@@ -8,7 +8,7 @@ pub fn Home() -> Element {
     let projects = data::featured_projects();
     rsx! {
         section { class: "hero",
-            h1 { class: "hero-name", "Scotty Ray Fermo" }
+            h1 { class: "hero-name", "Scotty Fermo" }
             p { class: "hero-title", "Software Engineer | Full-Stack | Rust" }
             p { class: "hero-tagline",
                 "I build production Rust systems that solve hard problems."
@@ -34,8 +34,8 @@ pub fn Home() -> Element {
         }
         section { class: "about",
             p {
-                "Nearly 4 years building production systems and leading technical teams. "
-                "Over a year of intensive Rust development \u{2014} from near-zero to shipping production systems. "
+                "4+ years of building production systems and leading technical teams. "
+                "1+ years of intensive Rust development \u{2014} from near-zero to shipping production systems. "
                 "Builder mentality: when I see inefficiency, I build tools to eliminate it."
             }
         }
