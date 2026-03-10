@@ -3,6 +3,26 @@
 
 /* === Theme Definitions === */
 
+.rustbox-dark {
+    --bg0-h: #1a1210; --bg0: #211a16; --bg1: #2e2420; --bg2: #3d302a; --bg3: #4d3d35;
+    --fg0: #f0dcc8; --fg1: #e4cdb5; --fg2: #c9ad8f; --fg3: #a8896a; --fg4: #8a7058;
+    --red: #c4432b; --green: #8a9a5b; --yellow: #d4943a; --blue: #6b8fa3;
+    --purple: #a06b5c; --aqua: #6d9474; --orange: #cf6830;
+    --red-bright: #e05a3e; --green-bright: #a3b56e; --yellow-bright: #e8ab4f;
+    --blue-bright: #85a8ba; --purple-bright: #b88474; --aqua-bright: #87ad8d;
+    --orange-bright: #e8823f;
+}
+
+.rustbox-light {
+    --bg0-h: #f5ede4; --bg0: #f0e6da; --bg1: #e6d9cb; --bg2: #d4c3ae; --bg3: #bda88e;
+    --fg0: #2a1f18; --fg1: #3d2e24; --fg2: #4d3d32; --fg3: #6b5545; --fg4: #8a7058;
+    --red: #a83220; --green: #6b7a42; --yellow: #b57a28; --blue: #4a7088;
+    --purple: #8a5548; --aqua: #517a5a; --orange: #b05525;
+    --red-bright: #8c2010; --green-bright: #556530; --yellow-bright: #9a6518;
+    --blue-bright: #355a72; --purple-bright: #724038; --aqua-bright: #3d6244;
+    --orange-bright: #94421a;
+}
+
 .gruvbox-dark {
     --bg0-h: #1d2021; --bg0: #282828; --bg1: #3c3836; --bg2: #504945; --bg3: #665c54;
     --fg0: #fbf1c7; --fg1: #ebdbb2; --fg2: #d5c4a1; --fg3: #bdae93; --fg4: #a89984;
@@ -101,6 +121,26 @@
     --red-bright: #bf616a; --green-bright: #a3be8c; --yellow-bright: #ebcb8b;
     --blue-bright: #5e81ac; --purple-bright: #b48ead; --aqua-bright: #8fbcbb;
     --orange-bright: #d08770;
+}
+
+.dracula-dark {
+    --bg0-h: #21222c; --bg0: #282a36; --bg1: #343746; --bg2: #44475a; --bg3: #565a70;
+    --fg0: #f8f8f2; --fg1: #f8f8f2; --fg2: #e0e0da; --fg3: #bfbfb8; --fg4: #a0a098;
+    --red: #ff5555; --green: #50fa7b; --yellow: #f1fa8c; --blue: #6272a4;
+    --purple: #bd93f9; --aqua: #8be9fd; --orange: #ffb86c;
+    --red-bright: #ff6e6e; --green-bright: #69ff94; --yellow-bright: #ffffa5;
+    --blue-bright: #8be9fd; --purple-bright: #d6acff; --aqua-bright: #a4ffff;
+    --orange-bright: #ffd185;
+}
+
+.dracula-light {
+    --bg0-h: #f0f0f0; --bg0: #f8f8f2; --bg1: #e8e8e2; --bg2: #d8d8d2; --bg3: #c0c0ba;
+    --fg0: #282a36; --fg1: #343746; --fg2: #44475a; --fg3: #565a70; --fg4: #6272a4;
+    --red: #ff5555; --green: #2dba4e; --yellow: #c4a616; --blue: #4e60a0;
+    --purple: #9b6ddb; --aqua: #4eb8cc; --orange: #e09a40;
+    --red-bright: #cc3333; --green-bright: #1f9e3a; --yellow-bright: #a88d10;
+    --blue-bright: #3a4e8c; --purple-bright: #7d4fc0; --aqua-bright: #389eb0;
+    --orange-bright: #c48030;
 }
 
 .vantablack {
@@ -592,6 +632,31 @@ a:hover {
     font-family: 'Iosevka', 'Iosevka Nerd Font', monospace;
     white-space: pre;
 }
+
+/* highlight.js overrides using theme variables */
+.code-content .hljs { background: transparent; color: var(--fg1); }
+.code-content .hljs-keyword,
+.code-content .hljs-built_in { color: var(--red-bright); }
+.code-content .hljs-type,
+.code-content .hljs-class .hljs-title,
+.code-content .hljs-title.class_ { color: var(--yellow-bright); }
+.code-content .hljs-function .hljs-title,
+.code-content .hljs-title.function_ { color: var(--green-bright); }
+.code-content .hljs-string,
+.code-content .hljs-doctag { color: var(--aqua-bright); }
+.code-content .hljs-number,
+.code-content .hljs-literal { color: var(--purple-bright); }
+.code-content .hljs-comment { color: var(--fg4); font-style: italic; }
+.code-content .hljs-meta,
+.code-content .hljs-meta .hljs-keyword { color: var(--orange-bright); }
+.code-content .hljs-attr,
+.code-content .hljs-attribute { color: var(--blue-bright); }
+.code-content .hljs-symbol,
+.code-content .hljs-bullet { color: var(--orange); }
+.code-content .hljs-variable,
+.code-content .hljs-template-variable { color: var(--fg1); }
+.code-content .hljs-params { color: var(--fg2); }
+.code-content .hljs-punctuation { color: var(--fg3); }
 
 .code-description {
     padding: 0.75rem 1rem;

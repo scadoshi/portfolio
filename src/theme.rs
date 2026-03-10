@@ -7,7 +7,7 @@ pub struct ThemeConfig {
 impl Default for ThemeConfig {
     fn default() -> Self {
         Self {
-            name: "gruvbox".to_string(),
+            name: "rustbox".to_string(),
             is_dark: true,
         }
     }
@@ -29,7 +29,9 @@ impl ThemeConfig {
 }
 
 pub const THEMES: &[(&str, &str)] = &[
+    ("rustbox", "Rustbox"),
     ("gruvbox", "Gruvbox"),
+    ("dracula", "Dracula"),
     ("everforest", "Everforest"),
     ("catppuccin", "Catppuccin"),
     ("tokyo-night", "Tokyo Night"),

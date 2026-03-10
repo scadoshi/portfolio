@@ -5,12 +5,12 @@ use crate::components::linked_text::LinkedText;
 use crate::data;
 
 #[component]
-pub fn ProjectDetail(slug: String) -> Element {
-    let Some(project) = data::find_project(&slug) else {
+pub fn SideQuestDetail(slug: String) -> Element {
+    let Some(project) = data::find_side_quest(&slug) else {
         return rsx! {
             div { class: "not-found",
-                h1 { "Project not found" }
-                p { "No project matches \"{slug}\"." }
+                h1 { "Side quest not found" }
+                p { "No side quest matches \"{slug}\"." }
             }
         };
     };

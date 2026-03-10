@@ -7,6 +7,7 @@ mod theme;
 
 use pages::home::Home;
 use pages::project_detail::ProjectDetail;
+use pages::side_quest_detail::SideQuestDetail;
 use pages::side_quests::SideQuests;
 use theme::ThemeConfig;
 
@@ -22,6 +23,8 @@ pub enum Route {
         ProjectDetail { slug: String },
         #[route("/side-quests")]
         SideQuests {},
+        #[route("/side-quests/:slug")]
+        SideQuestDetail { slug: String },
 }
 
 fn main() {
@@ -30,10 +33,12 @@ fn main() {
 
 #[component]
 fn App() -> Element {
-    let theme = use_signal(|| ThemeConfig::default());
+    let theme = use_signal(ThemeConfig::default);
     use_context_provider(|| theme);
     rsx! {
         document::Stylesheet { href: MAIN_CSS }
+        document::Script { src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" }
+        document::Script { src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js" }
         Router::<Route> {}
     }
 }
