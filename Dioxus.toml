@@ -1,0 +1,12 @@
+[application]
+name = "portfolio"
+
+[web.app]
+title = "Scotty Ray Fermo"
+
+[web.resource]
+style = []
+script = []
+
+[web.resource.dev]
+script = []

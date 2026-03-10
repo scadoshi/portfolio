@@ -1,18 +1,17 @@
 # Portfolio
 
-Personal portfolio site presenting six Rust projects. Built with Dioxus targeting WASM for web deployment. The site itself is a portfolio piece — a Rust developer's portfolio written in Rust.
+Personal portfolio site presenting seven Rust projects. Built with Dioxus targeting WASM for web deployment. The site itself is a portfolio piece: a Rust developer's portfolio written in Rust.
 
 ## Goal
 
-Present projects in a way that highlights what was learned, what was built, and why it matters. Not a resume — a technical showcase with interactive elements where possible.
+Present projects in a way that highlights what was learned, what was built, and why it matters. Not a resume. A technical showcase with interactive elements where possible.
 
 ## Tech Stack
 
 | Crate | Purpose |
 |-------|---------|
-| `dioxus` | Cross-platform UI framework (targeting web/WASM) |
+| `dioxus` 0.7.1 | Cross-platform UI framework (targeting web/WASM) |
 | `dioxus-router` | Client-side routing between project pages |
-| `serde` | Serialization for project data |
 
 ### Later
 
@@ -24,28 +23,33 @@ Present projects in a way that highlights what was learned, what was built, and 
 
 ## Architecture
 
-Dioxus WASM app. Same hexagonal-ish structure used in zwipe/zwiper:
+Dioxus WASM app. Flat module structure for simplicity:
 
 ```
 src/
-├── bin/main.rs              # Entry point, launches Dioxus app
-└── lib/
-    ├── lib.rs
-    ├── domain/              # Project data, categories, metadata
-    │   └── projects/        # Per-project content and descriptions
-    ├── inbound/             # UI layer
-    │   ├── router.rs        # Route definitions
-    │   ├── screens/         # Page-level components (home, project detail, about)
-    │   └── components/      # Reusable UI (project card, code block, nav, terminal)
-    └── outbound/            # (minimal — static content, no backend needed)
+├── main.rs                 # Entry point, Router enum, App, NavbarLayout
+├── data.rs                 # All project content as static data
+├── theme.rs                # ThemeConfig, theme list, light/dark toggle logic
+├── components/
+│   ├── navbar.rs           # [SRF] brand, nav links, Projects dropdown
+│   ├── project_card.rs     # Home page card with impact tooltip
+│   ├── code_block.rs       # Terminal-styled code display
+│   ├── theme_switcher.rs   # Theme dropdown + light/dark toggle
+│   └── footer.rs           # GitHub, LinkedIn, Email
+└── pages/
+    ├── home.rs             # Hero + about + project cards grid
+    ├── project_detail.rs   # Dynamic :slug lookup, full detail page
+    └── side_quests.rs      # Marvin, Nighthawk, Upsee, Capture grouped
 ```
 
 ## Design Direction
 
-- Dark theme, monospace-forward — looks like it was built by someone who lives in the terminal
-- Each project gets its own page with architecture overview, key code, and what was learned
-- Interactive terminal demos where feasible (Nighthawk REPL is the easiest candidate for WASM)
-- Mobile responsive — recruiters look at portfolios on phones
+- Terminal aesthetic with Iosevka Nerd Font, monospace everywhere
+- 6 color themes: Gruvbox (default), Everforest, Catppuccin, Tokyo Night, Nord, Vantablack
+- Each theme has dark/light variants (Vantablack dark-only)
+- Theme switcher in navbar
+- Each project gets its own page with objective, approach, implementation, obstacles, progress
+- Mobile responsive
 
 ## Deployment
 
@@ -53,4 +57,4 @@ Static WASM bundle. Host on GitHub Pages, Cloudflare Pages, or Vercel. No backen
 
 ## Current State
 
-Phase 0 — planning and content organization. No code yet.
+Phase 1 in progress. Core site is built and compiles. All pages, routing, themes, and content are functional. Remaining: GIF/screenshot assets and deployment.
