@@ -5,7 +5,7 @@ pub fn Footer() -> Element {
     rsx! {
         footer { class: "footer",
             div { class: "footer-container",
-                span { "\u{00a9} 2026 Scotty Ray Fermo" }
+                span { "\u{00a9} 2026 Scotty Fermo" }
                 div { class: "footer-links",
                     a {
                         href: "https://github.com/scadoshi",

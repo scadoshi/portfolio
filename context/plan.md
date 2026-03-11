@@ -26,7 +26,7 @@
 ### 1. Home (`/`)
 
 **Hero**
-- Name: Scotty Ray Fermo
+- Name: Scotty Fermo
 - Title: Software Engineer | Full-Stack | Rust
 - Mission: "I build production Rust systems that solve hard problems."
 - Contact links: GitHub, LinkedIn, Email

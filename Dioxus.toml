@@ -2,7 +2,7 @@
 name = "portfolio"
 
 [web.app]
-title = "Scotty Ray Fermo"
+title = "Scotty Fermo"
 
 [web.resource]
 style = []
