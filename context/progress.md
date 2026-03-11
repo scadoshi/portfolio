@@ -44,14 +44,14 @@ All 7 project descriptions reviewed against actual source code and updated:
 - [x] Halo Action Importer — cache evolution story, data normalization, two-tier caching
 - [x] Zwipe — 100k+ cards, 3 binaries, error chain, strict linting, shared types
 
-## Hosting (IN PROGRESS)
+## Hosting (COMPLETE)
 
 - [x] GitHub Actions workflow for build and deploy to GitHub Pages
 - [x] Domain purchased: scottyfermo.com (Namecheap)
 - [x] DNS A records and CNAME configured pointing to GitHub Pages
-- [ ] DNS propagation and GitHub Pages verification
-- [ ] Enforce HTTPS
-- [ ] Site live at https://scottyfermo.com
+- [x] DNS propagation and GitHub Pages verification
+- [x] Enforce HTTPS
+- [x] Site live at https://scottyfermo.com
 
 ## Phase 2 — Interactive Elements (FUTURE)
 

@@ -64,4 +64,4 @@ src/
 
 ## Current State
 
-Phase 1 complete. All pages, routing, 8 themes, syntax highlighting, and content evaluation done. Hosting in progress: GitHub Actions workflow deployed, domain purchased, DNS propagating. Site will be live at https://scottyfermo.com.
+Live at https://scottyfermo.com. Phase 1 complete. All pages, routing, 8 themes, syntax highlighting, and content evaluation done. GitHub Actions deploys automatically on push to master.
