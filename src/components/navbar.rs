@@ -8,7 +8,7 @@ pub fn Navbar() -> Element {
     rsx! {
         nav { class: "navbar",
             div { class: "nav-container",
-                Link { to: Route::Home {}, class: "nav-brand", "[SRF]" }
+                Link { to: Route::Home {}, class: "nav-brand", "[SF]" }
                 div { class: "nav-links",
                     Link { to: Route::Home {}, class: "nav-link", "Home" }
                     div { class: "dropdown",
