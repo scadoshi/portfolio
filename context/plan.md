@@ -2,15 +2,19 @@
 
 ## Stack
 - Dioxus 0.7.1 + dioxus-router targeting WASM
-- Static deploy (GitHub Pages / Cloudflare Pages)
-- 6 color themes with light/dark variants
+- GitHub Pages via GitHub Actions CI/CD
+- Custom domain: scottyfermo.com
+- 8 color themes with light/dark variants
 - Iosevka Nerd Font (CDN via fontsource)
+- highlight.js for syntax highlighting (CDN)
 
 ## Themes
 
 | Theme | Dark | Light |
 |-------|------|-------|
-| Gruvbox (default) | Yes | Yes |
+| Rustbox (default) | Yes | Yes |
+| Gruvbox | Yes | Yes |
+| Dracula | Yes | Yes |
 | Everforest | Yes | Yes |
 | Catppuccin | Yes (Mocha) | Yes (Latte) |
 | Tokyo Night | Yes | Yes |
@@ -33,21 +37,21 @@
 **Big 3 Project Cards**
 Each card: project name, category tag, summary, impact metric with hover tooltip, links to detail page and GitHub repo.
 
-1. **Zwipe** - Full-stack MTG deck builder. 24,500 lines of production Rust.
+1. **Zwipe** - Full-stack MTG deck builder. ~24,500 lines of production Rust.
 2. **Halo Action Importer** - Production bulk import. Weeks of manual work, automated.
 3. **Halo Custom Field Builder** - Shipped CLI tool. Manual UI clicks to one CSV import.
 
-### 2. Zwipe (`/projects/zwipe`)
-Full detail: objective, approach (hexagonal architecture, newtypes, JWT auth), implementation (3 code snippets), obstacles, progress and impact.
+### 2-4. Featured Project Detail Pages (`/projects/:slug`)
 
-### 3. Halo Action Importer (`/projects/halo-action-importer`)
-Full detail: objective, approach (resilience-first), implementation (resilience pattern, retry evolution), obstacles, progress and impact.
+Full detail: objective, approach, implementation (syntax-highlighted code snippets with component keys for correct rendering on navigation), obstacles, progress and impact.
 
-### 4. Halo Custom Field Builder (`/projects/halo-custom-field-builder`)
-Full detail: objective, approach (domain modeling, two-layer serialization), implementation (field type system, serialization), obstacles, progress and impact.
+### 5. Side Quests Index (`/side-quests`)
 
-### 5. Side Quests (`/side-quests`)
-One page, four sections. Each: name, category, description, highlights, one code snippet, repo link.
+Card-based index linking to individual detail pages. Subtitle explains these are proofs of concept and learning projects.
+
+### 6. Side Quest Detail Pages (`/side-quests/:slug`)
+
+Same full detail structure as featured projects. Each side quest gets its own page:
 - **Marvin** - AI Tooling
 - **Nighthawk** - Database Internals
 - **Upsee** - ML Inference
@@ -56,7 +60,7 @@ One page, four sections. Each: name, category, description, highlights, one code
 ## Navbar
 
 ```
-[SRF]  Home    Projects ▾    Side Quests    [Gruvbox ▾] [light]
+[SRF]  Home    Projects v    Side Quests    [Rustbox v] [light]
                  Zwipe
                  Halo Action Importer
                  Halo Custom Field Builder
@@ -76,36 +80,36 @@ One page, four sections. Each: name, category, description, highlights, one code
 
 ```
 src/
-├── main.rs              # Entry, Router, App, NavbarLayout
-├── data.rs              # All project content as static data
-├── theme.rs             # ThemeConfig, THEMES list
+├── main.rs              # Entry, Router, App, NavbarLayout, highlight.js CDN
+├── data.rs              # All project content (Project struct, ProjectType enum)
+├── theme.rs             # ThemeConfig, 8 themes
 ├── components/
 │   ├── navbar.rs        # Nav with Projects dropdown
 │   ├── project_card.rs  # Card with impact tooltip
-│   ├── code_block.rs    # Terminal-styled code display
+│   ├── code_block.rs    # highlight.js integration with unique IDs
+│   ├── linked_text.rs   # Auto-linking URLs in text
 │   ├── theme_switcher.rs # Theme picker + light/dark toggle
 │   └── footer.rs        # Contact links
 └── pages/
     ├── home.rs          # Hero + about + project grid
-    ├── project_detail.rs # Dynamic :slug detail page
-    └── side_quests.rs   # Grouped learning projects
+    ├── project_detail.rs # Dynamic :slug detail page (featured)
+    ├── side_quests.rs   # Card index linking to detail pages
+    └── side_quest_detail.rs # Dynamic :slug detail page (side quests)
 ```
 
-## Remaining Phase 1 Work
+## Hosting
+
+- GitHub Actions workflow builds on push to master
+- Installs Rust + wasm32-unknown-unknown target
+- Runs `dx build --release`
+- Adds CNAME file for custom domain
+- Copies index.html to 404.html for SPA routing
+- Deploys via upload-pages-artifact + deploy-pages
+
+## Remaining Work
 
 - GIF/screenshot assets for project cards
-- Deploy to GitHub Pages or Cloudflare Pages
-
-## Phase 2 (Future)
-
-- Syntax-highlighted code blocks
 - Architecture diagrams (SVG)
 - Nighthawk WASM REPL
-- Code walkthroughs with expandable annotations
-
-## Phase 3 (Future)
-
 - Transitions and scroll animations
 - SEO metadata
-- Performance optimization
-- Custom domain
