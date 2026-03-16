@@ -2,7 +2,7 @@
 
 ## Headline
 
-Log-structured key-value store built from scratch — append-only log, binary format, CRC32 checksums, corruption recovery.
+LSM-tree storage engine from scratch. WAL, memtable, SSTables, k-way compaction.
 
 ## Category
 
@@ -10,7 +10,7 @@ Learning Project — Database Internals
 
 ## What It Is
 
-A key-value store modeled after the Bitcask paper. Append-only log with in-memory HashMap index, binary serialization with custom headers (magic bytes, CRC32, length-prefixed entries), log compaction via atomic rename, and byte-by-byte corruption recovery.
+A log-structured storage engine built phase by phase. Started from the Bitcask paper as a simple append-only log, then evolved into a full LSM-tree: BTreeMap memtable, WAL-backed durability, SSTable flush, and k-way merge compaction. The architecture behind LevelDB, RocksDB, and Cassandra. ~800 lines of engine code with 81 tests covering every layer.
 
 ## What It Proves
 
@@ -48,7 +48,7 @@ Planned phases: SSTable/LSM-tree (sorted on-disk segments, bloom filters), TCP n
 
 ## Status
 
-Learning project. Phases 1-3 complete (append-only log, compaction, binary serialization with checksums).
+Phases 1-4 complete. WAL, memtable, SSTable flush and read path, and k-way compaction all working with 81 tests. Next: bloom filters and leveled compaction (L0/L1).
 
 ## Repo
 

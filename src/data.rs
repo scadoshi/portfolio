@@ -351,64 +351,129 @@ const NIGHTHAWK: Project = Project {
     name: "Nighthawk",
     slug: "nighthawk",
     project_type: ProjectType::SideQuest,
-    headline: "Bitcask key-value store. Append-only log, CRC32 checksums, corruption recovery.",
+    headline: "LSM-tree storage engine from scratch. WAL, memtable, SSTables, k-way compaction.",
     category: "Database Internals",
     repo_url: "https://github.com/scadoshi/nighthawk",
-    summary: "A key-value store modeled after the Bitcask paper. Built in three phases: append-only log with in-memory index, then durability and compaction, then a custom binary format with CRC32 checksums and byte-by-byte corruption recovery. Trait-based architecture where behavior is composed onto standard library types. ~470 LOC.",
-    impact_metric: "~470 lines, 3 phases",
-    impact_detail: "Built from the Bitcask paper to understand how databases work at the storage layer. Every write is durable, every read is a single disk seek, and corrupted data is recoverable.",
-    objective: "Implement the Bitcask storage engine from the original paper (https://riak.com/assets/bitcask-intro.pdf) to understand how key-value databases work at the lowest level: binary formats, crash safety, and corruption recovery.",
+    summary: "A log-structured storage engine built phase by phase. Started from the Bitcask paper as a simple append-only log, then evolved into a full LSM-tree: BTreeMap memtable, WAL-backed durability, SSTable flush, and k-way merge compaction. The architecture behind LevelDB, RocksDB, and Cassandra. ~800 lines of engine code with 81 tests covering every layer.",
+    impact_metric: "~800 lines of engine, 81 tests",
+    impact_detail: "Started as a Bitcask implementation and grew into a full LSM-tree storage engine. Each phase added a real layer of database behavior. By Phase 4, it had the same core architecture as the storage engines used in production systems like RocksDB.",
+    objective: "Build a key-value storage engine incrementally, starting from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) and evolving toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a concrete layer of real database behavior: durability, binary formats, sorted flush, and merge compaction.",
     approach: &[
-        "Phase 1: Append-only log with in-memory HashMap index. Set appends to disk, get looks up offset and seeks. Index rebuilt from log on startup",
-        "Phase 2: Durability via sync_all() after every write. Log compaction deduplicates entries into a temp file, atomic rename swaps it in. Reuses the temp log's already-built index to avoid redundant scanning",
-        "Phase 3: Custom binary format with 10-byte headers: magic bytes (0x4E48 \"NH\"), CRC32 checksum, length-prefixed entry. Byte-by-byte corruption recovery with typed error enum (HeaderNotFound, MagicBytesNotFound, ChecksumMismatch, EntryParseError)",
-        "Trait-based composition: Header trait on File (read/write with headers), Index trait on HashMap (rebuild from file), Execute trait on Log (command dispatch)",
-        "wincode serialization with SchemaRead/SchemaWrite derives for binary Entry encoding",
-        "Size-based automatic compaction triggers when log exceeds 10MB",
+        "Phases 1-3 (Bitcask foundation): append-only WAL with in-memory index, sync_all() durability, log compaction via atomic rename, custom binary format with 10-byte headers (magic bytes 0x4E48, CRC32 checksum, length prefix via wincode serialization), and byte-by-byte corruption recovery with a typed CorruptionType enum",
+        "Phase 4 Step 1 (Memtable): upgraded index from HashMap<String, u64> offsets to BTreeMap<String, Entry> values. Sorted order is required for SSTable flush. MemTable::process() unifies insert/remove and tracks byte-level size. WAL is replayed into the memtable on startup",
+        "Phase 4 Step 2 (SSTable flush): when memtable exceeds 4MB, all entries are written in sorted order to data/sstables/{timestamp:020}.sst. Microsecond Unix timestamp in the filename means lexicographic order equals chronological order. After flush: sync_all(), truncate WAL, clear memtable",
+        "Phase 4 Step 3 (Read path): check memtable first (BTreeMap lookup, no disk I/O). On miss, scan SSTables newest-to-oldest using the existing binary header reader. First match wins. Recency is always truth",
+        "Phase 4 Step 4 (K-way compaction): k-way merge across all SSTable files. Each iteration finds the global minimum key, the newest file wins on duplicates, tombstones are dropped. Triggers every 10 flushes via flush_count on Log. Original SSTables deleted after compacted output is written",
+        "81 tests covering every layer: command parser, entry serialization, corruption recovery, memtable operations, WAL rebuild on startup, SSTable flush and read path, and compaction correctness including tombstone handling and duplicate key resolution",
     ],
     snippets: &[
         Snippet {
-            title: "On-Disk Binary Format",
-            code: r#"// Each entry on disk:
-[magic: 0x4E48] [crc32: 4 bytes] [entry_len: 4 bytes] [wincode Entry]
-     "NH"        integrity check    length prefix        serialized data
+            title: "LSM-Tree Architecture",
+            code: r#"// Write path:
+// set "foo" "bar"
+//   → append to WAL (crash safe, sync'd to disk)
+//   → insert into memtable (BTreeMap<String, Entry>)
+//   → if memtable.size() > 4MB: flush to SSTable
+//   → every 10 flushes: k-way merge compaction
 
-// Corruption recovery:
-// If magic bytes don't match or CRC fails,
-// scan forward byte-by-byte until next valid header.
-// Distinguishes: HeaderNotFound, MagicBytesNotFound,
-//   ChecksumMismatch, EntryParseError"#,
-            description: "Every entry is self-describing and independently verifiable. If any entry is corrupted, the scanner skips forward byte-by-byte until it finds the next valid magic byte sequence.",
+// Read path:
+// get "foo"
+//   → check memtable (BTreeMap::get, O(log n), no disk I/O)
+//   → scan SSTables newest-to-oldest (recency = truth)
+
+// On disk:
+// data/wal                       — append-only WAL, replayed on startup
+// data/sstables/00000000000000…  — sorted, timestamped SSTable files"#,
+            description: "WAL provides crash safety. Memtable absorbs writes in sorted order. SSTables are immutable sorted segments. Compaction merges them back down. Each layer has one job.",
         },
         Snippet {
-            title: "Trait-Based Composition",
-            code: r#"// Behavior composed onto standard library types:
+            title: "K-Way Merge: compact()",
+            code: r#"pub fn compact(&mut self) -> anyhow::Result<()> {
+    let mut entries: Vec<_> = read_dir(&self.sstables_path)?.flatten().collect();
+    entries.sort_by_key(|e| Reverse(e.file_name())); // newest-to-oldest
+    let to_delete: Vec<_> = entries.iter().map(|e| e.path()).collect();
 
-// Header trait on File — read/write entries with binary headers
-impl Header for File {
-    fn write_entry_with_header(&mut self, entry: &Entry) -> Result<u64>;
-    fn read_next_entry_with_header(&mut self) -> Result<Option<Entry>>;
-}
+    // Pair each file with its current entry cursor
+    let mut files: Vec<_> = entries
+        .into_iter()
+        .filter_map(|e| OpenOptions::new().read(true).open(e.path()).ok())
+        .map(|f| (None::<Entry>, f))
+        .collect();
+    for (entry, file) in files.iter_mut() {
+        *entry = file.read_next_entry_with_header()?;
+    }
 
-// Index trait on HashMap — rebuild key-to-offset map from log file
-impl Index for HashMap<String, u64> {
-    fn from_file(file: &mut File) -> Result<Self>;
-}
+    let mut memtable = MemTable::new();
+    loop {
+        files.retain(|(entry, _)| entry.is_some());
+        if files.is_empty() { break; }
 
-// Execute trait on Log — command dispatch separated from storage
-impl Execute for Log {
-    fn execute(&mut self, command: Command) -> Result<()>;
+        // Find global minimum key across all active cursors
+        let min = {
+            let mut min = None::<String>;
+            for (entry, _) in files.iter() {
+                let curr = entry.as_ref().unwrap();
+                if min.as_ref().is_none_or(|m| curr.key().cmp(m).is_lt()) {
+                    min = Some(curr.key().to_owned());
+                }
+            }
+            min.unwrap()
+        };
+
+        // First file (newest) with this key wins; all participants advance
+        for (entry, file) in files.iter_mut() {
+            let is_participant = entry.as_ref().unwrap().key() == min;
+            let winner_found = memtable.contains_key(&min);
+            if is_participant && !winner_found {
+                memtable.process(entry.as_ref().unwrap())?;
+            }
+            if is_participant {
+                *entry = file.read_next_entry_with_header()?;
+            }
+        }
+        if memtable.should_flush() {
+            memtable.flush_to(self.sstables_path.clone())?;
+        }
+    }
+    if !memtable.is_empty() {
+        memtable.flush_to(self.sstables_path.clone())?;
+    }
+    for path in to_delete { remove_file(path)?; }
+    Ok(())
 }"#,
-            description: "Each concern is a trait implemented on the type that makes sense for it. File knows how to read/write headers. HashMap knows how to rebuild itself from a log. Log knows how to execute commands. No god objects.",
+            description: "Files sorted newest-to-oldest means the first file with a given key is always the winner. All participants advance their cursor on each key so no entry is ever skipped. Tombstones are implicitly dropped: MemTable::process() removes keys on Delete, so they never appear in the flushed output.",
+        },
+        Snippet {
+            title: "TempDir Lifetime in Tests",
+            code: r#"// Every test that touches the filesystem uses this helper:
+fn temp_log() -> (TempDir, Log) {
+    let dir = tempfile::tempdir().unwrap();
+    let log = Log::new(
+        dir.path(),
+        dir.path().join("memtable"),
+        dir.path().join("sstables"),
+        true,
+    ).unwrap();
+    (dir, log) // TempDir returned — caller keeps directory alive
+}
+
+// Usage in every test:
+let (_dir, mut log) = temp_log();
+//   ^^^^
+// Binding _dir keeps TempDir alive for the test scope.
+// let (_, mut log) = ... drops TempDir immediately,
+// deleting the directory before the test body runs."#,
+            description: "TempDir implements Drop — when it goes out of scope the temp directory is deleted. Discarding it with _ drops it at the statement. Binding it as _dir keeps it alive until end of scope. This came up when adding filesystem tests: the first version wiped the directory the test was about to use.",
         },
     ],
     obstacles: &[
-        "Corruption recovery required distinguishing four failure modes (missing header, bad magic bytes, checksum mismatch, parse error) and handling each differently. A single generic error would lose the ability to recover",
-        "Log compaction must be atomic: write to temp file, sync, rename. If the process crashes mid-compaction, the original log is still intact. After rename, reuse the temp log's index (*self = temp) to avoid a redundant full scan",
-        "Learned little-endian byte encoding (u32::to_le_bytes/from_le_bytes) for the header format. LE is convention for on-disk formats since x86/ARM are natively little-endian",
+        "Compaction correctness: tombstones must be dropped during merge (not written to output), and duplicate keys must resolve to the newest source file. Getting this wrong silently resurrects deleted keys with no error at runtime",
+        "TempDir lifetime in tests: creating a Log inside a temp dir would drop the TempDir immediately, deleting the directory before the test ran. Fixed by returning (TempDir, Log) tuples from all test helpers to keep the directory alive",
+        "flush_count must be initialized from the existing SSTable count on startup, not zero. Without this, the compaction trigger fires on the wrong schedule after a process restart",
+        "Upgrading from HashMap to BTreeMap required threading sorted order through the entire flush path. The payoff: BTreeMap iterates in key order automatically, which is what makes SSTable files cheaply sortable without a separate pass",
     ],
-    progress: "Phases 1-3 complete. Get, set, delete, compaction, and corruption recovery all working. Roadmap: Phase 4 (SSTable/LSM-tree with BTreeMap memtable and bloom filters), Phase 5 (TCP network layer), Phase 6 (concurrency with RwLock).",
-    impact: "Demonstrates understanding of database internals at the storage engine level. Not just using databases, but understanding how they work: binary formats, crash safety, checksums, compaction, and corruption recovery. Built incrementally in deliberate phases, each adding a layer of real database behavior.",
+    progress: "Phases 1-4 complete. WAL, memtable, SSTable flush and read path, and k-way compaction all working with 81 tests. Next: bloom filters (probabilistic skip for SSTable reads) and leveled compaction (L0/L1 tiers to control read/write amplification).",
+    impact: "Started from a paper and evolved into the storage architecture behind LevelDB, RocksDB, and Cassandra. Not just reading about LSM-trees but building one from scratch: WAL semantics, sorted flush, merge compaction, and the test coverage to verify it all holds.",
 };
 
 const UPSEE: Project = Project {
