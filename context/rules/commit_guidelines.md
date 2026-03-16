@@ -4,3 +4,6 @@
 - Group related files logically
 - No emojis
 - Use `git diff` to understand changes before committing
+- **Never** include AI-agent signatures in commits.
+    - Example: "Written with the help of Claude Opus 4.5"
+    - Never commit with something like this in your message.
