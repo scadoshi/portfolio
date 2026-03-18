@@ -25,7 +25,7 @@ pub fn ProjectCard(
             }
             div { class: "card-actions",
                 Link {
-                    to: Route::ProjectDetail { slug: slug },
+                    to: Route::ProjectDetail { slug },
                     class: "card-link",
                     "View Project \u{2192}"
                 }

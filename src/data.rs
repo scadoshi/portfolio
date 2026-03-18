@@ -1,13 +1,6 @@
-#[derive(Clone, Copy, PartialEq)]
-pub enum ProjectType {
-    Featured,
-    SideQuest,
-}
-
 pub struct Project {
     pub name: &'static str,
     pub slug: &'static str,
-    pub project_type: ProjectType,
     pub headline: &'static str,
     pub category: &'static str,
     pub repo_url: &'static str,
@@ -47,7 +40,6 @@ pub fn find_side_quest(slug: &str) -> Option<&'static Project> {
 const ZWIPE: Project = Project {
     name: "Zwipe",
     slug: "zwipe",
-    project_type: ProjectType::Featured,
     headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 100k+ cards.",
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
@@ -118,7 +110,6 @@ query_builder.push_bind(format_keys);"#,
 const HALO_ACTION_IMPORTER: Project = Project {
     name: "Halo Action Importer",
     slug: "halo-action-importer",
-    project_type: ProjectType::Featured,
     headline: "Production bulk import tool. Millions of records, resilient retry, incremental caching.",
     category: "Production Data Tooling",
     repo_url: "https://github.com/scadoshi/halo_action_importer",
@@ -207,7 +198,6 @@ fn read_cached_ids() -> CacheData {
 const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     name: "Halo Custom Field Builder",
     slug: "halo-custom-field-builder",
-    project_type: ProjectType::Featured,
     headline: "Shipped CLI tool. Bulk-creating custom fields across Halo Software products with cross-platform binaries.",
     category: "Production Data Tooling",
     repo_url: "https://github.com/scadoshi/halo_custom_field_builder",
@@ -286,7 +276,6 @@ impl From<&CustomField> for HttpCustomField {
 const MARVIN: Project = Project {
     name: "Marvin",
     slug: "marvin",
-    project_type: ProjectType::SideQuest,
     headline: "CLI chatbot on Rig framework. Streaming, tool use, web search, context management.",
     category: "AI Tooling",
     repo_url: "https://github.com/scadoshi/marvin",
@@ -350,7 +339,6 @@ impl Tool for SearchWeb {
 const NIGHTHAWK: Project = Project {
     name: "Nighthawk",
     slug: "nighthawk",
-    project_type: ProjectType::SideQuest,
     headline: "LSM-tree storage engine from scratch. WAL, memtable, SSTables, bloom filters, k-way compaction.",
     category: "Database Internals",
     repo_url: "https://github.com/scadoshi/nighthawk",
@@ -486,7 +474,6 @@ impl<R: Read + Seek> BloomFilterReader for R {
 const UPSEE: Project = Project {
     name: "Upsee",
     slug: "upsee",
-    project_type: ProjectType::SideQuest,
     headline: "Real-time pullup counter. Webcam + MoveNet pose estimation via tract ONNX runtime.",
     category: "ML Inference",
     repo_url: "https://github.com/scadoshi/upsee",
@@ -553,7 +540,6 @@ match state {
 const CAPTURE: Project = Project {
     name: "Capture",
     slug: "capture",
-    project_type: ProjectType::SideQuest,
     headline: "Cross-platform security camera. Input device grabbing, intruder photos, platform-specific I/O.",
     category: "Systems Programming",
     repo_url: "https://github.com/scadoshi/capture",
