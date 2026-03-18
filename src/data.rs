@@ -33,7 +33,7 @@ pub fn featured_projects() -> &'static [Project] {
 }
 
 pub fn side_quests() -> &'static [Project] {
-    &[MARVIN, NIGHTHAWK, UPSEE, CAPTURE]
+    &[NIGHTHAWK, MARVIN, CAPTURE, UPSEE]
 }
 
 pub fn find_project(slug: &str) -> Option<&'static Project> {
