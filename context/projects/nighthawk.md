@@ -10,7 +10,7 @@ Learning Project — Database Internals
 
 ## What It Is
 
-A log-structured storage engine built phase by phase. Started from the Bitcask paper as a simple append-only log, then evolved into a full LSM-tree: BTreeMap memtable, WAL-backed durability, SSTable flush, and k-way merge compaction. The architecture behind LevelDB, RocksDB, and Cassandra. ~800 lines of engine code with 81 tests covering every layer.
+A log-structured storage engine built phase by phase. Started from the Bitcask paper as a simple append-only log, then evolved into a full LSM-tree: BTreeMap memtable, WAL-backed durability, SSTable flush, k-way merge compaction, and per-SSTable bloom filters. The architecture behind LevelDB, RocksDB, and Cassandra. ~1,000 lines of engine code with 89 tests covering every layer.
 
 ## What It Proves
 
@@ -48,7 +48,7 @@ Planned phases: SSTable/LSM-tree (sorted on-disk segments, bloom filters), TCP n
 
 ## Status
 
-Phases 1-4 complete. WAL, memtable, SSTable flush and read path, and k-way compaction all working with 81 tests. Next: bloom filters and leveled compaction (L0/L1).
+Phases 1-5 and entry consolidation complete. WAL, memtable, SSTable flush and read path, k-way compaction, per-SSTable bloom filters, and tombstone resurrection fix all working with 89 tests. Next: leveled compaction (L0/L1).
 
 ## Repo
 
