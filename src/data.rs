@@ -339,51 +339,48 @@ impl Tool for SearchWeb {
 const NIGHTHAWK: Project = Project {
     name: "Nighthawk",
     slug: "nighthawk",
-    headline: "LSM-tree storage engine from scratch. WAL, memtable, SSTables, bloom filters, k-way compaction.",
+    headline: "LSM-tree key-value database from scratch. TCP server, concurrent connections, WAL, SSTables, bloom filters, k-way compaction.",
     category: "Database Internals",
     repo_url: "https://github.com/scadoshi/nighthawk",
-    summary: "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to a full LSM-tree. BTreeMap memtable, WAL durability, timestamped SSTables, per-SSTable bloom filters, and k-way merge compaction. The architecture behind LevelDB, RocksDB, and Cassandra. ~1,000 lines of engine code, 89 tests.",
-    impact_metric: "~1,000 lines of engine, 89 tests",
-    impact_detail: "Started from a paper and built the storage layer that powers production databases. Not just reading about LSM-trees: implementing WAL semantics, bloom filter math, and compaction correctness from scratch.",
-    objective: "Build a key-value storage engine incrementally from the Bitcask paper toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer of database behavior.",
+    summary: "Complete LSM-tree key-value database built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf). Not just a storage engine: a TCP server you can connect to and use. Thread-per-connection concurrency with per-command locking. WAL durability with crash recovery, BTreeMap memtable, timestamped SSTables with bloom filter footers, k-way merge compaction, and a binary protocol with CRC32 checksums and byte-level corruption recovery. The architecture behind LevelDB, RocksDB, and Cassandra. ~2,100 LOC, 99 tests.",
+    impact_metric: "~2,100 lines, 99 tests, 6 phases",
+    impact_detail: "Started from a paper and built the storage layer that powers production databases. Not a contained exercise: a real TCP database server you can host, connect to, and query. Every layer built from scratch: binary protocol, WAL, memtable, SSTables, bloom filters, compaction, corruption recovery, concurrency.",
+    objective: "Build a key-value database incrementally from the Bitcask paper toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, and concurrency.",
     approach: &[
-        "Phases 1-3 (Bitcask foundation): append-only WAL, sync_all() durability, atomic rename compaction, 10-byte binary headers (magic 0x4E48, CRC32, wincode length prefix), byte-by-byte corruption recovery with typed CorruptionType enum",
-        "Memtable: BTreeMap<String, Entry> replaces HashMap offsets — sorted order is what makes SSTable flush cheap. MemTable::process() tracks byte-level size; WAL replays into memtable on startup",
-        "SSTable flush + read: 4MB threshold flushes sorted entries to data/sstables/{timestamp:020}.sst — lexicographic order is chronological. Reads check memtable first (no I/O), then scan SSTables newest-to-oldest",
-        "K-way compaction: seen_keys: HashSet tracks winners; Entry::Set guard suppresses tombstone output. Triggers every 10 flushes, original SSTables deleted after compacted output is written",
-        "Bloom filters: one per SSTable as an in-file footer. Kirsch-Mitzenmacher double hashing (two xxh3 seeds, k=7, 10 bits/key, ~1% FP rate). BloomFilterReader blanket impl on R: Read + Seek — any file handle gains the trait automatically",
-        "Entry consolidation: initial WalEntry/SstEntry split caused tombstone resurrection. Single Entry enum threads tombstones through all layers; compact() drops them from output via Entry::Set guard",
+        "Phases 1-3 (Bitcask foundation): append-only WAL, sync_all() after every write, atomic rename compaction. 10-byte binary header per entry (magic 0x4E48, CRC32, wincode length prefix). Corruption recovery scans byte-by-byte past garbage to find the next valid entry, typed via CorruptionType enum (NotEnoughBytes, MagicBytesMismatch, ChecksumMismatch, ParseError)",
+        "Memtable: BTreeMap<String, Entry> replaces HashMap offsets from the Bitcask phase. Sorted order is what makes SSTable flush cheap: just iterate and write. MemTable::process() tracks byte-level size for flush decisions. WAL replays into memtable on startup for crash recovery",
+        "SSTable flush + read: 4MB threshold flushes sorted entries to data/sstables/{timestamp:020}.sst where lexicographic order is chronological. Read path checks memtable first (no I/O), then scans SSTables newest-to-oldest. Bloom filter checked before scanning any file",
+        "K-way compaction: all SSTables processed simultaneously, not sequentially. Per-iteration finds the global minimum key across all active cursors. Newest file wins on duplicate keys. seen_keys: HashSet tracks winners; tombstone winners are silently dropped from output so they don't accumulate. Triggers every 10 flushes, intermediate memtable flushes keep memory bounded",
+        "Bloom filters: one per SSTable stored as an in-file footer. Kirsch-Mitzenmacher double hashing with two xxh3 seeds, k=7, 10 bits/key for ~1% false positive rate. BloomFilterReader is a blanket impl on R: Read + Seek, so any file handle gains bloom filter reading automatically",
+        "Entry consolidation: initial WalEntry/SstEntry split caused a tombstone resurrection bug. Single Entry enum threads tombstones through all layers (WAL, memtable, SSTables). compact() drops tombstone winners from output via Entry::Set guard. Regression test written before the refactor",
+        "TCP server with concurrent connections: thread::spawn per connection, Arc<Mutex<Log>> shared across threads. Per-command locking keeps the critical section short: lock, execute, drop, flush. Clients make progress concurrently rather than waiting for entire connection lifetimes",
+        "Generic Runner<R: BufRead, W: Write>: same read/parse/execute loop powers both the CLI (stdin/stdout) and the TCP server (TcpStream/BufWriter<TcpStream>). bin/lib crate split keeps orchestration in the binary, all logic in the library",
     ],
     snippets: &[
         Snippet {
-            title: "SSTable",
-            code: r#"pub struct SSTable {
-    bloom_filter: BloomFilter,
-    bloom_filter_pos: u64,
-    file: File,
-}
-
-impl SSTable {
-    pub fn from_path(path: impl AsRef<Path>) -> anyhow::Result<Option<Self>> {
-        let mut file = File::open(path.as_ref())?;
-        let Some(bloom_filter) = file.read_bloom_filter()? else {
-            return Ok(None);
-        };
-        let bloom_filter_pos = file.metadata()?.len() - bloom_filter.len() as u64 - 4;
-        if !HeaderReader::<Entry>::header_has_at_least_one(&mut file)? {
-            return Ok(None);
+            title: "Corruption Recovery",
+            code: r#"// 10-byte header: [magic: 0x4E48 (2B)][crc32 (4B)][len (4B)]
+// If magic or checksum fails, scan forward byte-by-byte
+fn header_read_next(&mut self) -> anyhow::Result<Option<Entry>> {
+    loop {
+        match try_read_header(&mut self.reader) {
+            Ok(entry) => return Ok(Some(entry)),
+            Err(CorruptionType::NotEnoughBytes) => return Ok(None), // EOF
+            Err(CorruptionType::MagicBytesMismatch) => {
+                // Advance 1 byte past the bad position, retry
+                self.reader.seek(SeekFrom::Current(-(HEADER_SIZE as i64 - 1)))?;
+            }
+            Err(CorruptionType::ChecksumMismatch) => {
+                // CRC32 doesn't match — skip this entry
+                self.reader.seek(SeekFrom::Current(-(HEADER_SIZE as i64 - 1)))?;
+            }
+            Err(CorruptionType::ParseError) => {
+                // Magic+CRC valid but wincode parse failed — skip entry
+            }
         }
-        Ok(Some(Self { bloom_filter, bloom_filter_pos, file }))
-    }
-
-    pub fn read_next_entry(&mut self) -> anyhow::Result<Option<Entry>> {
-        if self.file.stream_position()? > self.bloom_filter_pos {
-            return Ok(None); // bloom filter footer reached
-        }
-        self.file.header_read_next()
     }
 }"#,
-            description: "from_path reads the bloom filter footer via the BloomFilterReader blanket trait, records the footer boundary, and verifies at least one valid entry exists. read_next_entry() enforces that boundary internally — callers never see the footer.",
+            description: "A crash mid-write can leave partial data in the WAL. Instead of failing on startup, the reader scans past garbage to find the next valid entry. Four distinct corruption types so callers know exactly what went wrong.",
         },
         Snippet {
             title: "Bloom Filter",
@@ -412,7 +409,7 @@ impl BloomFilter {
 impl<R: Read + Seek> BloomFilterReader for R {
     fn read_bloom_filter(&mut self) -> anyhow::Result<Option<BloomFilter>> { ... }
 }"#,
-            description: "insert() and may_contain() are symmetric: same positions(), opposite bit operations. Two hash seeds replace k separate functions. The blanket impl makes the trait the extension point — no wrapper, just import it.",
+            description: "insert() and may_contain() are symmetric: same positions(), opposite bit operations. Two hash seeds replace k separate functions. The blanket impl makes the trait the extension point: no wrapper, just import it.",
         },
         Snippet {
             title: "K-Way Merge: compact()",
@@ -440,16 +437,16 @@ impl<R: Read + Seek> BloomFilterReader for R {
 
         for (entry, sstable) in sstables.iter_mut() {
             let entry_ref = entry.as_ref().unwrap();
-            let is_particpant = entry_ref.key() == min;
+            let is_participant = entry_ref.key() == min;
             let winner_found = seen_keys.contains(min.as_str());
-            if is_particpant && !winner_found {
+            if is_participant && !winner_found {
                 seen_keys.insert(min.clone());
                 if let Entry::Set { .. } = entry_ref {
                     memtable.process(entry_ref.clone())?;
                 }
                 // Entry::Delete: mark seen but drop — tombstone served its purpose
             }
-            if is_particpant {
+            if is_participant {
                 *entry = sstable.read_next_entry()?;
             }
         }
@@ -463,12 +460,13 @@ impl<R: Read + Seek> BloomFilterReader for R {
         },
     ],
     obstacles: &[
-        "Tombstone resurrection: split Entry into WalEntry/SstEntry assuming SSTables only need Sets. Deleting a flushed key cleared the memtable only — the SSTable still had the original Set, and get() would find it. Fix: single Entry enum, tombstones propagate through all layers, compact() suppresses them via Entry::Set guard. Regression test was written before the refactor",
-        "Compaction winner tracking evolved: first version used memtable.contains_key() which could not distinguish a tombstone winner from a Set winner. Replaced with seen_keys: HashSet so tombstone winners can be explicitly suppressed",
-        "flush_count must be initialized from the existing SSTable count on startup, not zero. A restart after writes would otherwise compact on the wrong schedule",
+        "Tombstone resurrection: split Entry into WalEntry/SstEntry assuming SSTables only need Sets. Deleting a flushed key cleared the memtable only, but the SSTable still had the original Set and get() would find it again. Fix: single Entry enum, tombstones propagate through all layers, compact() suppresses them via Entry::Set guard. Regression test written before the refactor to verify the fix",
+        "Compaction winner tracking evolved: first version used memtable.contains_key() which could not distinguish a tombstone winner from a Set winner. Replaced with seen_keys: HashSet so tombstone winners can be explicitly dropped from output instead of silently surviving",
+        "flush_count must be initialized from the existing SSTable count on startup, not zero. A restart after writes would otherwise compact on the wrong schedule since it wouldn't know how many flushes happened before the restart",
+        "Per-command vs per-connection locking: holding the Mutex for an entire connection lifetime would serialize all clients. Per-command locking (lock, execute, drop) keeps the critical section short so concurrent clients actually make progress",
     ],
-    progress: "Phases 1-5 and entry consolidation complete. 89 tests across 6 modules, including tombstone resurrection regression. Next: leveled compaction (L0/L1).",
-    impact: "Started from a paper and evolved into the storage architecture behind LevelDB, RocksDB, and Cassandra. Not just reading about LSM-trees but building one from scratch: WAL semantics, sorted flush, merge compaction, and the test coverage to verify it all holds.",
+    progress: "Complete. All 6 phases done: Bitcask foundation, durability, binary protocol, LSM-tree (memtable + SSTables + bloom filters + compaction), networking, and concurrency. 99 tests across 7 modules including TCP integration tests.",
+    impact: "Started from a paper and built a complete, connectable key-value database implementing the storage architecture behind LevelDB, RocksDB, and Cassandra. Every layer built from scratch: binary protocol with corruption recovery, WAL durability, sorted memtable flush, bloom filter accelerated reads, k-way merge compaction, TCP server with concurrent access. Not a library, a database you can host and connect to.",
 };
 
 const UPSEE: Project = Project {
