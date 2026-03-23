@@ -44,17 +44,20 @@ const ZWIPE: Project = Project {
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
     summary: "A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Three binaries in a Cargo workspace: zerver (Axum REST API), zwiper (Dioxus cross-platform app), and zervice (background task runner). The frontend imports the backend as a library dependency for shared domain types.",
-    impact_metric: "~24,500 lines of production Rust",
+    impact_metric: "~25,800 lines of production Rust",
     impact_detail: "Hexagonal architecture with strict type safety throughout. Every domain boundary enforced at the type level. Production-strict linting: .unwrap(), .expect(), panic!, todo!, dbg!, and print! are all denied at compile time. 33 enforced Clippy rules.",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation, targeting web, iOS, Android, and desktop from a single Rust codebase. Three workspace binaries: zerver (Axum REST API), zwiper (Dioxus frontend), and zervice (background service for card sync and session cleanup).",
     approach: &[
-        "Hexagonal architecture applied consistently across ~24,500 lines of Rust. Port traits define what operations are needed (AuthRepository, CardRepository, DeckRepository). Adapters implement those ports for specific technologies. Domain logic has zero external dependencies",
+        "Hexagonal architecture applied consistently across ~25,800 lines of Rust. Port traits define what operations are needed (AuthRepository, CardRepository, DeckRepository). Adapters implement those ports for specific technologies. Domain logic has zero external dependencies",
         "Domain-driven design with validated newtypes: Username (3-20 chars, profanity filter), Password (8-128 chars, uppercase/lowercase/digit/symbol required, max 3 consecutive repeats, checked against common password dictionary), EmailAddress, UserId, DeckId, JwtSecret. Invalid data is unrepresentable",
+        "CardFilter builder (30+ fluent setters) drives both SQL and in-memory execution. FilterCards and GroupCards are extension traits on Vec<Card>: the frontend can filter and partition a local deck collection without a server round-trip using the exact same criteria as the SQL adapter. Grouping by card type, mana cost, or color with enum-dispatched classification",
         "Structured error chain: SQLx errors → PostgreSQL constraint violation detection (unique=23505, check=23514) → domain-specific error enums (RegisterUserError::Duplicate) → HTTP status codes (409 Conflict). Internal details logged but never exposed to clients",
         "JWT access tokens (HS256, 24-hour expiry) + rotating refresh tokens (max 5 per user, SHA-256 hashed, 14-day expiry). Old refresh token deleted on use, preventing replay attacks. Session limits auto-enforced by background service",
-        "Argon2id password hashing with OS-random salts (resistant to GPU/ASIC attacks). Common password blocklist with 170+ patterns following NIST guidelines",
-        "PostgreSQL with compile-time verified SQLx queries: 7 migrations, JSONB operators (@> contains, <@ contained by, ?| has any key), dynamic query building for card search with 10+ filter criteria",
+        "Argon2id password hashing with OS-random salts (resistant to GPU/ASIC attacks). Common password blocklist with 170+ patterns following NIST guidelines. Password type consumed after hashing so plaintext can never be reused",
+        "PostgreSQL with compile-time verified SQLx queries: 7 migrations, JSONB operators (@> contains, <@ contained by, ?| has any key), dynamic query building, bulk upsert with automatic card-by-card fallback on batch failure, PartialEq-based delta detection to skip unchanged records during Scryfall sync",
         "Background service binary (zervice): hourly Scryfall delta sync handling 100k+ cards in batches of 327 (respecting PostgreSQL's 65k parameter limit), expired refresh token cleanup, max session enforcement",
+        "Custom swipe gesture engine across 10 files: OnSwipe core trait with OnTouch (mobile) and OnMouse (desktop) adapters. Velocity-based and distance-based dual-threshold detection, axis locking to prevent cross-axis drift, dynamic return animation scaled to swipe distance. Built from scratch, not a library",
+        "Dioxus signal architecture: Upkeep trait extends Signal<Option<Session>> with background auto-refresh (60s interval, refreshes access token before expiry, clears session on failure). Central context provider initializes session, HTTP client, card filter state, and search results for consumption across all screens",
         "Production-strict linting: .unwrap(), .expect(), panic!, todo!, dbg!, and print! all denied at compile time. 33 enforced Clippy rules. Full documentation pass with #![warn(missing_docs)]",
     ],
     snippets: &[
@@ -73,35 +76,152 @@ outbound/      External systems
             description: "Clean separation of concerns. Domain logic has zero external dependencies. Port traits make testing and swapping implementations straightforward.",
         },
         Snippet {
-            title: "Partial Updates with Option<Option<T>>",
-            code: r#"// None        = field not provided (don't change)
-// Some(None)  = explicitly set to null
-// Some(Some(v)) = update to new value
-pub struct UpdateDeck {
-    pub name: Option<Option<String>>,
-    pub description: Option<Option<String>>,
-}"#,
-            description: "Distinguishing 'not provided' from 'set to null' in partial update operations. A pattern that becomes essential when building real APIs.",
+            title: "Trait-Based Card Filtering & Grouping",
+            code: r#"// Extension traits on Vec<Card> — no wrapper types, just import the trait
+pub trait FilterCards {
+    fn filter_by(self, filter: &CardFilter) -> Vec<Card>;
+}
+pub trait GroupCards {
+    fn group_by(self, option: GroupByOption) -> Vec<CardGroup>;
+}
+
+impl FilterCards for Vec<Card> {
+    fn filter_by(self, filter: &CardFilter) -> Vec<Card> {
+        let mut cards: Vec<Card> = self.into_iter()
+            .filter(|card| { /* 20+ criteria: text, color, CMC, power,
+                               rarity, type, set, artist, legality... */ })
+            .collect();
+        // Sort by enum dispatch (name, CMC, rarity, random, etc.)
+        // Paginate: .skip(offset).take(limit)
+        cards
+    }
+}
+
+impl GroupCards for Vec<Card> {
+    fn group_by(self, option: GroupByOption) -> Vec<CardGroup> {
+        let labels = match option {
+            GroupByOption::CardType => vec!["lands", "creatures", ...],
+            GroupByOption::Cmc      => vec!["0", "1", "2", ... "6+"],
+            GroupByOption::Color    => vec!["white", "blue", ... "colorless"],
+        };
+        let mut buckets = vec![Vec::new(); labels.len()];
+        for card in self { buckets[classify(&card, option)].push(card); }
+        // zip labels + buckets, drop empties
+    }
+}
+
+// Usage: deck_cards.filter_by(&filter).group_by(GroupByOption::CardType)"#,
+            description: "Same CardFilter drives both the SQL adapter (server-side) and these in-memory traits (client-side). The frontend can filter a local deck without a round-trip using the exact same criteria. Extension traits mean Vec<Card> gains these methods just by importing the trait.",
         },
         Snippet {
-            title: "JSONB Card Search",
-            code: r#"// Advanced card search with dual color identity modes
-// @> = contains (cards with AT LEAST these colors)
-// <@ = contained by (cards with ONLY these colors)
-query_builder.push(" AND c.color_identity @> ");
-query_builder.push_bind(color_json);
+            title: "CardFilter Builder Pipeline",
+            code: r#"// Builder with 30+ fluent setters, validates on build()
+let filter = CardFilterBuilder::default()
+    .set_color_identity_within(colors)  // -> &mut Self
+    .set_cmc_range((2.0, 5.0))
+    .set_type_line_contains("Creature")
+    .set_rarity_equals_any(rarities)
+    .set_is_valid_commander(true)
+    .set_order_by(OrderByOption::Cmc)
+    .set_limit(50)
+    .build()?;  // -> Result<CardFilter, InvalidCardFilter>
 
-// ?| = has any of these keys (for legality filtering)
-query_builder.push(" AND c.legalities ?| ");
-query_builder.push_bind(format_keys);"#,
-            description: "PostgreSQL JSONB operators for flexible card filtering. Supports both 'at least these colors' and 'only these colors' search modes.",
+// Same filter works server-side (SQL) and client-side (in-memory)
+let results = card_service.search(&filter).await?;  // SQL adapter
+let local   = deck_cards.filter_by(&filter);         // Vec<Card> trait
+let groups  = local.group_by(GroupByOption::CardType); // partition"#,
+            description: "One filter type, two execution paths. The builder validates that at least one search criterion is set (not just pagination). 30+ setters cover every MTG search dimension: colors, mana cost, power/toughness ranges, text search, rarity, set, artist, legality, commander validity.",
+        },
+        Snippet {
+            title: "Swipe Gesture Engine",
+            code: r#"// Core trait: platform-agnostic swipe logic
+trait OnSwipe {
+    fn onswipestart(&mut self, point: ClientPoint);
+    fn onswipemove(&mut self, point: ClientPoint);
+    fn onswipeend(&mut self, point: ClientPoint, config: &SwipeConfig);
+}
+
+// Platform adapters: same core, different event types
+impl OnTouch for Signal<SwipeState> {
+    fn ontouchstart(&mut self, e: Event<TouchData>) {
+        self.with_mut(|ss| ss.onswipestart(e.client_coordinates()));
+    }
+}
+impl OnMouse for Signal<SwipeState> {
+    fn onmousedown(&mut self, e: Event<MouseData>) {
+        self.with_mut(|ss| ss.onswipestart(e.client_coordinates()));
+    }
+}
+
+// Detection: dual threshold (distance OR velocity) + axis locking
+fn set_latest_swipe(&mut self, config: &SwipeConfig) {
+    if distance > config.distance_threshold
+        || (distance > 10.0 && speed > config.speed_threshold)
+    {
+        match self.traversing_axis {
+            Some(Axis::X) if delta.x < 0.0 => self.latest_swipe = Some(Dir::Left),
+            Some(Axis::X) if delta.x > 0.0 => self.latest_swipe = Some(Dir::Right),
+            Some(Axis::Y) if delta.y < 0.0 => self.latest_swipe = Some(Dir::Up),
+            Some(Axis::Y) if delta.y > 0.0 => self.latest_swipe = Some(Dir::Down),
+            _ => {}
+        }
+    }
+}
+
+// Swipeable component: reactive transform follows finger/cursor
+rsx! { div {
+    style: "transform: translate({xpx}px, {ypx}px);
+            transition: transform {return_seconds}s;",
+    ontouchstart, ontouchmove, ontouchend,
+    onmousedown, onmousemove, onmouseup,
+    { children }
+} }"#,
+            description: "10 files, zero library dependencies. OnSwipe defines the gesture logic once; OnTouch and OnMouse adapt it to platform events. Axis locks on first movement so diagonal drags don't fire both directions. Velocity tracking (pixels/ms between consecutive points) lets quick flicks register even below the distance threshold. The Swipeable component renders a reactive CSS transform that follows the user's finger in real time.",
+        },
+        Snippet {
+            title: "88-Column Upsert Automation",
+            code: r#"// Single source of truth: 88 field names, line-separated
+const SCRYFALL_DATA_FIELDS: &str = "
+    arena_id  id  lang  mtgo_id  oracle_id  cmc
+    color_identity  colors  power  toughness  type_line
+    ...  (88 fields total)
+";
+
+// Derived helpers — all read from the same constant
+fn scryfall_data_fields() -> String { /* comma-join for INSERT */ }
+fn bulk_upsert_conflict_fields() -> String {
+    // "ON CONFLICT (id) DO UPDATE SET arena_id = EXCLUDED.arena_id, ..."
+}
+
+// Trait-based binding: QueryBuilder gains card methods
+trait BindScryfallDataFields {
+    fn bind_scryfall_fields(&mut self, card: &ScryfallData) -> &mut Self;
+}
+trait BindCards {
+    fn bind_cards(&mut self, data: &[ScryfallData]) -> &mut Self;
+}
+
+// Result: one fluent chain builds the entire 88-column upsert
+QueryBuilder::new("INSERT INTO scryfall_data (")
+    .push(scryfall_data_fields())
+    .push(") VALUES ")
+    .bind_cards(scryfall_data)
+    .push(bulk_upsert_conflict_fields())
+    .push(" RETURNING *;")
+
+// Upsert strategy chain — each layer adds a capability:
+// BatchDeltaUpsertWithTx (chunk + skip unchanged)
+//   → BulkDeltaUpsertWithTx (PartialEq diff against DB)
+//     → BulkUpsertWithTx (single SQL statement)
+//       → SingleUpsertWithTx (card-by-card fallback)
+// One bad card never blocks the rest of the batch"#,
+            description: "Strict hex-arch would demand a separate DatabaseScryfallData DTO, but maintaining 88 fields on two types is untenable solo. Compromise: feature-gated #[cfg_attr(feature = \"zerver\", derive(sqlx::FromRow))] on the domain type. A constant feeds all SQL generation. Trait-based binding keeps the calling code clean. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching respects PostgreSQL's 65k parameter limit, and automatic fallback to card-by-card ensures one bad record never blocks 100k others.",
         },
     ],
     obstacles: &[
-        "PostgreSQL parameter limits required batching card upserts at ~327 cards per batch (65,535 max params / ~200 fields per card)",
-        "Scryfall API rate limiting and delta sync required careful orchestration with batch processing and sync metrics tracking",
-        "Full documentation pass with #![warn(missing_docs)] resolved 243 warnings across the codebase",
-        "Clippy configured with 33 enforced lints including strict denies on unwrap, expect, panic, todo, and dbg_macro",
+        "ScryfallData has 88 fields. Strict hexagonal architecture would demand a separate DatabaseScryfallData DTO, but maintaining 88 fields across two types plus mapping between them is untenable solo. Pragmatic compromise: feature-gated derive on the domain type, a single constant feeding all SQL generation, and trait-based binding automation. Bend the rule once, automate everything around it",
+        "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
+        "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
     ],
     progress: "Auth, card database, deck management, and card search complete. Working on deck card browser with full-screen swipeable card viewer.",
     impact: "Demonstrates complete full-stack capability in Rust: database migrations, JWT auth with refresh token rotation, reactive frontend, background services, all in one language with shared domain types between frontend and backend.",

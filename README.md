@@ -8,8 +8,8 @@ Personal portfolio site showcasing Rust projects. Built with Dioxus (Rust WASM f
 - **Halo Action Importer** - Production bulk import tool for Halo Software
 - **Halo Custom Field Builder** - CLI for bulk-creating custom fields via API
 - **Marvin** - CLI chatbot built on the Rig AI framework
-- **Nighthawk** - Bitcask-inspired storage engine
-- **Upsee** - Fall detection with MoveNet ML inference
+- **Nighthawk** - LSM-tree key-value database with TCP server and concurrency
+- **Upsee** - Real-time pullup counter with MoveNet ML inference
 - **Capture** - V4L2 camera capture via raw Linux syscalls
 
 ## Stack

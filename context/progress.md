@@ -43,6 +43,8 @@ All 7 project descriptions reviewed against actual source code and updated:
 - [x] Halo Custom Field Builder — corrected LOC, layered architecture, CI/CD
 - [x] Halo Action Importer — cache evolution story, data normalization, two-tier caching
 - [x] Zwipe — 100k+ cards, 3 binaries, error chain, strict linting, shared types
+- [x] Zwipe deep refresh — replaced Option<Option<T>> and JSONB snippets with FilterCards/GroupCards traits, CardFilter builder pipeline, swipe gesture engine, 88-column upsert automation. Added frontend approach bullets (swipe engine, Dioxus signals). Rewrote obstacles. Updated LOC to ~25,800
+- [x] Nighthawk — updated to reflect all 6 phases complete: TCP server, concurrency, corruption recovery snippet, bloom filter, k-way compaction. ~2,100 LOC, 99 tests
 
 ## Hosting (COMPLETE)
 
