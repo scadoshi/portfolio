@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+    paths: 
+      - 'src/**'
+      - '.github/workflows/deploy.yml'
 
 permissions:
   contents: read
