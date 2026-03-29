@@ -40,13 +40,13 @@ pub fn find_side_quest(slug: &str) -> Option<&'static Project> {
 const ZWIPE: Project = Project {
     name: "Zwipe",
     slug: "zwipe",
-    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 100k+ cards.",
+    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 35k+ cards. Live at https://zwipe.net.",
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
-    summary: "A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Three binaries in a Cargo workspace: zerver (Axum REST API), zwiper (Dioxus cross-platform app), and zervice (background task runner). The frontend imports the backend as a library dependency for shared domain types.",
-    impact_metric: "~25,800 lines of production Rust",
-    impact_detail: "Hexagonal architecture with strict type safety throughout. Every domain boundary enforced at the type level. Production-strict linting: .unwrap(), .expect(), panic!, todo!, dbg!, and print! are all denied at compile time. 33 enforced Clippy rules.",
-    objective: "Build a full-stack MTG deck builder with swipe-based navigation, targeting web, iOS, Android, and desktop from a single Rust codebase. Three workspace binaries: zerver (Axum REST API), zwiper (Dioxus frontend), and zervice (background service for card sync and session cleanup).",
+    summary: "A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Four crates in a Cargo workspace: zerver (Axum REST API), zwiper (Dioxus iOS/Android/desktop app), zervice (background task runner), and zweb (web portal at zwipe.net). The frontend imports the backend as a library dependency for shared domain types. Nightly database backups to Cloudflare R2. CI/CD via self-hosted GitHub Actions runner.",
+    impact_metric: "~37,300 lines of production Rust",
+    impact_detail: "Hexagonal architecture with strict type safety throughout. 250+ unit tests. Every domain boundary enforced at the type level. Production-strict linting: .unwrap(), .expect(), panic!, todo!, dbg!, and print! are all denied at compile time. 33 enforced Clippy rules. Nightly Cloudflare R2 backups. Binary versioning across all crates.",
+    objective: "Build a full-stack MTG deck builder with swipe-based navigation, targeting web, iOS, Android, and desktop from a single Rust codebase. Four workspace crates: zerver (Axum REST API), zwiper (Dioxus frontend), zervice (background service), and zweb (web portal). Live at https://zwipe.net with App Store submission pending.",
     approach: &[
         "Hexagonal architecture applied consistently across ~25,800 lines of Rust. Port traits define what operations are needed (AuthRepository, CardRepository, DeckRepository). Adapters implement those ports for specific technologies. Domain logic has zero external dependencies",
         "Domain-driven design with validated newtypes: Username (3-20 chars, profanity filter), Password (8-128 chars, uppercase/lowercase/digit/symbol required, max 3 consecutive repeats, checked against common password dictionary), EmailAddress, UserId, DeckId, JwtSecret. Invalid data is unrepresentable",
@@ -55,10 +55,14 @@ const ZWIPE: Project = Project {
         "JWT access tokens (HS256, 24-hour expiry) + rotating refresh tokens (max 5 per user, SHA-256 hashed, 14-day expiry). Old refresh token deleted on use, preventing replay attacks. Session limits auto-enforced by background service",
         "Argon2id password hashing with OS-random salts (resistant to GPU/ASIC attacks). Common password blocklist with 170+ patterns following NIST guidelines. Password type consumed after hashing so plaintext can never be reused",
         "PostgreSQL with compile-time verified SQLx queries: 7 migrations, JSONB operators (@> contains, <@ contained by, ?| has any key), dynamic query building, bulk upsert with automatic card-by-card fallback on batch failure, PartialEq-based delta detection to skip unchanged records during Scryfall sync",
-        "Background service binary (zervice): hourly Scryfall delta sync handling 100k+ cards in batches of 327 (respecting PostgreSQL's 65k parameter limit), expired refresh token cleanup, max session enforcement",
+        "Background service binary (zervice): hourly Scryfall delta sync handling 35k+ cards in batches of 327 (respecting PostgreSQL's 65k parameter limit), expired refresh token cleanup, max session enforcement",
         "Custom swipe gesture engine across 10 files: OnSwipe core trait with OnTouch (mobile) and OnMouse (desktop) adapters. Velocity-based and distance-based dual-threshold detection, axis locking to prevent cross-axis drift, dynamic return animation scaled to swipe distance. Built from scratch, not a library",
         "Dioxus signal architecture: Upkeep trait extends Signal<Option<Session>> with background auto-refresh (60s interval, refreshes access token before expiry, clears session on failure). Central context provider initializes session, HTTP client, card filter state, and search results for consumption across all screens",
         "Production-strict linting: .unwrap(), .expect(), panic!, todo!, dbg!, and print! all denied at compile time. 33 enforced Clippy rules. Full documentation pass with #![warn(missing_docs)]",
+        "Email verification with tiered limits: unverified accounts limited to 1 deck and 100 cards, verified accounts get full limits (20 decks, 250 cards). Enforced via email_verified JWT claim with zero extra DB queries",
+        "Card image preview modal: tap any card in the deck list to expand details, then view full card art in a drop-in overlay with dismiss-on-tap-outside. CSS keyframe animations for entrance/exit",
+        "Web portal (zweb) at https://zwipe.net: Dioxus WASM SPA deployed to GitHub Pages. Email verification, password reset, contribute page, privacy policy. Shares no code with zwiper but mirrors its design language",
+        "Nightly database backups: pg_dump to Cloudflare R2 via rclone with 30-day lifecycle retention. Restore runbook documented. The database is the only stateful data not replicated elsewhere",
     ],
     snippets: &[
         Snippet {
@@ -223,8 +227,8 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
         "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
     ],
-    progress: "Auth, card database, deck management, and card search complete. Working on deck card browser with full-screen swipeable card viewer.",
-    impact: "Demonstrates complete full-stack capability in Rust: database migrations, JWT auth with refresh token rotation, reactive frontend, background services, all in one language with shared domain types between frontend and backend.",
+    progress: "Feature-complete and live at https://zwipe.net. Auth, card database, deck management, card search, swipe-based deck building, card image preview, account deletion, email verification with tiered limits, binary versioning, nightly database backups. App Store submission pending.",
+    impact: "Demonstrates complete full-stack capability in Rust: database migrations, JWT auth with refresh token rotation, reactive cross-platform frontend, background services, CI/CD, cloud backups, and a web portal \u{2014} all in one language with shared domain types between frontend and backend. ~37,300 lines across four crates, 250+ tests, zero unwrap.",
 };
 
 const HALO_ACTION_IMPORTER: Project = Project {

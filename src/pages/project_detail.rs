@@ -16,7 +16,7 @@ pub fn ProjectDetail(slug: String) -> Element {
     };
 
     rsx! {
-        div { class: "project-detail",
+        div { class: "project-detail content-enter",
             section { class: "project-header",
                 span { class: "project-category-tag", "{project.category}" }
                 h1 { class: "project-name", "{project.name}" }

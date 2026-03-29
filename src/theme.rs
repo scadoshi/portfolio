@@ -15,8 +15,8 @@ impl Default for ThemeConfig {
 
 impl ThemeConfig {
     pub fn css_class(&self) -> String {
-        if self.name == "vantablack" {
-            "theme-wrapper vantablack".to_string()
+        if self.name == "vantablack" || self.name == "zwipe" {
+            format!("theme-wrapper {}", self.name)
         } else {
             let mode = if self.is_dark { "dark" } else { "light" };
             format!("theme-wrapper {}-{}", self.name, mode)
@@ -24,7 +24,7 @@ impl ThemeConfig {
     }
 
     pub fn has_light_mode(&self) -> bool {
-        self.name != "vantablack"
+        self.name != "vantablack" && self.name != "zwipe"
     }
 }
 
@@ -36,5 +36,6 @@ pub const THEMES: &[(&str, &str)] = &[
     ("catppuccin", "Catppuccin"),
     ("tokyo-night", "Tokyo Night"),
     ("nord", "Nord"),
+    ("zwipe", "Zwipe"),
     ("vantablack", "Vantablack"),
 ];

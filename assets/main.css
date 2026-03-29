@@ -143,6 +143,16 @@
     --orange-bright: #c48030;
 }
 
+.zwipe {
+    --bg0-h: #14161b; --bg0: #1a1d23; --bg1: #22252b; --bg2: #2a2d33; --bg3: #333639;
+    --fg0: #f5f5dc; --fg1: #e8e8cc; --fg2: #d4d4b8; --fg3: #a0a090; --fg4: #888878;
+    --red: #f5f5dc; --green: #f5f5dc; --yellow: #f5f5dc; --blue: #f5f5dc;
+    --purple: #f5f5dc; --aqua: #f5f5dc; --orange: #f5f5dc;
+    --red-bright: #f5f5dc; --green-bright: #f5f5dc; --yellow-bright: #f5f5dc;
+    --blue-bright: #f5f5dc; --purple-bright: #f5f5dc; --aqua-bright: #f5f5dc;
+    --orange-bright: #f5f5dc;
+}
+
 .vantablack {
     --bg0-h: #000000; --bg0: #000000; --bg1: #0a0a0a; --bg2: #141414; --bg3: #1e1e1e;
     --fg0: #ffffff; --fg1: #e0e0e0; --fg2: #b0b0b0; --fg3: #808080; --fg4: #606060;
@@ -151,6 +161,68 @@
     --red-bright: #ff6b6b; --green-bright: #51cf66; --yellow-bright: #fcc419;
     --blue-bright: #74c0fc; --purple-bright: #b197fc; --aqua-bright: #63e6be;
     --orange-bright: #ff922b;
+}
+
+/* === Animations === */
+
+@keyframes content-enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content-enter {
+    animation: content-enter 0.3s ease-out both;
+}
+
+/* === Announcement Banner === */
+
+.announcement-banner {
+    position: fixed;
+    top: 4.5rem;
+    left: 1.5rem;
+    background: var(--bg1);
+    border: 1px solid var(--fg4);
+    border-radius: 6px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.85rem;
+    color: var(--fg1);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 420px;
+    animation: banner-slide-in 0.4s ease-out both;
+    animation-delay: 1s;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.announcement-banner a {
+    color: var(--aqua-bright);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.announcement-banner a:hover {
+    color: var(--orange-bright);
+}
+
+.banner-dismiss {
+    background: none;
+    border: none;
+    color: var(--fg3);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+}
+
+.banner-dismiss:hover {
+    color: var(--fg0);
+}
+
+@keyframes banner-slide-in {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* === Base === */

@@ -5,6 +5,7 @@ mod data;
 mod pages;
 mod theme;
 
+use pages::contribute::Contribute;
 use pages::home::Home;
 use pages::project_detail::ProjectDetail;
 use pages::side_quest_detail::SideQuestDetail;
@@ -25,6 +26,8 @@ pub enum Route {
         SideQuests {},
         #[route("/side-quests/:slug")]
         SideQuestDetail { slug: String },
+        #[route("/contribute")]
+        Contribute {},
 }
 
 fn main() {

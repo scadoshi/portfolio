@@ -32,6 +32,7 @@ pub fn Navbar() -> Element {
                         }
                     }
                     Link { to: Route::SideQuests {}, class: "nav-link", "Side Quests" }
+                    Link { to: Route::Contribute {}, class: "nav-link", "Contribute" }
                 }
                 ThemeSwitcher {}
             }

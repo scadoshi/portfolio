@@ -7,7 +7,7 @@ use crate::Route;
 pub fn SideQuests() -> Element {
     let quests = data::side_quests();
     rsx! {
-        div { class: "side-quests",
+        div { class: "side-quests content-enter",
             section { class: "page-header",
                 h1 { "Side Quests" }
                 p { class: "page-subtitle",

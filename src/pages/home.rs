@@ -7,8 +7,27 @@ use crate::data;
 #[component]
 pub fn Home() -> Element {
     let projects = data::featured_projects();
+    let mut banner_visible = use_signal(|| true);
     rsx! {
-        section { class: "hero",
+        if banner_visible() {
+            div { class: "announcement-banner",
+                span {
+                    "Zwipe is live \u{2014} the deck builder MTG deserved. "
+                    a {
+                        href: "https://zwipe.net",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        "Try it now \u{2192}"
+                    }
+                }
+                button {
+                    class: "banner-dismiss",
+                    onclick: move |_| banner_visible.set(false),
+                    "\u{2715}"
+                }
+            }
+        }
+        section { class: "hero content-enter",
             h1 { class: "hero-name", "Scotty Fermo" }
             p { class: "hero-title", "Software Engineer | Full-Stack | Rust" }
             p { class: "hero-tagline",
