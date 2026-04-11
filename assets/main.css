@@ -224,18 +224,18 @@
 }
 
 .zwipe-dark {
-    --bg0-h: #1e1c1a; --bg0: #242220; --bg1: #322f2d; --bg2: #464240; --bg3: #5e5956;
-    --fg0: #f7cfb9; --fg1: #e0b8a2; --fg2: #c6a694; --fg3: #a98e7f; --fg4: #8a7568;
+    --bg0-h: #1f1e1e; --bg0: #252424; --bg1: #302e2e; --bg2: #433f3f; --bg3: #585554;
+    --fg0: #f5c4a0; --fg1: #d8b090; --fg2: #d0a078; --fg3: #a88060; --fg4: #886850;
     --red: #d13b3b; --green: #399a55; --yellow: #6d9e9c; --blue: #6d9e9c;
     --purple: #c9a227; --aqua: #ee4080; --orange: #9ab868;
-    --red-bright: #e05050; --green-bright: #4ab068; --yellow-bright: #80b0ae;
-    --blue-bright: #80b0ae; --purple-bright: #d9b440; --aqua-bright: #f06090;
+    --red-bright: #8b3030; --green-bright: #2d7040; --yellow-bright: #80b0ae;
+    --blue-bright: #80b0ae; --purple-bright: #8a7020; --aqua-bright: #f06090;
     --orange-bright: #adc87a;
 }
 
 .zwipe-light {
-    --bg0-h: #ecdece; --bg0: #f2e6da; --bg1: #e0d0c0; --bg2: #cbb8a8; --bg3: #b8a090;
-    --fg0: #3a2a20; --fg1: #4a3828; --fg2: #5e4535; --fg3: #7a5f4f; --fg4: #987868;
+    --bg0-h: #eae7e4; --bg0: #f0edea; --bg1: #ddd8d4; --bg2: #c8c0ba; --bg3: #b0a49a;
+    --fg0: #3a2e26; --fg1: #4a3c30; --fg2: #5e4e42; --fg3: #7a6558; --fg4: #988070;
     --red: #b02020; --green: #2a7a40; --yellow: #4a7a78; --blue: #4a7a78;
     --purple: #a08018; --aqua: #c02060; --orange: #7a9848;
     --red-bright: #8a1818; --green-bright: #1a5a2a; --yellow-bright: #3a6a68;
@@ -339,13 +339,13 @@
 }
 
 .announcement-banner a {
-    color: var(--aqua-bright);
+    color: var(--blue);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
 
 .announcement-banner a:hover {
-    color: var(--orange-bright);
+    color: var(--aqua);
 }
 
 .banner-dismiss {
@@ -391,13 +391,13 @@ body {
 }
 
 a {
-    color: var(--aqua-bright);
+    color: var(--blue);
     text-decoration: none;
     transition: color 0.2s;
 }
 
 a:hover {
-    color: var(--orange-bright);
+    color: var(--aqua);
 }
 
 /* === Navbar === */
@@ -593,7 +593,7 @@ a:hover {
 
 .hero-tagline {
     font-size: 1rem;
-    color: var(--aqua-bright);
+    color: var(--blue-bright);
     margin-bottom: 2rem;
 }
 
@@ -604,7 +604,7 @@ a:hover {
 }
 
 .hero-links a {
-    color: var(--blue-bright);
+    color: var(--blue);
     text-decoration: none;
     padding: 0.4rem 1rem;
     border: 1px solid var(--bg3);
@@ -613,8 +613,8 @@ a:hover {
 }
 
 .hero-links a:hover {
-    border-color: var(--orange-bright);
-    color: var(--orange-bright);
+    border-color: var(--aqua);
+    color: var(--aqua);
 }
 
 /* === About === */
@@ -1044,7 +1044,7 @@ a:hover {
 }
 
 .footer-links a:hover {
-    color: var(--aqua-bright);
+    color: var(--aqua);
 }
 
 /* === Responsive === */
