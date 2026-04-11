@@ -7,7 +7,7 @@ pub struct ThemeConfig {
 impl Default for ThemeConfig {
     fn default() -> Self {
         Self {
-            name: "rustbox".to_string(),
+            name: "gruvbox".to_string(),
             is_dark: true,
         }
     }
@@ -15,16 +15,12 @@ impl Default for ThemeConfig {
 
 impl ThemeConfig {
     pub fn css_class(&self) -> String {
-        if self.name == "vantablack" || self.name == "zwipe" {
-            format!("theme-wrapper {}", self.name)
-        } else {
-            let mode = if self.is_dark { "dark" } else { "light" };
-            format!("theme-wrapper {}-{}", self.name, mode)
-        }
+        let mode = if self.is_dark { "dark" } else { "light" };
+        format!("theme-wrapper {}-{}", self.name, mode)
     }
 
     pub fn has_light_mode(&self) -> bool {
-        self.name != "vantablack" && self.name != "zwipe"
+        true
     }
 }
 
@@ -36,6 +32,12 @@ pub const THEMES: &[(&str, &str)] = &[
     ("catppuccin", "Catppuccin"),
     ("tokyo-night", "Tokyo Night"),
     ("nord", "Nord"),
+    ("rose-pine", "Rosé Pine"),
+    ("monokai", "Monokai"),
+    ("one-dark", "One Dark"),
+    ("solarized", "Solarized"),
     ("zwipe", "Zwipe"),
-    ("vantablack", "Vantablack"),
+    ("protanopia", "Protanopia"),
+    ("deuteranopia", "Deuteranopia"),
+    ("tritanopia", "Tritanopia"),
 ];
