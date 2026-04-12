@@ -4,6 +4,8 @@ use crate::Route;
 use crate::components::project_card::ProjectCard;
 use crate::data;
 
+const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
+
 #[component]
 pub fn Home() -> Element {
     let projects = data::featured_projects();
@@ -28,6 +30,7 @@ pub fn Home() -> Element {
             }
         }
         section { class: "hero content-enter",
+            div { class: "logo", "{LOGO_ASCII}" }
             h1 { class: "hero-name", "Scotty Fermo" }
             p { class: "hero-title", "Software Engineer | Full-Stack | Rust" }
             p { class: "hero-tagline",

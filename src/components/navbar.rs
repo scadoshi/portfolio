@@ -1,14 +1,34 @@
 use dioxus::prelude::*;
+use dioxus::document::eval;
 
 use crate::components::theme_switcher::ThemeSwitcher;
 use crate::Route;
+
+const LOGO_S: &str = include_str!("../../assets/s.txt");
 
 #[component]
 pub fn Navbar() -> Element {
     rsx! {
         nav { class: "navbar",
             div { class: "nav-container",
-                Link { to: Route::Home {}, class: "nav-brand", "[SF]" }
+                Link {
+                    to: Route::Home {},
+                    class: "nav-brand",
+                    onclick: move |_| {
+                        spawn(async {
+                            let _ = eval(r#"
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                const el = document.querySelector('.logo');
+                                if (el) {
+                                    el.style.animation = 'none';
+                                    void el.offsetHeight;
+                                    el.style.animation = '';
+                                }
+                            "#).await;
+                        });
+                    },
+                    pre { class: "nav-logo", "{LOGO_S}" }
+                }
                 div { class: "nav-links",
                     Link { to: Route::Home {}, class: "nav-link", "Home" }
                     div { class: "dropdown",

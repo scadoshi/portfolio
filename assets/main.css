@@ -316,6 +316,30 @@
     animation: content-enter 0.3s ease-out both;
 }
 
+@keyframes logo-enter {
+    from {
+        letter-spacing: 0.625rem;
+        opacity: 0;
+        transform: translateY(-0.75rem);
+    }
+    to {
+        letter-spacing: 0;
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    font-family: 'Cascadia Code', monospace;
+    font-size: clamp(0.5rem, 2.5vw, 1.4rem);
+    line-height: 0.9;
+    white-space: pre;
+    text-align: left;
+    display: inline-block;
+    color: var(--fg1);
+    animation: logo-enter 0.6s ease-out backwards;
+}
+
 /* === Announcement Banner === */
 
 .announcement-banner {
@@ -427,6 +451,21 @@ a:hover {
 }
 
 .nav-brand:hover {
+    color: var(--yellow-bright);
+}
+
+.nav-logo {
+    font-family: 'Cascadia Code', monospace;
+    font-size: 0.45rem;
+    line-height: 0.9;
+    white-space: pre;
+    margin: 0;
+    color: var(--fg1);
+    transition: letter-spacing 0.15s;
+}
+
+.nav-brand:hover .nav-logo {
+    letter-spacing: 1px;
     color: var(--yellow-bright);
 }
 
