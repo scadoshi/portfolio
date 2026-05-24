@@ -519,7 +519,8 @@ a:hover {
     flex-direction: column;
 }
 
-.dropdown-item {
+.dropdown-item,
+.dropdown-item:visited {
     padding: 0.5rem 1rem;
     color: var(--fg2);
     text-decoration: none;
