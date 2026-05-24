@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
 
-use crate::Route;
 use crate::components::project_card::ProjectCard;
 use crate::data;
 
@@ -82,13 +81,15 @@ pub fn Home() -> Element {
         }
         div { class: "featured-side-quest",
             div { class: "fsq-inner",
-                span { class: "fsq-label", "// featured side quest" }
-                span { class: "fsq-name", "Nighthawk" }
-                span { class: "fsq-blurb", "LSM-tree storage engine from scratch" }
-                Link {
-                    to: Route::SideQuestDetail { slug: "nighthawk".to_string() },
+                span { class: "fsq-label", "// btw" }
+                span { class: "fsq-name", "this site is built in Rust" }
+                span { class: "fsq-blurb", "Dioxus + WASM, no JS" }
+                a {
+                    href: "https://github.com/scadoshi/portfolio",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
                     class: "fsq-link",
-                    "view \u{2192}"
+                    "view repo \u{2192}"
                 }
             }
         }
