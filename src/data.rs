@@ -8,6 +8,7 @@ pub struct Project {
     pub card_bullets: &'static [&'static str],
     pub impact_metric: &'static str,
     pub objective: &'static str,
+    pub tags: &'static [&'static str],
     pub media: &'static [MediaItem],
     pub approach: &'static [&'static str],
     pub snippets: &'static [Snippet],
@@ -80,7 +81,7 @@ pub fn find_side_quest(slug: &str) -> Option<&'static Project> {
 const ZWIPE: Project = Project {
     name: "Zwipe",
     slug: "zwipe",
-    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 110k+ cards. Live at https://zwipe.net.",
+    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 110k+ cards.",
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
     summary: "Mobile-first Magic: The Gathering deck builder with swipe-based navigation.",
@@ -92,6 +93,7 @@ const ZWIPE: Project = Project {
     ],
     impact_metric: "Full-stack mobile app \u{2014} ~37,300 lines of Rust",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. Live at https://zwipe.net; App Store submission pending.",
+    tags: &["rust", "full-stack", "ios", "dioxus", "postgresql"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/zwipe/zwipe-demo-add-cards.mp4"),
@@ -283,6 +285,7 @@ const HALO_ACTION_IMPORTER: Project = Project {
     ],
     impact_metric: "Weeks of manual work, automated",
     objective: "Bulk-import millions of records into Halo Software from CSV and Excel against a production API. Must survive every real failure mode: network errors, token expiry, missing tickets, partial batch failures, inconsistent data formats across client exports.",
+    tags: &["rust", "csv", "etl", "api-resilience"],
     media: &[],
     approach: &[
         "Per-failure-mode recovery, not blanket retry-with-backoff. 401 \u{2192} refresh token; 504/network \u{2192} retry immediately; missing ticket \u{2192} permanent skip via run-wide HashSet<u32>; deserialization error \u{2192} skip row and continue",
@@ -375,6 +378,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     ],
     impact_metric: "Manual UI clicks to one CSV import",
     objective: "Read custom field definitions from CSV and create them across Halo Software products via the API. Must support all 8 field types, handle auth, respect rate limits, ship as cross-platform binaries.",
+    tags: &["rust", "cli", "api", "cross-platform"],
     media: &[],
     approach: &[
         "Type-safe domain modeling: Name (max 64, alphanumeric + underscore), Label (max 256), FieldType (8 variants with sub-type enums). All validated at construction \u{2014} invalid data rejected before any API call",
@@ -455,6 +459,7 @@ const MARVIN: Project = Project {
     ],
     impact_metric: "~1,750 lines of Rust",
     objective: "Learn the Rig AI framework by building a real CLI chatbot. Each feature should teach something new about Rig or Rust \u{2014} prioritizing learning over shipping.",
+    tags: &["rust", "ai", "cli", "llm"],
     media: &[],
     approach: &[
         "Found and fixed deprecated Anthropic model constants in Rig causing 404 errors. Filed issue #1370 (https://github.com/0xPlaygrounds/rig/issues/1370), submitted a PR across 17 files. The learning project found a real bug in its own framework",
@@ -523,6 +528,7 @@ const NIGHTHAWK: Project = Project {
     ],
     impact_metric: "~2,100 lines, 99 tests, 6 phases",
     objective: "Build a key-value database incrementally from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, concurrency.",
+    tags: &["rust", "kv-store", "lsm-tree", "networking"],
     media: &[],
     approach: &[
         "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to full LSM-tree \u{2014} WAL, memtable, SSTables, bloom filters, k-way compaction, TCP server, concurrency. Six distinct architectural layers, each one a real piece of how production KV systems work",
@@ -661,6 +667,7 @@ const DIPROTODON: Project = Project {
     ],
     impact_metric: "~1,187 lines, 50+ tests, M0\u{2013}M2 complete",
     objective: "Build a Redis-compatible KV server one wire-protocol layer at a time, hand-writing the substance so the muscle survives the project. Each milestone adds a real layer: TCP echo, RESP framing, command dispatch, in-memory KV ops, then TTL, AOF, and Pub/Sub. Sibling-paired with a Go port (wombat) to feel the translation between languages.",
+    tags: &["rust", "redis", "tcp", "protocol"],
     media: &[],
     approach: &[
         "Hand-written RESP wire protocol \u{2014} no library does the work. Real redis-cli clients connect and run all four M2 commands (PING, GET/SET/DEL/EXISTS) against it",
@@ -753,6 +760,7 @@ const UPSEE: Project = Project {
     ],
     impact_metric: "~145 lines, on-device ML",
     objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time from a webcam, using the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference \u{2014} everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
+    tags: &["rust", "ml", "computer-vision", "real-time"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/upsee/upsee-demo.mp4"),
@@ -830,6 +838,7 @@ const CAPTURE: Project = Project {
     ],
     impact_metric: "~225 lines, 2 platforms",
     objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
+    tags: &["rust", "cross-platform", "security", "camera"],
     media: &[],
     approach: &[
         "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps via [target.'cfg(...)'.dependencies] in Cargo.toml",

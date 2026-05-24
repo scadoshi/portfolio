@@ -32,6 +32,13 @@ pub fn ProjectDetail(slug: String) -> Element {
                     class: "repo-link",
                     "View on GitHub \u{2192}"
                 }
+                if !project.tags.is_empty() {
+                    div { class: "tag-row",
+                        for tag in project.tags {
+                            span { class: "tag", "{tag}" }
+                        }
+                    }
+                }
             }
 
             section { class: "project-section",

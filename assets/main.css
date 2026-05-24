@@ -996,15 +996,47 @@ a:hover {
 .hero-links a {
     color: var(--accent-primary);
     text-decoration: none;
+    font-size: 0.85rem;
     padding: 0.4rem 1rem;
-    border: 1px solid var(--accent-primary);
+    border: 1px solid var(--border-primary);
     border-radius: 0.4rem;
     transition: border-color 0.2s, color 0.2s;
 }
 
 .hero-links a:hover {
-    border-color: var(--accent-secondary);
+    border-color: var(--accent-primary);
     color: var(--accent-secondary);
+}
+
+/* === Project Tags === */
+
+.tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.tag {
+    background: transparent;
+    border: 1px solid var(--border-primary);
+    border-radius: 0.4rem;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+    color: var(--text-subtle);
+    letter-spacing: 0.02em;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.tag::before {
+    content: '#';
+    color: var(--accent-primary);
+    margin-right: 0.15rem;
+}
+
+.tag:hover {
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
 }
 
 /* === About === */

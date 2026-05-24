@@ -40,17 +40,17 @@ pub fn Home() -> Element {
                     href: "https://github.com/scadoshi",
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    "GitHub"
+                    "GitHub \u{2197}"
                 }
                 a {
                     href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    "LinkedIn"
+                    "LinkedIn \u{2197}"
                 }
                 a {
                     href: "mailto:scottyfermo@hotmail.com",
-                    "Email"
+                    "Email \u{2197}"
                 }
             }
         }
