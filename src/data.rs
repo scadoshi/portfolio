@@ -73,40 +73,17 @@ const ZWIPE: Project = Project {
         "Full commander support \u{2014} partners, backgrounds, oathbreaker",
     ],
     impact_metric: "Full-stack mobile app \u{2014} ~37,300 lines of Rust",
-    objective: "Build a full-stack MTG deck builder with swipe-based navigation, targeting iOS, Android, and web from a single Rust codebase. Five workspace crates: zwipe-core (shared domain), zerver (Axum REST API), zwiper (Dioxus frontend), zervice (background sync), and zite (static website). Full commander support with all partner variants, backgrounds, and oathbreaker. Live at https://zwipe.net with App Store submission pending.",
+    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. Live at https://zwipe.net; App Store submission pending.",
     approach: &[
-        "Hexagonal architecture applied consistently across ~37,300 lines of Rust. Port traits define what operations are needed (AuthRepository, CardRepository, DeckRepository). Adapters implement those ports for specific technologies. Domain logic lives in zwipe-core \u{2014} a pure shared crate with zero framework dependencies, used by both frontend and backend",
-        "Domain-driven design with validated newtypes: Username (3-20 chars, profanity filter), Password (8-128 chars, uppercase/lowercase/digit/symbol required, max 3 consecutive repeats, checked against common password dictionary), EmailAddress, UserId, DeckId, JwtSecret. Invalid data is unrepresentable",
-        "CardFilter builder (30+ fluent setters) drives both SQL and in-memory execution. FilterCards and GroupCards are extension traits on Vec<Card>: the frontend can filter and partition a local deck collection without a server round-trip using the exact same criteria as the SQL adapter. Grouping by card type, mana cost, or color with enum-dispatched classification",
-        "Structured error chain: SQLx errors → PostgreSQL constraint violation detection (unique=23505, check=23514) → domain-specific error enums (RegisterUserError::Duplicate) → HTTP status codes (409 Conflict). Internal details logged but never exposed to clients",
-        "JWT access tokens (HS256, 24-hour expiry) + rotating refresh tokens (max 5 per user, SHA-256 hashed, 14-day expiry). Old refresh token deleted on use, preventing replay attacks. Session limits auto-enforced by background service",
-        "Argon2id password hashing with OS-random salts (resistant to GPU/ASIC attacks). Common password blocklist with 170+ patterns following NIST guidelines. Password type consumed after hashing so plaintext can never be reused",
-        "PostgreSQL with compile-time verified SQLx queries: 7 migrations, JSONB operators (@> contains, <@ contained by, ?| has any key), dynamic query building, bulk upsert with automatic card-by-card fallback on batch failure, PartialEq-based delta detection to skip unchanged records during Scryfall sync",
-        "Background service binary (zervice): nightly Scryfall delta sync handling 110k+ card printings in batches of 327 (respecting PostgreSQL's 65k parameter limit), materialized view refresh for deduplicated search (~35k unique cards), expired refresh token cleanup, max session enforcement",
-        "Custom SwipeStack component with peeking card stack (up to 10 card preview), drag tilt effect, concurrent exit animations, and undo stack. OnSwipe core trait with OnTouch (mobile) and OnMouse (desktop) adapters across 10 files. Velocity-based and distance-based dual-threshold detection, axis locking to prevent cross-axis drift. Built from scratch, not a library",
-        "Dioxus signal architecture: Upkeep trait extends Signal<Option<Session>> with background auto-refresh (60s interval, refreshes access token before expiry, clears session on failure). Central context provider initializes session, HTTP client, card filter state, and search results for consumption across all screens",
-        "Production-strict linting: .unwrap(), .expect(), panic!, todo!, dbg!, and print! all denied at compile time. 33 enforced Clippy rules. Full documentation pass with #![warn(missing_docs)]",
-        "Full commander support: all partner variants (Partner, Partner with [Name], Friends Forever, Doctor's Companion), backgrounds (Choose a Background), and oathbreaker (signature spell). Color identity = union of command zone. Eligibility filtering per format. Maybeboard and sideboard support with import/export (// Maybeboard headers). Deck cloning in a single transaction",
-        "Email verification with tiered limits: unverified accounts limited to 1 deck and 100 cards, verified accounts get full limits (20 decks, 250 cards). Enforced via email_verified JWT claim with zero extra DB queries",
-        "Card image preview modal: tap any card in the deck list to expand details, then view full card art in a drop-in overlay with dismiss-on-tap-outside. CSS keyframe animations for entrance/exit",
-        "Static website (zite) at https://zwipe.net: Dioxus static site deployed to GitHub Pages. Landing page, about page, email verification, password reset, contribute page, discord, privacy policy. Pulls shared domain types from zwipe-core (logo, theme definitions). 15 themes with dark/light variants including 3 colorblind-accessible options",
-        "Nightly database backups: pg_dump to Cloudflare R2 via rclone with 30-day lifecycle retention. Restore runbook documented. The database is the only stateful data not replicated elsewhere",
+        "Rust on mobile via Dioxus \u{2014} one Rust codebase compiles to a native mobile app, no JS bridge, no separate frontend repo",
+        "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardFilter type drives SQL queries server-side and in-memory filtering on the device, via extension traits on Vec<Card>",
+        "Swipe stack built from scratch \u{2014} OnSwipe trait with OnTouch/OnMouse adapters, dual-threshold detection (velocity OR distance), axis locking. Ten files, zero gesture libraries",
+        "Production-grade auth: Argon2id with NIST-compliant 170+ pattern blocklist, rotating refresh tokens (replay-safe via delete-on-use), Password type consumed on hash so plaintext can't leak",
+        "SQLx at scale \u{2014} five-strategy upsert chain handles batching, PartialEq delta detection, and per-row fallback; 88-column Scryfall sync respects PostgreSQL's 65k parameter limit (~327 cards per batch)",
+        "Background service (zervice) for nightly Scryfall delta sync of 110k+ printings, materialized view refresh for deduplicated search (~35k unique cards), refresh-token cleanup, session enforcement",
+        "Production posture: .unwrap, .expect, panic!, todo!, dbg!, print! all denied at compile time. 33 enforced Clippy rules, 340+ tests, security audit complete, nightly Cloudflare R2 backups",
     ],
     snippets: &[
-        Snippet {
-            title: "Hexagonal Architecture",
-            code: r#"domain/        Pure business logic, no external deps
-  models/      Per-operation request/response types
-  ports.rs     Trait interfaces (repositories, services)
-  services.rs  Business logic orchestration
-
-inbound/       Entry points
-  http/        Axum handlers, routes, JWT middleware
-
-outbound/      External systems
-  sqlx/        PostgreSQL repositories implementing port traits"#,
-            description: "Clean separation of concerns. Domain logic has zero external dependencies. Port traits make testing and swapping implementations straightforward.",
-        },
         Snippet {
             title: "Trait-Based Card Filtering & Grouping",
             code: r#"// Extension traits on Vec<Card> — no wrapper types, just import the trait
@@ -144,25 +121,6 @@ impl GroupCards for Vec<Card> {
 
 // Usage: deck_cards.filter_by(&filter).group_by(GroupByOption::CardType)"#,
             description: "Same CardFilter drives both the SQL adapter (server-side) and these in-memory traits (client-side). The frontend can filter a local deck without a round-trip using the exact same criteria. Extension traits mean Vec<Card> gains these methods just by importing the trait.",
-        },
-        Snippet {
-            title: "CardFilter Builder Pipeline",
-            code: r#"// Builder with 30+ fluent setters, validates on build()
-let filter = CardFilterBuilder::default()
-    .set_color_identity_within(colors)  // -> &mut Self
-    .set_cmc_range((2.0, 5.0))
-    .set_type_line_contains("Creature")
-    .set_rarity_equals_any(rarities)
-    .set_is_valid_commander(true)
-    .set_order_by(OrderByOption::Cmc)
-    .set_limit(50)
-    .build()?;  // -> Result<CardFilter, InvalidCardFilter>
-
-// Same filter works server-side (SQL) and client-side (in-memory)
-let results = card_service.search(&filter).await?;  // SQL adapter
-let local   = deck_cards.filter_by(&filter);         // Vec<Card> trait
-let groups  = local.group_by(GroupByOption::CardType); // partition"#,
-            description: "One filter type, two execution paths. The builder validates that at least one search criterion is set (not just pagination). 30+ setters cover every MTG search dimension: colors, mana cost, power/toughness ranges, text search, rarity, set, artist, legality, commander validity.",
         },
         Snippet {
             title: "Swipe Gesture Engine",
@@ -255,8 +213,8 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
         "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
     ],
-    progress: "Feature-complete and live at https://zwipe.net. Auth, card database, deck management, card search, swipe-based deck building with peeking stack and drag tilt, commander system (partners, backgrounds, oathbreaker), maybeboard, sideboard, deck import/export, deck cloning, card image preview, account deletion, email verification with tiered limits, 15 themes, security audit complete, nightly database backups. App Store submission pending.",
-    impact: "Demonstrates complete full-stack capability in Rust: database migrations, JWT auth with refresh token rotation, reactive cross-platform frontend, background services, CI/CD, cloud backups, and a static website \u{2014} all in one language with shared domain types between frontend and backend. ~37,300 lines across five crates, 340+ tests, zero unwrap.",
+    progress: "Feature-complete. Full deck management, swipe-based deck building, commander system, maybeboard/sideboard, import/export, email verification, 15 themes. Security audit complete; nightly backups. Live at https://zwipe.net; App Store submission pending.",
+    impact: "Full-stack mobile delivery in pure Rust \u{2014} shared domain types across the Axum API, the Dioxus app, and a background sync service. ~37,300 lines across five crates, 340+ tests, zero unwrap.",
     status: ProjectStatus::Doing,
 };
 
@@ -274,15 +232,13 @@ const HALO_ACTION_IMPORTER: Project = Project {
         "~3,230 LOC across 20 files",
     ],
     impact_metric: "Weeks of manual work, automated",
-    objective: "Build a CLI tool for bulk importing actions into Halo Software products from CSV and Excel files. Must handle millions of records against a production API with real failure modes: network errors, token expiry, missing tickets, partial batch failures, and wildly inconsistent data formats across client exports.",
+    objective: "Bulk-import millions of records into Halo Software from CSV and Excel against a production API. Must survive every real failure mode: network errors, token expiry, missing tickets, partial batch failures, inconsistent data formats across client exports.",
     approach: &[
-        "Production-grade error recovery: infinite retry on network/timeout failures, automatic token refresh on 401s, permanent skip on missing tickets via HashSet<u32> tracked across the entire run",
-        "Ticket-grouped retry logic: when a batch fails with a 'not found' error, group actions by ticket_id and retry each group independently to maximize successful imports and identify exactly which tickets don't exist",
-        "Deduplication cache that evolved through three stages as the dataset grew: (1) single report endpoint fetching existing IDs from Halo before each run, (2) split across multiple report resources when the single endpoint started timing out under load, (3) fully local cache built from a direct database query of ~8 million action IDs when even the split reports couldn't serve that volume. Each stage required rethinking how the tool remembers its own work",
-        "Two-tier incremental caching with fs2 file locking: JSON cache tracks existing IDs per Halo report resource, text file tracks IDs imported during the current run (append-only for speed). Both survive process restarts and support concurrent writes. --only-cache flag skips report fetching entirely when using a manual cache",
-        "Structured output per run: log/YYYY-MM-DD_HH-MM-SS/ directory with full.log, retry.csv (re-importable), and summary.json with performance metrics, error breakdown by type, and affected ticket IDs",
-        "Real-time progress: ETA based on rolling average batch times, entries/minute throughput, per-sheet timing. You can see exactly where a multi-hour run stands",
-        "CLI with practical flags: --batch-size, --only-parse (validate everything without API calls), --only-cache (skip report fetching), --input-path",
+        "Per-failure-mode recovery, not blanket retry-with-backoff. 401 \u{2192} refresh token; 504/network \u{2192} retry immediately; missing ticket \u{2192} permanent skip via run-wide HashSet<u32>; deserialization error \u{2192} skip row and continue",
+        "Ticket-grouped retry: when a batch fails, group actions by ticket_id and retry each group independently. Maximizes successful imports and identifies exactly which tickets don't exist",
+        "Cache evolution as the dataset grew: single Halo report endpoint \u{2192} split across resources \u{2192} fully local cache from a direct DB query of ~8M existing action IDs. Each stage rethought how the tool remembers its own work",
+        "Two-tier cache with fs2 file locking: JSON tracks existing IDs per resource (per-run cache), text file tracks IDs imported during the current run (append-only). Both survive restarts and concurrent writes",
+        "Structured per-run output: log/YYYY-MM-DD_HH-MM-SS/ with full.log, retry.csv (re-importable), and summary.json with performance metrics, error breakdown by type, affected ticket IDs",
     ],
     snippets: &[
         Snippet {
@@ -344,13 +300,12 @@ fn read_cached_ids() -> CacheData {
         },
     ],
     obstacles: &[
-        "The biggest challenge was deduplication at scale. Started with a single Halo report endpoint serving existing action IDs before each run. That worked at ~100k IDs but started timing out as the dataset grew. Split across multiple report resources with per-resource caching. That bought time but eventually even the split reports couldn't serve millions of IDs without timing out. Final solution: query the Halo database directly for all ~8 million existing action IDs, store them locally, and trust the local cache as the source of truth. Safe because I was the only one importing, which I could assure in my instance",
-        "Binary search retry was the wrong abstraction for batch failures. Replaced with ticket-grouped retry that's both simpler and more efficient",
-        "File locking for concurrent cache writes: hit corruption bugs when running parallel instances against the same cache directory. Fixed properly with fs2 exclusive locks on both cache files",
-        "Building software that runs unattended for hours against unreliable APIs required thinking through every failure mode. A crash at hour 3 of a 4-hour run would mean starting over without the caching layer",
+        "Deduplication at scale: single Halo report worked at ~100k IDs but timed out as the dataset grew. Splitting across resources bought time; still timed out at millions. Final answer: direct DB query for all ~8M existing action IDs, local cache as source of truth (safe because I was the only importer)",
+        "Binary search retry was the wrong abstraction for batch failures \u{2014} O(log(batch) * failures) too many API calls. Ticket-grouped retry is simpler and more efficient",
+        "Parallel instances against the same cache directory hit corruption bugs. Fixed with fs2 exclusive locks on both cache files",
     ],
     progress: "Production. Actively used for real data migrations.",
-    impact: "Reduced data migration timelines from weeks to days. Runs unattended for hours processing millions of records with automatic recovery from any transient failure.",
+    impact: "Reduced migration timelines from weeks to days. Runs unattended for hours against millions of records with automatic recovery from any transient failure.",
     status: ProjectStatus::Done,
 };
 
@@ -368,16 +323,13 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
         "Cross-platform binaries via GitHub Actions. ~1,370 LOC",
     ],
     impact_metric: "Manual UI clicks to one CSV import",
-    objective: "Build a CLI tool that reads custom field definitions from CSV files and creates them in Halo Software products via the API. Must support all 8 field types, handle authentication, respect rate limits, and distribute as cross-platform binaries.",
+    objective: "Read custom field definitions from CSV and create them across Halo Software products via the API. Must support all 8 field types, handle auth, respect rate limits, ship as cross-platform binaries.",
     approach: &[
-        "Layered architecture: inbound (CSV parsing, interactive TUI), domain (models, validation, import results), outbound (OAuth auth client, field API client, HTTP type mapping). Same pattern used at larger scale in Zwipe",
-        "bin/lib crate split: binary crate for orchestration, library crate for all logic. Enables testing domain logic independently of the CLI",
-        "Type-safe domain modeling: Name (max 64, alphanumeric + underscore), Label (max 256), FieldType (8 variants with sub-type enums). All validated at construction, invalid data rejected before any API call",
-        "OAuth 2.0 client credentials flow with Arc<Mutex<Option<AuthToken>>> for token caching. 30-second expiry buffer prevents edge-case 401s. Only fetches a new token when the cached one expires",
-        "CSV parsing with header-position detection: finds columns by name rather than assuming fixed positions. Row-level error messages include row number and specific field issue for debugging",
-        "Interactive debug TUI with colored terminal output: import mode (all fields) or debug mode (field-by-field with process/skip/quit). Import results tracked with timestamps per field",
-        "Rate limiting (500ms between requests) to stay under Halo's 700/5min API limit",
-        "GitHub Actions CI/CD: matrix build for Windows, macOS (Intel + ARM), and Linux. Cargo caching, distribution packaging with README and sample CSV, artifact uploads",
+        "Type-safe domain modeling: Name (max 64, alphanumeric + underscore), Label (max 256), FieldType (8 variants with sub-type enums). All validated at construction \u{2014} invalid data rejected before any API call",
+        "OAuth 2.0 client credentials flow with Arc<Mutex<Option<AuthToken>>> caching. 30-second expiry buffer prevents the edge-case 401 between check and call",
+        "Layered architecture (inbound/domain/outbound) with bin/lib crate split. Same pattern Zwipe uses at larger scale; lets the library logic be tested independently of the CLI",
+        "Interactive debug TUI with colored output: import mode runs everything, debug mode walks field-by-field with process/skip/quit. Per-field import results tracked with timestamps",
+        "GitHub Actions matrix build: Windows, macOS Intel + ARM, Linux. Cargo caching, distribution packaging with README + sample CSV",
     ],
     snippets: &[
         Snippet {
@@ -427,14 +379,12 @@ impl From<&CustomField> for HttpCustomField {
         },
     ],
     obstacles: &[
-        "Cross-platform binary distribution required a GitHub Actions CI/CD matrix: 4 targets (Windows, macOS Intel, macOS ARM, Linux), each with cargo caching, release builds, and distribution packaging",
-        "OAuth token management: caching the token in Arc<Mutex<Option<AuthToken>>> with a 30-second expiry buffer. Without the buffer, tokens could expire between the check and the API call",
-        "CSV header-position parsing instead of fixed column indices. Real CSVs from clients don't always have columns in the expected order. Row-level error messages made debugging bad input straightforward",
-        "Selection options for SingleSelect/MultiSelect fields contain commas, which conflict with the Halo API's comma-separated format. Built selection_options_string() to strip commas from individual options before joining",
-        "Log management: auto-cleanup of old log files (max 100 files, 7-day retention). Without this, repeated runs in production would accumulate unbounded log files",
+        "Selection options for SingleSelect/MultiSelect fields contain commas, which collide with Halo's comma-separated API format. Built selection_options_string() to strip commas from individual options before joining",
+        "CSV header-position parsing instead of fixed column indices: real client CSVs don't always have columns in the expected order. Row-level error messages include row number + specific field issue",
+        "Log auto-cleanup (max 100 files, 7-day retention). Without it, repeated production runs accumulate unbounded log files",
     ],
     progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Actively used in production for client implementations.",
-    impact: "Reduced enterprise configuration time from hours to minutes. Deployed across Fortune 500 client implementations. ~1,370 lines of Rust demonstrating layered architecture, production-grade auth, and operational tooling (logging, results tracking, CI/CD).",
+    impact: "Reduced enterprise configuration time from hours to minutes. Deployed across Fortune 500 client implementations.",
     status: ProjectStatus::Done,
 };
 
@@ -452,14 +402,13 @@ const MARVIN: Project = Project {
         "Found + fixed deprecated model constants in Rig (PR across 17 files). ~1,750 LOC",
     ],
     impact_metric: "~1,750 lines of Rust",
-    objective: "Learn the Rig AI framework by building a real CLI chatbot. Each feature should teach something new about Rig or Rust, prioritizing learning over shipping.",
+    objective: "Learn the Rig AI framework by building a real CLI chatbot. Each feature should teach something new about Rig or Rust \u{2014} prioritizing learning over shipping.",
     approach: &[
-        "Incremental feature development: start with basic chat loop, add streaming, tools, persistence, context management",
-        "Command pattern architecture: each slash command is a trait impl routed via ChatInput enum",
+        "Found and fixed deprecated Anthropic model constants in Rig causing 404 errors. Filed issue #1370 (https://github.com/0xPlaygrounds/rig/issues/1370), submitted a PR across 17 files. The learning project found a real bug in its own framework",
+        "Command pattern architecture: each slash command is a trait impl routed via a ChatInput enum. Started as a 220-line monolith, refactored to clean module boundaries as complexity grew",
         "4 Tavily web tools (search, extract, crawl, sitemap) sharing an Arc<TavilyClient> for efficient client reuse",
-        "schemars for automatic JSON Schema generation from Rust types, eliminating manual schema maintenance",
-        "Dynamic model discovery from Anthropic's /v1/models API instead of hardcoded constants",
-        "Chat persistence with session IDs: /save writes to JSON, /import loads previous sessions",
+        "schemars derives JSON Schema from Rust types at compile time \u{2014} no manual schema maintenance, no drift between types and definitions",
+        "Dynamic model discovery from Anthropic's /v1/models API instead of hardcoded constants that go stale",
     ],
     snippets: &[
         Snippet {
@@ -497,13 +446,12 @@ impl Tool for SearchWeb {
         },
     ],
     obstacles: &[
-        "Discovered deprecated Anthropic model constants in Rig causing 404 errors. Filed issue #1370 (https://github.com/0xPlaygrounds/rig/issues/1370), fixed 17 files across the Rig repo, and submitted a PR following their contributing guidelines",
-        "Stdout buffering: print!() without newline requires manual flush() for immediate display during streaming",
+        "Stdout buffering: print!() without a newline requires manual flush() for immediate display during streaming",
         "Tavily API rejects null values for optional fields. Fixed with #[serde(skip_serializing_if = \"Option::is_none\")]",
-        "Architecture evolved from 220-line monolith to command pattern as features outgrew the original structure",
+        "Architecture outgrew the 220-line monolith. Refactored to command pattern with per-command modules \u{2014} each command independently testable",
     ],
-    progress: "Active. Core chatbot with streaming, tools, persistence, and context management all working. Roadmap includes RAG with local files, persistent memory, and MCP server integration.",
-    impact: "Demonstrates ability to learn a new framework by building with it. Contributed back to the ecosystem when a bug was found. Shows progression from simple prototype to well-structured application.",
+    progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
+    impact: "Learning project that contributed back to its own framework. Demonstrates the loop: pick a real goal, hit real friction, fix it upstream, ship something usable.",
     status: ProjectStatus::Done,
 };
 
@@ -521,16 +469,14 @@ const NIGHTHAWK: Project = Project {
         "~2,100 LOC, 99 tests",
     ],
     impact_metric: "~2,100 lines, 99 tests, 6 phases",
-    objective: "Build a key-value database incrementally from the Bitcask paper toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, and concurrency.",
+    objective: "Build a key-value database incrementally from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, concurrency.",
     approach: &[
-        "Phases 1-3 (Bitcask foundation): append-only WAL, sync_all() after every write, atomic rename compaction. 10-byte binary header per entry (magic 0x4E48, CRC32, wincode length prefix). Corruption recovery scans byte-by-byte past garbage to find the next valid entry, typed via CorruptionType enum (NotEnoughBytes, MagicBytesMismatch, ChecksumMismatch, ParseError)",
-        "Memtable: BTreeMap<String, Entry> replaces HashMap offsets from the Bitcask phase. Sorted order is what makes SSTable flush cheap: just iterate and write. MemTable::process() tracks byte-level size for flush decisions. WAL replays into memtable on startup for crash recovery",
-        "SSTable flush + read: 4MB threshold flushes sorted entries to data/sstables/{timestamp:020}.sst where lexicographic order is chronological. Read path checks memtable first (no I/O), then scans SSTables newest-to-oldest. Bloom filter checked before scanning any file",
-        "K-way compaction: all SSTables processed simultaneously, not sequentially. Per-iteration finds the global minimum key across all active cursors. Newest file wins on duplicate keys. seen_keys: HashSet tracks winners; tombstone winners are silently dropped from output so they don't accumulate. Triggers every 10 flushes, intermediate memtable flushes keep memory bounded",
-        "Bloom filters: one per SSTable stored as an in-file footer. Kirsch-Mitzenmacher double hashing with two xxh3 seeds, k=7, 10 bits/key for ~1% false positive rate. BloomFilterReader is a blanket impl on R: Read + Seek, so any file handle gains bloom filter reading automatically",
-        "Entry consolidation: initial WalEntry/SstEntry split caused a tombstone resurrection bug. Single Entry enum threads tombstones through all layers (WAL, memtable, SSTables). compact() drops tombstone winners from output via Entry::Set guard. Regression test written before the refactor",
-        "TCP server with concurrent connections: thread::spawn per connection, Arc<Mutex<Log>> shared across threads. Per-command locking keeps the critical section short: lock, execute, drop, flush. Clients make progress concurrently rather than waiting for entire connection lifetimes",
-        "Generic Runner<R: BufRead, W: Write>: same read/parse/execute loop powers both the CLI (stdin/stdout) and the TCP server (TcpStream/BufWriter<TcpStream>). bin/lib crate split keeps orchestration in the binary, all logic in the library",
+        "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to full LSM-tree \u{2014} WAL, memtable, SSTables, bloom filters, k-way compaction, TCP server, concurrency. Six distinct architectural layers, each one a real piece of how production KV systems work",
+        "WAL with sync_all() after every write; 10-byte binary header (magic 0x4E48 + CRC32 + length); corruption recovery scans byte-by-byte past garbage, typed via a CorruptionType enum so callers know exactly what went wrong",
+        "BTreeMap memtable makes SSTable flush trivial (iterate + write). WAL replays into memtable on startup for crash recovery. 4MB threshold keeps memory bounded",
+        "Bloom filters as in-file SSTable footers. Kirsch-Mitzenmacher double hashing with two xxh3 seeds, k=7, ~1% false positive rate. BloomFilterReader as a blanket impl on R: Read + Seek \u{2014} any file handle gains it",
+        "K-way compaction across all SSTables simultaneously, not sequentially. seen_keys HashSet drops tombstone winners so they never accumulate. Single Entry enum threads tombstones through every layer (WAL, memtable, SSTables)",
+        "TCP server: thread-per-connection, Arc<Mutex<Log>>, per-command locking (lock \u{2192} execute \u{2192} drop \u{2192} flush). Generic Runner<R: BufRead, W: Write> powers both the CLI and the TCP server from the same loop",
     ],
     snippets: &[
         Snippet {
@@ -636,13 +582,12 @@ impl<R: Read + Seek> BloomFilterReader for R {
         },
     ],
     obstacles: &[
-        "Tombstone resurrection: split Entry into WalEntry/SstEntry assuming SSTables only need Sets. Deleting a flushed key cleared the memtable only, but the SSTable still had the original Set and get() would find it again. Fix: single Entry enum, tombstones propagate through all layers, compact() suppresses them via Entry::Set guard. Regression test written before the refactor to verify the fix",
-        "Compaction winner tracking evolved: first version used memtable.contains_key() which could not distinguish a tombstone winner from a Set winner. Replaced with seen_keys: HashSet so tombstone winners can be explicitly dropped from output instead of silently surviving",
-        "flush_count must be initialized from the existing SSTable count on startup, not zero. A restart after writes would otherwise compact on the wrong schedule since it wouldn't know how many flushes happened before the restart",
-        "Per-command vs per-connection locking: holding the Mutex for an entire connection lifetime would serialize all clients. Per-command locking (lock, execute, drop) keeps the critical section short so concurrent clients actually make progress",
+        "Tombstone resurrection: splitting Entry into WalEntry/SstEntry assumed SSTables only needed Sets. Deleting a flushed key cleared the memtable but the SSTable still had the original Set, and get() would find it again. Fix: single Entry enum threading tombstones through all layers; compact() suppresses them via an Entry::Set guard. Regression test written before the refactor",
+        "flush_count must be initialized from the existing SSTable count on startup, not zero. A restart after writes would otherwise compact on the wrong schedule",
+        "Per-command vs per-connection locking: holding the Mutex for an entire connection lifetime would serialize all clients. Per-command locking (lock \u{2192} execute \u{2192} drop) keeps the critical section short so clients actually make progress",
     ],
-    progress: "Complete. All 6 phases done: Bitcask foundation, durability, binary protocol, LSM-tree (memtable + SSTables + bloom filters + compaction), networking, and concurrency. 99 tests across 7 modules including TCP integration tests.",
-    impact: "Started from a paper and built a complete, connectable key-value database implementing the storage architecture behind LevelDB, RocksDB, and Cassandra. Every layer built from scratch: binary protocol with corruption recovery, WAL durability, sorted memtable flush, bloom filter accelerated reads, k-way merge compaction, TCP server with concurrent access. Not a library, a database you can host and connect to.",
+    progress: "Complete. All 6 phases done. 99 tests across 7 modules including TCP integration tests.",
+    impact: "Started from a paper and built a complete, connectable key-value database \u{2014} the storage architecture behind LevelDB, RocksDB, and Cassandra. Every layer built from scratch: binary protocol with corruption recovery, WAL durability, sorted memtable flush, bloom-filter-accelerated reads, k-way merge compaction, TCP server with concurrent access.",
     status: ProjectStatus::Done,
 };
 
@@ -658,19 +603,18 @@ const DIPROTODON: Project = Project {
         "Parser-as-framer returning Incomplete / Malformed / Ok((frame, leftover))",
         "Binary-safe end-to-end (Vec<u8>, not String)",
         "Hexagonal layout; generic Session<R, W> for cursor-based tests",
+        "~1,187 LOC, 50+ tests across every protocol layer",
     ],
-    impact_metric: "~1,200 lines, 50+ tests, M0\u{2013}M2 complete",
+    impact_metric: "~1,187 lines, 50+ tests, M0\u{2013}M2 complete",
     objective: "Build a Redis-compatible KV server one wire-protocol layer at a time, hand-writing the substance so the muscle survives the project. Each milestone adds a real layer: TCP echo, RESP framing, command dispatch, in-memory KV ops, then TTL, AOF, and Pub/Sub. Sibling-paired with a Go port (wombat) to feel the translation between languages.",
     approach: &[
-        "Hexagonal layout (src/lib/{domain,inbound,outbound}/) \u{2014} domain types know nothing about RESP, RESP knows nothing about Redis semantics. One-way coupling: outbound depends on domain, inbound depends on domain, domain depends on nobody.",
-        "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError> returns the parsed frame and a leftover slice borrowing from the input. No allocation for the rest-of-the-buffer. Caller drains the consumed prefix and reads more on Incomplete. The parser is the only thing that knows whether a frame is complete, because completeness depends on bulk-string length prefixes and array sizes.",
-        "Three-state error model collapsed into one Result: FrameError has Incomplete, Malformed, UnknownSigil, InvalidLength, and MissingTerminator variants. Incomplete is the load-bearing signal \u{2014} the session reader uses it to know when to read more bytes vs. when to clear a poisoned buffer.",
-        "Binary safety end-to-end. Keys and values are Vec<u8>, not String. Bulk-string payloads on the wire can be arbitrary bytes (jpegs, interior \\r\\n, whatever). UTF-8 is never enforced where the protocol doesn't require it. Command dispatch matches on byte slices (b\"get\", b\"set\") after ASCII-lowercasing the verb.",
-        "Iterative array parsing. Recursive parse_array would blow the stack on MGET key1..key1000. Iterative loop with a Vec is one extra concept and zero stack-overflow risk.",
-        "SimpleInner newtype validates the no-CR/LF invariant for simple-string and simple-error payloads at construction time. Three constructors: SimpleInner::ok() and ::pong() bypass validation for known-safe literals (infallible by inspection); ::sanitized(...) strips CR/LF from arbitrary error message bytes for outbound use. Inbound bytes get strict validation, outbound server-authored strings get lossy sanitization \u{2014} different policies for different trust boundaries.",
-        "Generic Session<R: Read, W: Write>. SessionReader<R> owns a Vec<u8> frame-accumulation buffer and handles three cases mechanically: success drains the consumed prefix, Incomplete preserves the buffer, hard parse error clears it. Cursor<Vec<u8>> as R and Vec<u8> as W lets tests script RESP bytes in and out without a real socket.",
-        "Reply serializer with Reply::write_to(&mut impl Write) streams bytes via write_all \u{2014} no intermediate Vec. BufWriter at the call site accumulates small writes (sigil, payload, terminator) into one syscall per flush. Five variants: SimpleString, SimpleError, BulkString, NullBulk, Integer.",
-        "Bad-command resilience: malformed frames and unknown commands return -ERR ...\\r\\n via SimpleInner::sanitized without killing the session. The session continues for the next command. Disconnect (0-byte read) cleanly returns the session.",
+        "Hand-written RESP wire protocol \u{2014} no library does the work. Real redis-cli clients connect and run all four M2 commands (PING, GET/SET/DEL/EXISTS) against it",
+        "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input \u{2014} no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
+        "Binary safe end-to-end: Vec<u8>, not String. Bulk-string payloads can be arbitrary bytes (jpegs, interior CRLF, whatever). UTF-8 is never enforced where the protocol doesn't require it",
+        "Iterative array parsing. Recursive parse_array would blow the stack on MGET key1..key1000; a Vec + loop is one extra concept and zero risk",
+        "SimpleInner newtype with three trust levels: strict TryFrom for untrusted bytes, infallible ok()/pong() for known-safe literals, sanitized() that strips CR/LF for arbitrary server-authored error strings. Inbound strict, outbound lossy",
+        "Generic Session<R: Read, W: Write>. Cursor<Vec<u8>> as R lets tests script RESP bytes in and out without a real socket",
+        "Hexagonal layout (domain / inbound / outbound). Domain knows nothing about RESP, RESP knows nothing about Redis semantics. One-way coupling: inbound and outbound depend on domain, never the reverse",
     ],
     snippets: &[
         Snippet {
@@ -730,15 +674,12 @@ impl SimpleInner {
         },
     ],
     obstacles: &[
-        "Bytes-to-Vec read footgun: first version of SessionReader::read called inner.read(&mut new) where new was Vec::new() \u{2014} reads into a zero-length slice always return Ok(0), buf never grew, the get_frame loop spun forever. Fix: read into a sized stack array ([0u8; 1024]) and extend_from_slice(&new[..n]) using the returned count. Clippy's unused_io_amount lint catches it now.",
-        "Borrow-checker corner on parse_frame: parse_one returns (Frame, &[u8]) where the slice borrows from self.buf. Trying to self.buf.clear() or self.buf.drain(..) while that slice was alive failed. Fix: extract bytes.len() (a Copy usize) into a local, drop the borrow, then mutate. The lesson: when you need both 'information from the borrow' and 'to mutate the source,' extract just the bits you need before mutating.",
-        "Initial TryFrom<&[u8]> for Frame had no leftover-bytes return path. The streaming protocol needs the leftover \u{2014} it's structural, not optional. Dropped TryFrom entirely; parse_one is the public entry point with the leftover slice as part of its contract.",
-        "split_crlf Contract A vs Contract B decision: if no CRLF is in the buffer, should split_crlf return None (telling the parser 'need more bytes') or Some((entire_buf, &[])) (telling it 'here's everything')? Contract A (None) is correct because it preserves the Incomplete signal up to the parser layer. Contract B would lie to the caller and force an extra round of error gymnastics upstream. The byte-splitter layer doesn't have errors; the parser layer above it does \u{2014} that boundary matters.",
-        "Bespoke text Command::TryFrom<&str> survived for a while before getting deleted. The temptation to reuse the old text parser by joining Vec<&[u8]> back into a String was real \u{2014} it would have worked, but it would have done the work RESP already did, broken binary safety (UTF-8 forced where it isn't required), and kept dead code alive. Better: match on Vec<Frame::BulkString> directly. The architectural test was 'does the new wire have to pretend to be the old wire?' \u{2014} no.",
-        "Hard-parse-error hot loop: first version of get_frame sent the SimpleError, continued the loop, but didn't clear the poisoned buf. Next iteration parsed the same garbage prefix, sent the same error, forever. Fix lives in parse_frame: any non-Incomplete error clears the buf, so the session recovers when the next valid frame arrives.",
+        "Bytes-to-Vec read footgun: first version called inner.read(&mut new) where new was Vec::new() \u{2014} reads into a zero-length slice return Ok(0) forever, buf never grew, the get_frame loop spun. Fix: read into a sized stack array ([0u8; 1024]) and extend_from_slice(&new[..n]) using the returned count. Clippy's unused_io_amount catches it now",
+        "Borrow-checker corner on parse_frame: parse_one returns (Frame, &[u8]) borrowing from self.buf. Trying to self.buf.drain(..) while the slice was alive failed. Fix: extract bytes.len() (a Copy usize) before mutating",
+        "split_crlf contract: when no CRLF is in the buffer, should it return None or Some((entire_buf, &[]))? None is correct \u{2014} it preserves the Incomplete signal up to the parser. The byte-splitter doesn't have errors; the parser does. That boundary matters",
     ],
-    progress: "M0 (TCP echo), M1 (RESP protocol + dispatch), and M2 (GET/SET/DEL/EXISTS) complete. Real redis-cli clients connect and run all four commands successfully. Test coverage on every protocol layer: Crlf trait, Frame parser, Frame\u{2192}Command mapping, Reply serializer, SessionReader drain logic, domain Command. Next phases on the roadmap: M3 (EXPIRE/TTL with active background sweep), M4 (AOF persistence with rewrite-style compaction \u{2014} deliberately not LSM, since nighthawk already proves that ground), M5 (Pub/Sub fan-out, easier after a tokio migration).",
-    impact: "Demonstrates the muscle to implement a real network protocol from the byte level \u{2014} framing, error variants, streaming, binary safety, layered architecture \u{2014} interoperable with a real client (redis-cli) rather than a mock. Paired with nighthawk to cover the two halves of how production KV systems are built: nighthawk does the on-disk LSM storage engine, diprotodon does the in-memory protocol-server layer. Both written by hand, no shortcuts on the substance.",
+    progress: "M0\u{2013}M2 complete: TCP echo, RESP protocol + dispatch, GET/SET/DEL/EXISTS. Test coverage on every protocol layer. Roadmap: M3 EXPIRE/TTL, M4 AOF persistence (deliberately not LSM \u{2014} nighthawk already proves that ground), M5 Pub/Sub.",
+    impact: "Real network protocol implemented from the byte level \u{2014} framing, error variants, streaming, binary safety, layered architecture \u{2014} interoperable with a real client, not a mock. Paired with nighthawk to cover both halves of how production KV systems are built: nighthawk the on-disk LSM storage engine, diprotodon the in-memory protocol server. Both hand-written.",
     status: ProjectStatus::Doing,
 };
 
@@ -756,14 +697,13 @@ const UPSEE: Project = Project {
         "~145 LOC",
     ],
     impact_metric: "~145 lines, on-device ML",
-    objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time using a webcam and the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference, everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
+    objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time from a webcam, using the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference \u{2014} everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
     approach: &[
-        "tract ONNX runtime as a Rust-native alternative to Python inference. Load model, optimize, run: three method calls to go from ONNX file to runnable inference",
-        "Custom Square trait on ImageBuffer: center-crops webcam frames to square aspect ratio before resizing. Improved keypoint confidence significantly",
-        "Tensor construction via Array4::from_shape_fn: reshapes 192x192 RGB image into [1, 3, 192, 192] NCHW tensor with 0-1 normalization in one pass",
-        "Confidence threshold filtering: averages confidence scores across 4 keypoints (shoulders + wrists), skips frames below 0.4 to avoid acting on unreliable data",
-        "Hysteresis-based state machine: UP threshold at 0.05 (arms high), DOWN threshold at 0.15 (arms extended). Dead zone between them absorbs sensor noise",
-        "30 warmup frames before starting inference to let camera auto-exposure settle",
+        "tract ONNX runtime as the Rust-native inference path. Three method calls from ONNX file to runnable inference: model_for_path \u{2192} into_optimized \u{2192} into_runnable. No Python, no cloud",
+        "Custom Square trait on ImageBuffer center-crops webcam frames to square aspect before resizing. Distortion-free resize meaningfully improved keypoint confidence",
+        "Tensor build via Array4::from_shape_fn: reshapes a 192x192 RGB image into a [1, 3, 192, 192] NCHW tensor with 0-1 normalization in one pass",
+        "Confidence threshold filtering: averages scores across 4 keypoints (shoulders + wrists), skips frames below 0.4 so the counter never acts on unreliable data",
+        "Hysteresis state machine: UP at 0.05 (arms high), DOWN at 0.15 (arms extended). Dead zone between thresholds absorbs sensor noise so jitter doesn't false-count",
     ],
     snippets: &[
         Snippet {
@@ -803,14 +743,12 @@ match state {
         },
     ],
     obstacles: &[
-        "Tensor shape [1, 3, 192, 192] in NCHW format was not intuitive. Required reading the ONNX model metadata and tract source to understand MoveNet's expected input layout",
-        "Quantized MoveNet model (w8a16) is incompatible with tract: QuantizeLinear op is unsupported. Had to use the full-precision float model instead",
         "Single threshold caused false counts from keypoint jitter. Hysteresis with separate UP/DOWN thresholds and a dead zone solved it",
-        "Webcam frames needed square cropping before resize to avoid distorting the aspect ratio, which degraded keypoint confidence. Built a custom Square trait on ImageBuffer for center-cropping",
-        "tract documentation is sparse compared to Python ML libraries. Required reading source code, ONNX model metadata, and the tract examples to get the pipeline working",
+        "Quantized MoveNet model (w8a16) is incompatible with tract \u{2014} QuantizeLinear op is unsupported. Used the full-precision float model instead",
+        "tract documentation is sparse compared to Python ML libraries. Required reading source, ONNX model metadata, and tract examples to get the pipeline working",
     ],
-    progress: "Working prototype. Counts pullups in real time from webcam feed. Roadmap: threshold tuning with more data, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
-    impact: "Demonstrates ML inference in Rust without Python or cloud dependencies. Shows ability to work through an unfamiliar domain (ML, tensor operations, pose estimation) by reading specs, model metadata, and source code rather than relying on tutorials. ~145 lines from webcam to rep counter.",
+    progress: "Working prototype. Counts pullups in real time from webcam. Roadmap: threshold tuning, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
+    impact: "ML inference in Rust without Python or cloud dependencies. ~145 lines from webcam frame to rep count.",
     status: ProjectStatus::Done,
 };
 
@@ -828,14 +766,13 @@ const CAPTURE: Project = Project {
         "~225 LOC",
     ],
     impact_metric: "~225 lines, 2 platforms",
-    objective: "Build a cross-platform security camera that locks input devices, takes a photo of anyone who touches the keyboard or mouse, and only unlocks with a secret key. Must work on both macOS and Linux despite fundamentally different I/O models.",
+    objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
     approach: &[
-        "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps in Cargo.toml via [target.'cfg(...)'.dependencies]",
-        "Linux: enumerate /dev/input/event* devices, filter via capability heuristics (Identify trait on evdev::Device), grab each, poll with nix::poll, ungrab on exit",
-        "macOS: rdev::grab with Accessibility API. Callback returns None to swallow events. No clean stop API, forced to process::exit(0) on secret key",
-        "Custom traits on third-party types: Identify trait on Device (is_probably_keyboard, is_probably_mouse), IsSecret trait on InputEvent for secret key matching",
-        "CaptureState with jiff timestamps for 1-second debounce between photos. Rc<Mutex<CaptureState>> for interior mutability in event callbacks",
-        "Camera warmup: 30 frames discarded on init to let auto-exposure settle before taking real photos",
+        "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps via [target.'cfg(...)'.dependencies] in Cargo.toml",
+        "Linux: enumerate /dev/input/event* devices, filter by capability heuristics (Identify trait on evdev::Device), grab each, poll with nix::poll, ungrab on exit",
+        "macOS: rdev::grab with Accessibility API callbacks. Callback returns None to swallow events. No clean stop API \u{2014} process::exit(0) on secret key",
+        "Custom traits on third-party types: Identify on evdev::Device (is_probably_keyboard, is_probably_mouse), IsSecret on InputEvent. Extension beats wrapping",
+        "CaptureState with jiff timestamps for 1-second photo debounce. Rc<Mutex<CaptureState>> for interior mutability inside event callbacks",
     ],
     snippets: &[
         Snippet {
@@ -882,12 +819,11 @@ impl IsSecret for InputEvent {
         },
     ],
     obstacles: &[
-        "rdev grabs ALL evdev devices on Linux, including Bluetooth controllers and network adapters, causing disconnects. Discovered this at runtime. Dropped to raw evdev with selective grabbing based on device capabilities",
-        "macOS rdev::grab has no clean stop API. The grab loop blocks forever with no break mechanism. Forced to use process::exit(0), which means no cleanup or graceful shutdown on macOS",
-        "Linux poll loop requires rebuilding PollFd vec each iteration because PollFd borrows the device file descriptor, causing borrow conflicts if held across the loop body",
-        "Device identification is heuristic-based. A device that reports EV_REPEAT + alpha keys is 'probably a keyboard'. No guaranteed way to distinguish real keyboards from virtual or composite devices",
+        "rdev grabs ALL evdev devices on Linux \u{2014} Bluetooth controllers, network adapters \u{2014} causing disconnects. Discovered at runtime. Dropped to raw evdev with selective grabbing by capability",
+        "macOS rdev::grab has no clean stop API. The grab loop blocks forever with no break mechanism. Forced to process::exit(0) \u{2014} no cleanup or graceful shutdown on macOS",
+        "Linux poll loop must rebuild PollFd vec each iteration: PollFd borrows the device file descriptor, so holding it across the loop body fails the borrow check",
     ],
     progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with secret key. Clean ungrab on Linux, forced exit on macOS.",
-    impact: "Demonstrates systems-level programming across platforms. Shows ability to drop down to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit the use case. Custom traits on third-party types for clean abstraction of platform-specific behavior. ~225 LOC.",
+    impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types for clean abstraction of platform-specific behavior.",
     status: ProjectStatus::Done,
 };

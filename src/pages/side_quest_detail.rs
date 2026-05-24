@@ -42,7 +42,7 @@ pub fn SideQuestDetail(slug: String) -> Element {
                 h2 { "Approach" }
                 ul {
                     for point in project.approach {
-                        li { "{point}" }
+                        li { LinkedText { text: point.to_string() } }
                     }
                 }
             }
