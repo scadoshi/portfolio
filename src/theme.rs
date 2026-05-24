@@ -16,7 +16,7 @@ impl Default for ThemeConfig {
 impl ThemeConfig {
     pub fn css_class(&self) -> String {
         let mode = if self.is_dark { "dark" } else { "light" };
-        format!("theme-wrapper {}-{}", self.name, mode)
+        format!("theme-wrapper theme-{}-{}", self.name, mode)
     }
 
     pub fn has_light_mode(&self) -> bool {
