@@ -19,11 +19,19 @@ pub struct Project {
 
 use dioxus::prelude::*;
 
+#[derive(Clone, Copy, PartialEq)]
+#[allow(dead_code)]
+pub enum MediaKind {
+    Image,
+    Video,
+}
+
 #[derive(Clone, PartialEq)]
 pub struct MediaItem {
     pub src: Asset,
     pub alt: &'static str,
     pub caption: Option<&'static str>,
+    pub kind: MediaKind,
 }
 
 #[derive(Clone, Copy)]
@@ -84,7 +92,38 @@ const ZWIPE: Project = Project {
     ],
     impact_metric: "Full-stack mobile app \u{2014} ~37,300 lines of Rust",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. Live at https://zwipe.net; App Store submission pending.",
-    media: &[],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/zwipe/zwipe-demo-add-cards.mp4"),
+            alt: "Filtering and swiping through cards, with skip, add, and undo actions",
+            caption: Some("Filtering and swiping through cards \u{2014} skip, add, undo"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/zwipe/zwipe-demo-deck-view.mp4"),
+            alt: "Deck view expanding card entries and switching printings",
+            caption: Some("Deck view: expanding card details and switching printings"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/zwipe/zwipe-demo-deck-profile.mp4"),
+            alt: "Deck profile showing analytics charts and inline error resolution",
+            caption: Some("Deck analytics with inline error resolution"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/zwipe/zwipe-demo-import-deck.mp4"),
+            alt: "Creating a new deck and importing cards into it",
+            caption: Some("Creating a deck and bulk-importing cards"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/zwipe/zwipe-demo-profile.mp4"),
+            alt: "Profile management screen and switching themes",
+            caption: Some("Profile management and theme switching"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "Rust on mobile via Dioxus \u{2014} one Rust codebase compiles to a native mobile app, no JS bridge, no separate frontend repo",
         "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardFilter type drives SQL queries server-side and in-memory filtering on the device, via extension traits on Vec<Card>",
@@ -716,9 +755,10 @@ const UPSEE: Project = Project {
     objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time from a webcam, using the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference \u{2014} everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
     media: &[
         MediaItem {
-            src: asset!("/assets/projects/upsee/upsee-demo.gif"),
+            src: asset!("/assets/projects/upsee/upsee-demo.mp4"),
             alt: "Upsee counting pullups in real time from webcam input",
             caption: Some("Real-time pose estimation and rep counting via on-device MoveNet inference"),
+            kind: MediaKind::Video,
         },
     ],
     approach: &[

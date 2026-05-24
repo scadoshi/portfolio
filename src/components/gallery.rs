@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use crate::data::MediaItem;
+use crate::data::{MediaItem, MediaKind};
 
 #[component]
 pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
@@ -15,11 +15,27 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
     rsx! {
         figure { class: "project-gallery",
             div { class: "gallery-frame",
-                img {
-                    class: "gallery-image",
-                    src: "{current.src}",
-                    alt: "{current.alt}",
-                    loading: "lazy",
+                match current.kind {
+                    MediaKind::Image => rsx! {
+                        img {
+                            class: "gallery-image",
+                            src: "{current.src}",
+                            alt: "{current.alt}",
+                            loading: "lazy",
+                        }
+                    },
+                    MediaKind::Video => rsx! {
+                        video {
+                            class: "gallery-image",
+                            src: "{current.src}",
+                            "aria-label": "{current.alt}",
+                            autoplay: true,
+                            muted: true,
+                            "loop": true,
+                            playsinline: true,
+                            preload: "metadata",
+                        }
+                    },
                 }
                 if total > 1 {
                     button {

@@ -855,8 +855,9 @@ a:hover {
 /* === Project Gallery === */
 
 .project-gallery {
-    margin: 1.5rem 0 0;
+    margin: 1.5rem auto 0;
     padding: 0;
+    width: min(100%, 30rem);
 }
 
 .gallery-frame {
@@ -868,6 +869,7 @@ a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 70vh;
 }
 
 .gallery-image {
