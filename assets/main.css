@@ -394,7 +394,8 @@ body {
     flex-direction: column;
 }
 
-a {
+a,
+a:visited {
     color: var(--blue);
     text-decoration: none;
     transition: color 0.2s;
@@ -455,7 +456,8 @@ a:hover {
     align-items: center;
 }
 
-.nav-link {
+.nav-link,
+.nav-link:visited {
     color: var(--fg2);
     text-decoration: none;
     font-size: 0.95rem;

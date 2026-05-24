@@ -30,7 +30,6 @@ pub fn Navbar() -> Element {
                     pre { class: "nav-logo", "{LOGO_S}" }
                 }
                 div { class: "nav-links",
-                    Link { to: Route::Home {}, class: "nav-link", "Home" }
                     div { class: "dropdown",
                         span { class: "nav-link dropdown-trigger", "Projects \u{25be}" }
                         div { class: "dropdown-content",
