@@ -71,9 +71,11 @@ pub fn Home() -> Element {
                         slug: project.slug.to_string(),
                         category: project.category.to_string(),
                         summary: project.summary.to_string(),
+                        bullets: project.card_bullets.iter().map(|b| b.to_string()).collect(),
                         impact_metric: project.impact_metric.to_string(),
-                        impact_detail: project.impact_detail.to_string(),
                         repo_url: project.repo_url.to_string(),
+                        status_label: project.status.label().to_string(),
+                        status_class: project.status.css_class().to_string(),
                     }
                 }
             }

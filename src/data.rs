@@ -5,14 +5,36 @@ pub struct Project {
     pub category: &'static str,
     pub repo_url: &'static str,
     pub summary: &'static str,
+    pub card_bullets: &'static [&'static str],
     pub impact_metric: &'static str,
-    pub impact_detail: &'static str,
     pub objective: &'static str,
     pub approach: &'static [&'static str],
     pub snippets: &'static [Snippet],
     pub obstacles: &'static [&'static str],
     pub progress: &'static str,
     pub impact: &'static str,
+    pub status: ProjectStatus,
+}
+
+#[derive(Clone, Copy)]
+pub enum ProjectStatus {
+    Done,
+    Doing,
+}
+
+impl ProjectStatus {
+    pub fn label(&self) -> &'static str {
+        match self {
+            Self::Done => "Done",
+            Self::Doing => "Doing",
+        }
+    }
+    pub fn css_class(&self) -> &'static str {
+        match self {
+            Self::Done => "status-done",
+            Self::Doing => "status-doing",
+        }
+    }
 }
 
 pub struct Snippet {
@@ -26,7 +48,7 @@ pub fn featured_projects() -> &'static [Project] {
 }
 
 pub fn side_quests() -> &'static [Project] {
-    &[NIGHTHAWK, MARVIN, CAPTURE, UPSEE]
+    &[NIGHTHAWK, DIPROTODON, MARVIN, CAPTURE, UPSEE]
 }
 
 pub fn find_project(slug: &str) -> Option<&'static Project> {
@@ -43,9 +65,14 @@ const ZWIPE: Project = Project {
     headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 110k+ cards. Live at https://zwipe.net.",
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
-    summary: "A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Five crates in a Cargo workspace: zwipe-core (shared domain types), zerver (Axum REST API), zwiper (Dioxus iOS/Android app), zervice (background sync service), and zite (static website at zwipe.net). Hexagonal architecture with shared domain types across all crates. Commander support with all partner variants, backgrounds, and oathbreaker. 15 themes with dark/light variants. Nightly database backups to Cloudflare R2. CI/CD via self-hosted GitHub Actions runner.",
-    impact_metric: "~37,300 lines of production Rust",
-    impact_detail: "Hexagonal architecture with strict type safety throughout. 340+ unit tests. Every domain boundary enforced at the type level. Production-strict linting: .unwrap(), .expect(), panic!, todo!, dbg!, and print! are all denied at compile time. 33 enforced Clippy rules. Nightly Cloudflare R2 backups. Binary versioning across all crates. Security audit complete.",
+    summary: "Mobile-first Magic: The Gathering deck builder with swipe-based navigation.",
+    card_bullets: &[
+        "Native iOS + Android from one Dioxus codebase",
+        "Axum REST API backed by PostgreSQL (110k+ cards, materialized search)",
+        "Background sync service + static marketing site, all in the same workspace",
+        "Full commander support \u{2014} partners, backgrounds, oathbreaker",
+    ],
+    impact_metric: "Full-stack mobile app \u{2014} ~37,300 lines of Rust",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation, targeting iOS, Android, and web from a single Rust codebase. Five workspace crates: zwipe-core (shared domain), zerver (Axum REST API), zwiper (Dioxus frontend), zervice (background sync), and zite (static website). Full commander support with all partner variants, backgrounds, and oathbreaker. Live at https://zwipe.net with App Store submission pending.",
     approach: &[
         "Hexagonal architecture applied consistently across ~37,300 lines of Rust. Port traits define what operations are needed (AuthRepository, CardRepository, DeckRepository). Adapters implement those ports for specific technologies. Domain logic lives in zwipe-core \u{2014} a pure shared crate with zero framework dependencies, used by both frontend and backend",
@@ -230,6 +257,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     ],
     progress: "Feature-complete and live at https://zwipe.net. Auth, card database, deck management, card search, swipe-based deck building with peeking stack and drag tilt, commander system (partners, backgrounds, oathbreaker), maybeboard, sideboard, deck import/export, deck cloning, card image preview, account deletion, email verification with tiered limits, 15 themes, security audit complete, nightly database backups. App Store submission pending.",
     impact: "Demonstrates complete full-stack capability in Rust: database migrations, JWT auth with refresh token rotation, reactive cross-platform frontend, background services, CI/CD, cloud backups, and a static website \u{2014} all in one language with shared domain types between frontend and backend. ~37,300 lines across five crates, 340+ tests, zero unwrap.",
+    status: ProjectStatus::Doing,
 };
 
 const HALO_ACTION_IMPORTER: Project = Project {
@@ -238,9 +266,14 @@ const HALO_ACTION_IMPORTER: Project = Project {
     headline: "Production bulk import tool. Millions of records, resilient retry, incremental caching.",
     category: "Production Data Tooling",
     repo_url: "https://github.com/scadoshi/halo_action_importer",
-    summary: "CLI tool for bulk importing actions into the Halo Software suite from CSV and Excel files. Layered architecture (inbound/domain/outbound) with bin/lib crate split. Built for real migrations involving millions of records against production APIs with real failure modes: messy data formats, unreliable networks, and hours-long unattended runtimes. ~3,230 LOC across 20 files.",
+    summary: "CLI for bulk importing actions into the Halo Software suite from CSV and Excel.",
+    card_bullets: &[
+        "Layered architecture (inbound/domain/outbound) with bin/lib crate split",
+        "Built for hours-long unattended runs against unreliable production APIs",
+        "Handles millions of records with automatic recovery from transient failures",
+        "~3,230 LOC across 20 files",
+    ],
     impact_metric: "Weeks of manual work, automated",
-    impact_detail: "Halo's built-in browser import runs one entry at a time, loses progress on page refresh, and offers minimal error handling. For millions of entries that's literal weeks of runtime coordinating spreadsheets manually. This tool: dump everything into one file, run it, and forget it. Split files across directories for parallel execution when you need faster runtimes.",
     objective: "Build a CLI tool for bulk importing actions into Halo Software products from CSV and Excel files. Must handle millions of records against a production API with real failure modes: network errors, token expiry, missing tickets, partial batch failures, and wildly inconsistent data formats across client exports.",
     approach: &[
         "Production-grade error recovery: infinite retry on network/timeout failures, automatic token refresh on 401s, permanent skip on missing tickets via HashSet<u32> tracked across the entire run",
@@ -318,6 +351,7 @@ fn read_cached_ids() -> CacheData {
     ],
     progress: "Production. Actively used for real data migrations.",
     impact: "Reduced data migration timelines from weeks to days. Runs unattended for hours processing millions of records with automatic recovery from any transient failure.",
+    status: ProjectStatus::Done,
 };
 
 const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
@@ -326,9 +360,14 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     headline: "Shipped CLI tool. Bulk-creating custom fields across Halo Software products with cross-platform binaries.",
     category: "Production Data Tooling",
     repo_url: "https://github.com/scadoshi/halo_custom_field_builder",
-    summary: "CLI tool that reads custom field definitions from CSV and creates them across Halo Software products via API. Layered architecture (inbound/domain/outbound) with bin/lib crate split. Type-safe domain modeling, OAuth 2.0 with token caching, interactive debug TUI, import results tracking, and log management. Cross-platform binaries via GitHub Actions CI/CD. ~1,370 LOC.",
+    summary: "CLI that bulk-creates custom fields across Halo Software products from CSV definitions.",
+    card_bullets: &[
+        "Layered architecture (inbound/domain/outbound) with bin/lib crate split",
+        "Type-safe domain modeling; OAuth 2.0 with token caching",
+        "Interactive debug TUI; import results tracking; log management",
+        "Cross-platform binaries via GitHub Actions. ~1,370 LOC",
+    ],
     impact_metric: "Manual UI clicks to one CSV import",
-    impact_detail: "Instead of building configuration manually through Halo's UI one field at a time, prepare a CSV and import. ~1000 fields in about 15 minutes on a single thread. Great workflow: gather client requirements, use AI to generate a CSV to spec, then import. Building forms becomes trivially fast as long as the fields fall within the tool's scope.",
     objective: "Build a CLI tool that reads custom field definitions from CSV files and creates them in Halo Software products via the API. Must support all 8 field types, handle authentication, respect rate limits, and distribute as cross-platform binaries.",
     approach: &[
         "Layered architecture: inbound (CSV parsing, interactive TUI), domain (models, validation, import results), outbound (OAuth auth client, field API client, HTTP type mapping). Same pattern used at larger scale in Zwipe",
@@ -396,6 +435,7 @@ impl From<&CustomField> for HttpCustomField {
     ],
     progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Actively used in production for client implementations.",
     impact: "Reduced enterprise configuration time from hours to minutes. Deployed across Fortune 500 client implementations. ~1,370 lines of Rust demonstrating layered architecture, production-grade auth, and operational tooling (logging, results tracking, CI/CD).",
+    status: ProjectStatus::Done,
 };
 
 const MARVIN: Project = Project {
@@ -404,9 +444,14 @@ const MARVIN: Project = Project {
     headline: "CLI chatbot on Rig framework. Streaming, tool use, web search, context management.",
     category: "AI Tooling",
     repo_url: "https://github.com/scadoshi/marvin",
-    summary: "Interactive CLI chatbot built on the Rig AI framework with Claude as the backend. Started as a learning project to understand AI agent plumbing in Rust. Streaming responses, 4 Tavily web tools with Arc-shared client, math tools, chat persistence with session IDs, token tracking, context compaction, and dynamic model discovery from Anthropic's API. Found and fixed deprecated model constants in Rig itself, submitting a PR across 17 files. ~1,750 LOC.",
+    summary: "Interactive CLI chatbot built on Rig with Claude. A Rust agent-plumbing learning project.",
+    card_bullets: &[
+        "Streaming responses; 4 Tavily web tools with Arc-shared client; math tools",
+        "Chat persistence with session IDs; token tracking; context compaction",
+        "Dynamic model discovery from Anthropic's API",
+        "Found + fixed deprecated model constants in Rig (PR across 17 files). ~1,750 LOC",
+    ],
     impact_metric: "~1,750 lines of Rust",
-    impact_detail: "Built to learn the Rig AI framework by building something real, not just reading docs. Each feature taught something new about Rust async patterns, AI agent plumbing, or open source contribution.",
     objective: "Learn the Rig AI framework by building a real CLI chatbot. Each feature should teach something new about Rig or Rust, prioritizing learning over shipping.",
     approach: &[
         "Incremental feature development: start with basic chat loop, add streaming, tools, persistence, context management",
@@ -459,6 +504,7 @@ impl Tool for SearchWeb {
     ],
     progress: "Active. Core chatbot with streaming, tools, persistence, and context management all working. Roadmap includes RAG with local files, persistent memory, and MCP server integration.",
     impact: "Demonstrates ability to learn a new framework by building with it. Contributed back to the ecosystem when a bug was found. Shows progression from simple prototype to well-structured application.",
+    status: ProjectStatus::Done,
 };
 
 const NIGHTHAWK: Project = Project {
@@ -467,9 +513,14 @@ const NIGHTHAWK: Project = Project {
     headline: "LSM-tree key-value database from scratch. TCP server, concurrent connections, WAL, SSTables, bloom filters, k-way compaction.",
     category: "Database Internals",
     repo_url: "https://github.com/scadoshi/nighthawk",
-    summary: "Complete LSM-tree key-value database built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf). Not just a storage engine: a TCP server you can connect to and use. Thread-per-connection concurrency with per-command locking. WAL durability with crash recovery, BTreeMap memtable, timestamped SSTables with bloom filter footers, k-way merge compaction, and a binary protocol with CRC32 checksums and byte-level corruption recovery. The architecture behind LevelDB, RocksDB, and Cassandra. ~2,100 LOC, 99 tests.",
+    summary: "LSM-tree key-value database built phase by phase from the Bitcask paper. The architecture behind LevelDB, RocksDB, and Cassandra.",
+    card_bullets: &[
+        "TCP server with thread-per-connection concurrency, per-command locking",
+        "WAL durability, BTreeMap memtable, bloom-filtered SSTables",
+        "K-way merge compaction; byte-level corruption recovery",
+        "~2,100 LOC, 99 tests",
+    ],
     impact_metric: "~2,100 lines, 99 tests, 6 phases",
-    impact_detail: "Started from a paper and built the storage layer that powers production databases. Not a contained exercise: a real TCP database server you can host, connect to, and query. Every layer built from scratch: binary protocol, WAL, memtable, SSTables, bloom filters, compaction, corruption recovery, concurrency.",
     objective: "Build a key-value database incrementally from the Bitcask paper toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, and concurrency.",
     approach: &[
         "Phases 1-3 (Bitcask foundation): append-only WAL, sync_all() after every write, atomic rename compaction. 10-byte binary header per entry (magic 0x4E48, CRC32, wincode length prefix). Corruption recovery scans byte-by-byte past garbage to find the next valid entry, typed via CorruptionType enum (NotEnoughBytes, MagicBytesMismatch, ChecksumMismatch, ParseError)",
@@ -592,6 +643,103 @@ impl<R: Read + Seek> BloomFilterReader for R {
     ],
     progress: "Complete. All 6 phases done: Bitcask foundation, durability, binary protocol, LSM-tree (memtable + SSTables + bloom filters + compaction), networking, and concurrency. 99 tests across 7 modules including TCP integration tests.",
     impact: "Started from a paper and built a complete, connectable key-value database implementing the storage architecture behind LevelDB, RocksDB, and Cassandra. Every layer built from scratch: binary protocol with corruption recovery, WAL durability, sorted memtable flush, bloom filter accelerated reads, k-way merge compaction, TCP server with concurrent access. Not a library, a database you can host and connect to.",
+    status: ProjectStatus::Done,
+};
+
+const DIPROTODON: Project = Project {
+    name: "Diprotodon",
+    slug: "diprotodon",
+    headline: "Redis-compatible in-memory KV server in Rust. Hand-written RESP wire protocol, real redis-cli clients connect.",
+    category: "Network Protocols & Systems",
+    repo_url: "https://github.com/scadoshi/diprotodon",
+    summary: "Redis-compatible in-memory KV server in Rust. Real redis-cli clients connect.",
+    card_bullets: &[
+        "Hand-written RESP wire protocol \u{2014} no library does the work",
+        "Parser-as-framer returning Incomplete / Malformed / Ok((frame, leftover))",
+        "Binary-safe end-to-end (Vec<u8>, not String)",
+        "Hexagonal layout; generic Session<R, W> for cursor-based tests",
+    ],
+    impact_metric: "~1,200 lines, 50+ tests, M0\u{2013}M2 complete",
+    objective: "Build a Redis-compatible KV server one wire-protocol layer at a time, hand-writing the substance so the muscle survives the project. Each milestone adds a real layer: TCP echo, RESP framing, command dispatch, in-memory KV ops, then TTL, AOF, and Pub/Sub. Sibling-paired with a Go port (wombat) to feel the translation between languages.",
+    approach: &[
+        "Hexagonal layout (src/lib/{domain,inbound,outbound}/) \u{2014} domain types know nothing about RESP, RESP knows nothing about Redis semantics. One-way coupling: outbound depends on domain, inbound depends on domain, domain depends on nobody.",
+        "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError> returns the parsed frame and a leftover slice borrowing from the input. No allocation for the rest-of-the-buffer. Caller drains the consumed prefix and reads more on Incomplete. The parser is the only thing that knows whether a frame is complete, because completeness depends on bulk-string length prefixes and array sizes.",
+        "Three-state error model collapsed into one Result: FrameError has Incomplete, Malformed, UnknownSigil, InvalidLength, and MissingTerminator variants. Incomplete is the load-bearing signal \u{2014} the session reader uses it to know when to read more bytes vs. when to clear a poisoned buffer.",
+        "Binary safety end-to-end. Keys and values are Vec<u8>, not String. Bulk-string payloads on the wire can be arbitrary bytes (jpegs, interior \\r\\n, whatever). UTF-8 is never enforced where the protocol doesn't require it. Command dispatch matches on byte slices (b\"get\", b\"set\") after ASCII-lowercasing the verb.",
+        "Iterative array parsing. Recursive parse_array would blow the stack on MGET key1..key1000. Iterative loop with a Vec is one extra concept and zero stack-overflow risk.",
+        "SimpleInner newtype validates the no-CR/LF invariant for simple-string and simple-error payloads at construction time. Three constructors: SimpleInner::ok() and ::pong() bypass validation for known-safe literals (infallible by inspection); ::sanitized(...) strips CR/LF from arbitrary error message bytes for outbound use. Inbound bytes get strict validation, outbound server-authored strings get lossy sanitization \u{2014} different policies for different trust boundaries.",
+        "Generic Session<R: Read, W: Write>. SessionReader<R> owns a Vec<u8> frame-accumulation buffer and handles three cases mechanically: success drains the consumed prefix, Incomplete preserves the buffer, hard parse error clears it. Cursor<Vec<u8>> as R and Vec<u8> as W lets tests script RESP bytes in and out without a real socket.",
+        "Reply serializer with Reply::write_to(&mut impl Write) streams bytes via write_all \u{2014} no intermediate Vec. BufWriter at the call site accumulates small writes (sigil, payload, terminator) into one syscall per flush. Five variants: SimpleString, SimpleError, BulkString, NullBulk, Integer.",
+        "Bad-command resilience: malformed frames and unknown commands return -ERR ...\\r\\n via SimpleInner::sanitized without killing the session. The session continues for the next command. Disconnect (0-byte read) cleanly returns the session.",
+    ],
+    snippets: &[
+        Snippet {
+            title: "Parser-as-Framer",
+            code: r#"pub fn parse_one(bytes: &[u8]) -> Result<(Frame, &[u8]), FrameError> {
+    let (header, rest) = bytes.split_crlf().ok_or(FrameError::Incomplete)?;
+    let (sigil, len_bytes) = header.split_first().ok_or(FrameError::Malformed)?;
+    let len: usize = std::str::from_utf8(len_bytes)?.parse()?;
+    match sigil {
+        b'$' => Self::parse_bulk_string(rest, len),
+        b'*' => Self::parse_array(rest, len),
+        _ => Err(FrameError::UnknownSigil),
+    }
+}"#,
+            description: "Frame::parse_one returns the parsed frame and a leftover slice borrowing from the input. Incomplete is a real error variant, not an Option \u{2014} it's load-bearing for the session reader's read-more loop. split_crlf returns None when no CRLF is found, which is the Incomplete signal at the byte-splitter layer.",
+        },
+        Snippet {
+            title: "Drain on Success, Clear on Garbage, Preserve on Incomplete",
+            code: r#"pub fn parse_frame(&mut self) -> Result<Frame, FrameError> {
+    match Frame::parse_one(&self.buf) {
+        Ok((frame, bytes)) => {
+            let consumed = self.buf.len() - bytes.len();
+            self.buf.drain(..consumed);  // keep only the leftover
+            Ok(frame)
+        }
+        Err(e) => {
+            if !matches!(e, FrameError::Incomplete) {
+                self.buf.clear();  // poisoned wire, throw it away
+            }
+            Err(e)  // Incomplete preserves the buf for next read
+        }
+    }
+}"#,
+            description: "The borrow checker forbids holding the leftover slice while mutating self.buf \u{2014} so capture bytes.len() (a usize, Copy), drop the borrow, then drain. Three different policies in three arms: success drains the consumed prefix, hard error clears, Incomplete preserves so the next read appends to a valid in-progress frame.",
+        },
+        Snippet {
+            title: "SimpleInner: Strict In, Lossy Out",
+            code: r#"impl TryFrom<&[u8]> for SimpleInner {
+    type Error = SimpleInnerError;
+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        if value.contains(&b'\r') { return Err(SimpleInnerError::IncludesCarriageReturn); }
+        if value.contains(&b'\n') { return Err(SimpleInnerError::IncludesLineFeed); }
+        Ok(Self(value.to_vec()))
+    }
+}
+
+impl SimpleInner {
+    pub fn ok() -> Self { Self(b"OK".to_vec()) }
+    pub fn pong() -> Self { Self(b"PONG".to_vec()) }
+    pub fn sanitized(bytes: impl Into<Vec<u8>>) -> Self {
+        Self(bytes.into().into_iter()
+            .filter(|b| *b != b'\r' && *b != b'\n')
+            .collect())
+    }
+}"#,
+            description: "Same newtype, three constructors with different trust levels. Inbound (or untrusted) bytes get TryFrom's strict validation \u{2014} rejected if CR/LF present. Known-safe literals (\"OK\", \"PONG\") get infallible constructors. Arbitrary server-authored error strings get sanitized \u{2014} CR/LF stripped because the wire format forbids them anyway. The invariant survives all three paths.",
+        },
+    ],
+    obstacles: &[
+        "Bytes-to-Vec read footgun: first version of SessionReader::read called inner.read(&mut new) where new was Vec::new() \u{2014} reads into a zero-length slice always return Ok(0), buf never grew, the get_frame loop spun forever. Fix: read into a sized stack array ([0u8; 1024]) and extend_from_slice(&new[..n]) using the returned count. Clippy's unused_io_amount lint catches it now.",
+        "Borrow-checker corner on parse_frame: parse_one returns (Frame, &[u8]) where the slice borrows from self.buf. Trying to self.buf.clear() or self.buf.drain(..) while that slice was alive failed. Fix: extract bytes.len() (a Copy usize) into a local, drop the borrow, then mutate. The lesson: when you need both 'information from the borrow' and 'to mutate the source,' extract just the bits you need before mutating.",
+        "Initial TryFrom<&[u8]> for Frame had no leftover-bytes return path. The streaming protocol needs the leftover \u{2014} it's structural, not optional. Dropped TryFrom entirely; parse_one is the public entry point with the leftover slice as part of its contract.",
+        "split_crlf Contract A vs Contract B decision: if no CRLF is in the buffer, should split_crlf return None (telling the parser 'need more bytes') or Some((entire_buf, &[])) (telling it 'here's everything')? Contract A (None) is correct because it preserves the Incomplete signal up to the parser layer. Contract B would lie to the caller and force an extra round of error gymnastics upstream. The byte-splitter layer doesn't have errors; the parser layer above it does \u{2014} that boundary matters.",
+        "Bespoke text Command::TryFrom<&str> survived for a while before getting deleted. The temptation to reuse the old text parser by joining Vec<&[u8]> back into a String was real \u{2014} it would have worked, but it would have done the work RESP already did, broken binary safety (UTF-8 forced where it isn't required), and kept dead code alive. Better: match on Vec<Frame::BulkString> directly. The architectural test was 'does the new wire have to pretend to be the old wire?' \u{2014} no.",
+        "Hard-parse-error hot loop: first version of get_frame sent the SimpleError, continued the loop, but didn't clear the poisoned buf. Next iteration parsed the same garbage prefix, sent the same error, forever. Fix lives in parse_frame: any non-Incomplete error clears the buf, so the session recovers when the next valid frame arrives.",
+    ],
+    progress: "M0 (TCP echo), M1 (RESP protocol + dispatch), and M2 (GET/SET/DEL/EXISTS) complete. Real redis-cli clients connect and run all four commands successfully. Test coverage on every protocol layer: Crlf trait, Frame parser, Frame\u{2192}Command mapping, Reply serializer, SessionReader drain logic, domain Command. Next phases on the roadmap: M3 (EXPIRE/TTL with active background sweep), M4 (AOF persistence with rewrite-style compaction \u{2014} deliberately not LSM, since nighthawk already proves that ground), M5 (Pub/Sub fan-out, easier after a tokio migration).",
+    impact: "Demonstrates the muscle to implement a real network protocol from the byte level \u{2014} framing, error variants, streaming, binary safety, layered architecture \u{2014} interoperable with a real client (redis-cli) rather than a mock. Paired with nighthawk to cover the two halves of how production KV systems are built: nighthawk does the on-disk LSM storage engine, diprotodon does the in-memory protocol-server layer. Both written by hand, no shortcuts on the substance.",
+    status: ProjectStatus::Doing,
 };
 
 const UPSEE: Project = Project {
@@ -600,9 +748,14 @@ const UPSEE: Project = Project {
     headline: "Real-time pullup counter. Webcam + MoveNet pose estimation via tract ONNX runtime.",
     category: "ML Inference",
     repo_url: "https://github.com/scadoshi/upsee",
-    summary: "Real-time pullup counter using webcam + MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet) via the tract ONNX runtime (https://github.com/sonos/tract). Runs entirely on-device with no cloud inference. Custom Square trait for center-cropping frames, confidence filtering to skip bad frames, and hysteresis state machine for accurate counting. ~145 LOC.",
+    summary: "Real-time pullup counter using webcam + MoveNet pose estimation. Runs entirely on-device.",
+    card_bullets: &[
+        "tract ONNX runtime for inference; no cloud dependency",
+        "Custom Square trait for center-cropping frames",
+        "Confidence filtering + hysteresis state machine for accurate counts",
+        "~145 LOC",
+    ],
     impact_metric: "~145 lines, on-device ML",
-    impact_detail: "Full ML inference pipeline running locally in Rust. No Python, no cloud API, no latency. Frame capture to rep count in real time.",
     objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time using a webcam and the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference, everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
     approach: &[
         "tract ONNX runtime as a Rust-native alternative to Python inference. Load model, optimize, run: three method calls to go from ONNX file to runnable inference",
@@ -658,6 +811,7 @@ match state {
     ],
     progress: "Working prototype. Counts pullups in real time from webcam feed. Roadmap: threshold tuning with more data, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
     impact: "Demonstrates ML inference in Rust without Python or cloud dependencies. Shows ability to work through an unfamiliar domain (ML, tensor operations, pose estimation) by reading specs, model metadata, and source code rather than relying on tutorials. ~145 lines from webcam to rep counter.",
+    status: ProjectStatus::Done,
 };
 
 const CAPTURE: Project = Project {
@@ -666,9 +820,14 @@ const CAPTURE: Project = Project {
     headline: "Cross-platform security camera. Input device grabbing, intruder photos, platform-specific I/O.",
     category: "Systems Programming",
     repo_url: "https://github.com/scadoshi/capture",
-    summary: "Cross-platform security camera that grabs all input devices, snaps intruder photos on any interaction, and only releases with a secret key. Linux uses raw evdev with nix::poll, macOS uses rdev with Accessibility API callbacks. Custom traits on third-party types for device identification and secret key detection. ~225 LOC.",
+    summary: "Cross-platform security camera. Grabs all input devices, snaps intruder photos, only releases with a secret key.",
+    card_bullets: &[
+        "Linux: raw evdev with nix::poll for selective device grabbing",
+        "macOS: rdev with Accessibility API callbacks",
+        "Custom traits on third-party types for device ID + secret key detection",
+        "~225 LOC",
+    ],
     impact_metric: "~225 lines, 2 platforms",
-    impact_detail: "Same goal on two platforms, completely different implementations. Linux uses raw evdev with nix::poll, macOS uses rdev with Accessibility API callbacks. Conditional compilation keeps both behind a clean interface.",
     objective: "Build a cross-platform security camera that locks input devices, takes a photo of anyone who touches the keyboard or mouse, and only unlocks with a secret key. Must work on both macOS and Linux despite fundamentally different I/O models.",
     approach: &[
         "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps in Cargo.toml via [target.'cfg(...)'.dependencies]",
@@ -730,4 +889,5 @@ impl IsSecret for InputEvent {
     ],
     progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with secret key. Clean ungrab on Linux, forced exit on macOS.",
     impact: "Demonstrates systems-level programming across platforms. Shows ability to drop down to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit the use case. Custom traits on third-party types for clean abstraction of platform-specific behavior. ~225 LOC.",
+    status: ProjectStatus::Done,
 };

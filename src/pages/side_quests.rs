@@ -17,9 +17,17 @@ pub fn SideQuests() -> Element {
             div { class: "projects-grid",
                 for quest in quests {
                     div { class: "project-card",
-                        div { class: "card-category", "{quest.category}" }
+                        div { class: "card-category",
+                            "{quest.category}"
+                            span { class: "status-tag {quest.status.css_class()}", "{quest.status.label()}" }
+                        }
                         h3 { class: "card-title", "{quest.name}" }
                         p { class: "card-summary", "{quest.summary}" }
+                        ul { class: "card-bullets",
+                            for bullet in quest.card_bullets {
+                                li { "{bullet}" }
+                            }
+                        }
                         div { class: "card-actions",
                             Link {
                                 to: Route::SideQuestDetail { slug: quest.slug.to_string() },

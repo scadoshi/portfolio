@@ -8,21 +8,26 @@ pub fn ProjectCard(
     slug: String,
     category: String,
     summary: String,
+    bullets: Vec<String>,
     impact_metric: String,
-    impact_detail: String,
     repo_url: String,
+    status_label: String,
+    status_class: String,
 ) -> Element {
     rsx! {
         div { class: "project-card",
-            div { class: "card-category", "{category}" }
+            div { class: "card-category",
+                "{category}"
+                span { class: "status-tag {status_class}", "{status_label}" }
+            }
             h3 { class: "card-title", "{name}" }
             p { class: "card-summary", "{summary}" }
-            div { class: "card-impact",
-                "{impact_metric}"
-                if !impact_detail.is_empty() {
-                    div { class: "card-impact-tooltip", "{impact_detail}" }
+            ul { class: "card-bullets",
+                for bullet in bullets {
+                    li { "{bullet}" }
                 }
             }
+            div { class: "card-impact", "{impact_metric}" }
             div { class: "card-actions",
                 Link {
                     to: Route::ProjectDetail { slug },
