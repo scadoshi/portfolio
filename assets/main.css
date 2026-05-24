@@ -223,26 +223,6 @@
     --orange-bright: #ab2b00;
 }
 
-.zwipe-dark {
-    --bg0-h: #1f1e1e; --bg0: #252424; --bg1: #302e2e; --bg2: #433f3f; --bg3: #585554;
-    --fg0: #f5c4a0; --fg1: #d8b090; --fg2: #d0a078; --fg3: #a88060; --fg4: #886850;
-    --red: #d13b3b; --green: #399a55; --yellow: #6d9e9c; --blue: #6d9e9c;
-    --purple: #c9a227; --aqua: #ee4080; --orange: #9ab868;
-    --red-bright: #8b3030; --green-bright: #2d7040; --yellow-bright: #80b0ae;
-    --blue-bright: #80b0ae; --purple-bright: #8a7020; --aqua-bright: #f06090;
-    --orange-bright: #adc87a;
-}
-
-.zwipe-light {
-    --bg0-h: #eae7e4; --bg0: #f0edea; --bg1: #ddd8d4; --bg2: #c8c0ba; --bg3: #b0a49a;
-    --fg0: #3a2e26; --fg1: #4a3c30; --fg2: #5e4e42; --fg3: #7a6558; --fg4: #988070;
-    --red: #b02020; --green: #2a7a40; --yellow: #4a7a78; --blue: #4a7a78;
-    --purple: #a08018; --aqua: #c02060; --orange: #7a9848;
-    --red-bright: #8a1818; --green-bright: #1a5a2a; --yellow-bright: #3a6a68;
-    --blue-bright: #3a6a68; --purple-bright: #7a6010; --aqua-bright: #a01850;
-    --orange-bright: #608038;
-}
-
 /* === Colorblind Accessible === */
 
 .protanopia-dark {

@@ -25,19 +25,19 @@ impl ThemeConfig {
 }
 
 pub const THEMES: &[(&str, &str)] = &[
-    ("rustbox", "Rustbox"),
-    ("gruvbox", "Gruvbox"),
+    ("catppuccin", "Catppuccin"),
     ("dracula", "Dracula"),
     ("everforest", "Everforest"),
-    ("catppuccin", "Catppuccin"),
-    ("tokyo-night", "Tokyo Night"),
-    ("nord", "Nord"),
-    ("rose-pine", "Rosé Pine"),
+    ("gruvbox", "Gruvbox"),
     ("monokai", "Monokai"),
+    ("nord", "Nord"),
     ("one-dark", "One Dark"),
+    ("rose-pine", "Rosé Pine"),
+    ("rustbox", "Rustbox"),
     ("solarized", "Solarized"),
-    ("zwipe", "Zwipe"),
-    ("protanopia", "Protanopia"),
+    ("tokyo-night", "Tokyo Night"),
+    // Colorblind-accessible themes
     ("deuteranopia", "Deuteranopia"),
+    ("protanopia", "Protanopia"),
     ("tritanopia", "Tritanopia"),
 ];
