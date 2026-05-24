@@ -8,12 +8,22 @@ pub struct Project {
     pub card_bullets: &'static [&'static str],
     pub impact_metric: &'static str,
     pub objective: &'static str,
+    pub media: &'static [MediaItem],
     pub approach: &'static [&'static str],
     pub snippets: &'static [Snippet],
     pub obstacles: &'static [&'static str],
     pub progress: &'static str,
     pub impact: &'static str,
     pub status: ProjectStatus,
+}
+
+use dioxus::prelude::*;
+
+#[derive(Clone, PartialEq)]
+pub struct MediaItem {
+    pub src: Asset,
+    pub alt: &'static str,
+    pub caption: Option<&'static str>,
 }
 
 #[derive(Clone, Copy)]
@@ -74,6 +84,7 @@ const ZWIPE: Project = Project {
     ],
     impact_metric: "Full-stack mobile app \u{2014} ~37,300 lines of Rust",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. Live at https://zwipe.net; App Store submission pending.",
+    media: &[],
     approach: &[
         "Rust on mobile via Dioxus \u{2014} one Rust codebase compiles to a native mobile app, no JS bridge, no separate frontend repo",
         "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardFilter type drives SQL queries server-side and in-memory filtering on the device, via extension traits on Vec<Card>",
@@ -233,6 +244,7 @@ const HALO_ACTION_IMPORTER: Project = Project {
     ],
     impact_metric: "Weeks of manual work, automated",
     objective: "Bulk-import millions of records into Halo Software from CSV and Excel against a production API. Must survive every real failure mode: network errors, token expiry, missing tickets, partial batch failures, inconsistent data formats across client exports.",
+    media: &[],
     approach: &[
         "Per-failure-mode recovery, not blanket retry-with-backoff. 401 \u{2192} refresh token; 504/network \u{2192} retry immediately; missing ticket \u{2192} permanent skip via run-wide HashSet<u32>; deserialization error \u{2192} skip row and continue",
         "Ticket-grouped retry: when a batch fails, group actions by ticket_id and retry each group independently. Maximizes successful imports and identifies exactly which tickets don't exist",
@@ -324,6 +336,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     ],
     impact_metric: "Manual UI clicks to one CSV import",
     objective: "Read custom field definitions from CSV and create them across Halo Software products via the API. Must support all 8 field types, handle auth, respect rate limits, ship as cross-platform binaries.",
+    media: &[],
     approach: &[
         "Type-safe domain modeling: Name (max 64, alphanumeric + underscore), Label (max 256), FieldType (8 variants with sub-type enums). All validated at construction \u{2014} invalid data rejected before any API call",
         "OAuth 2.0 client credentials flow with Arc<Mutex<Option<AuthToken>>> caching. 30-second expiry buffer prevents the edge-case 401 between check and call",
@@ -403,6 +416,7 @@ const MARVIN: Project = Project {
     ],
     impact_metric: "~1,750 lines of Rust",
     objective: "Learn the Rig AI framework by building a real CLI chatbot. Each feature should teach something new about Rig or Rust \u{2014} prioritizing learning over shipping.",
+    media: &[],
     approach: &[
         "Found and fixed deprecated Anthropic model constants in Rig causing 404 errors. Filed issue #1370 (https://github.com/0xPlaygrounds/rig/issues/1370), submitted a PR across 17 files. The learning project found a real bug in its own framework",
         "Command pattern architecture: each slash command is a trait impl routed via a ChatInput enum. Started as a 220-line monolith, refactored to clean module boundaries as complexity grew",
@@ -470,6 +484,7 @@ const NIGHTHAWK: Project = Project {
     ],
     impact_metric: "~2,100 lines, 99 tests, 6 phases",
     objective: "Build a key-value database incrementally from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, concurrency.",
+    media: &[],
     approach: &[
         "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to full LSM-tree \u{2014} WAL, memtable, SSTables, bloom filters, k-way compaction, TCP server, concurrency. Six distinct architectural layers, each one a real piece of how production KV systems work",
         "WAL with sync_all() after every write; 10-byte binary header (magic 0x4E48 + CRC32 + length); corruption recovery scans byte-by-byte past garbage, typed via a CorruptionType enum so callers know exactly what went wrong",
@@ -607,6 +622,7 @@ const DIPROTODON: Project = Project {
     ],
     impact_metric: "~1,187 lines, 50+ tests, M0\u{2013}M2 complete",
     objective: "Build a Redis-compatible KV server one wire-protocol layer at a time, hand-writing the substance so the muscle survives the project. Each milestone adds a real layer: TCP echo, RESP framing, command dispatch, in-memory KV ops, then TTL, AOF, and Pub/Sub. Sibling-paired with a Go port (wombat) to feel the translation between languages.",
+    media: &[],
     approach: &[
         "Hand-written RESP wire protocol \u{2014} no library does the work. Real redis-cli clients connect and run all four M2 commands (PING, GET/SET/DEL/EXISTS) against it",
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input \u{2014} no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
@@ -698,6 +714,13 @@ const UPSEE: Project = Project {
     ],
     impact_metric: "~145 lines, on-device ML",
     objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time from a webcam, using the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference \u{2014} everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/upsee/upsee-demo.gif"),
+            alt: "Upsee counting pullups in real time from webcam input",
+            caption: Some("Real-time pose estimation and rep counting via on-device MoveNet inference"),
+        },
+    ],
     approach: &[
         "tract ONNX runtime as the Rust-native inference path. Three method calls from ONNX file to runnable inference: model_for_path \u{2192} into_optimized \u{2192} into_runnable. No Python, no cloud",
         "Custom Square trait on ImageBuffer center-crops webcam frames to square aspect before resizing. Distortion-free resize meaningfully improved keypoint confidence",
@@ -767,6 +790,7 @@ const CAPTURE: Project = Project {
     ],
     impact_metric: "~225 lines, 2 platforms",
     objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
+    media: &[],
     approach: &[
         "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps via [target.'cfg(...)'.dependencies] in Cargo.toml",
         "Linux: enumerate /dev/input/event* devices, filter by capability heuristics (Identify trait on evdev::Device), grab each, poll with nix::poll, ungrab on exit",

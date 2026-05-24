@@ -1,5 +1,6 @@
 pub mod code_block;
 pub mod footer;
+pub mod gallery;
 pub mod linked_text;
 pub mod navbar;
 pub mod project_card;

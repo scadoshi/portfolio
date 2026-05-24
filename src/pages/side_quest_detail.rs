@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::code_block::CodeBlock;
+use crate::components::gallery::ProjectGallery;
 use crate::components::linked_text::LinkedText;
 use crate::data;
 
@@ -36,6 +37,7 @@ pub fn SideQuestDetail(slug: String) -> Element {
             section { class: "project-section",
                 h2 { "Objective" }
                 p { LinkedText { text: project.objective.to_string() } }
+                ProjectGallery { items: project.media }
             }
 
             section { class: "project-section",
