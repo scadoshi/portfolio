@@ -18,6 +18,7 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                 match current.kind {
                     MediaKind::Image => rsx! {
                         img {
+                            key: "{index()}",
                             class: "gallery-image",
                             src: "{current.src}",
                             alt: "{current.alt}",
@@ -26,6 +27,7 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                     },
                     MediaKind::Video => rsx! {
                         video {
+                            key: "{index()}",
                             class: "gallery-image",
                             src: "{current.src}",
                             "aria-label": "{current.alt}",
