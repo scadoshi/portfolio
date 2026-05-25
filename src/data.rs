@@ -496,15 +496,46 @@ const MARVIN: Project = Project {
         "Found + fixed deprecated model constants in Rig (PR across 17 files). ~1,750 LOC",
     ],
     impact_metric: "~1,750 lines of Rust",
-    objective: "Learn the Rig AI framework by building a real CLI chatbot. Each feature should teach something new about Rig or Rust \u{2014} prioritizing learning over shipping.",
+    objective: "Learn the [Rig](https://github.com/0xPlaygrounds/rig) AI framework by building a real CLI chatbot on [Anthropic's Claude](https://www.anthropic.com/claude). Each feature should teach something new about Rig or Rust, prioritizing learning over shipping.",
     tags: &["rust", "ai", "cli", "llm"],
-    media: &[],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/marvin/help_cmd_std_chat.mp4"),
+            alt: "Help command and a standard chat exchange",
+            caption: Some("/help and a standard chat exchange"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/marvin/commands.mp4"),
+            alt: "Slash command tour",
+            caption: Some("Slash command tour"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/marvin/import_chat_math_tool_call.mp4"),
+            alt: "Importing a chat and a math tool call",
+            caption: Some("Importing a chat and a math tool call"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/marvin/tavily_web_tool_calls.mp4"),
+            alt: "Tavily web search tool calls",
+            caption: Some("Tavily web search tool calls"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/marvin/model_switch_mid_chat.mp4"),
+            alt: "Switching Anthropic models mid-chat",
+            caption: Some("Switching Anthropic models mid-chat"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
-        "Found and fixed deprecated Anthropic model constants in Rig causing 404 errors. Filed issue #1370 (https://github.com/0xPlaygrounds/rig/issues/1370), submitted a PR across 17 files. The learning project found a real bug in its own framework",
+        "Flagged a production bug in [Rig](https://github.com/0xPlaygrounds/rig): hardcoded [Anthropic](https://www.anthropic.com) model constants resolving to deprecated IDs and 404ing the API. Filed [issue #1370](https://github.com/0xPlaygrounds/rig/issues/1370), submitted a stopgap PR, and argued in-thread that constants tied to an external source of truth are the wrong primitive \u{2014} suggested fetching /v1/models at runtime instead. Maintainers acknowledged the deeper fix is a larger refactor; Marvin implements the runtime-discovery pattern locally",
         "Command pattern architecture: each slash command is a trait impl routed via a ChatInput enum. Started as a 220-line monolith, refactored to clean module boundaries as complexity grew",
-        "4 Tavily web tools (search, extract, crawl, sitemap) sharing an Arc<TavilyClient> for efficient client reuse",
+        "4 [Tavily](https://tavily.com) web tools (search, extract, crawl, sitemap) sharing an Arc<TavilyClient> for efficient client reuse",
         "schemars derives JSON Schema from Rust types at compile time \u{2014} no manual schema maintenance, no drift between types and definitions",
-        "Dynamic model discovery from Anthropic's /v1/models API instead of hardcoded constants that go stale",
+        "Dynamic model discovery from [Anthropic's](https://www.anthropic.com) /v1/models API instead of hardcoded constants that go stale",
     ],
     snippets: &[
         Snippet {
@@ -527,27 +558,68 @@ impl Tool for SearchWeb {
             description: "schemars derives JSON Schema from Rust types at compile time. No manual schema writing, no drift between types and definitions. Arc sharing keeps a single HTTP client across all 4 web tools.",
         },
         Snippet {
-            title: "Architecture Evolution",
-            code: r#"// Before: monolithic main.rs (~220 lines, all logic inline)
-// After: command pattern with 11 user commands in separate modules
-//
-// main.rs         13 lines, bootstraps Runner::run()
-// chat/mod.rs     Chat struct: history, input, agent, model
-// chat/input.rs   ChatInput enum for command routing
-// commands/       Individual modules per command
-// runner.rs       Main loop with pattern matching on ChatInput
-// anthropic/      Dynamic model discovery from /v1/models API
-// agent_tools/    Math tools + 4 Tavily web tools"#,
-            description: "Deliberate refactoring from monolith to clean module boundaries as complexity grew. Each command is independently testable.",
+            title: "Command Dispatch",
+            code: r#"// Every line of user input parses into a ChatInput variant,
+// then the runner pattern-matches it to a command module.
+enum ChatInput {
+    Message(String),
+    Help,
+    Clear,
+    Save,
+    Load(String),
+    Model(String),
+    Tokens,
+    Compact,
+    Exit,
+    // ...one variant per slash command
+}
+
+loop {
+    let line = read_line()?;
+    match ChatInput::parse(&line) {
+        ChatInput::Message(text) => chat.stream(text).await?,
+        ChatInput::Help          => commands::help::run(),
+        ChatInput::Clear         => commands::clear::run(&mut chat),
+        ChatInput::Save          => commands::save::run(&chat)?,
+        ChatInput::Load(name)    => commands::load::run(&mut chat, &name)?,
+        ChatInput::Model(name)   => commands::model::run(&mut chat, &name).await?,
+        ChatInput::Tokens        => commands::tokens::run(&chat),
+        ChatInput::Compact       => commands::compact::run(&mut chat).await?,
+        ChatInput::Exit          => break,
+        // ...
+    }
+}"#,
+            description: "Adding a command is a two-step change: a new ChatInput variant and a new module. No conditionals in the loop, no flag-string soup. The 220-line main.rs grew into this; the architecture earned its complexity.",
+        },
+        Snippet {
+            title: "Dynamic Model Discovery",
+            code: r#"// Hardcoded model constants in Rig were 404ing on Anthropic's API.
+// Fix: fetch the live model list at startup instead of trusting constants.
+async fn list_models(api_key: &str) -> Result<Vec<Model>> {
+    let resp = http
+        .get("https://api.anthropic.com/v1/models")
+        .header("x-api-key", api_key)
+        .header("anthropic-version", "2023-06-01")
+        .send()
+        .await?
+        .error_for_status()?;
+    Ok(resp.json::<ModelList>().await?.data)
+}
+
+// /model with no argument lists what's actually available right now.
+// /model <id> switches mid-chat. No release required when Anthropic
+// ships a new model.
+"#,
+            description: "Rig's hardcoded constants drift the moment Anthropic ships a model \u{2014} that's the bug behind issue #1370. Marvin sidesteps the whole class of problem by asking Anthropic what exists, right now, at startup. /model with no argument is whatever Claude shipped this week.",
         },
     ],
     obstacles: &[
         "Stdout buffering: print!() without a newline requires manual flush() for immediate display during streaming",
-        "Tavily API rejects null values for optional fields. Fixed with #[serde(skip_serializing_if = \"Option::is_none\")]",
-        "Architecture outgrew the 220-line monolith. Refactored to command pattern with per-command modules \u{2014} each command independently testable",
+        "[Tavily](https://tavily.com) API rejects null values for optional fields. Fixed with #[serde(skip_serializing_if = \"Option::is_none\")]",
+        "Architecture outgrew the 220-line monolith. Refactored to command pattern with per-command modules. Each command independently testable",
     ],
     progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
-    impact: "Learning project that contributed back to its own framework. Demonstrates the loop: pick a real goal, hit real friction, fix it upstream, ship something usable.",
+    impact: "Learning project that fed real signal back to its own framework. Flagged a production bug in Rig, proposed the architectural fix in-thread, and shipped the better pattern locally rather than waiting on the upstream refactor.",
     status: ProjectStatus::Done,
 };
 
