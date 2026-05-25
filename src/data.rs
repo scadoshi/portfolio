@@ -639,7 +639,20 @@ const NIGHTHAWK: Project = Project {
     impact_metric: "~2,100 lines, 99 tests, 6 phases",
     objective: "Build a key-value database incrementally from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, concurrency.",
     tags: &["rust", "kv-store", "lsm-tree", "networking"],
-    media: &[],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/nighthawk/cli_repl.mp4"),
+            alt: "Interactive CLI REPL session",
+            caption: Some("Interactive CLI REPL"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/nighthawk/server_and_two_clients.mp4"),
+            alt: "TCP server handling two concurrent clients",
+            caption: Some("TCP server handling two concurrent clients"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to full LSM-tree \u{2014} WAL, memtable, SSTables, bloom filters, k-way compaction, TCP server, concurrency. Six distinct architectural layers, each one a real piece of how production KV systems work",
         "WAL with sync_all() after every write; 10-byte binary header (magic 0x4E48 + CRC32 + length); corruption recovery scans byte-by-byte past garbage, typed via a CorruptionType enum so callers know exactly what went wrong",
@@ -778,7 +791,14 @@ const DIPROTODON: Project = Project {
     impact_metric: "~1,187 lines, 50+ tests, M0\u{2013}M2 complete",
     objective: "Build a Redis-compatible KV server one wire-protocol layer at a time, hand-writing the substance so the muscle survives the project. Each milestone adds a real layer: TCP echo, RESP framing, command dispatch, in-memory KV ops, then TTL, AOF, and Pub/Sub. Sibling-paired with a Go port (wombat) to feel the translation between languages.",
     tags: &["rust", "redis", "tcp", "protocol"],
-    media: &[],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/diprotodon/server_run_redis_cli_connect.mp4"),
+            alt: "redis-cli connecting to the server: SET, GET, DEL, PING",
+            caption: Some("redis-cli connecting: SET, GET, DEL, then PING repeatedly"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "Hand-written RESP wire protocol \u{2014} no library does the work. Real redis-cli clients connect and run all four M2 commands (PING, GET/SET/DEL/EXISTS) against it",
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input \u{2014} no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
@@ -949,7 +969,14 @@ const CAPTURE: Project = Project {
     impact_metric: "~225 lines, 2 platforms",
     objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
     tags: &["rust", "cross-platform", "security", "camera"],
-    media: &[],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/capture/demo.mp4"),
+            alt: "Keyboard and mouse input triggering intruder captures",
+            caption: Some("Keyboard and mouse input triggering intruder captures"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps via [target.'cfg(...)'.dependencies] in Cargo.toml",
         "Linux: enumerate /dev/input/event* devices, filter by capability heuristics (Identify trait on evdev::Device), grab each, poll with nix::poll, ungrab on exit",
