@@ -139,7 +139,7 @@ const ZWIPE: Project = Project {
         "Production-grade auth: Argon2id with NIST-compliant 170+ pattern blocklist, rotating refresh tokens (replay-safe via delete-on-use), Password type consumed on hash so plaintext can't leak",
         "SQLx at scale \u{2014} five-strategy upsert chain handles batching, PartialEq delta detection, and per-row fallback; 88-column Scryfall sync respects PostgreSQL's 65k parameter limit (~327 cards per batch)",
         "Background service (zervice) for nightly Scryfall delta sync of 110k+ printings, materialized view refresh for deduplicated search (~35k unique cards), refresh-token cleanup, session enforcement",
-        "Production posture: .unwrap, .expect, panic!, todo!, dbg!, print! all denied at compile time. 33 enforced Clippy rules, 340+ tests, security audit complete, nightly Cloudflare R2 backups",
+        "Production posture: .unwrap, .expect, panic!, todo!, dbg!, print! all denied at compile time. 33 enforced Clippy rules, 416 tests, security audit complete, nightly Cloudflare R2 backups",
     ],
     snippets: &[
         Snippet {
