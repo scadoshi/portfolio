@@ -385,7 +385,20 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     impact_metric: "Manual UI clicks to one CSV import",
     objective: "Read custom field definitions from CSV and create them across Halo Software products via the API. Must support all 8 field types, handle auth, respect rate limits, ship as cross-platform binaries.",
     tags: &["rust", "cli", "api", "cross-platform"],
-    media: &[],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/halo-custom-field-builder/full_process.mp4"),
+            alt: "Full process: debug mode, regular mode, CSV used, and logs rendered",
+            caption: Some("Full process: debug mode, regular mode, CSV used, and logs rendered"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/halo-custom-field-builder/build_field_by_hand.mp4"),
+            alt: "Manually creating a custom field",
+            caption: Some("Manually creating a custom field"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "Type-safe domain modeling: Name (max 64, alphanumeric + underscore), Label (max 256), FieldType (8 variants with sub-type enums). All validated at construction \u{2014} invalid data rejected before any API call",
         "OAuth 2.0 client credentials flow with Arc<Mutex<Option<AuthToken>>> caching. 30-second expiry buffer prevents the edge-case 401 between check and call",

@@ -35,6 +35,7 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                             muted: true,
                             "loop": true,
                             playsinline: true,
+                            controls: true,
                             preload: "metadata",
                         }
                     },

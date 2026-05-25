@@ -1260,7 +1260,7 @@ a:hover {
 .project-gallery {
     margin: 1.5rem auto 0;
     padding: 0;
-    width: min(100%, 30rem);
+    width: min(100%, 56rem);
 }
 
 .gallery-frame {
