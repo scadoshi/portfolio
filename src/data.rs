@@ -292,7 +292,26 @@ const HALO_ACTION_IMPORTER: Project = Project {
     impact_metric: "Weeks of manual work, automated",
     objective: "Bulk-import millions of records into Halo Software from CSV and Excel against a production API. Must survive every real failure mode: network errors, token expiry, missing tickets, partial batch failures, inconsistent data formats across client exports.",
     tags: &["rust", "csv", "etl", "api-resilience"],
-    media: &[],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/halo-action-importer/full_run.mp4"),
+            alt: "Full import run with batching and only-parse validation",
+            caption: Some("Full run: batching across multiple sizes and only-parse mode validating inbound data"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/halo-action-importer/showing_imported_actions.mp4"),
+            alt: "Imported actions resulting from the run",
+            caption: Some("Resulting actions imported into Halo"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/halo-action-importer/logging_and_cache.mp4"),
+            alt: "Per-run log directory and cache files",
+            caption: Some("Per-run log directory and the two-tier cache"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "Per-failure-mode recovery, not blanket retry-with-backoff. 401 \u{2192} refresh token; 504/network \u{2192} retry immediately; missing ticket \u{2192} permanent skip via run-wide HashSet<u32>; deserialization error \u{2192} skip row and continue",
         "Ticket-grouped retry: when a batch fails, group actions by ticket_id and retry each group independently. Maximizes successful imports and identifies exactly which tickets don't exist",
