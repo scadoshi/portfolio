@@ -766,14 +766,11 @@ a,
 a:visited {
     color: var(--accent-primary);
     text-decoration: none;
-    transition: color 0.2s, text-decoration-color 0.2s;
+    transition: color 0.2s;
 }
 
 a:hover {
     color: var(--accent-secondary);
-    text-decoration: underline;
-    text-decoration-color: var(--accent-secondary);
-    text-underline-offset: 0.15em;
 }
 
 /* === Navbar === */
