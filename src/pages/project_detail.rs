@@ -79,7 +79,7 @@ pub fn ProjectDetail(slug: String) -> Element {
 
             section { class: "project-section",
                 h2 { "Progress & Impact" }
-                p { "{project.progress}" }
+                p { LinkedText { text: project.progress.to_string() } }
                 p { class: "impact-statement", "{project.impact}" }
             }
         }

@@ -92,7 +92,7 @@ const ZWIPE: Project = Project {
         "Full commander support \u{2014} partners, backgrounds, oathbreaker",
     ],
     impact_metric: "Full-stack mobile app \u{2014} ~37,300 lines of Rust",
-    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. Live at https://zwipe.net; App Store submission pending.",
+    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). App Store submission pending.",
     tags: &["rust", "full-stack", "ios", "dioxus", "postgresql"],
     media: &[
         MediaItem {
@@ -271,7 +271,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
         "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
     ],
-    progress: "Feature-complete. Full deck management, swipe-based deck building, commander system, maybeboard/sideboard, import/export, email verification, 15 themes. Security audit complete; nightly backups. Live at https://zwipe.net; App Store submission pending.",
+    progress: "Feature-complete. Full deck management, swipe-based deck building, commander system, maybeboard/sideboard, import/export, email verification, 15 themes. Security audit complete; nightly backups. Live at [zwipe.net](https://zwipe.net); App Store submission pending.",
     impact: "Full-stack mobile delivery in pure Rust \u{2014} shared domain types across the Axum API, the Dioxus app, and a background sync service. ~37,300 lines across five crates, 340+ tests, zero unwrap.",
     status: ProjectStatus::Doing,
 };
