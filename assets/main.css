@@ -1,5 +1,5 @@
-@import url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@latest/400.css');
-@import url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@latest/700.css');
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@latest/400.css");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@latest/700.css");
 
 /* ==================
         themes
@@ -656,8 +656,14 @@
 /* === Animations === */
 
 @keyframes content-enter {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .content-enter {
@@ -678,7 +684,7 @@
 }
 
 .logo {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: clamp(0.5rem, 2.5vw, 1.4rem);
     line-height: 0.9;
     white-space: pre;
@@ -735,8 +741,14 @@
 }
 
 @keyframes banner-slide-in {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* === Base === */
@@ -748,7 +760,7 @@
 }
 
 body {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     line-height: 1.6;
     font-size: 16px;
     margin: 0;
@@ -804,7 +816,7 @@ a:hover {
 }
 
 .nav-logo {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 0.45rem;
     line-height: 0.9;
     white-space: pre;
@@ -873,7 +885,7 @@ a:hover {
 
 .dropdown::after,
 .theme-select::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 100%;
     left: 0;
@@ -893,7 +905,9 @@ a:hover {
     color: var(--text-subtle);
     text-decoration: none;
     font-size: 0.9rem;
-    transition: background-color 0.2s, color 0.2s;
+    transition:
+        background-color 0.2s,
+        color 0.2s;
 }
 
 .dropdown-item:hover {
@@ -925,7 +939,9 @@ a:hover {
     text-align: left;
     cursor: pointer;
     width: 100%;
-    transition: background-color 0.2s, color 0.2s;
+    transition:
+        background-color 0.2s,
+        color 0.2s;
 }
 
 .theme-option:hover {
@@ -946,7 +962,9 @@ a:hover {
     font-size: 0.85rem;
     padding: 0.2rem 0.5rem;
     cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
 }
 
 .mode-toggle:hover {
@@ -1000,7 +1018,9 @@ a:hover {
     padding: 0.4rem 1rem;
     border: 1px solid var(--border-primary);
     border-radius: 0.4rem;
-    transition: border-color 0.2s, color 0.2s;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
 }
 
 .hero-links a:hover {
@@ -1025,11 +1045,13 @@ a:hover {
     font-size: 0.78rem;
     color: var(--text-subtle);
     letter-spacing: 0.02em;
-    transition: border-color 0.15s, color 0.15s;
+    transition:
+        border-color 0.15s,
+        color 0.15s;
 }
 
 .tag::before {
-    content: '#';
+    content: "#";
     color: var(--accent-primary);
     margin-right: 0.15rem;
 }
@@ -1144,7 +1166,7 @@ a:hover {
 }
 
 .card-bullets li::before {
-    content: '\203A';
+    content: "\203A";
     position: absolute;
     left: 0;
     color: var(--accent-primary);
@@ -1285,8 +1307,12 @@ a:hover {
 }
 
 @keyframes gallery-fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .gallery-nav {
@@ -1299,14 +1325,18 @@ a:hover {
     border-radius: 50%;
     width: 2.5rem;
     height: 2.5rem;
-    font-size: 1.4rem;
+    padding: 0;
+    font-size: 1rem;
     line-height: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.85;
-    transition: opacity 0.15s, background 0.15s;
+    font-family: monospace;
+    opacity: 0.75;
+    transition:
+        opacity 0.15s,
+        background 0.15s;
 }
 
 .gallery-nav:hover {
@@ -1314,8 +1344,12 @@ a:hover {
     background: var(--border-secondary);
 }
 
-.gallery-prev { left: 0.75rem; }
-.gallery-next { right: 0.75rem; }
+.gallery-prev {
+    left: 0.75rem;
+}
+.gallery-next {
+    right: 0.75rem;
+}
 
 .gallery-meta {
     display: flex;
@@ -1366,34 +1400,62 @@ a:hover {
 }
 
 .code-content code {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     white-space: pre;
 }
 
 /* highlight.js overrides using theme variables */
-.code-content .hljs { background: transparent; color: var(--text-primary); }
+.code-content .hljs {
+    background: transparent;
+    color: var(--text-primary);
+}
 .code-content .hljs-keyword,
-.code-content .hljs-built_in { color: var(--border-error); }
+.code-content .hljs-built_in {
+    color: var(--border-error);
+}
 .code-content .hljs-type,
 .code-content .hljs-class .hljs-title,
-.code-content .hljs-title.class_ { color: var(--border-warning); }
+.code-content .hljs-title.class_ {
+    color: var(--border-warning);
+}
 .code-content .hljs-function .hljs-title,
-.code-content .hljs-title.function_ { color: var(--border-success); }
+.code-content .hljs-title.function_ {
+    color: var(--border-success);
+}
 .code-content .hljs-string,
-.code-content .hljs-doctag { color: var(--accent-primary); }
+.code-content .hljs-doctag {
+    color: var(--accent-primary);
+}
 .code-content .hljs-number,
-.code-content .hljs-literal { color: var(--accent-secondary); }
-.code-content .hljs-comment { color: var(--text-muted); font-style: italic; }
+.code-content .hljs-literal {
+    color: var(--accent-secondary);
+}
+.code-content .hljs-comment {
+    color: var(--text-muted);
+    font-style: italic;
+}
 .code-content .hljs-meta,
-.code-content .hljs-meta .hljs-keyword { color: var(--accent-tertiary); }
+.code-content .hljs-meta .hljs-keyword {
+    color: var(--accent-tertiary);
+}
 .code-content .hljs-attr,
-.code-content .hljs-attribute { color: var(--accent-primary); }
+.code-content .hljs-attribute {
+    color: var(--accent-primary);
+}
 .code-content .hljs-symbol,
-.code-content .hljs-bullet { color: var(--accent-tertiary); }
+.code-content .hljs-bullet {
+    color: var(--accent-tertiary);
+}
 .code-content .hljs-variable,
-.code-content .hljs-template-variable { color: var(--text-primary); }
-.code-content .hljs-params { color: var(--text-subtle); }
-.code-content .hljs-punctuation { color: var(--text-muted); }
+.code-content .hljs-template-variable {
+    color: var(--text-primary);
+}
+.code-content .hljs-params {
+    color: var(--text-subtle);
+}
+.code-content .hljs-punctuation {
+    color: var(--text-muted);
+}
 
 .code-description {
     padding: 0.75rem 1rem;

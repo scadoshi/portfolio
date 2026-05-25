@@ -48,7 +48,7 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                             let i = index();
                             index.set(if i == 0 { total - 1 } else { i - 1 });
                         },
-                        "\u{2039}"
+                        "\u{2190}"
                     }
                     button {
                         class: "gallery-nav gallery-next",
@@ -57,7 +57,7 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                             let i = index();
                             index.set((i + 1) % total);
                         },
-                        "\u{203a}"
+                        "\u{2192}"
                     }
                 }
             }
