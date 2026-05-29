@@ -91,7 +91,7 @@ const ZWIPE: Project = Project {
         "Background sync service + static marketing site, all in the same workspace",
         "Full commander support \u{2014} partners, backgrounds, oathbreaker",
     ],
-    impact_metric: "Full-stack mobile app \u{2014} ~37,300 lines of Rust",
+    impact_metric: "Full-stack mobile app \u{2014} ~45,200 lines of Rust",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). App Store submission pending.",
     tags: &["rust", "full-stack", "ios", "dioxus", "postgresql"],
     media: &[
@@ -272,7 +272,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
     ],
     progress: "Feature-complete. Full deck management, swipe-based deck building, commander system, maybeboard/sideboard, import/export, email verification, 15 themes. Security audit complete; nightly backups. Live at [zwipe.net](https://zwipe.net); App Store submission pending.",
-    impact: "Full-stack mobile delivery in pure Rust \u{2014} shared domain types across the Axum API, the Dioxus app, and a background sync service. ~37,300 lines across five crates, 340+ tests, zero unwrap.",
+    impact: "Full-stack mobile delivery in pure Rust \u{2014} shared domain types across the Axum API, the Dioxus app, and a background sync service. ~45,200 lines across five crates, 416 tests, zero unwrap.",
     status: ProjectStatus::Doing,
 };
 
