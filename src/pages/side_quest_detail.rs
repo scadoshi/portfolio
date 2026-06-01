@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 use crate::components::code_block::CodeBlock;
 use crate::components::gallery::ProjectGallery;
 use crate::components::linked_text::LinkedText;
+use crate::components::page_meta::PageMeta;
 use crate::data;
 
 #[component]
@@ -18,8 +19,11 @@ pub fn SideQuestDetail(slug: String) -> Element {
     };
 
     rsx! {
-        document::Title { "{project.name} — Scotty Fermo" }
-        document::Meta { name: "description", content: "{project.headline}" }
+        PageMeta {
+            title: project.name.to_string(),
+            description: project.headline.to_string(),
+            path: format!("/side-quests/{}", project.slug),
+        }
         div { class: "project-detail content-enter",
             section { class: "project-header",
                 span { class: "project-category-tag",

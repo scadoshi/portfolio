@@ -47,10 +47,7 @@ jobs:
           tool: dioxus-cli@0.7.9
 
       - name: Build
-        run: dx build --release --ssg
-
-      - name: Merge prerendered HTML into public
-        run: cp -r target/dx/portfolio/release/web/static/. target/dx/portfolio/release/web/public/
+        run: dx build --release --ssg --force-sequential
 
       - name: Add CNAME
         run: echo "scottyfermo.com" > target/dx/portfolio/release/web/public/CNAME

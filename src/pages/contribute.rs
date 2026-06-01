@@ -1,5 +1,7 @@
 use dioxus::prelude::*;
 
+use crate::components::page_meta::PageMeta;
+
 const STRIPE_URL: &str = "https://buy.stripe.com/5kQdRa5tUeNm9pd8BY9Zm00";
 const BMC_URL: &str = "https://buymeacoffee.com/scadoshi";
 const GITHUB_SPONSORS_URL: &str = "https://github.com/sponsors/scadoshi";
@@ -7,10 +9,10 @@ const GITHUB_SPONSORS_URL: &str = "https://github.com/sponsors/scadoshi";
 #[component]
 pub fn Contribute() -> Element {
     rsx! {
-        document::Title { "Contribute — Scotty Fermo" }
-        document::Meta {
-            name: "description",
-            content: "Support continued open-source Rust development from Scotty Fermo via Stripe, Buy Me a Coffee, or GitHub Sponsors.",
+        PageMeta {
+            title: "Contribute",
+            description: "Support continued open-source Rust development from Scotty Fermo via Stripe, Buy Me a Coffee, or GitHub Sponsors.",
+            path: "/contribute",
         }
         div { class: "side-quests content-enter",
             section { class: "page-header",

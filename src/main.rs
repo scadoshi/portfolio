@@ -35,23 +35,30 @@ pub enum Route {
 }
 
 fn main() {
-    let builder = dioxus::LaunchBuilder::new();
-    #[cfg(feature = "server")]
-    let builder = builder.with_cfg(
-        dioxus::server::ServeConfig::new()
-            .incremental(dioxus::server::IncrementalRendererConfig::default()),
-    );
-    builder.launch(App);
+    dioxus::LaunchBuilder::new()
+        .with_cfg(server_only! {
+            dioxus::server::ServeConfig::builder()
+                .incremental(
+                    dioxus::server::IncrementalRendererConfig::new()
+                        .static_dir(
+                            std::env::current_exe()
+                                .unwrap()
+                                .parent()
+                                .unwrap()
+                                .join("public"),
+                        )
+                        .clear_cache(false),
+                )
+        })
+        .launch(App);
 }
 
-#[cfg(feature = "server")]
 #[server(endpoint = "static_routes")]
-async fn static_routes() -> Result<Vec<String>, ServerFnError> {
-    let mut routes = vec![
-        "/".to_string(),
-        "/side-quests".to_string(),
-        "/contribute".to_string(),
-    ];
+async fn static_routes() -> ServerFnResult<Vec<String>> {
+    let mut routes: Vec<String> = Route::static_routes()
+        .iter()
+        .map(ToString::to_string)
+        .collect();
     for p in data::featured_projects() {
         routes.push(format!("/projects/{}", p.slug));
     }

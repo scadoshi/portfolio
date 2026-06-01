@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 
+use crate::components::page_meta::PageMeta;
 use crate::data;
 use crate::Route;
 
@@ -7,10 +8,10 @@ use crate::Route;
 pub fn SideQuests() -> Element {
     let quests = data::side_quests();
     rsx! {
-        document::Title { "Side Quests — Scotty Fermo" }
-        document::Meta {
-            name: "description",
-            content: "Proofs of concept and learning projects in Rust: LSM-tree KV store, Redis-compatible server, V4L2 camera capture, ML inference, and more.",
+        PageMeta {
+            title: "Side Quests",
+            description: "Proofs of concept and learning projects in Rust: LSM-tree KV store, Redis-compatible server, V4L2 camera capture, ML inference, and more.",
+            path: "/side-quests",
         }
         div { class: "side-quests content-enter",
             section { class: "page-header",
