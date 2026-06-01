@@ -786,9 +786,9 @@ const DIPROTODON: Project = Project {
         "GET/SET/DEL/EXISTS/EXPIRE/EXPIREAT/TTL/PERSIST/PING, binary-safe end-to-end",
         "TTL with lazy expiry on read + background sweeper thread",
         "Graceful shutdown: AtomicBool flag, nonblocking accept, all threads joined",
-        "~1,810 LOC, 90+ tests across every protocol layer",
+        "~2,480 LOC, 130+ tests across every protocol and storage layer",
     ],
-    impact_metric: "~1,810 lines, 90+ tests, hand-written RESP",
+    impact_metric: "~2,480 lines, 130+ tests, hand-written RESP",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, snapshot persistence, graceful shutdown \u{2014} all written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
     media: &[
@@ -803,7 +803,7 @@ const DIPROTODON: Project = Project {
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input \u{2014} no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
         "Binary safe end-to-end: Vec<u8>, not String. Bulk-string payloads can be arbitrary bytes (jpegs, interior CRLF, whatever). UTF-8 is never enforced where the protocol doesn't require it",
         "Iterative array parsing. Recursive parse_array would blow the stack on MGET key1..key1000; a Vec + loop is one extra concept and zero risk",
-        "TTL via a sidecar expiries map alongside values, single mutex covering both. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread reclaiming memory \u{2014} hold-the-lock pattern, defensible because the sweep is microseconds at this scale",
+        "Storage is HashMap<Vec<u8>, Entry> where Entry { value, absolute_ttl: Option<u64> } \u{2014} one struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread reclaiming memory. Hold-the-lock over the full sweep, defensible because it's microseconds at this scale",
         "Graceful shutdown without a signal-handling crate: Arc<AtomicBool> flag, TcpListener::set_nonblocking(true) so accept() returns WouldBlock and the loop can check the flag, stdin EOF or \"quit\" as the trigger. Every spawned thread is collected as a JoinHandle and joined cleanly before run() returns",
         "Generic Session<R: Read, W: Write>. Cursor<Vec<u8>> as R lets tests script RESP bytes in and out without a real socket",
         "Hexagonal layout (domain / inbound / outbound). Domain knows nothing about RESP, RESP knows nothing about Redis semantics. One-way coupling: inbound and outbound depend on domain, never the reverse",
@@ -863,33 +863,35 @@ for h in handles { let _ = h.join(); }"#,
         },
         Snippet {
             title: "Lazy Expiry + Background Sweeper",
-            code: r#"// Lazy: every read path drops expired keys on access
+            code: r#"pub struct Entry { pub value: Vec<u8>, pub absolute_ttl: Option<u64> }
+
+// Lazy: every read path drops expired keys on access
 pub fn get_absolute_ttl(&self, key: impl AsRef<[u8]>)
     -> Result<Option<Option<u64>>, CacheError>
 {
     let guard = self.inner.lock().map_err(|_| CacheError::MutexPoisoned)?;
-    if !guard.values.contains_key(key.as_ref()) { return Ok(None); }
-    let Some(ttl) = guard.expiries.get(key.as_ref()).copied() else {
-        return Ok(Some(None));
+    let Some(Entry { absolute_ttl, .. }) = guard.get(key.as_ref()) else {
+        return Ok(None);
     };
+    let ttl = absolute_ttl.to_owned();
     drop(guard);  // release before re-locking inside remove()
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
-    if now >= ttl { self.remove(key)?; return Ok(None); }
-    Ok(Some(Some(ttl)))
+    if ttl.is_some_and(|t| now >= t) { self.remove(key)?; return Ok(None); }
+    Ok(Some(ttl))
 }
 
 // Active: sweeper thread reclaims memory, hold the lock once
 pub fn remove_expired(&self) -> Result<usize, CacheError> {
-    let mut guard = self.inner.lock().map_err(|_| CacheError::MutexPoisoned)?;
     let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
-    let expired: Vec<Vec<u8>> = guard.expiries.iter()
-        .filter(|(_, ttl)| now >= **ttl)
+    let mut guard = self.inner.lock().map_err(|_| CacheError::MutexPoisoned)?;
+    let expired: Vec<Vec<u8>> = guard.iter()
+        .filter(|(_, Entry { absolute_ttl, .. })| absolute_ttl.is_some_and(|t| now >= t))
         .map(|(k, _)| k.to_owned())
         .collect();
-    for k in &expired { guard.values.remove(k); guard.expiries.remove(k); }
+    for k in &expired { guard.remove(k); }
     Ok(expired.len())
 }"#,
-            description: "Two halves of the same story. Lazy expiry on every read means clients never see expired keys regardless of sweep cadence; the active sweeper is just memory hygiene. Hold-the-lock over the whole sweep is defensible at this scale (microseconds) and removes the snapshot/re-check race \u{2014} switch to snapshot-then-evict if profiling ever shows tail latency hurt.",
+            description: "One Entry per key keeps value and TTL together \u{2014} no risk of values and expiries drifting apart, no two-map dance on insert/remove. Lazy expiry on every read means clients never see expired keys regardless of sweep cadence; the active sweeper is just memory hygiene. Hold-the-lock over the whole sweep is defensible at this scale (microseconds) and removes the snapshot/re-check race \u{2014} switch to snapshot-then-evict if profiling ever shows tail latency hurt.",
         },
     ],
     obstacles: &[
