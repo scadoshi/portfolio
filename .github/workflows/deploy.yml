@@ -42,16 +42,18 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - name: Install Dioxus CLI
-        run: cargo install dioxus-cli --locked
+        uses: taiki-e/install-action@v2
+        with:
+          tool: dioxus-cli@0.7.9
 
       - name: Build
-        run: dx build --release
+        run: dx build --release --ssg
+
+      - name: Merge prerendered HTML into public
+        run: cp -r target/dx/portfolio/release/web/static/. target/dx/portfolio/release/web/public/
 
       - name: Add CNAME
         run: echo "scottyfermo.com" > target/dx/portfolio/release/web/public/CNAME
-
-      - name: Add 404.html for SPA routing
-        run: cp target/dx/portfolio/release/web/public/index.html target/dx/portfolio/release/web/public/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

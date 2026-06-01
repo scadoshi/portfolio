@@ -9,6 +9,7 @@ use crate::data;
 pub fn ProjectDetail(slug: String) -> Element {
     let Some(project) = data::find_project(&slug) else {
         return rsx! {
+            document::Title { "Project not found — Scotty Fermo" }
             div { class: "not-found",
                 h1 { "Project not found" }
                 p { "No project matches \"{slug}\"." }
@@ -17,6 +18,8 @@ pub fn ProjectDetail(slug: String) -> Element {
     };
 
     rsx! {
+        document::Title { "{project.name} — Scotty Fermo" }
+        document::Meta { name: "description", content: "{project.headline}" }
         div { class: "project-detail content-enter",
             section { class: "project-header",
                 span { class: "project-category-tag",

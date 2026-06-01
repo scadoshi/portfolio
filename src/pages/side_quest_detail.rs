@@ -9,6 +9,7 @@ use crate::data;
 pub fn SideQuestDetail(slug: String) -> Element {
     let Some(project) = data::find_side_quest(&slug) else {
         return rsx! {
+            document::Title { "Side quest not found — Scotty Fermo" }
             div { class: "not-found",
                 h1 { "Side quest not found" }
                 p { "No side quest matches \"{slug}\"." }
@@ -17,6 +18,8 @@ pub fn SideQuestDetail(slug: String) -> Element {
     };
 
     rsx! {
+        document::Title { "{project.name} — Scotty Fermo" }
+        document::Meta { name: "description", content: "{project.headline}" }
         div { class: "project-detail content-enter",
             section { class: "project-header",
                 span { class: "project-category-tag",

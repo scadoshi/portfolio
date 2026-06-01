@@ -12,6 +12,11 @@ pub fn Home() -> Element {
     let mut zwipe_banner = use_signal(|| true);
     let mut dipro_banner = use_signal(|| true);
     rsx! {
+        document::Title { "Scotty Fermo — Software Engineer | Rust" }
+        document::Meta {
+            name: "description",
+            content: "Personal portfolio of Scotty Fermo. Production Rust systems, full-stack engineering, and side quests in protocol design, storage engines, and ML.",
+        }
         if zwipe_banner() || dipro_banner() {
             div { class: "banner-stack",
                 if zwipe_banner() {
