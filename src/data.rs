@@ -783,13 +783,13 @@ const DIPROTODON: Project = Project {
     summary: "Redis-compatible in-memory KV server in Rust. Real redis-cli clients connect.",
     card_bullets: &[
         "Hand-written RESP wire protocol \u{2014} no library does the work",
-        "Parser-as-framer returning Incomplete / Malformed / Ok((frame, leftover))",
-        "Binary-safe end-to-end (Vec<u8>, not String)",
-        "Hexagonal layout; generic Session<R, W> for cursor-based tests",
-        "~1,187 LOC, 50+ tests across every protocol layer",
+        "GET/SET/DEL/EXISTS/EXPIRE/EXPIREAT/TTL/PERSIST/PING, binary-safe end-to-end",
+        "TTL with lazy expiry on read + background sweeper thread",
+        "Graceful shutdown: AtomicBool flag, nonblocking accept, all threads joined",
+        "~1,810 LOC, 90+ tests across every protocol layer",
     ],
-    impact_metric: "~1,187 lines, 50+ tests, M0\u{2013}M2 complete",
-    objective: "Build a Redis-compatible KV server one wire-protocol layer at a time, hand-writing the substance so the muscle survives the project. Each milestone adds a real layer: TCP echo, RESP framing, command dispatch, in-memory KV ops, then TTL, AOF, and Pub/Sub. Sibling-paired with a Go port (wombat) to feel the translation between languages.",
+    impact_metric: "~1,810 lines, 90+ tests, hand-written RESP",
+    objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, snapshot persistence, graceful shutdown \u{2014} all written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
     media: &[
         MediaItem {
@@ -800,11 +800,11 @@ const DIPROTODON: Project = Project {
         },
     ],
     approach: &[
-        "Hand-written RESP wire protocol \u{2014} no library does the work. Real redis-cli clients connect and run all four M2 commands (PING, GET/SET/DEL/EXISTS) against it",
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input \u{2014} no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
         "Binary safe end-to-end: Vec<u8>, not String. Bulk-string payloads can be arbitrary bytes (jpegs, interior CRLF, whatever). UTF-8 is never enforced where the protocol doesn't require it",
         "Iterative array parsing. Recursive parse_array would blow the stack on MGET key1..key1000; a Vec + loop is one extra concept and zero risk",
-        "SimpleInner newtype with three trust levels: strict TryFrom for untrusted bytes, infallible ok()/pong() for known-safe literals, sanitized() that strips CR/LF for arbitrary server-authored error strings. Inbound strict, outbound lossy",
+        "TTL via a sidecar expiries map alongside values, single mutex covering both. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread reclaiming memory \u{2014} hold-the-lock pattern, defensible because the sweep is microseconds at this scale",
+        "Graceful shutdown without a signal-handling crate: Arc<AtomicBool> flag, TcpListener::set_nonblocking(true) so accept() returns WouldBlock and the loop can check the flag, stdin EOF or \"quit\" as the trigger. Every spawned thread is collected as a JoinHandle and joined cleanly before run() returns",
         "Generic Session<R: Read, W: Write>. Cursor<Vec<u8>> as R lets tests script RESP bytes in and out without a real socket",
         "Hexagonal layout (domain / inbound / outbound). Domain knows nothing about RESP, RESP knows nothing about Redis semantics. One-way coupling: inbound and outbound depend on domain, never the reverse",
     ],
@@ -824,53 +824,81 @@ const DIPROTODON: Project = Project {
             description: "Frame::parse_one returns the parsed frame and a leftover slice borrowing from the input. Incomplete is a real error variant, not an Option \u{2014} it's load-bearing for the session reader's read-more loop. split_crlf returns None when no CRLF is found, which is the Incomplete signal at the byte-splitter layer.",
         },
         Snippet {
-            title: "Drain on Success, Clear on Garbage, Preserve on Incomplete",
-            code: r#"pub fn parse_frame(&mut self) -> Result<Frame, FrameError> {
-    match Frame::parse_one(&self.buf) {
-        Ok((frame, bytes)) => {
-            let consumed = self.buf.len() - bytes.len();
-            self.buf.drain(..consumed);  // keep only the leftover
-            Ok(frame)
-        }
-        Err(e) => {
-            if !matches!(e, FrameError::Incomplete) {
-                self.buf.clear();  // poisoned wire, throw it away
+            title: "Graceful Shutdown, No Signal Crate",
+            code: r#"let listener = TcpListener::bind(BIND_ADDRESS)?;
+listener.set_nonblocking(true)?;  // accept() returns WouldBlock instead of parking
+let shutdown = Arc::new(AtomicBool::new(false));
+let mut handles = Vec::<JoinHandle<()>>::new();
+
+// stdin trigger: EOF or "quit"/"exit" flips the flag
+let shutdown_clone = shutdown.clone();
+handles.push(spawn(move || {
+    let mut s = String::new();
+    loop {
+        s.clear();
+        match std::io::stdin().read_line(&mut s) {
+            Ok(0) => { shutdown_clone.store(true, Ordering::Relaxed); break; }
+            Ok(_) if matches!(s.trim().to_lowercase().as_str(), "quit" | "exit") => {
+                shutdown_clone.store(true, Ordering::Relaxed); break;
             }
-            Err(e)  // Incomplete preserves the buf for next read
+            _ => (),
         }
     }
-}"#,
-            description: "The borrow checker forbids holding the leftover slice while mutating self.buf \u{2014} so capture bytes.len() (a usize, Copy), drop the borrow, then drain. Three different policies in three arms: success drains the consumed prefix, hard error clears, Incomplete preserves so the next read appends to a valid in-progress frame.",
-        },
-        Snippet {
-            title: "SimpleInner: Strict In, Lossy Out",
-            code: r#"impl TryFrom<&[u8]> for SimpleInner {
-    type Error = SimpleInnerError;
-    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        if value.contains(&b'\r') { return Err(SimpleInnerError::IncludesCarriageReturn); }
-        if value.contains(&b'\n') { return Err(SimpleInnerError::IncludesLineFeed); }
-        Ok(Self(value.to_vec()))
+}));
+
+// main loop: check flag, throttle WouldBlock, prune finished handles
+loop {
+    if shutdown.load(Ordering::Relaxed) { break; }
+    handles.retain(|h| !h.is_finished());
+    match listener.accept() {
+        Ok((stream, _)) => { /* spawn session, push handle */ }
+        Err(e) if e.kind() == ErrorKind::WouldBlock => {
+            std::thread::sleep(Duration::from_millis(50));  // don't burn a core
+        }
+        Err(e) => eprintln!("accept failed: {e}"),
     }
 }
+for h in handles { let _ = h.join(); }"#,
+            description: "No ctrlc/signal-hook crate. set_nonblocking turns accept() into a poll \u{2014} pair it with a 50ms sleep on WouldBlock so the loop checks the shutdown flag instead of burning a CPU. A stdin thread is the trigger (EOF or \"quit\"). Every spawned worker (sessions, persistence, sweeper) is collected as a JoinHandle and joined before run() returns, so in-flight work finishes cleanly.",
+        },
+        Snippet {
+            title: "Lazy Expiry + Background Sweeper",
+            code: r#"// Lazy: every read path drops expired keys on access
+pub fn get_absolute_ttl(&self, key: impl AsRef<[u8]>)
+    -> Result<Option<Option<u64>>, CacheError>
+{
+    let guard = self.inner.lock().map_err(|_| CacheError::MutexPoisoned)?;
+    if !guard.values.contains_key(key.as_ref()) { return Ok(None); }
+    let Some(ttl) = guard.expiries.get(key.as_ref()).copied() else {
+        return Ok(Some(None));
+    };
+    drop(guard);  // release before re-locking inside remove()
+    let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
+    if now >= ttl { self.remove(key)?; return Ok(None); }
+    Ok(Some(Some(ttl)))
+}
 
-impl SimpleInner {
-    pub fn ok() -> Self { Self(b"OK".to_vec()) }
-    pub fn pong() -> Self { Self(b"PONG".to_vec()) }
-    pub fn sanitized(bytes: impl Into<Vec<u8>>) -> Self {
-        Self(bytes.into().into_iter()
-            .filter(|b| *b != b'\r' && *b != b'\n')
-            .collect())
-    }
+// Active: sweeper thread reclaims memory, hold the lock once
+pub fn remove_expired(&self) -> Result<usize, CacheError> {
+    let mut guard = self.inner.lock().map_err(|_| CacheError::MutexPoisoned)?;
+    let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
+    let expired: Vec<Vec<u8>> = guard.expiries.iter()
+        .filter(|(_, ttl)| now >= **ttl)
+        .map(|(k, _)| k.to_owned())
+        .collect();
+    for k in &expired { guard.values.remove(k); guard.expiries.remove(k); }
+    Ok(expired.len())
 }"#,
-            description: "Same newtype, three constructors with different trust levels. Inbound (or untrusted) bytes get TryFrom's strict validation \u{2014} rejected if CR/LF present. Known-safe literals (\"OK\", \"PONG\") get infallible constructors. Arbitrary server-authored error strings get sanitized \u{2014} CR/LF stripped because the wire format forbids them anyway. The invariant survives all three paths.",
+            description: "Two halves of the same story. Lazy expiry on every read means clients never see expired keys regardless of sweep cadence; the active sweeper is just memory hygiene. Hold-the-lock over the whole sweep is defensible at this scale (microseconds) and removes the snapshot/re-check race \u{2014} switch to snapshot-then-evict if profiling ever shows tail latency hurt.",
         },
     ],
     obstacles: &[
         "Bytes-to-Vec read footgun: first version called inner.read(&mut new) where new was Vec::new() \u{2014} reads into a zero-length slice return Ok(0) forever, buf never grew, the get_frame loop spun. Fix: read into a sized stack array ([0u8; 1024]) and extend_from_slice(&new[..n]) using the returned count. Clippy's unused_io_amount catches it now",
         "Borrow-checker corner on parse_frame: parse_one returns (Frame, &[u8]) borrowing from self.buf. Trying to self.buf.drain(..) while the slice was alive failed. Fix: extract bytes.len() (a Copy usize) before mutating",
+        "Self-deadlock on the TTL read path: get_absolute_ttl held the mutex guard, then called self.remove() on the expired branch \u{2014} which tries to re-lock the same std::sync::Mutex from the same thread. std mutexes aren't reentrant; the thread hangs forever. Fix: drop(guard) explicitly before the re-entry. Guards live to end of scope, not end of statement \u{2014} only inline lock() temporaries drop early",
         "split_crlf contract: when no CRLF is in the buffer, should it return None or Some((entire_buf, &[]))? None is correct \u{2014} it preserves the Incomplete signal up to the parser. The byte-splitter doesn't have errors; the parser does. That boundary matters",
     ],
-    progress: "M0\u{2013}M2 complete: TCP echo, RESP protocol + dispatch, GET/SET/DEL/EXISTS. Test coverage on every protocol layer. Roadmap: M3 EXPIRE/TTL, M4 AOF persistence (deliberately not LSM \u{2014} nighthawk already proves that ground), M5 Pub/Sub.",
+    progress: "GET/SET/DEL/EXISTS/EXPIRE/EXPIREAT/TTL/PERSIST/PING all working over real RESP. Snapshot persistence to disk on a periodic tick. Graceful shutdown end-to-end. Next: AOF persistence (deliberately not LSM \u{2014} nighthawk already proves that ground), then async migration, then Pub/Sub.",
     impact: "Real network protocol implemented from the byte level \u{2014} framing, error variants, streaming, binary safety, layered architecture \u{2014} interoperable with a real client, not a mock. Paired with nighthawk to cover both halves of how production KV systems are built: nighthawk the on-disk LSM storage engine, diprotodon the in-memory protocol server. Both hand-written.",
     status: ProjectStatus::Doing,
 };

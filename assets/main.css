@@ -696,34 +696,99 @@
 
 /* === Announcement Banner === */
 
-.announcement-banner {
+.banner-stack {
     position: fixed;
     top: 6rem;
     left: 1.5rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 420px;
+}
+
+.announcement-banner {
+    position: relative;
+    overflow: hidden;
     background: var(--border-secondary);
     border: 1px solid var(--text-muted);
     border-radius: 0.4rem;
-    padding: 0.8rem 1.2rem;
+    padding: 0.8rem 2.4rem 0.9rem 1.2rem;
     font-size: 0.85rem;
     color: var(--text-primary);
-    z-index: 100;
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    max-width: 420px;
-    animation: banner-slide-in 0.4s ease-out both;
+    flex-direction: column;
+    gap: 0.4rem;
+    animation: banner-slide-in 0.5s ease-out both;
     animation-delay: 1s;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-.announcement-banner a {
+.banner-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.banner-category {
+    font-size: 0.7rem;
+    color: var(--border-success);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.banner-text {
+    line-height: 1.45;
+}
+
+.announcement-banner .banner-dismiss {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.7rem;
+}
+
+.announcement-banner + .announcement-banner {
+    animation-delay: 1.2s;
+}
+
+.banner-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: var(--accent-primary);
+    transform-origin: left;
+    animation: banner-countdown 10s linear forwards;
+    animation-delay: 1s;
+}
+
+.announcement-banner + .announcement-banner .banner-progress {
+    animation-delay: 1.2s;
+}
+
+.announcement-banner:hover .banner-progress {
+    animation-play-state: paused;
+}
+
+@keyframes banner-countdown {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
+}
+
+.announcement-banner a,
+.announcement-banner a:visited {
     color: var(--accent-primary);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
 
 .announcement-banner a:hover {
-    color: var(--accent-primary);
+    color: var(--accent-secondary);
 }
 
 .banner-dismiss {
@@ -731,7 +796,8 @@
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
     padding: 0;
     line-height: 1;
 }
@@ -743,7 +809,7 @@
 @keyframes banner-slide-in {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-80px);
     }
     to {
         opacity: 1;
@@ -1163,6 +1229,7 @@ a:hover {
     padding-left: 1rem;
     position: relative;
     margin-bottom: 0.25rem;
+    overflow-wrap: anywhere;
 }
 
 .card-bullets li::before {
