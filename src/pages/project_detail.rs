@@ -10,7 +10,7 @@ use crate::data;
 pub fn ProjectDetail(slug: String) -> Element {
     let Some(project) = data::find_project(&slug) else {
         return rsx! {
-            document::Title { "Project not found — Scotty Fermo" }
+            document::Title { "Project not found | Scotty Fermo" }
             div { class: "not-found",
                 h1 { "Project not found" }
                 p { "No project matches \"{slug}\"." }

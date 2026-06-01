@@ -4,9 +4,9 @@ use dioxus::prelude::*;
 pub fn PageMeta(title: String, description: String, path: String) -> Element {
     let canonical = format!("https://scottyfermo.com{path}");
     let full_title = if title == "Scotty Fermo" {
-        "Scotty Fermo — Software Engineer | Rust".to_string()
+        "Scotty Fermo".to_string()
     } else {
-        format!("{title} — Scotty Fermo")
+        format!("{title} | Scotty Fermo")
     };
 
     rsx! {
