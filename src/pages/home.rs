@@ -73,11 +73,10 @@ pub fn Home() -> Element {
             }
         }
         section { class: "hero content-enter",
-            div { class: "logo", "{LOGO_ASCII}" }
-            h1 { class: "hero-name", "Scotty Fermo" }
+            h1 { class: "logo", "aria-label": "Scotty Fermo", "{LOGO_ASCII}" }
             p { class: "hero-title", "Software Engineer | Full-Stack | Rust" }
             p { class: "hero-tagline",
-                "I build production Rust systems that solve hard problems."
+                "Production Rust for the work that has to actually run \u{2014} mobile apps, internal tooling, and the storage engines underneath."
             }
             div { class: "hero-links",
                 a {
@@ -102,7 +101,8 @@ pub fn Home() -> Element {
             p {
                 "4+ years of building production systems and leading technical teams. "
                 "1+ years of intensive Rust development \u{2014} from near-zero to shipping production systems. "
-                "Builder mentality: when I see inefficiency, I build tools to eliminate it."
+                "At Halo Software I shipped CLI tools that turned multi-week manual migrations into one-command jobs. "
+                "On my own I built Zwipe (a full-stack mobile MTG deck builder, App Store pending) and went deep on the storage engines and protocols underneath \u{2014} an LSM-tree KV database and a Redis-compatible server, both hand-written."
             }
         }
         section { class: "projects-section",

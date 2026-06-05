@@ -87,11 +87,10 @@ const ZWIPE: Project = Project {
     summary: "Mobile-first Magic: The Gathering deck builder with swipe-based navigation.",
     card_bullets: &[
         "Native iOS + Android from one Dioxus codebase",
-        "Axum REST API backed by PostgreSQL (110k+ cards, materialized search)",
-        "Background sync service + static marketing site, all in the same workspace",
-        "Full commander support \u{2014} partners, backgrounds, oathbreaker",
+        "Axum + PostgreSQL backend, 110k+ cards, materialized search",
+        "5 workspace crates, 416 tests, zero unwrap in production code",
     ],
-    impact_metric: "Full-stack mobile app \u{2014} ~45,200 lines of Rust",
+    impact_metric: "Live: zwipe.net. App Store submission pending.",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). App Store submission pending.",
     tags: &["rust", "full-stack", "ios", "dioxus", "postgresql"],
     media: &[
@@ -135,10 +134,8 @@ const ZWIPE: Project = Project {
     approach: &[
         "Rust on mobile via Dioxus \u{2014} one Rust codebase compiles to a native mobile app, no JS bridge, no separate frontend repo",
         "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardFilter type drives SQL queries server-side and in-memory filtering on the device, via extension traits on Vec<Card>",
-        "Swipe stack built from scratch \u{2014} OnSwipe trait with OnTouch/OnMouse adapters, dual-threshold detection (velocity OR distance), axis locking. Ten files, zero gesture libraries",
         "Production-grade auth: Argon2id with NIST-compliant 170+ pattern blocklist, rotating refresh tokens (replay-safe via delete-on-use), Password type consumed on hash so plaintext can't leak",
         "SQLx at scale \u{2014} five-strategy upsert chain handles batching, PartialEq delta detection, and per-row fallback; 88-column Scryfall sync respects PostgreSQL's 65k parameter limit (~327 cards per batch)",
-        "Background service (zervice) for nightly Scryfall delta sync of 110k+ printings, materialized view refresh for deduplicated search (~35k unique cards), refresh-token cleanup, session enforcement",
         "Production posture: .unwrap, .expect, panic!, todo!, dbg!, print! all denied at compile time. 33 enforced Clippy rules, 416 tests, security audit complete, nightly Cloudflare R2 backups",
     ],
     snippets: &[
@@ -284,12 +281,11 @@ const HALO_ACTION_IMPORTER: Project = Project {
     repo_url: "https://github.com/scadoshi/halo_action_importer",
     summary: "CLI for bulk importing actions into the Halo Software suite from CSV and Excel.",
     card_bullets: &[
-        "Layered architecture (inbound/domain/outbound) with bin/lib crate split",
-        "Built for hours-long unattended runs against unreliable production APIs",
-        "Handles millions of records with automatic recovery from transient failures",
-        "~3,230 LOC across 20 files",
+        "Runs unattended for hours against unreliable APIs, recovers from every transient failure",
+        "Per-failure-mode retry: 401 refresh, 504/network retry, missing-ticket permanent skip",
+        "Two-tier cache survives restarts and concurrent writes via fs2 file locks",
     ],
-    impact_metric: "Weeks of manual work, automated",
+    impact_metric: "Weeks of manual work, automated.",
     objective: "Bulk-import millions of records into Halo Software from CSV and Excel against a production API. Must survive every real failure mode: network errors, token expiry, missing tickets, partial batch failures, inconsistent data formats across client exports.",
     tags: &["rust", "csv", "etl", "api-resilience"],
     media: &[
@@ -396,12 +392,11 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     repo_url: "https://github.com/scadoshi/halo_custom_field_builder",
     summary: "CLI that bulk-creates custom fields across Halo Software products from CSV definitions.",
     card_bullets: &[
-        "Layered architecture (inbound/domain/outbound) with bin/lib crate split",
-        "Type-safe domain modeling; OAuth 2.0 with token caching",
-        "Interactive debug TUI; import results tracking; log management",
-        "Cross-platform binaries via GitHub Actions. ~1,370 LOC",
+        "Type-safe domain modeling \u{2014} invalid data rejected before any API call",
+        "OAuth 2.0 with cached tokens; 30-second expiry buffer prevents edge-case 401s",
+        "Cross-platform binaries via GitHub Actions matrix (Windows, macOS Intel + ARM, Linux)",
     ],
-    impact_metric: "Manual UI clicks to one CSV import",
+    impact_metric: "Hours to minutes. Deployed across Fortune 500 client implementations.",
     objective: "Read custom field definitions from CSV and create them across Halo Software products via the API. Must support all 8 field types, handle auth, respect rate limits, ship as cross-platform binaries.",
     tags: &["rust", "cli", "api", "cross-platform"],
     media: &[
@@ -656,7 +651,6 @@ const NIGHTHAWK: Project = Project {
     approach: &[
         "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to full LSM-tree \u{2014} WAL, memtable, SSTables, bloom filters, k-way compaction, TCP server, concurrency. Six distinct architectural layers, each one a real piece of how production KV systems work",
         "WAL with sync_all() after every write; 10-byte binary header (magic 0x4E48 + CRC32 + length); corruption recovery scans byte-by-byte past garbage, typed via a CorruptionType enum so callers know exactly what went wrong",
-        "BTreeMap memtable makes SSTable flush trivial (iterate + write). WAL replays into memtable on startup for crash recovery. 4MB threshold keeps memory bounded",
         "Bloom filters as in-file SSTable footers. Kirsch-Mitzenmacher double hashing with two xxh3 seeds, k=7, ~1% false positive rate. BloomFilterReader as a blanket impl on R: Read + Seek \u{2014} any file handle gains it",
         "K-way compaction across all SSTables simultaneously, not sequentially. seen_keys HashSet drops tombstone winners so they never accumulate. Single Entry enum threads tombstones through every layer (WAL, memtable, SSTables)",
         "TCP server: thread-per-connection, Arc<Mutex<Log>>, per-command locking (lock \u{2192} execute \u{2192} drop \u{2192} flush). Generic Runner<R: BufRead, W: Write> powers both the CLI and the TCP server from the same loop",
@@ -783,13 +777,12 @@ const DIPROTODON: Project = Project {
     summary: "Redis-compatible in-memory KV server in Rust. Real redis-cli clients connect.",
     card_bullets: &[
         "Hand-written RESP wire protocol \u{2014} no library does the work",
-        "GET/SET/DEL/EXISTS/EXPIRE/EXPIREAT/TTL/PERSIST/PING, binary-safe end-to-end",
-        "TTL with lazy expiry on read + background sweeper thread",
-        "Graceful shutdown: AtomicBool flag, nonblocking accept, all threads joined",
-        "~2,480 LOC, 130+ tests across every protocol and storage layer",
+        "Hexagonal ports: domain Service orchestrates the cache + a CacheRepository persister",
+        "Durability: atomic snapshot (temp+rename) + AOF replay through the same RESP parse path",
+        "~4,500 LOC, 219 tests across every protocol, storage, and persistence layer",
     ],
-    impact_metric: "~2,480 lines, 130+ tests, hand-written RESP",
-    objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, snapshot persistence, graceful shutdown \u{2014} all written without reaching for a protocol crate.",
+    impact_metric: "~4,500 lines, 219 tests, hand-written RESP + durability",
+    objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown \u{2014} all written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
     media: &[
         MediaItem {
@@ -801,12 +794,10 @@ const DIPROTODON: Project = Project {
     ],
     approach: &[
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input \u{2014} no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
-        "Binary safe end-to-end: Vec<u8>, not String. Bulk-string payloads can be arbitrary bytes (jpegs, interior CRLF, whatever). UTF-8 is never enforced where the protocol doesn't require it",
-        "Iterative array parsing. Recursive parse_array would blow the stack on MGET key1..key1000; a Vec + loop is one extra concept and zero risk",
-        "Storage is HashMap<Vec<u8>, Entry> where Entry { value, absolute_ttl: Option<u64> } \u{2014} one struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread reclaiming memory. Hold-the-lock over the full sweep, defensible because it's microseconds at this scale",
+        "Storage is HashMap<Vec<u8>, Entry> where Entry { value, absolute_ttl: Option<u64> } \u{2014} one struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread for memory hygiene",
+        "Hexagonal ports: the domain defines two trait boundaries \u{2014} CacheRepository (the persister implements it) and CacheService (the domain Service implements it; the session calls it). Adapter errors map into a domain-owned RepositoryError at the boundary, so the domain never names an outbound type",
+        "Durability via snapshot + AOF, hybrid recovery. Snapshot is a wincode dump written temp-file-then-rename (atomic; never a half-written file). AOF is the wire protocol \u{2014} each mutating command is appended as the exact RESP bytes a client would have sent, so replay reuses Frame::parse_one + Command::try_from. Snapshot-then-truncate compaction holds the cache lock across both so no mutation escapes between the two",
         "Graceful shutdown without a signal-handling crate: Arc<AtomicBool> flag, TcpListener::set_nonblocking(true) so accept() returns WouldBlock and the loop can check the flag, stdin EOF or \"quit\" as the trigger. Every spawned thread is collected as a JoinHandle and joined cleanly before run() returns",
-        "Generic Session<R: Read, W: Write>. Cursor<Vec<u8>> as R lets tests script RESP bytes in and out without a real socket",
-        "Hexagonal layout (domain / inbound / outbound). Domain knows nothing about RESP, RESP knows nothing about Redis semantics. One-way coupling: inbound and outbound depend on domain, never the reverse",
     ],
     snippets: &[
         Snippet {
@@ -862,46 +853,62 @@ for h in handles { let _ = h.join(); }"#,
             description: "No ctrlc/signal-hook crate. set_nonblocking turns accept() into a poll \u{2014} pair it with a 50ms sleep on WouldBlock so the loop checks the shutdown flag instead of burning a CPU. A stdin thread is the trigger (EOF or \"quit\"). Every spawned worker (sessions, persistence, sweeper) is collected as a JoinHandle and joined before run() returns, so in-flight work finishes cleanly.",
         },
         Snippet {
-            title: "Lazy Expiry + Background Sweeper",
-            code: r#"pub struct Entry { pub value: Vec<u8>, pub absolute_ttl: Option<u64> }
-
-// Lazy: every read path drops expired keys on access
-pub fn get_absolute_ttl(&self, key: impl AsRef<[u8]>)
-    -> Result<Option<Option<u64>>, CacheError>
-{
-    let guard = self.inner.lock().map_err(|_| CacheError::MutexPoisoned)?;
-    let Some(Entry { absolute_ttl, .. }) = guard.get(key.as_ref()) else {
-        return Ok(None);
-    };
-    let ttl = absolute_ttl.to_owned();
-    drop(guard);  // release before re-locking inside remove()
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
-    if ttl.is_some_and(|t| now >= t) { self.remove(key)?; return Ok(None); }
-    Ok(Some(ttl))
+            title: "AOF Is the Wire Protocol",
+            code: r#"// Every mutation logged as the exact RESP bytes a client would have sent.
+// One serializer (Frame::write_to) for both the network and the log.
+impl From<MutatingCommand> for Frame {
+    fn from(value: MutatingCommand) -> Self {
+        match value {
+            MC::Set { key, value } => Frame::Array(vec![
+                Frame::BulkString(b"SET".to_vec()),
+                Frame::BulkString(key),
+                Frame::BulkString(value),
+            ]),
+            // ...DEL, EXPIRE, EXPIREAT, PERSIST
+        }
+    }
 }
 
-// Active: sweeper thread reclaims memory, hold the lock once
-pub fn remove_expired(&self) -> Result<usize, CacheError> {
-    let now = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
-    let mut guard = self.inner.lock().map_err(|_| CacheError::MutexPoisoned)?;
-    let expired: Vec<Vec<u8>> = guard.iter()
-        .filter(|(_, Entry { absolute_ttl, .. })| absolute_ttl.is_some_and(|t| now >= t))
-        .map(|(k, _)| k.to_owned())
-        .collect();
-    for k in &expired { guard.remove(k); }
-    Ok(expired.len())
+// Replay reuses Frame::parse_one + Command::try_from — the same inbound
+// parse path the network uses. Cache-only execute() so replay doesn't
+// re-write the log it's reading.
+pub fn replay(&self, cache: &Cache) -> Result<(), AofError> {
+    let mut bytes = fs::read(&*self.path)?;
+    let mut buf = bytes.as_slice();
+    loop {
+        match Frame::parse_one(buf) {
+            Ok((frame, rest)) => {
+                buf = rest;
+                cache.execute(Command::try_from(frame)?)?;
+            }
+            // Trailing torn frame = crash mid-append. Stop cleanly,
+            // keep everything parsed so far.
+            Err(FrameError::Incomplete) => break,
+            Err(e) => return Err(e.into()),
+        }
+    }
+    Ok(())
+}
+
+// Checkpoint: snapshot then truncate, both under the cache lock so
+// no mutation escapes between the two. Crash between = re-apply
+// already-snapshotted commands. Harmless.
+fn snapshot(&self, cache: &Cache) -> Result<(), RepositoryError> {
+    let guard = cache.lock().map_err(|_| PersisterError::MutexPoisoned)?;
+    self.snapshot.store(&guard)?;  // wincode dump via temp+rename
+    self.aof.clear()?;             // truncate log
+    Ok(())
 }"#,
-            description: "One Entry per key keeps value and TTL together \u{2014} no risk of values and expiries drifting apart, no two-map dance on insert/remove. Lazy expiry on every read means clients never see expired keys regardless of sweep cadence; the active sweeper is just memory hygiene. Hold-the-lock over the whole sweep is defensible at this scale (microseconds) and removes the snapshot/re-check race \u{2014} switch to snapshot-then-evict if profiling ever shows tail latency hurt.",
+            description: "The AOF being byte-for-byte the wire protocol means replay reuses the inbound parse path — no separate decoder, no version-skew between disk and network format. Snapshots use temp-file-then-rename for atomicity. Checkpointing holds the cache lock across snapshot+clear; the order (snapshot first, clear second) means a crash between them only causes harmless re-application of already-durable commands.",
         },
     ],
     obstacles: &[
-        "Bytes-to-Vec read footgun: first version called inner.read(&mut new) where new was Vec::new() \u{2014} reads into a zero-length slice return Ok(0) forever, buf never grew, the get_frame loop spun. Fix: read into a sized stack array ([0u8; 1024]) and extend_from_slice(&new[..n]) using the returned count. Clippy's unused_io_amount catches it now",
-        "Borrow-checker corner on parse_frame: parse_one returns (Frame, &[u8]) borrowing from self.buf. Trying to self.buf.drain(..) while the slice was alive failed. Fix: extract bytes.len() (a Copy usize) before mutating",
-        "Self-deadlock on the TTL read path: get_absolute_ttl held the mutex guard, then called self.remove() on the expired branch \u{2014} which tries to re-lock the same std::sync::Mutex from the same thread. std mutexes aren't reentrant; the thread hangs forever. Fix: drop(guard) explicitly before the re-entry. Guards live to end of scope, not end of statement \u{2014} only inline lock() temporaries drop early",
-        "split_crlf contract: when no CRLF is in the buffer, should it return None or Some((entire_buf, &[]))? None is correct \u{2014} it preserves the Incomplete signal up to the parser. The byte-splitter doesn't have errors; the parser does. That boundary matters",
+        "Self-deadlock on the TTL read path: get_absolute_ttl held the mutex guard, then called self.remove() on the expired branch \u{2014} which tries to re-lock the same std::sync::Mutex from the same thread. std mutexes aren't reentrant; the thread hangs forever. Fix: drop(guard) explicitly before the re-entry. Guards live to end of scope, not end of statement",
+        "get_frame read-before-parse bug: original loop called reader.read() first, then parse_frame(). When one TCP read delivered multiple frames (common \u{2014} TCP coalesces small writes), the first call returned the first frame fine; the second call's first move was a read that hit EOF, returned None, and the queued second frame in the buffer was never seen. Fix: parse first, only read on Incomplete, return None when an Incomplete is followed by a zero-byte read",
+        "AOF/snapshot atomicity: between the snapshot read and the AOF truncate, a writer could land a new mutation that gets wiped without ever being captured. Fix: hold the cache lock across both. Order matters too \u{2014} snapshot first, then clear, so a crash between just re-applies already-durable commands. Harmless.",
     ],
-    progress: "GET/SET/DEL/EXISTS/EXPIRE/EXPIREAT/TTL/PERSIST/PING all working over real RESP. Snapshot persistence to disk on a periodic tick. Graceful shutdown end-to-end. Next: AOF persistence (deliberately not LSM \u{2014} nighthawk already proves that ground), then async migration, then Pub/Sub.",
-    impact: "Real network protocol implemented from the byte level \u{2014} framing, error variants, streaming, binary safety, layered architecture \u{2014} interoperable with a real client, not a mock. Paired with nighthawk to cover both halves of how production KV systems are built: nighthawk the on-disk LSM storage engine, diprotodon the in-memory protocol server. Both hand-written.",
+    progress: "M1\u{2013}M4 complete. All commands over real RESP, snapshot + AOF persistence behind a hexagonal port, graceful shutdown end-to-end. 219 tests. Next: async migration, then Pub/Sub, then MULTI/EXEC.",
+    impact: "Paired with nighthawk to cover both halves of how production KV systems are built \u{2014} nighthawk the on-disk LSM storage engine, diprotodon the in-memory protocol server with WAL-style durability. Both hand-written, both interoperable with real clients (redis-cli for diprotodon, raw TCP for nighthawk).",
     status: ProjectStatus::Doing,
 };
 
