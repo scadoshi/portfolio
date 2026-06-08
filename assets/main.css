@@ -790,7 +790,7 @@
 }
 
 .announcement-banner a:hover {
-    color: var(--accent-secondary);
+    color: var(--accent-primary);
 }
 
 .banner-dismiss {
@@ -832,6 +832,7 @@ body {
     line-height: 1.6;
     font-size: 16px;
     margin: 0;
+    touch-action: manipulation;
 }
 
 .theme-wrapper {
@@ -849,8 +850,10 @@ a:visited {
     transition: color 0.2s;
 }
 
-a:hover {
-    color: var(--accent-secondary);
+@media (hover: hover) {
+    a:hover {
+        color: var(--accent-primary);
+    }
 }
 
 /* === Navbar === */
@@ -865,11 +868,12 @@ a:hover {
 }
 
 .nav-container {
-    max-width: 1000px;
+    max-width: 760px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
 }
 
 .nav-brand {
@@ -879,8 +883,10 @@ a:hover {
     text-decoration: none;
 }
 
-.nav-brand:hover {
-    color: var(--border-warning);
+@media (hover: hover) {
+    .nav-brand:hover {
+        color: var(--border-warning);
+    }
 }
 
 .nav-logo {
@@ -893,27 +899,113 @@ a:hover {
     transition: letter-spacing 0.15s;
 }
 
-.nav-brand:hover .nav-logo {
-    letter-spacing: 1px;
-    color: var(--border-warning);
+@media (hover: hover) {
+    .nav-brand:hover .nav-logo {
+        letter-spacing: 1px;
+        color: var(--border-warning);
+    }
+}
+
+.nav-panel {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .nav-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: center;
+    height: 1.85rem;
+    line-height: 1;
 }
 
 .nav-link,
-.nav-link:visited {
+.nav-link:visited,
+.dropdown-trigger,
+.theme-select-trigger,
+.mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 1.85rem;
+    padding: 0 0.8rem;
     color: var(--text-subtle);
     text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.2s;
+    background: none;
+    border: 1px solid var(--border-primary);
+    border-radius: 0.4rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        color 0.2s,
+        border-color 0.2s;
 }
 
-.nav-link:hover {
-    color: var(--accent-tertiary);
+@media (hover: hover) {
+    .nav-link:hover,
+    .dropdown-trigger:hover,
+    .theme-select-trigger:hover,
+    .mode-toggle:hover {
+        color: var(--accent-primary);
+        border-color: var(--accent-primary);
+    }
+}
+
+/* === Hamburger === */
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.3rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--border-primary);
+    border-radius: 0.35rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+@media (hover: hover) {
+    .nav-toggle:hover {
+        border-color: var(--accent-primary);
+    }
+}
+
+.nav-toggle-bar {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--text-primary);
+    transition:
+        transform 0.2s,
+        opacity 0.2s;
+}
+
+.nav-toggle-open .nav-toggle-bar:nth-child(1) {
+    transform: translateY(0.4rem) rotate(45deg);
+}
+.nav-toggle-open .nav-toggle-bar:nth-child(2) {
+    opacity: 0;
+}
+.nav-toggle-open .nav-toggle-bar:nth-child(3) {
+    transform: translateY(-0.4rem) rotate(-45deg);
+}
+
+/* === Backdrop for click-outside dropdown dismiss === */
+
+.theme-backdrop,
+.nav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: transparent;
 }
 
 /* === Dropdowns (shared) === */
@@ -961,10 +1053,17 @@ a:hover {
     height: 0.5rem;
 }
 
-.dropdown:hover .dropdown-content,
-.theme-select:hover .theme-select-content {
+.dropdown-open .dropdown-content,
+.theme-select-open .theme-select-content {
     display: flex;
     flex-direction: column;
+}
+
+.dropdown-trigger,
+.theme-select-trigger {
+    position: relative;
+    z-index: 200;
+    user-select: none;
 }
 
 .dropdown-item,
@@ -978,9 +1077,11 @@ a:hover {
         color 0.2s;
 }
 
-.dropdown-item:hover {
-    background-color: var(--border-muted);
-    color: var(--accent-tertiary);
+@media (hover: hover) {
+    .dropdown-item:hover {
+        background-color: var(--border-muted);
+        color: var(--accent-primary);
+    }
 }
 
 /* === Theme Switcher === */
@@ -989,12 +1090,6 @@ a:hover {
     display: flex;
     gap: 0.75rem;
     align-items: center;
-}
-
-.theme-select-trigger {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-family: inherit;
 }
 
 .theme-option {
@@ -1012,32 +1107,15 @@ a:hover {
         color 0.2s;
 }
 
-.theme-option:hover {
-    background-color: var(--border-muted);
-    color: var(--accent-tertiary);
+@media (hover: hover) {
+    .theme-option:hover {
+        background-color: var(--border-muted);
+        color: var(--accent-primary);
+    }
 }
 
 .theme-option.active {
     color: var(--accent-primary);
-}
-
-.mode-toggle {
-    background: none;
-    border: 1px solid var(--border-primary);
-    border-radius: 0.4rem;
-    color: var(--text-muted);
-    font-family: inherit;
-    font-size: 0.85rem;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
-    transition:
-        border-color 0.2s,
-        color 0.2s;
-}
-
-.mode-toggle:hover {
-    border-color: var(--accent-tertiary);
-    color: var(--accent-tertiary);
 }
 
 /* === Content === */
@@ -1086,7 +1164,7 @@ a:hover {
 
 .hero-links a:hover {
     border-color: var(--accent-primary);
-    color: var(--accent-secondary);
+    color: var(--accent-primary);
 }
 
 /* === Project Tags === */
@@ -1256,7 +1334,7 @@ a:hover {
 }
 
 .card-link:hover {
-    color: var(--accent-tertiary);
+    color: var(--accent-primary);
 }
 
 .card-link-secondary {
@@ -1303,7 +1381,7 @@ a:hover {
 }
 
 .repo-link:hover {
-    color: var(--accent-tertiary);
+    color: var(--accent-primary);
 }
 
 .project-section {
@@ -1650,7 +1728,7 @@ a:hover {
 }
 
 .fsq-link:hover {
-    color: var(--accent-tertiary);
+    color: var(--accent-primary);
 }
 
 /* === Footer === */
@@ -1701,9 +1779,101 @@ a:hover {
         grid-template-columns: 1fr;
     }
 
-    .nav-links {
+    .navbar {
+        padding: 0.75rem 1rem;
+    }
+
+    .nav-container {
+        flex-wrap: wrap;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-panel {
+        display: none;
+        flex-basis: 100%;
+        flex-direction: column;
+        align-items: stretch;
         gap: 1rem;
+        padding-top: 1rem;
+        margin-top: 0.75rem;
+        border-top: 1px solid var(--border-primary);
+    }
+
+    .nav-panel-open {
+        display: flex;
+    }
+
+    .nav-panel .nav-links {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        height: auto;
+    }
+
+    .nav-panel .nav-link,
+    .nav-panel .dropdown-trigger {
+        height: auto;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 0.65rem 1rem;
+    }
+
+    .nav-panel .dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-panel .dropdown-content {
+        position: static;
+        transform: none;
+        margin-top: 0.5rem;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .nav-panel .dropdown-item {
+        text-align: center;
+        padding: 0.4rem 1rem;
+        border: none;
+        border-radius: 0;
+        margin: 0;
         font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .nav-panel .theme-switcher {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-primary);
+    }
+
+    .nav-panel .theme-select-trigger,
+    .nav-panel .mode-toggle {
+        height: auto;
+        font-size: 0.95rem;
+        padding: 0.55rem 1rem;
+    }
+
+    .nav-panel .theme-select-content {
+        right: auto;
+        left: 0;
+        max-height: 50vh;
+    }
+
+    body:has(.nav-panel-open) .banner-stack {
+        top: auto;
+        bottom: 1.5rem;
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
     }
 
     .footer-container {
@@ -1718,13 +1888,5 @@ a:hover {
 
     .project-name {
         font-size: 1.5rem;
-    }
-
-    .theme-switcher {
-        gap: 0.5rem;
-    }
-
-    .theme-select-trigger {
-        font-size: 0.75rem;
     }
 }

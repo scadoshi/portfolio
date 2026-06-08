@@ -5,14 +5,33 @@ use crate::theme::{ThemeConfig, THEMES};
 #[component]
 pub fn ThemeSwitcher() -> Element {
     let mut theme = use_context::<Signal<ThemeConfig>>();
+    let mut open = use_signal(|| false);
     let current_name = theme.read().name.clone();
     let is_dark = theme.read().is_dark;
     let has_light = theme.read().has_light_mode();
+    let select_class = if open() {
+        "theme-select theme-select-open"
+    } else {
+        "theme-select"
+    };
 
     rsx! {
+        if open() {
+            div {
+                class: "theme-backdrop",
+                onclick: move |_| open.set(false),
+            }
+        }
         div { class: "theme-switcher",
-            div { class: "theme-select",
-                span { class: "theme-select-trigger",
+            div { class: "{select_class}",
+                button {
+                    class: "theme-select-trigger",
+                    aria_expanded: "{open()}",
+                    onclick: move |evt| {
+                        evt.stop_propagation();
+                        let next = !open();
+                        open.set(next);
+                    },
                     "{display_name(&current_name)} \u{25be}"
                 }
                 div { class: "theme-select-content",
@@ -30,6 +49,7 @@ pub fn ThemeSwitcher() -> Element {
                                             t.is_dark = true;
                                         }
                                     });
+                                    open.set(false);
                                 },
                                 "{label}"
                             }
@@ -43,7 +63,7 @@ pub fn ThemeSwitcher() -> Element {
                     onclick: move |_| {
                         theme.with_mut(|t| t.is_dark = !t.is_dark);
                     },
-                    if is_dark { "[light]" } else { "[dark]" }
+                    if is_dark { "light" } else { "dark" }
                 }
             }
         }
