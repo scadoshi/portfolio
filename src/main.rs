@@ -73,6 +73,7 @@ fn App() -> Element {
     let theme = use_signal(ThemeConfig::default);
     use_context_provider(|| theme);
     rsx! {
+        document::Meta { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" }
         document::Link { rel: "icon", href: FAVICON_ICO }
         document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
