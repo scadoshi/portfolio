@@ -707,6 +707,7 @@
     flex-direction: column;
     gap: 0.6rem;
     max-width: 420px;
+    transition: transform 0.25s ease;
 }
 
 .announcement-banner {
@@ -751,6 +752,36 @@
 
 .announcement-banner + .announcement-banner {
     animation-delay: 1.2s;
+}
+
+/* fade out, then collapse so a remaining toast slides up instead of jumping;
+   the element is removed from the DOM when this animation ends. compound
+   selector + placement after the slide-in rules so it overrides them */
+.announcement-banner.banner-leaving {
+    animation: banner-leave 0.45s ease forwards;
+    animation-delay: 0s;
+    pointer-events: none;
+}
+
+@keyframes banner-leave {
+    0% {
+        opacity: 1;
+        max-height: 10rem;
+    }
+    45% {
+        opacity: 0;
+        max-height: 10rem;
+    }
+    100% {
+        opacity: 0;
+        max-height: 0;
+        /* cancel the stack gap left behind */
+        margin-bottom: -0.6rem;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-top-width: 0;
+        border-bottom-width: 0;
+    }
 }
 
 .banner-progress {
@@ -907,6 +938,10 @@ a:visited {
 }
 
 .nav-panel {
+    display: flex;
+}
+
+.nav-panel-inner {
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -1785,6 +1820,9 @@ a:visited {
 
     .nav-container {
         flex-wrap: wrap;
+        /* the collapsed panel still occupies a (zero-height) flex line;
+           row-gap would add phantom space below the toggle row */
+        row-gap: 0;
     }
 
     .nav-toggle {
@@ -1792,18 +1830,49 @@ a:visited {
     }
 
     .nav-panel {
-        display: none;
+        display: grid;
+        grid-template-rows: 0fr;
+        /* explicit full-width column: the implicit auto column would be
+           content-sized instead of filling the panel */
+        grid-template-columns: minmax(0, 1fr);
         flex-basis: 100%;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-        padding-top: 1rem;
-        margin-top: 0.75rem;
-        border-top: 1px solid var(--border-primary);
+        opacity: 0;
+        visibility: hidden;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: 1px solid transparent;
+        transition:
+            grid-template-rows 0.25s ease,
+            opacity 0.2s ease,
+            margin-top 0.25s ease,
+            padding-top 0.25s ease,
+            border-top-color 0.2s ease,
+            visibility 0s linear 0.25s;
     }
 
     .nav-panel-open {
-        display: flex;
+        grid-template-rows: 1fr;
+        opacity: 1;
+        visibility: visible;
+        /* old 0.75rem margin + the 1rem container row-gap this replaces */
+        margin-top: 1.75rem;
+        padding-top: 1rem;
+        border-top-color: var(--border-primary);
+        transition:
+            grid-template-rows 0.25s ease,
+            opacity 0.2s ease,
+            margin-top 0.25s ease,
+            padding-top 0.25s ease,
+            border-top-color 0.2s ease,
+            visibility 0s;
+    }
+
+    .nav-panel .nav-panel-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        overflow: hidden;
+        min-height: 0;
     }
 
     .nav-panel .nav-links {
@@ -1828,7 +1897,11 @@ a:visited {
     }
 
     .nav-panel .dropdown-content {
-        position: static;
+        /* relative (not static) keeps the in-flow layout but lets the base
+           z-index apply, so items sit above the fixed .nav-backdrop */
+        position: relative;
+        top: 0;
+        left: 0;
         transform: none;
         margin-top: 0.5rem;
         background: transparent;
@@ -1863,17 +1936,23 @@ a:visited {
     }
 
     .nav-panel .theme-select-content {
+        /* fixed escapes the panel's overflow:hidden collapse wrapper, so the
+           dropdown pops out over the page; auto offsets keep it anchored at
+           its natural spot below the trigger (navbar is sticky, so stable) */
+        position: fixed;
+        top: auto;
         right: auto;
-        left: 0;
+        margin-top: 0.5rem;
         max-height: 50vh;
+        overflow-y: auto;
     }
 
     body:has(.nav-panel-open) .banner-stack {
-        top: auto;
-        bottom: 1.5rem;
-        left: 1rem;
-        right: 1rem;
-        max-width: none;
+        /* slide out of the expanding menu's way, down to the bottom edge
+           (top/bottom auto-flips can't transition, transform can);
+           7.5rem = the 6rem top offset + a 1.5rem bottom margin */
+        transform: translateY(calc(100vh - 100% - 7.5rem));
+        transform: translateY(calc(100dvh - 100% - 7.5rem));
     }
 
     .footer-container {

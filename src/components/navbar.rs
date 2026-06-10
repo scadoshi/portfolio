@@ -62,6 +62,7 @@ pub fn Navbar() -> Element {
                     span { class: "nav-toggle-bar" }
                 }
                 div { class: "{panel_class}",
+                    div { class: "nav-panel-inner",
                     div { class: "nav-links",
                         if projects_open() {
                             div {
@@ -124,6 +125,7 @@ pub fn Navbar() -> Element {
                         }
                     }
                     ThemeSwitcher {}
+                    } // nav-panel-inner
                 }
             }
         }
