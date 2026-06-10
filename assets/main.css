@@ -1971,3 +1971,13 @@ a:visited {
         font-size: 1.5rem;
     }
 }
+
+/* short viewports (landscape phones): the open menu spans the full height,
+   so there is no clear bottom edge for the banners to retreat to — slide
+   them off-screen instead */
+@media (max-width: 60rem) and (max-height: 500px) {
+    body:has(.nav-panel-open) .banner-stack {
+        transform: translateY(100vh);
+        transform: translateY(100dvh);
+    }
+}
