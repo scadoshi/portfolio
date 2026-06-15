@@ -100,9 +100,18 @@ pub fn Home() -> Element {
         }
         section { class: "hero content-enter",
             h1 { class: "logo", "aria-label": "Scotty Fermo", "{LOGO_ASCII}" }
-            p { class: "hero-title", "Software Engineer | Full-Stack | Rust" }
-            p { class: "hero-tagline",
-                "Production Rust for the work that has to actually run \u{2014} mobile apps, internal tooling, and the storage engines underneath."
+            div { class: "hero-panel",
+                p { class: "hero-tagline",
+                    "Production "
+                    span { class: "hero-tagline-accent", "Rust" }
+                    " for the work that has to actually run \u{2014} "
+                    span { class: "hero-tagline-accent", "mobile apps" }
+                    ", "
+                    span { class: "hero-tagline-accent", "internal tooling" }
+                    ", and the "
+                    span { class: "hero-tagline-accent", "storage engines" }
+                    " underneath."
+                }
             }
             div { class: "hero-links",
                 a {
@@ -124,6 +133,7 @@ pub fn Home() -> Element {
             }
         }
         section { class: "about",
+            p { class: "about-subtitle", "Software Engineer | Full-Stack | Rust" }
             p {
                 "4+ years of building production systems and leading technical teams. "
                 "1+ years of intensive Rust development \u{2014} from near-zero to shipping production systems. "
@@ -146,20 +156,6 @@ pub fn Home() -> Element {
                         status_label: project.status.label().to_string(),
                         status_class: project.status.css_class().to_string(),
                     }
-                }
-            }
-        }
-        div { class: "featured-side-quest",
-            div { class: "fsq-inner",
-                span { class: "fsq-label", "// btw" }
-                span { class: "fsq-name", "this site is built in Rust" }
-                span { class: "fsq-blurb", "Dioxus + WASM, no JS" }
-                a {
-                    href: "https://github.com/scadoshi/portfolio",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    class: "fsq-link",
-                    "view repo \u{2192}"
                 }
             }
         }

@@ -713,7 +713,7 @@
 .announcement-banner {
     position: relative;
     overflow: hidden;
-    background: var(--border-secondary);
+    background: var(--bg-primary);
     border: 1px solid var(--text-muted);
     border-radius: 0.4rem;
     padding: 0.8rem 2.4rem 0.9rem 1.2rem;
@@ -724,7 +724,7 @@
     gap: 0.4rem;
     animation: banner-slide-in 0.5s ease-out both;
     animation-delay: 1s;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-md);
 }
 
 .banner-header {
@@ -867,8 +867,15 @@ body {
 }
 
 .theme-wrapper {
+    --grid-line: color-mix(in srgb, var(--text-primary) 4%, transparent);
+    --grid-size: 28px;
+    --bg-sink: color-mix(in srgb, var(--bg-primary), #000 15%);
     min-height: 100vh;
-    background-color: var(--bg-primary);
+    background-color: var(--bg-sink);
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
     color: var(--text-primary);
     display: flex;
     flex-direction: column;
@@ -890,12 +897,13 @@ a:visited {
 /* === Navbar === */
 
 .navbar {
-    background-color: var(--border-secondary);
+    background-color: var(--bg-primary);
     border-bottom: 1px solid var(--border-primary);
     padding: 0.75rem 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: var(--shadow-sm);
 }
 
 .nav-container {
@@ -1060,9 +1068,10 @@ a:visited {
     display: none;
     position: absolute;
     top: 100%;
-    background: var(--border-secondary);
-    border: 1px solid var(--border-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
     border-radius: 0.4rem;
+    box-shadow: var(--shadow-md);
     min-width: 200px;
     padding: 0.5rem 0;
     z-index: 200;
@@ -1114,7 +1123,7 @@ a:visited {
 
 @media (hover: hover) {
     .dropdown-item:hover {
-        background-color: var(--border-muted);
+        background-color: var(--bg-sink);
         color: var(--accent-primary);
     }
 }
@@ -1144,13 +1153,27 @@ a:visited {
 
 @media (hover: hover) {
     .theme-option:hover {
-        background-color: var(--border-muted);
+        background-color: var(--bg-sink);
         color: var(--accent-primary);
     }
 }
 
 .theme-option.active {
     color: var(--accent-primary);
+}
+
+.theme-select-content .theme-select-label {
+    padding: 0.5rem 1rem 0.25rem;
+    margin-top: 0.25rem;
+    color: var(--accent-primary);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--border-primary);
+}
+
+.theme-select-content .theme-select-label:first-child {
+    margin-top: 0;
+    border-top: none;
 }
 
 /* === Content === */
@@ -1164,19 +1187,26 @@ a:visited {
 .hero {
     text-align: center;
     padding: 5rem 2rem 3rem;
-    border-bottom: 1px solid var(--border-muted);
 }
 
-.hero-title {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
+.hero-panel {
+    max-width: 1000px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
 }
 
 .hero-tagline {
     font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 0;
+}
+
+.hero-tagline-accent {
     color: var(--accent-primary);
-    margin-bottom: 2rem;
 }
 
 .hero-links {
@@ -1190,8 +1220,10 @@ a:visited {
     text-decoration: none;
     font-size: 0.85rem;
     padding: 0.4rem 1rem;
+    background-color: var(--bg-primary);
     border: 1px solid var(--border-primary);
     border-radius: 0.4rem;
+    box-shadow: var(--shadow-sm);
     transition:
         border-color 0.2s,
         color 0.2s;
@@ -1238,12 +1270,20 @@ a:visited {
 /* === About === */
 
 .about {
-    max-width: 700px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 2.5rem 2rem;
-    text-align: center;
+    text-align: left;
     color: var(--text-muted);
     font-size: 0.95rem;
+}
+
+.about-subtitle {
+    color: var(--color-warning);
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-primary);
 }
 
 /* === Projects Section === */
@@ -1271,10 +1311,11 @@ a:visited {
 }
 
 .project-card {
-    background: var(--border-secondary);
-    border: 1px solid var(--border-primary);
-    border-radius: 0.4rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 1rem;
     padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
     transition: border-color 0.2s;
 }
 
@@ -1284,7 +1325,7 @@ a:visited {
 
 .card-category {
     font-size: 0.75rem;
-    color: var(--border-success);
+    color: var(--accent-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 0.5rem;
@@ -1313,7 +1354,7 @@ a:visited {
 
 .card-title {
     font-size: 1.2rem;
-    color: var(--text-primary);
+    color: var(--accent-primary);
     margin-bottom: 0.75rem;
 }
 
@@ -1352,7 +1393,7 @@ a:visited {
     color: var(--border-warning);
     margin-bottom: 1rem;
     padding: 0.5rem 0.75rem;
-    background: var(--bg-primary);
+    background: var(--bg-sink);
     border-left: 2px solid var(--color-warning);
     border-radius: 0.4rem;
 }
@@ -1461,11 +1502,32 @@ a:visited {
 }
 
 .gallery-frame {
-    position: relative;
     background: var(--bg-primary);
-    border: 1px solid var(--border-muted);
-    border-radius: 0.4rem;
+    border: 1px solid var(--border-secondary);
+    border-radius: 0.6rem;
+    box-shadow: var(--shadow-md);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+}
+
+.gallery-header {
+    text-align: center;
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.gallery-rule {
+    border: none;
+    border-top: 1px solid var(--border-secondary);
+    margin: 0.75rem -1.25rem;
+}
+
+.gallery-body {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1509,6 +1571,7 @@ a:visited {
     justify-content: center;
     font-family: monospace;
     opacity: 0.75;
+    box-shadow: var(--shadow-sm);
     transition:
         opacity 0.15s,
         background 0.15s;
@@ -1516,22 +1579,21 @@ a:visited {
 
 .gallery-nav:hover {
     opacity: 1;
-    background: var(--border-secondary);
+    background: var(--bg-sink);
 }
 
 .gallery-prev {
-    left: 0.75rem;
+    left: 0;
 }
 .gallery-next {
-    right: 0.75rem;
+    right: 0;
 }
 
-.gallery-meta {
+.gallery-footer {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;
-    margin-top: 0.5rem;
     color: var(--text-muted);
     font-size: 0.85rem;
 }
@@ -1552,13 +1614,14 @@ a:visited {
 .code-block {
     margin: 1.5rem 0;
     background: var(--bg-primary);
-    border: 1px solid var(--border-muted);
-    border-radius: 0.4rem;
+    border: 1px solid var(--border-secondary);
+    border-radius: 0.6rem;
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
 
 .code-header {
-    background: var(--border-secondary);
+    background: var(--bg-sink);
     padding: 0.5rem 1rem;
     font-size: 0.85rem;
     color: var(--text-muted);
@@ -1723,55 +1786,58 @@ a:visited {
     margin-bottom: 1rem;
 }
 
-/* === Featured Side Quest Bar === */
+/* === Footer === */
 
-.featured-side-quest {
+.footer {
+    background-color: var(--bg-primary);
     border-top: 1px solid var(--border-muted);
-    padding: 0.75rem 2rem;
+    padding: 2rem;
+    margin-top: auto;
+    box-shadow: var(--shadow-md);
 }
 
-.fsq-inner {
+.footer-built {
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 0 auto 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-secondary);
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.85rem;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
     flex-wrap: wrap;
+    font-size: 0.85rem;
 }
 
-.fsq-label {
+.footer-built-text {
+    margin: 0;
+}
+
+.footer-built-comment {
     color: var(--text-muted);
-    font-style: italic;
-    flex-shrink: 0;
 }
 
-.fsq-name {
+.footer-built-byline {
+    font-style: italic;
+}
+
+.footer-built-strong {
     color: var(--text-primary);
     font-weight: 700;
-    flex-shrink: 0;
 }
 
-.fsq-blurb {
+.footer-built-muted {
     color: var(--text-muted);
 }
 
-.fsq-link {
+.footer-built-link {
     margin-left: auto;
     color: var(--accent-primary);
     flex-shrink: 0;
 }
 
-.fsq-link:hover {
+.footer-built-link:hover {
     color: var(--accent-primary);
-}
-
-/* === Footer === */
-
-.footer {
-    border-top: 1px solid var(--border-muted);
-    padding: 2rem;
-    margin-top: auto;
 }
 
 .footer-container {
@@ -1937,11 +2003,16 @@ a:visited {
         padding: 0.55rem 1rem;
     }
 
+    .nav-panel .theme-select {
+        /* static makes the open dropdown's containing block the relative,
+           sticky .navbar instead of this .theme-select, so absolute (below)
+           escapes the panel's overflow:hidden while staying pinned to the
+           sticky nav on scroll (fixed drifted as the page scrolled) */
+        position: static;
+    }
+
     .nav-panel .theme-select-content {
-        /* fixed escapes the panel's overflow:hidden collapse wrapper, so the
-           dropdown pops out over the page; auto offsets keep it anchored at
-           its natural spot below the trigger (navbar is sticky, so stable) */
-        position: fixed;
+        position: absolute;
         top: auto;
         right: auto;
         margin-top: 0.5rem;

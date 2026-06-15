@@ -2,6 +2,8 @@ use dioxus::prelude::*;
 
 use crate::theme::{ThemeConfig, THEMES};
 
+const COLORBLIND: &[&str] = &["deuteranopia", "protanopia", "tritanopia"];
+
 #[component]
 pub fn ThemeSwitcher() -> Element {
     let mut theme = use_context::<Signal<ThemeConfig>>();
@@ -35,7 +37,29 @@ pub fn ThemeSwitcher() -> Element {
                     "{display_name(&current_name)} \u{25be}"
                 }
                 div { class: "theme-select-content",
-                    {THEMES.iter().map(|entry| {
+                    div { class: "theme-select-label", "Themes" }
+                    {THEMES.iter().filter(|entry| !COLORBLIND.contains(&entry.0)).map(|entry| {
+                        let id = entry.0;
+                        let label = entry.1;
+                        let is_active = current_name == id;
+                        rsx! {
+                            button {
+                                class: if is_active { "theme-option active" } else { "theme-option" },
+                                onclick: move |_| {
+                                    theme.with_mut(|t| {
+                                        t.name = id.to_string();
+                                        if id == "vantablack" {
+                                            t.is_dark = true;
+                                        }
+                                    });
+                                    open.set(false);
+                                },
+                                "{label}"
+                            }
+                        }
+                    })}
+                    div { class: "theme-select-label", "Color blind" }
+                    {THEMES.iter().filter(|entry| COLORBLIND.contains(&entry.0)).map(|entry| {
                         let id = entry.0;
                         let label = entry.1;
                         let is_active = current_name == id;
