@@ -4,45 +4,38 @@ use dioxus::prelude::*;
 pub fn Footer() -> Element {
     rsx! {
         footer { class: "footer",
-            div { class: "footer-built",
-                p { class: "footer-built-text",
-                    span { class: "footer-built-comment",
-                        "// "
-                        span { class: "footer-built-byline", "By the way" }
-                    }
-                    " "
-                    span { class: "footer-built-strong", "this site is built in Rust" }
-                    " "
-                    span { class: "footer-built-muted", "Dioxus + WASM, no JS" }
-                }
+            p { class: "footer-copy",
+                "\u{00a9} 2026 Scotty Fermo | "
                 a {
-                    class: "footer-built-link",
+                    href: "https://github.com/scadoshi",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    "GitHub"
+                }
+                " | "
+                a {
+                    href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    "LinkedIn"
+                }
+                " | "
+                a {
+                    href: "mailto:scottyfermo@hotmail.com",
+                    "Email"
+                }
+            }
+            p { class: "footer-built-text",
+                a {
+                    class: "footer-built-repo",
                     href: "https://github.com/scadoshi/portfolio",
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    "view repo \u{2192}"
+                    "This site"
                 }
-            }
-            div { class: "footer-container",
-                span { "\u{00a9} 2026 Scotty Fermo" }
-                div { class: "footer-links",
-                    a {
-                        href: "https://github.com/scadoshi",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
-                        "GitHub"
-                    }
-                    a {
-                        href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
-                        "LinkedIn"
-                    }
-                    a {
-                        href: "mailto:scottyfermo@hotmail.com",
-                        "Email"
-                    }
-                }
+                " is unofficial "
+                span { class: "footer-built-strong", "JavaScript-Free Content" }
+                ", hand-written in Rust and compiled to WebAssembly via Dioxus. Not approved or endorsed by the ECMAScript committee. No JavaScript was shipped, bundled, or harmed in the making of this page."
             }
         }
     }
