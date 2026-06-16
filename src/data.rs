@@ -779,10 +779,11 @@ const DIPROTODON: Project = Project {
         "Hand-written RESP wire protocol \u{2014} no library does the work",
         "Hexagonal ports: domain Service orchestrates the cache + a CacheRepository persister",
         "Durability: atomic snapshot (temp+rename) + AOF replay through the same RESP parse path",
-        "~4,500 LOC, 219 tests across every protocol, storage, and persistence layer",
+        "Pub/Sub fan-out over a per-session writer thread \u{2014} delivers out of band while the reader blocks",
+        "~5,500 LOC, 227 tests across protocol, storage, persistence, and pub/sub",
     ],
-    impact_metric: "~4,500 lines, 219 tests, hand-written RESP + durability",
-    objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown \u{2014} all written without reaching for a protocol crate.",
+    impact_metric: "~5,500 lines, 227 tests, hand-written RESP + durability + pub/sub",
+    objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out \u{2014} all written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
     media: &[
         MediaItem {
@@ -798,6 +799,7 @@ const DIPROTODON: Project = Project {
         "Hexagonal ports: the domain defines two trait boundaries \u{2014} CacheRepository (the persister implements it) and CacheService (the domain Service implements it; the session calls it). Adapter errors map into a domain-owned RepositoryError at the boundary, so the domain never names an outbound type",
         "Durability via snapshot + AOF, hybrid recovery. Snapshot is a wincode dump written temp-file-then-rename (atomic; never a half-written file). AOF is the wire protocol \u{2014} each mutating command is appended as the exact RESP bytes a client would have sent, so replay reuses Frame::parse_one + Command::try_from. Snapshot-then-truncate compaction holds the cache lock across both so no mutation escapes between the two",
         "Graceful shutdown without a signal-handling crate: Arc<AtomicBool> flag, TcpListener::set_nonblocking(true) so accept() returns WouldBlock and the loop can check the flag, stdin EOF or \"quit\" as the trigger. Every spawned thread is collected as a JoinHandle and joined cleanly before run() returns",
+        "Pub/Sub without async: each session splits into a ReadHalf (parse + execute) and a WriteHalf that solely owns the socket's write end and drains a per-session mpsc. PUBLISH serializes the [\"message\", channel, payload] push once and drops the bytes into every subscriber's mpsc \u{2014} so a subscriber receives out of band while its own reader is blocked on a client read, with no extra thread per subscriber. The registry (channel \u{2192} senders keyed by session id) prunes dead senders on fan-out and unsubscribes a session from every channel on disconnect",
     ],
     snippets: &[
         Snippet {
@@ -901,13 +903,41 @@ fn snapshot(&self, cache: &Cache) -> Result<(), RepositoryError> {
 }"#,
             description: "The AOF being byte-for-byte the wire protocol means replay reuses the inbound parse path — no separate decoder, no version-skew between disk and network format. Snapshots use temp-file-then-rename for atomicity. Checkpointing holds the cache lock across snapshot+clear; the order (snapshot first, clear second) means a crash between them only causes harmless re-application of already-durable commands.",
         },
+        Snippet {
+            title: "Pub/Sub Fan-Out",
+            code: r#"// The push is built once, then the raw bytes are dropped into each
+// subscriber's mpsc — the same channel their WriteHalf already drains
+// to the socket. No per-subscriber thread: the session writer IS the
+// subscriber output.
+let push = Reply::Array(vec![
+    Reply::BulkString(b"message".to_vec()),
+    Reply::BulkString(channel.clone()),
+    Reply::BulkString(payload),
+])
+.to_bytes();
+
+pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsError> {
+    let mut reached = 0;
+    let mut guard = self.channels.lock().map_err(|_| ChannelsError::MutexPoisoned)?;
+    if let Some(subs) = guard.get_mut(channel) {
+        // retain() fans out and prunes in one pass: a send error means the
+        // receiver was dropped (dead session), so drop that sender too.
+        subs.retain(|_id, tx| match tx.send(message.clone()) {
+            Ok(()) => { reached += 1; true }
+            Err(_) => false,
+        });
+    }
+    Ok(reached) // live subscribers that actually received it
+}"#,
+            description: "PUBLISH serializes the [\"message\", channel, payload] array once and drops the bytes into each subscriber's mpsc \u{2014} the exact channel that subscriber's WriteHalf already drains to its socket, so delivery happens out of band while the subscriber's reader is blocked on a client read, with no separate per-subscriber thread. retain() prunes any receiver that's been dropped (a disconnected session) in the same pass that counts reach, so the returned :N is always live subscribers.",
+        },
     ],
     obstacles: &[
         "Self-deadlock on the TTL read path: get_absolute_ttl held the mutex guard, then called self.remove() on the expired branch \u{2014} which tries to re-lock the same std::sync::Mutex from the same thread. std mutexes aren't reentrant; the thread hangs forever. Fix: drop(guard) explicitly before the re-entry. Guards live to end of scope, not end of statement",
         "get_frame read-before-parse bug: original loop called reader.read() first, then parse_frame(). When one TCP read delivered multiple frames (common \u{2014} TCP coalesces small writes), the first call returned the first frame fine; the second call's first move was a read that hit EOF, returned None, and the queued second frame in the buffer was never seen. Fix: parse first, only read on Incomplete, return None when an Incomplete is followed by a zero-byte read",
         "AOF/snapshot atomicity: between the snapshot read and the AOF truncate, a writer could land a new mutation that gets wiped without ever being captured. Fix: hold the cache lock across both. Order matters too \u{2014} snapshot first, then clear, so a crash between just re-applies already-durable commands. Harmless.",
     ],
-    progress: "M1\u{2013}M4 complete. All commands over real RESP, snapshot + AOF persistence behind a hexagonal port, graceful shutdown end-to-end. 219 tests. Next: async migration, then Pub/Sub, then MULTI/EXEC.",
+    progress: "M1\u{2013}M5 complete. All commands over real RESP, snapshot + AOF persistence behind a hexagonal port, graceful shutdown, and Pub/Sub (SUBSCRIBE/UNSUBSCRIBE/PUBLISH) with per-session writer-thread fan-out. 227 tests. Next: async migration, then MULTI/EXEC.",
     impact: "Paired with nighthawk to cover both halves of how production KV systems are built \u{2014} nighthawk the on-disk LSM storage engine, diprotodon the in-memory protocol server with WAL-style durability. Both hand-written, both interoperable with real clients (redis-cli for diprotodon, raw TCP for nighthawk).",
     status: ProjectStatus::Doing,
 };
