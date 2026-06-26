@@ -138,7 +138,7 @@ pub fn Home() -> Element {
                 "4+ years of building production systems and leading technical teams. "
                 "1+ years of intensive Rust development \u{2014} from near-zero to shipping production systems. "
                 "At Halo Software I shipped CLI tools that turned multi-week manual migrations into one-command jobs. "
-                "On my own I built Zwipe (a full-stack mobile MTG deck builder, App Store pending) and went deep on the storage engines and protocols underneath \u{2014} an LSM-tree KV database and a Redis-compatible server, both hand-written."
+                "On my own I built Zwipe (a full-stack mobile MTG deck builder, submitted to both app stores) and went deep on the storage engines and protocols underneath \u{2014} an LSM-tree KV database and a Redis-compatible server, both hand-written."
             }
         }
         section { class: "projects-section",
