@@ -76,7 +76,7 @@ pub fn Home() -> Element {
                         },
                         div { class: "banner-header",
                             span { class: "banner-category", "Featured" }
-                            span { class: "status-tag status-doing", "In Progress" }
+                            span { class: "status-tag status-doing", "Doing" }
                         }
                         span { class: "banner-text",
                             "Diprotodon, a hand-written Redis-compatible KV server. "
