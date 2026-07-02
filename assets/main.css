@@ -1870,6 +1870,10 @@ a:visited {
            content-sized instead of filling the panel */
         grid-template-columns: minmax(0, 1fr);
         flex-basis: 100%;
+        /* bleed through the navbar's side padding so the divider rules run
+           edge to edge; the inner re-adds the inset for content */
+        margin-left: -1rem;
+        margin-right: -1rem;
         opacity: 0;
         visibility: hidden;
         margin-top: 0;
@@ -1907,6 +1911,8 @@ a:visited {
         gap: 1rem;
         overflow: hidden;
         min-height: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 
     .nav-panel .nav-links {
@@ -1960,6 +1966,10 @@ a:visited {
         gap: 0.75rem;
         padding-top: 0.75rem;
         border-top: 1px solid var(--border-primary);
+        /* bleed to the panel edges so this divider also runs edge to edge
+           (stays inside the inner's padding box, so overflow won't clip it) */
+        margin-left: -1rem;
+        margin-right: -1rem;
     }
 
     .nav-panel .theme-select-trigger,
