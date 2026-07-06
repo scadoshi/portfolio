@@ -96,8 +96,14 @@ const ZWIPE: Project = Project {
     media: &[
         MediaItem {
             src: asset!("/assets/projects/zwipe/1_create_deck.mp4"),
-            alt: "Creating a deck and importing a decklist from a link",
-            caption: Some("Create a deck and import a decklist from a link"),
+            alt: "Creating a deck and picking a commander",
+            caption: Some("Create a deck and pick your commander"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/zwipe/6_import_deck_stats.mp4"),
+            alt: "Importing a decklist from a link and checking the deck's stats",
+            caption: Some("Import a decklist from a link, then check your deck's stats"),
             kind: MediaKind::Video,
         },
         MediaItem {
@@ -108,8 +114,8 @@ const ZWIPE: Project = Project {
         },
         MediaItem {
             src: asset!("/assets/projects/zwipe/3_add_deck_cards.mp4"),
-            alt: "Swiping cards into a deck",
-            caption: Some("Swipe cards into your deck"),
+            alt: "Swiping cards out of a deck, then swiping new ones in",
+            caption: Some("Swipe cards out of your deck, then swipe new ones in"),
             kind: MediaKind::Video,
         },
         MediaItem {
