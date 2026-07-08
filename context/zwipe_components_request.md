@@ -116,6 +116,72 @@ to drift. We would like the crate to become the single home for them.
 4. `PageMeta`.
 5. Nav shell (most API design, do it last).
 
+## Round 2 (2026-07-08, post-migration): nav shell selector fixes
+
+Status update first: the portfolio has fully migrated (git dep pinned at
+`7848dbd7`). Themes, ThemePicker, PageMeta, NavBar, and NavDropdown are all
+consumed from the crate; ~760 lines of duplication deleted. Round 1 is
+closed. These three asks are what migration surfaced — each one exists
+because the shell's selectors assume zite's flat markup, and each currently
+costs the portfolio a counter-rule block in `assets/main.css` that must be
+deleted when the fix lands.
+
+### 2.1 Scope nav pill styling to direct link items
+
+- **Today:** `.nav-links a, .nav-links button.nav-link` (base, hover,
+  active) and the in-panel `.nav-panel .nav-links a, .nav-panel .nav-links
+  button.nav-link` sizing match *all descendants* of the links slot. Anchors
+  nested inside a composed widget inherit pill borders, padding, background,
+  and shadow — the portfolio's `NavDropdown` menu items rendered as a stack
+  of pills inside the menu box.
+- **Ask:** child combinators — `.nav-links > li > a`, `.nav-links > li >
+  button.nav-link`, and the same for the in-panel variants.
+- **zite impact:** none; its links are all direct `li > a`.
+- **Portfolio deletes:** the `.nav-links .nav-dropdown-content a` reset
+  block (~25 lines) plus its hover rule.
+
+### 2.2 Stretch panel items generically, not by tag enumeration
+
+- **Today:** the in-panel full-width/centering rules enumerate `a` /
+  `button.nav-link`. A `NavDropdown` placed in the links slot (a wrapper
+  `div` + `button.nav-dropdown-trigger`) falls through both selectors and
+  renders content-width — the crate's own component doesn't fit the crate's
+  own shell. The portfolio's first patch attempt (`.nav-panel .nav-dropdown
+  { width: 100% }`) then leaked into the theme picker's dropdown in the
+  trailing slot and broke *that* row, which shows how fragile the
+  enumeration is for consumers.
+- **Ask:** stretch every direct panel link item — `.nav-panel .nav-links >
+  li > * { width: 100% }` (or introduce a documented `.nav-item` class the
+  shell owns) — and move `.nav-panel .nav-links .nav-dropdown-trigger {
+  width: 100%; justify-content: center; }` into the crate next to its
+  existing in-panel trigger font/padding rules. Keeping it scoped under
+  `.nav-links` preserves the trailing-slot picker's compact centered row.
+- **zite impact:** none today; free if it ever puts a dropdown in its nav.
+- **Portfolio deletes:** both `.nav-panel .nav-links .nav-dropdown*` width
+  rules.
+
+### 2.3 First-class anchor items in NavDropdown
+
+- **Today:** `.nav-dropdown-item` styling assumes a `<button>`: it sets no
+  `display`, no `text-decoration`, and has no `:visited` handling. Menu
+  items that are real links (router `Link`s — needed for hrefs, SEO, and
+  middle-click) render inline, ignore the `width: 100%`, keep underlines,
+  and take the host's global `a:visited` color (which outranks the bare
+  class selector).
+- **Ask:** add an anchor variant to the existing rules:
+  `a.nav-dropdown-item { display: block; text-decoration: none; }` and
+  include `a.nav-dropdown-item:visited` in the color declaration. The `a.`
+  prefix wins the specificity fight against any host's `a:visited` global,
+  so consumers need zero overrides.
+- **zite impact:** none (picker items are buttons); benefits any future
+  link-based menu.
+- **Portfolio deletes:** the rest of the anchor reset, including the
+  in-panel item compaction rule.
+
+**End state when all three land:** the portfolio's entire nav footprint in
+`main.css` is `--nav-max-width: 760px` plus its brand/logo rules. The
+portfolio re-verifies each fix as the second consumer, same as Round 1.
+
 ## What the portfolio commits to
 
 - Track the dioxus `0.7.9` pin (already matches).
