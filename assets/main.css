@@ -304,23 +304,19 @@ a:visited {
 
 /* === Navbar === */
 
-.navbar {
-    background-color: var(--bg-primary);
-    border-bottom: 1px solid var(--border-primary);
-    padding: 0.75rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow-sm);
+/* The nav shell (sticky wrapper, hamburger, collapsing panel, link pills)
+   comes from zwipe-components (components.css, inlined before this sheet);
+   this site sets its narrower column and keeps brand/logo/dropdown
+   specifics below. */
+.nav-wrapper {
+    --nav-max-width: 760px;
 }
 
-.nav-container {
-    max-width: 760px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
+/* The global a:visited accent would beat the crate's pill color on visited
+   nav links (later stylesheet, equal specificity); restate it. :not(:hover)
+   lets the crate hover accent win while hovered. */
+.nav-links a:visited:not(:hover) {
+    color: var(--text-primary);
 }
 
 .nav-brand {
@@ -353,170 +349,34 @@ a:visited {
     }
 }
 
-.nav-panel {
-    display: flex;
-}
+/* === Dropdowns === */
 
-.nav-panel-inner {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.nav-links {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    height: 1.85rem;
-    line-height: 1;
-}
-
-.nav-link,
-.nav-link:visited,
-.dropdown-trigger {
-    display: inline-flex;
-    align-items: center;
-    box-sizing: border-box;
-    height: 1.85rem;
-    padding: 0 0.8rem;
-    color: var(--text-subtle);
-    text-decoration: none;
-    background: none;
-    border: 1px solid var(--border-primary);
-    border-radius: 0.4rem;
-    font-family: inherit;
-    font-size: 0.85rem;
-    line-height: 1;
-    white-space: nowrap;
-    cursor: pointer;
-    transition:
-        color 0.2s,
-        border-color 0.2s;
-}
-
-@media (hover: hover) {
-    .nav-link:hover,
-    .dropdown-trigger:hover {
-        color: var(--accent-primary);
-        border-color: var(--accent-primary);
-    }
-}
-
-/* === Hamburger === */
-
-.nav-toggle {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.3rem;
-    width: 2.25rem;
-    height: 2.25rem;
-    padding: 0.5rem;
-    background: transparent;
-    border: 1px solid var(--border-primary);
-    border-radius: 0.35rem;
-    cursor: pointer;
-    transition: border-color 0.15s;
-}
-
-@media (hover: hover) {
-    .nav-toggle:hover {
-        border-color: var(--accent-primary);
-    }
-}
-
-.nav-toggle-bar {
+/* The Projects menu is the crate's NavDropdown (trigger pill, floating
+   menu, backdrop, hover bridge — all in components.css). One local fix:
+   our menu items are Link anchors, so the crate's `.nav-links a` pill rule
+   and this site's global `a:visited` both outgun `.nav-dropdown-item` on
+   them. Reset those properties back to the crate's plain-row look. */
+.nav-links .nav-dropdown-content a,
+.nav-links .nav-dropdown-content a:visited {
     display: block;
     width: 100%;
-    height: 1px;
-    background: var(--text-primary);
-    transition:
-        transform 0.2s,
-        opacity 0.2s;
-}
-
-.nav-toggle-open .nav-toggle-bar:nth-child(1) {
-    transform: translateY(0.4rem) rotate(45deg);
-}
-.nav-toggle-open .nav-toggle-bar:nth-child(2) {
-    opacity: 0;
-}
-.nav-toggle-open .nav-toggle-bar:nth-child(3) {
-    transform: translateY(-0.4rem) rotate(-45deg);
-}
-
-/* === Backdrop for click-outside dropdown dismiss === */
-
-.nav-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 150;
-    background: transparent;
-}
-
-/* === Dropdowns (shared) === */
-
-.dropdown {
-    position: relative;
-}
-
-.dropdown-trigger {
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 0.4rem;
-    box-shadow: var(--shadow-md);
-    min-width: 200px;
-    padding: 0.5rem 0;
-    z-index: 200;
-}
-
-.dropdown-content {
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.dropdown::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 0.5rem;
-}
-
-.dropdown-open .dropdown-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.dropdown-trigger {
-    position: relative;
-    z-index: 200;
-    user-select: none;
-}
-
-.dropdown-item,
-.dropdown-item:visited {
-    padding: 0.5rem 1rem;
-    color: var(--text-subtle);
+    height: auto;
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-size: 0.85rem;
+    letter-spacing: normal;
+    text-align: left;
     text-decoration: none;
-    font-size: 0.9rem;
-    transition:
-        background-color 0.2s,
-        color 0.2s;
+    color: var(--text-muted);
 }
 
 @media (hover: hover) {
-    .dropdown-item:hover {
-        background-color: var(--bg-sink);
-        color: var(--accent-primary);
+    .nav-links .nav-dropdown-content a:hover {
+        background-color: var(--border-primary);
+        color: var(--text-primary);
     }
 }
 
@@ -1198,108 +1058,26 @@ a:visited {
         grid-template-columns: 1fr;
     }
 
-    .navbar {
-        padding: 0.75rem 1rem;
+    /* Hamburger, collapsing panel, in-panel link/picker/dropdown behavior
+       all come from zwipe-components. But the crate only stretches `a` /
+       `button.nav-link` panel items — the Projects NavDropdown wrapper and
+       its trigger are neither, so stretch them to match sibling pills.
+       Scoped to .nav-links so the theme picker's own NavDropdown (in the
+       trailing slot) keeps its compact centered row. */
+    .nav-panel .nav-links .nav-dropdown {
+        width: 100%;
     }
 
-    .nav-container {
-        flex-wrap: wrap;
-        /* the collapsed panel still occupies a (zero-height) flex line;
-           row-gap would add phantom space below the toggle row */
-        row-gap: 0;
-    }
-
-    .nav-toggle {
-        display: flex;
-    }
-
-    .nav-panel {
-        display: grid;
-        grid-template-rows: 0fr;
-        /* explicit full-width column: the implicit auto column would be
-           content-sized instead of filling the panel */
-        grid-template-columns: minmax(0, 1fr);
-        flex-basis: 100%;
-        /* bleed through the navbar's side padding so the divider rules run
-           edge to edge; the inner re-adds the inset for content */
-        margin-left: -1rem;
-        margin-right: -1rem;
-        opacity: 0;
-        visibility: hidden;
-        margin-top: 0;
-        padding-top: 0;
-        border-top: 1px solid transparent;
-        transition:
-            grid-template-rows 0.25s ease,
-            opacity 0.2s ease,
-            margin-top 0.25s ease,
-            padding-top 0.25s ease,
-            border-top-color 0.2s ease,
-            visibility 0s linear 0.25s;
-    }
-
-    .nav-panel-open {
-        grid-template-rows: 1fr;
-        opacity: 1;
-        visibility: visible;
-        /* old 0.75rem margin + the 1rem container row-gap this replaces */
-        margin-top: 1.75rem;
-        padding-top: 1rem;
-        border-top-color: var(--border-primary);
-        transition:
-            grid-template-rows 0.25s ease,
-            opacity 0.2s ease,
-            margin-top 0.25s ease,
-            padding-top 0.25s ease,
-            border-top-color 0.2s ease,
-            visibility 0s;
-    }
-
-    .nav-panel .nav-panel-inner {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-        overflow: hidden;
-        min-height: 0;
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-
-    .nav-panel .nav-links {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.75rem;
-        height: auto;
-    }
-
-    .nav-panel .nav-link,
-    .nav-panel .dropdown-trigger {
-        height: auto;
+    .nav-panel .nav-links .nav-dropdown-trigger {
+        width: 100%;
         justify-content: center;
-        text-align: center;
-        font-size: 0.95rem;
-        padding: 0.65rem 1rem;
     }
 
-    .nav-panel .dropdown {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .nav-panel .dropdown-content {
-        /* relative (not static) keeps the in-flow layout but lets the base
-           z-index apply, so items sit above the fixed .nav-backdrop */
-        position: relative;
-        top: 0;
-        left: 0;
-        transform: none;
-        margin-top: 0.5rem;
-        background: transparent;
-        border: none;
-        padding: 0;
-    }
-
-    .nav-panel .dropdown-item {
+    /* In-panel menu items are anchors, so the crate's in-panel
+       `.nav-panel .nav-links a` sizing matches them too; three classes deep
+       outguns it and keeps the rows compact. */
+    .nav-panel .nav-dropdown-content .nav-dropdown-item {
+        width: 100%;
         text-align: center;
         padding: 0.4rem 1rem;
         border: none;
@@ -1307,43 +1085,6 @@ a:visited {
         margin: 0;
         font-size: 0.85rem;
         color: var(--text-muted);
-    }
-
-    .nav-panel .theme-switcher {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid var(--border-primary);
-        /* bleed to the panel edges so this divider also runs edge to edge
-           (stays inside the inner's padding box, so overflow won't clip it) */
-        margin-left: -1rem;
-        margin-right: -1rem;
-    }
-
-    .nav-panel .theme-select-trigger,
-    .nav-panel .mode-toggle {
-        height: auto;
-        font-size: 0.95rem;
-        padding: 0.55rem 1rem;
-    }
-
-    .nav-panel .theme-select {
-        /* static makes the open dropdown's containing block the relative,
-           sticky .navbar instead of this .theme-select, so absolute (below)
-           escapes the panel's overflow:hidden while staying pinned to the
-           sticky nav on scroll (fixed drifted as the page scrolled) */
-        position: static;
-    }
-
-    .nav-panel .theme-select-content {
-        position: absolute;
-        top: auto;
-        right: auto;
-        margin-top: 0.5rem;
-        max-height: 50vh;
-        overflow-y: auto;
     }
 
     body:has(.nav-panel-open) .banner-stack {

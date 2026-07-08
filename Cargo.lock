@@ -1567,9 +1567,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "300e883d756b2e4ec94e02791f39b04b522276138852cfc41d9fb7e904106099"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "r-efi 6.0.0",
  "rand_core 0.10.1",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -2450,6 +2452,7 @@ name = "portfolio"
 version = "0.1.0"
 dependencies = [
  "dioxus",
+ "getrandom 0.4.3",
  "gloo-timers 0.4.0",
  "zwipe-components",
 ]
@@ -4307,16 +4310,17 @@ checksum = "b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa"
 [[package]]
 name = "zwipe-components"
 version = "1.4.0"
-source = "git+https://github.com/scadoshi/zwipe#8473761aa60028e022f19a884c81b35462078a2f"
+source = "git+https://github.com/scadoshi/zwipe#7848dbd79cacc8d84f64405f516d1ce936dfa03b"
 dependencies = [
  "dioxus",
+ "uuid",
  "zwipe-core",
 ]
 
 [[package]]
 name = "zwipe-core"
 version = "1.4.0"
-source = "git+https://github.com/scadoshi/zwipe#8473761aa60028e022f19a884c81b35462078a2f"
+source = "git+https://github.com/scadoshi/zwipe#7848dbd79cacc8d84f64405f516d1ce936dfa03b"
 dependencies = [
  "chrono",
  "email_address",
