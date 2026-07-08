@@ -858,12 +858,19 @@
     box-sizing: border-box;
 }
 
+html {
+    /* No elastic overscroll past the header or footer; the page stops
+       dead at its vertical boundaries. */
+    overscroll-behavior-y: none;
+}
+
 body {
     font-family: "JetBrains Mono", monospace;
     line-height: 1.6;
     font-size: 16px;
     margin: 0;
     touch-action: manipulation;
+    overscroll-behavior-y: none;
 }
 
 .theme-wrapper {
@@ -871,14 +878,27 @@ body {
     --grid-size: 28px;
     --bg-sink: color-mix(in srgb, var(--bg-primary), #000 15%);
     min-height: 100vh;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+}
+
+/* The grid lives on a viewport-fixed layer so it stays pinned while the
+   page content scrolls over it. A fixed pseudo-element (rather than
+   background-attachment: fixed) because iOS Safari ignores fixed
+   attachment. z-index -1 tucks it behind all in-flow content; the
+   wrapper itself paints no background so the layer shows through. */
+.theme-wrapper::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
     background-color: var(--bg-sink);
     background-image:
         linear-gradient(var(--grid-line) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: var(--grid-size) var(--grid-size);
-    color: var(--text-primary);
-    display: flex;
-    flex-direction: column;
 }
 
 a,
