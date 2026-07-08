@@ -312,13 +312,6 @@ a:visited {
     --nav-max-width: 760px;
 }
 
-/* The global a:visited accent would beat the crate's pill color on visited
-   nav links (later stylesheet, equal specificity); restate it. :not(:hover)
-   lets the crate hover accent win while hovered. */
-.nav-links a:visited:not(:hover) {
-    color: var(--text-primary);
-}
-
 .nav-brand {
     font-weight: 700;
     font-size: 1.2rem;
@@ -351,33 +344,15 @@ a:visited {
 
 /* === Dropdowns === */
 
-/* The Projects menu is the crate's NavDropdown (trigger pill, floating
-   menu, backdrop, hover bridge — all in components.css). One local fix:
-   our menu items are Link anchors, so the crate's `.nav-links a` pill rule
-   and this site's global `a:visited` both outgun `.nav-dropdown-item` on
-   them. Reset those properties back to the crate's plain-row look. */
-.nav-links .nav-dropdown-content a,
-.nav-links .nav-dropdown-content a:visited {
-    display: block;
-    width: 100%;
-    height: auto;
-    padding: 0.4rem 1rem;
-    border: none;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-    font-size: 0.85rem;
-    letter-spacing: normal;
-    text-align: left;
-    text-decoration: none;
-    color: var(--text-muted);
-}
-
-@media (hover: hover) {
-    .nav-links .nav-dropdown-content a:hover {
-        background-color: var(--border-primary);
-        color: var(--text-primary);
-    }
+/* NavDropdown (trigger pill, floating menu, backdrop, hover bridge,
+   anchor-item support) comes from zwipe-components. One site preference:
+   menus open with left edges aligned to the trigger, jutting right — the
+   crate default (right: 0, jutting left, sized for zite's edge-hugging
+   picker) reads off-balance in this nav. The crate's in-panel rules are
+   more specific, so hamburger behavior is untouched. */
+.nav-dropdown-content {
+    left: 0;
+    right: auto;
 }
 
 /* === Theme Switcher === */
@@ -1058,34 +1033,8 @@ a:visited {
         grid-template-columns: 1fr;
     }
 
-    /* Hamburger, collapsing panel, in-panel link/picker/dropdown behavior
-       all come from zwipe-components. But the crate only stretches `a` /
-       `button.nav-link` panel items — the Projects NavDropdown wrapper and
-       its trigger are neither, so stretch them to match sibling pills.
-       Scoped to .nav-links so the theme picker's own NavDropdown (in the
-       trailing slot) keeps its compact centered row. */
-    .nav-panel .nav-links .nav-dropdown {
-        width: 100%;
-    }
-
-    .nav-panel .nav-links .nav-dropdown-trigger {
-        width: 100%;
-        justify-content: center;
-    }
-
-    /* In-panel menu items are anchors, so the crate's in-panel
-       `.nav-panel .nav-links a` sizing matches them too; three classes deep
-       outguns it and keeps the rows compact. */
-    .nav-panel .nav-dropdown-content .nav-dropdown-item {
-        width: 100%;
-        text-align: center;
-        padding: 0.4rem 1rem;
-        border: none;
-        border-radius: 0;
-        margin: 0;
-        font-size: 0.85rem;
-        color: var(--text-muted);
-    }
+    /* Hamburger, collapsing panel, and all in-panel item/picker/dropdown
+       sizing come from zwipe-components. */
 
     body:has(.nav-panel-open) .banner-stack {
         /* slide out of the expanding menu's way, down to the bottom edge

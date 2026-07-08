@@ -118,6 +118,25 @@ to drift. We would like the crate to become the single home for them.
 
 ## Round 2 (2026-07-08, post-migration): nav shell selector fixes
 
+**Status: GRANTED IN FULL, shipped upstream as `a76ccc62` the same day.**
+All three fixes landed as asked (2.2 used `> li > *` instead of a new
+`.nav-item` class — better call, no new API). The portfolio updated its pin
+to `04dd9276`, deleted all four counter-rule blocks (the three below plus
+the `a:visited` restatement, which the child combinator's higher
+specificity made redundant), and re-verified as second consumer. End state
+achieved: the portfolio's nav footprint is `--nav-max-width: 760px` plus
+brand/logo rules.
+
+**Consumption mechanism, final ruling (owner, 2026-07-08):** the crates.io
+amendment above is REVERSED — the git dependency is the settled mechanism.
+Registry publication is off the table until a consumer outside the owner's
+repos appears; the publish checklist above is archived for that day. The
+portfolio keeps `git = "https://github.com/scadoshi/zwipe"` with
+Cargo.lock pinning, and picks up releases deliberately via
+`cargo update -p zwipe-components`.
+
+The original asks, kept for the record:
+
 Status update first: the portfolio has fully migrated (git dep pinned at
 `7848dbd7`). Themes, ThemePicker, PageMeta, NavBar, and NavDropdown are all
 consumed from the crate; ~760 lines of duplication deleted. Round 1 is
