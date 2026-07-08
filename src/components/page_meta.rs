@@ -1,27 +1,21 @@
 use dioxus::prelude::*;
+use zwipe_components::{PageMeta as SharedPageMeta, SiteMeta};
 
+/// This site's constants for the shared head-meta component. No OG image,
+/// which also selects the plain `summary` Twitter card.
+const SITE: SiteMeta = SiteMeta {
+    base_url: "https://scottyfermo.com",
+    site_name: "Scotty Fermo",
+    og_image_path: None,
+};
+
+/// Thin wrapper over the shared [`SharedPageMeta`]: bakes in the site config
+/// so pages keep calling `PageMeta { title, description, path }` unchanged.
+/// The home page passes the bare site name and renders unsuffixed, same as
+/// before (the shared component's bare-brand rule).
 #[component]
 pub fn PageMeta(title: String, description: String, path: String) -> Element {
-    let canonical = format!("https://scottyfermo.com{path}");
-    let full_title = if title == "Scotty Fermo" {
-        "Scotty Fermo".to_string()
-    } else {
-        format!("{title} | Scotty Fermo")
-    };
-
     rsx! {
-        document::Title { "{full_title}" }
-        document::Meta { name: "description", content: "{description}" }
-        document::Link { rel: "canonical", href: "{canonical}" }
-
-        document::Meta { property: "og:type", content: "website" }
-        document::Meta { property: "og:site_name", content: "Scotty Fermo" }
-        document::Meta { property: "og:title", content: "{full_title}" }
-        document::Meta { property: "og:description", content: "{description}" }
-        document::Meta { property: "og:url", content: "{canonical}" }
-
-        document::Meta { name: "twitter:card", content: "summary" }
-        document::Meta { name: "twitter:title", content: "{full_title}" }
-        document::Meta { name: "twitter:description", content: "{description}" }
+        SharedPageMeta { site: SITE, title, description, path }
     }
 }
