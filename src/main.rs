@@ -3,14 +3,13 @@ use dioxus::prelude::*;
 mod components;
 mod data;
 mod pages;
-mod theme;
 
 use pages::contribute::Contribute;
 use pages::home::Home;
 use pages::project_detail::ProjectDetail;
 use pages::side_quest_detail::SideQuestDetail;
 use pages::side_quests::SideQuests;
-use theme::ThemeConfig;
+use zwipe_components::{COMPONENTS_CSS, THEMES_CSS, ThemeConfig};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 const FAVICON_ICO: Asset = asset!("/assets/favicon/favicon.ico");
@@ -78,6 +77,11 @@ fn App() -> Element {
         document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
         document::Link { rel: "apple-touch-icon", sizes: "180x180", href: APPLE_TOUCH_ICON }
+        // Shared CSS inlined from zwipe-components (a git dep can't be reached
+        // by an asset pipeline). Order matters: themes -> components -> site,
+        // so site rules can override component rules.
+        document::Style { {THEMES_CSS} }
+        document::Style { {COMPONENTS_CSS} }
         document::Stylesheet { href: MAIN_CSS }
         document::Script { src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" }
         document::Script { src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js" }
@@ -88,9 +92,11 @@ fn App() -> Element {
 #[component]
 fn NavbarLayout() -> Element {
     let theme = use_context::<Signal<ThemeConfig>>();
+    // Core's css_class() is just "theme-{name}-{mode}"; the wrapper class
+    // carries this site's fixed-grid background layer.
     let css_class = theme.read().css_class();
     rsx! {
-        div { class: "{css_class}",
+        div { class: "theme-wrapper {css_class}",
             components::navbar::Navbar {}
             main { class: "content",
                 Outlet::<Route> {}

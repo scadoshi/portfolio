@@ -7,6 +7,10 @@ edition = "2021"
 [dependencies]
 dioxus = { version = "0.7.9", features = ["router", "fullstack"] }
 gloo-timers = { version = "0.4", features = ["futures"] }
+# Shared UI with zwipe.net (themes, ThemePicker, PageMeta, NavBar shell).
+# Cargo.lock pins the exact commit; `cargo update -p zwipe-components` pulls
+# the latest deliberately.
+zwipe-components = { git = "https://github.com/scadoshi/zwipe" }
 
 [features]
 default = ["web"]

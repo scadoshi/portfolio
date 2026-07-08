@@ -1,13 +1,14 @@
-use dioxus::prelude::*;
 use dioxus::document::eval;
+use dioxus::prelude::*;
+use zwipe_components::{ThemeConfig, ThemePicker};
 
-use crate::components::theme_switcher::ThemeSwitcher;
 use crate::Route;
 
 const LOGO_S: &str = include_str!("../../assets/s.txt");
 
 #[component]
 pub fn Navbar() -> Element {
+    let theme = use_context::<Signal<ThemeConfig>>();
     let mut open = use_signal(|| false);
     let mut projects_open = use_signal(|| false);
     let panel_class = if open() {
@@ -124,7 +125,7 @@ pub fn Navbar() -> Element {
                             "Contribute"
                         }
                     }
-                    ThemeSwitcher {}
+                    ThemePicker { theme }
                     } // nav-panel-inner
                 }
             }
