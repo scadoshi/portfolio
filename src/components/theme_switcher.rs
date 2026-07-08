@@ -10,7 +10,6 @@ pub fn ThemeSwitcher() -> Element {
     let mut open = use_signal(|| false);
     let current_name = theme.read().name.clone();
     let is_dark = theme.read().is_dark;
-    let has_light = theme.read().has_light_mode();
     let select_class = if open() {
         "theme-select theme-select-open"
     } else {
@@ -46,12 +45,7 @@ pub fn ThemeSwitcher() -> Element {
                             button {
                                 class: if is_active { "theme-option active" } else { "theme-option" },
                                 onclick: move |_| {
-                                    theme.with_mut(|t| {
-                                        t.name = id.to_string();
-                                        if id == "vantablack" {
-                                            t.is_dark = true;
-                                        }
-                                    });
+                                    theme.with_mut(|t| t.name = id.to_string());
                                     open.set(false);
                                 },
                                 "{label}"
@@ -67,12 +61,7 @@ pub fn ThemeSwitcher() -> Element {
                             button {
                                 class: if is_active { "theme-option active" } else { "theme-option" },
                                 onclick: move |_| {
-                                    theme.with_mut(|t| {
-                                        t.name = id.to_string();
-                                        if id == "vantablack" {
-                                            t.is_dark = true;
-                                        }
-                                    });
+                                    theme.with_mut(|t| t.name = id.to_string());
                                     open.set(false);
                                 },
                                 "{label}"
@@ -81,14 +70,12 @@ pub fn ThemeSwitcher() -> Element {
                     })}
                 }
             }
-            if has_light {
-                button {
-                    class: "mode-toggle",
-                    onclick: move |_| {
-                        theme.with_mut(|t| t.is_dark = !t.is_dark);
-                    },
-                    if is_dark { "light" } else { "dark" }
-                }
+            button {
+                class: "mode-toggle",
+                onclick: move |_| {
+                    theme.with_mut(|t| t.is_dark = !t.is_dark);
+                },
+                if is_dark { "light" } else { "dark" }
             }
         }
     }

@@ -19,9 +19,6 @@ impl ThemeConfig {
         format!("theme-wrapper theme-{}-{}", self.name, mode)
     }
 
-    pub fn has_light_mode(&self) -> bool {
-        true
-    }
 }
 
 pub const THEMES: &[(&str, &str)] = &[
