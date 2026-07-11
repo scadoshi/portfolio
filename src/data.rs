@@ -96,10 +96,10 @@ const ZWIPE: Project = Project {
     card_bullets: &[
         "Native iOS + Android from one Dioxus codebase",
         "Axum + PostgreSQL backend, 110k+ cards, materialized search",
-        "5 workspace crates, 416 tests, zero unwrap in production code",
+        "5 workspace crates, 525 tests, zero unwrap in production code",
     ],
-    impact_metric: "Live: zwipe.net. Submitted to the App Store and Google Play.",
-    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API), zwiper (Dioxus mobile app), zervice (background sync), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Submitted to the App Store and Google Play.",
+    impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
+    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-components (shared UI components), zite (static marketing site). Full commander support \u{2014} partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
     tags: &["rust", "full-stack", "ios", "dioxus", "postgresql"],
     media: &[
         MediaItem {
@@ -144,7 +144,7 @@ const ZWIPE: Project = Project {
         "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardFilter type drives SQL queries server-side and in-memory filtering on the device, via extension traits on Vec<Card>",
         "Production-grade auth: Argon2id with NIST-compliant 170+ pattern blocklist, rotating refresh tokens (replay-safe via delete-on-use), Password type consumed on hash so plaintext can't leak",
         "SQLx at scale \u{2014} five-strategy upsert chain handles batching, PartialEq delta detection, and per-row fallback; 88-column Scryfall sync respects PostgreSQL's 65k parameter limit (~327 cards per batch)",
-        "Production posture: .unwrap, .expect, panic!, todo!, dbg!, print! all denied at compile time. 33 enforced Clippy rules, 416 tests, security audit complete, nightly Cloudflare R2 backups",
+        "Production posture: .unwrap, .expect, panic!, todo!, dbg!, print! all denied at compile time. 22 enforced Clippy rules, 525 tests, security audit complete, nightly Cloudflare R2 backups",
     ],
     snippets: &[
         Snippet {
@@ -276,8 +276,8 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
         "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
     ],
-    progress: "Feature-complete. Full deck management, swipe-based deck building, commander system, maybeboard/sideboard, import/export, email verification, 15 themes. Security audit complete; nightly backups. Live at [zwipe.net](https://zwipe.net); submitted to the App Store and Google Play.",
-    impact: "Full-stack mobile delivery in pure Rust \u{2014} shared domain types across the Axum API, the Dioxus app, and a background sync service. ~45,200 lines across five crates, 416 tests, zero unwrap.",
+    progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, archetype tags, maybeboard/sideboard, import/export, and 14 themes. Security audit complete; nightly backups.",
+    impact: "Full-stack mobile delivery in pure Rust \u{2014} shared domain types across the Axum API, the Dioxus app, and a background sync service. ~66,000 lines across five crates, 525 tests, zero unwrap.",
     status: ProjectStatus::Doing,
 };
 
