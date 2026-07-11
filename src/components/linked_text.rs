@@ -36,12 +36,12 @@ fn split_urls(text: &str) -> Vec<TextPart> {
         let rest = &text[i..];
 
         // Try markdown link: [label](https://url)
-        if rest.starts_with('[') {
-            if let Some(close_bracket) = rest[1..].find(']') {
-                let after_label = &rest[1 + close_bracket + 1..];
+        if let Some(after_bracket) = rest.strip_prefix('[') {
+            if let Some(close_bracket) = after_bracket.find(']') {
+                let after_label = &after_bracket[close_bracket + 1..];
                 if after_label.starts_with("(https://") {
                     if let Some(close_paren) = after_label.find(')') {
-                        let label = &rest[1..1 + close_bracket];
+                        let label = &after_bracket[..close_bracket];
                         let href = &after_label[1..close_paren];
                         if i > plain_start {
                             parts.push(TextPart::Plain(text[plain_start..i].to_string()));
@@ -63,8 +63,7 @@ fn split_urls(text: &str) -> Vec<TextPart> {
             // URL ends at whitespace or any trailing punctuation that's clearly not part of a URL
             let end = rest
                 .find(|c: char| {
-                    c.is_whitespace()
-                        || matches!(c, ')' | '>' | ']' | ';' | ',' | '"' | '\'')
+                    c.is_whitespace() || matches!(c, ')' | '>' | ']' | ';' | ',' | '"' | '\'')
                 })
                 .unwrap_or(rest.len());
             // Strip a trailing '.' so "site.com." doesn't include the sentence period
