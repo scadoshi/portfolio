@@ -98,145 +98,9 @@
     transition: transform 0.25s ease;
 }
 
-.announcement-banner {
-    position: relative;
-    overflow: hidden;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 0.4rem;
-    padding: 0.8rem 2.4rem 0.9rem 1.2rem;
-    font-size: 0.75rem;
-    color: var(--text-primary);
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    animation: banner-slide-in 0.5s ease-out both;
-    animation-delay: 1s;
-    box-shadow: var(--shadow-md);
-}
-
-.banner-header {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-.banner-category {
-    font-size: 0.7rem;
-    color: var(--border-success);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.banner-text {
-    line-height: 1.45;
-}
-
-.announcement-banner .banner-dismiss {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.7rem;
-}
-
-.announcement-banner + .announcement-banner {
-    animation-delay: 1.2s;
-}
-
-/* fade out, then collapse so a remaining toast slides up instead of jumping;
-   the element is removed from the DOM when this animation ends. compound
-   selector + placement after the slide-in rules so it overrides them */
-.announcement-banner.banner-leaving {
-    animation: banner-leave 0.45s ease forwards;
-    animation-delay: 0s;
-    pointer-events: none;
-}
-
-@keyframes banner-leave {
-    0% {
-        opacity: 1;
-        max-height: 10rem;
-    }
-    45% {
-        opacity: 0;
-        max-height: 10rem;
-    }
-    100% {
-        opacity: 0;
-        max-height: 0;
-        /* cancel the stack gap left behind */
-        margin-bottom: -0.6rem;
-        padding-top: 0;
-        padding-bottom: 0;
-        border-top-width: 0;
-        border-bottom-width: 0;
-    }
-}
-
-.banner-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background: var(--accent-primary);
-    transform-origin: left;
-    animation: banner-countdown 10s linear forwards;
-    animation-delay: 1s;
-}
-
-.announcement-banner + .announcement-banner .banner-progress {
-    animation-delay: 1.2s;
-}
-
-.announcement-banner:hover .banner-progress {
-    animation-play-state: paused;
-}
-
-@keyframes banner-countdown {
-    from {
-        transform: scaleX(1);
-    }
-    to {
-        transform: scaleX(0);
-    }
-}
-
-.announcement-banner a,
-.announcement-banner a:visited {
-    color: var(--accent-primary);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-}
-
-.announcement-banner a:hover {
-    color: var(--accent-primary);
-}
-
-.banner-dismiss {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 0;
-    line-height: 1;
-}
-
-.banner-dismiss:hover {
-    color: var(--text-primary);
-}
-
-@keyframes banner-slide-in {
-    from {
-        opacity: 0;
-        transform: translateY(-80px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* .announcement-banner and its slide-in/leave/countdown animations are the
+   shared zwipe_components::Banner now; only the .banner-stack positioning
+   above (and its responsive overrides below) stays site-specific. */
 
 /* === Base === */
 
@@ -495,53 +359,8 @@ a:visited {
     gap: 1.5rem;
 }
 
-.project-card {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.2s;
-}
-
-.project-card:hover {
-    border-color: var(--accent-primary);
-}
-
-.card-category {
-    font-size: 0.75rem;
-    color: var(--accent-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.5rem;
-}
-
-.status-tag {
-    display: inline-block;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    margin-left: 0.5rem;
-    padding: 0.05rem 0.4rem;
-    border-radius: 0.25rem;
-    vertical-align: middle;
-    text-transform: none;
-}
-
-.status-done {
-    color: var(--border-success);
-    border: 1px solid var(--color-success);
-}
-
-.status-doing {
-    color: var(--border-warning);
-    border: 1px solid var(--color-warning);
-}
-
-.card-title {
-    font-size: 1.2rem;
-    color: var(--accent-primary);
-    margin-bottom: 0.75rem;
-}
+/* Card chrome (panel, eyebrow, title, status pills, actions) is the shared
+   zwipe_components::Panel now; only the card body content stays below. */
 
 .card-summary {
     font-size: 0.9rem;
@@ -583,25 +402,6 @@ a:visited {
     border-radius: 0.4rem;
 }
 
-.card-actions {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.card-link {
-    color: var(--accent-primary);
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.card-link:hover {
-    color: var(--accent-primary);
-}
-
-.card-link-secondary {
-    color: var(--text-muted);
-}
-
 /* === Project Detail === */
 
 .project-detail {
@@ -623,6 +423,12 @@ a:visited {
     letter-spacing: 0.08em;
 }
 
+/* The shared .status-tag spaces via flex gap; the detail header sets it inline,
+   so restore a small gap here. */
+.project-category-tag .status-tag {
+    margin-left: 0.5rem;
+}
+
 .project-name {
     font-size: 2rem;
     color: var(--text-primary);
@@ -633,16 +439,6 @@ a:visited {
     font-size: 1rem;
     color: var(--text-muted);
     margin-bottom: 1rem;
-}
-
-.repo-link {
-    color: var(--accent-primary);
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.repo-link:hover {
-    color: var(--accent-primary);
 }
 
 .project-section {

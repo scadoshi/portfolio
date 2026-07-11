@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use zwipe_components::Panel;
 
 use crate::components::page_meta::PageMeta;
 
@@ -22,47 +23,47 @@ pub fn Contribute() -> Element {
                 }
             }
             div { class: "projects-grid",
-                div { class: "project-card",
-                    div { class: "card-category", "One-Time" }
-                    h3 { class: "card-title", "Stripe" }
-                    p { class: "card-summary", "Pay what you want. No account required." }
-                    div { class: "card-actions",
+                Panel {
+                    eyebrow: "One-Time",
+                    title: "Stripe",
+                    actions: rsx! {
                         a {
                             href: STRIPE_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            class: "card-link",
-                            "Contribute \u{2192}"
+                            class: "panel-action",
+                            "Contribute \u{2197}"
                         }
-                    }
+                    },
+                    p { class: "card-summary", "Pay what you want. No account required." }
                 }
-                div { class: "project-card",
-                    div { class: "card-category", "One-Time" }
-                    h3 { class: "card-title", "Buy Me a Coffee" }
-                    p { class: "card-summary", "Quick one-off support through Buy Me a Coffee." }
-                    div { class: "card-actions",
+                Panel {
+                    eyebrow: "One-Time",
+                    title: "Buy Me a Coffee",
+                    actions: rsx! {
                         a {
                             href: BMC_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            class: "card-link",
-                            "buymeacoffee.com/scadoshi \u{2192}"
+                            class: "panel-action",
+                            "buymeacoffee.com/scadoshi \u{2197}"
                         }
-                    }
+                    },
+                    p { class: "card-summary", "Quick one-off support through Buy Me a Coffee." }
                 }
-                div { class: "project-card",
-                    div { class: "card-category", "Recurring" }
-                    h3 { class: "card-title", "GitHub Sponsors" }
-                    p { class: "card-summary", "Recurring monthly support via GitHub Sponsors." }
-                    div { class: "card-actions",
+                Panel {
+                    eyebrow: "Recurring",
+                    title: "GitHub Sponsors",
+                    actions: rsx! {
                         a {
                             href: GITHUB_SPONSORS_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            class: "card-link",
-                            "github.com/sponsors/scadoshi \u{2192}"
+                            class: "panel-action",
+                            "github.com/sponsors/scadoshi \u{2197}"
                         }
-                    }
+                    },
+                    p { class: "card-summary", "Recurring monthly support via GitHub Sponsors." }
                 }
             }
         }

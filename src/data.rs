@@ -54,6 +54,14 @@ impl ProjectStatus {
             Self::Doing => "status-doing",
         }
     }
+    /// Maps to the shared status pill; the label ("Done"/"Doing") is passed
+    /// separately so the pill keeps our wording, not the component's default.
+    pub fn banner_status(&self) -> zwipe_components::BannerStatus {
+        match self {
+            Self::Done => zwipe_components::BannerStatus::Done,
+            Self::Doing => zwipe_components::BannerStatus::Doing,
+        }
+    }
 }
 
 pub struct Snippet {

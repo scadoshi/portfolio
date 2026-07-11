@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use zwipe_components::{Banner, BannerStatus};
 
 use crate::components::page_meta::PageMeta;
 use crate::components::project_card::ProjectCard;
@@ -7,94 +8,34 @@ use crate::Route;
 
 const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
 
-#[derive(Clone, Copy, PartialEq)]
-enum Banner {
-    Shown,
-    Leaving,
-    Dismissed,
-}
-
-impl Banner {
-    fn class(self) -> &'static str {
-        match self {
-            Banner::Leaving => "announcement-banner banner-leaving",
-            _ => "announcement-banner",
-        }
-    }
-}
-
 #[component]
 pub fn Home() -> Element {
     let projects = data::featured_projects();
-    let mut zwipe_banner = use_signal(|| Banner::Shown);
-    let mut dipro_banner = use_signal(|| Banner::Shown);
     rsx! {
         PageMeta {
             title: "Scotty Fermo",
             description: "Personal portfolio of Scotty Fermo. Production Rust systems, full-stack engineering, and side quests in protocol design, storage engines, and ML.",
             path: "/",
         }
-        if zwipe_banner() != Banner::Dismissed || dipro_banner() != Banner::Dismissed {
-            div { class: "banner-stack",
-                if zwipe_banner() != Banner::Dismissed {
-                    div { class: zwipe_banner().class(),
-                        onanimationend: move |evt| {
-                            if evt.animation_name() == "banner-leave" {
-                                zwipe_banner.set(Banner::Dismissed);
-                            }
-                        },
-                        div { class: "banner-header",
-                            span { class: "banner-category", "Announcement" }
-                            span { class: "status-tag status-done", "Live" }
-                        }
-                        span { class: "banner-text",
-                            "Zwipe, the deck builder MTG deserved. "
-                            a {
-                                href: "https://zwipe.net",
-                                target: "_blank",
-                                rel: "noopener noreferrer",
-                                "Try it now \u{2192}"
-                            }
-                        }
-                        button {
-                            class: "banner-dismiss",
-                            onclick: move |_| zwipe_banner.set(Banner::Leaving),
-                            "\u{2715}"
-                        }
-                        div {
-                            class: "banner-progress",
-                            onanimationend: move |_| zwipe_banner.set(Banner::Leaving),
-                        }
-                    }
+        div { class: "banner-stack",
+            Banner {
+                category: "Announcement",
+                status: BannerStatus::Done,
+                "Zwipe, the deck builder MTG deserved. "
+                a {
+                    href: "https://zwipe.net",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    "Try it now \u{2197}"
                 }
-                if dipro_banner() != Banner::Dismissed {
-                    div { class: dipro_banner().class(),
-                        onanimationend: move |evt| {
-                            if evt.animation_name() == "banner-leave" {
-                                dipro_banner.set(Banner::Dismissed);
-                            }
-                        },
-                        div { class: "banner-header",
-                            span { class: "banner-category", "Featured" }
-                            span { class: "status-tag status-doing", "Doing" }
-                        }
-                        span { class: "banner-text",
-                            "Diprotodon, a hand-written Redis-compatible KV server. "
-                            Link {
-                                to: Route::SideQuestDetail { slug: "diprotodon".to_string() },
-                                "Check it out \u{2192}"
-                            }
-                        }
-                        button {
-                            class: "banner-dismiss",
-                            onclick: move |_| dipro_banner.set(Banner::Leaving),
-                            "\u{2715}"
-                        }
-                        div {
-                            class: "banner-progress",
-                            onanimationend: move |_| dipro_banner.set(Banner::Leaving),
-                        }
-                    }
+            }
+            Banner {
+                category: "Featured",
+                status: BannerStatus::Doing,
+                "Diprotodon, a hand-written Redis-compatible KV server. "
+                Link {
+                    to: Route::SideQuestDetail { slug: "diprotodon".to_string() },
+                    "Check it out \u{2192}"
                 }
             }
         }
@@ -153,8 +94,8 @@ pub fn Home() -> Element {
                         bullets: project.card_bullets.iter().map(|b| b.to_string()).collect(),
                         impact_metric: project.impact_metric.to_string(),
                         repo_url: project.repo_url.to_string(),
+                        status: project.status.banner_status(),
                         status_label: project.status.label().to_string(),
-                        status_class: project.status.css_class().to_string(),
                     }
                 }
             }

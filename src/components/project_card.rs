@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use zwipe_components::{BannerStatus, Panel};
 
 use crate::Route;
 
@@ -11,16 +12,29 @@ pub fn ProjectCard(
     bullets: Vec<String>,
     impact_metric: String,
     repo_url: String,
+    status: BannerStatus,
     status_label: String,
-    status_class: String,
 ) -> Element {
     rsx! {
-        div { class: "project-card",
-            div { class: "card-category",
-                "{category}"
-                span { class: "status-tag {status_class}", "{status_label}" }
-            }
-            h3 { class: "card-title", "{name}" }
+        Panel {
+            eyebrow: category,
+            title: name,
+            status,
+            status_label,
+            actions: rsx! {
+                Link {
+                    to: Route::ProjectDetail { slug },
+                    class: "panel-action",
+                    "View Project \u{2192}"
+                }
+                a {
+                    href: "{repo_url}",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    class: "panel-action",
+                    "GitHub \u{2197}"
+                }
+            },
             p { class: "card-summary", "{summary}" }
             ul { class: "card-bullets",
                 for bullet in bullets {
@@ -28,20 +42,6 @@ pub fn ProjectCard(
                 }
             }
             div { class: "card-impact", "{impact_metric}" }
-            div { class: "card-actions",
-                Link {
-                    to: Route::ProjectDetail { slug },
-                    class: "card-link",
-                    "View Project \u{2192}"
-                }
-                a {
-                    href: "{repo_url}",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    class: "card-link card-link-secondary",
-                    "GitHub \u{2192}"
-                }
-            }
         }
     }
 }

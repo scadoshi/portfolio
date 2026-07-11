@@ -36,8 +36,8 @@ pub fn ProjectDetail(slug: String) -> Element {
                     href: "{project.repo_url}",
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    class: "repo-link",
-                    "View on GitHub \u{2192}"
+                    class: "panel-action",
+                    "View on GitHub \u{2197}"
                 }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",

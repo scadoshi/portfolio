@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use zwipe_components::Panel;
 
 use crate::components::page_meta::PageMeta;
 use crate::data;
@@ -22,30 +23,29 @@ pub fn SideQuests() -> Element {
             }
             div { class: "projects-grid",
                 for quest in quests {
-                    div { class: "project-card",
-                        div { class: "card-category",
-                            "{quest.category}"
-                            span { class: "status-tag {quest.status.css_class()}", "{quest.status.label()}" }
-                        }
-                        h3 { class: "card-title", "{quest.name}" }
-                        p { class: "card-summary", "{quest.summary}" }
-                        ul { class: "card-bullets",
-                            for bullet in quest.card_bullets {
-                                li { "{bullet}" }
-                            }
-                        }
-                        div { class: "card-actions",
+                    Panel {
+                        eyebrow: quest.category.to_string(),
+                        title: quest.name.to_string(),
+                        status: quest.status.banner_status(),
+                        status_label: quest.status.label().to_string(),
+                        actions: rsx! {
                             Link {
                                 to: Route::SideQuestDetail { slug: quest.slug.to_string() },
-                                class: "card-link",
+                                class: "panel-action",
                                 "View Side Quest \u{2192}"
                             }
                             a {
                                 href: "{quest.repo_url}",
                                 target: "_blank",
                                 rel: "noopener noreferrer",
-                                class: "card-link card-link-secondary",
-                                "GitHub \u{2192}"
+                                class: "panel-action",
+                                "GitHub \u{2197}"
+                            }
+                        },
+                        p { class: "card-summary", "{quest.summary}" }
+                        ul { class: "card-bullets",
+                            for bullet in quest.card_bullets {
+                                li { "{bullet}" }
                             }
                         }
                     }
