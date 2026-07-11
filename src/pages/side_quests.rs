@@ -32,7 +32,7 @@ pub fn SideQuests() -> Element {
                             Link {
                                 to: Route::SideQuestDetail { slug: quest.slug.to_string() },
                                 class: "panel-action",
-                                "View Side Quest \u{2192}"
+                                "View Side Quest"
                             }
                             a {
                                 href: "{quest.repo_url}",

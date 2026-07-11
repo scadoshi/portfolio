@@ -25,7 +25,7 @@ pub fn ProjectCard(
                 Link {
                     to: Route::ProjectDetail { slug },
                     class: "panel-action",
-                    "View Project \u{2192}"
+                    "View Project"
                 }
                 a {
                     href: "{repo_url}",

@@ -35,7 +35,7 @@ pub fn Home() -> Element {
                 "Diprotodon, a hand-written Redis-compatible KV server. "
                 Link {
                     to: Route::SideQuestDetail { slug: "diprotodon".to_string() },
-                    "Check it out \u{2192}"
+                    "Check it out"
                 }
             }
         }
