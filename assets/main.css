@@ -135,6 +135,13 @@ body {
     flex-direction: column;
 }
 
+/* Light themes: lift the sink toward white (fresh-paper feel) instead of the
+   #000 15% darkening that reads muddy on cream palettes. The theme class is
+   "theme-{name}-{mode}", so only "-light" matches; dark mode is untouched. */
+.theme-wrapper[class$="-light"] {
+    --bg-sink: color-mix(in srgb, var(--bg-primary), #fff 35%);
+}
+
 /* The grid lives on a viewport-fixed layer so it stays pinned while the
    page content scrolls over it. A fixed pseudo-element (rather than
    background-attachment: fixed) because iOS Safari ignores fixed
