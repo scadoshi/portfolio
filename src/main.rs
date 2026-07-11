@@ -5,9 +5,8 @@ mod data;
 mod pages;
 
 use pages::contribute::Contribute;
+use pages::detail::{ProjectDetail, SideQuestDetail};
 use pages::home::Home;
-use pages::project_detail::ProjectDetail;
-use pages::side_quest_detail::SideQuestDetail;
 use pages::side_quests::SideQuests;
 use zwipe_components::{ThemeConfig, COMPONENTS_CSS, THEMES_CSS};
 

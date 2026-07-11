@@ -6,23 +6,15 @@ use crate::components::linked_text::LinkedText;
 use crate::components::page_meta::PageMeta;
 use crate::data;
 
-#[component]
-pub fn SideQuestDetail(slug: String) -> Element {
-    let Some(project) = data::find_side_quest(&slug) else {
-        return rsx! {
-            document::Title { "Side quest not found | Scotty Fermo" }
-            div { class: "not-found",
-                h1 { "Side quest not found" }
-                p { "No side quest matches \"{slug}\"." }
-            }
-        };
-    };
-
+/// Shared body for both detail pages — projects and side quests render
+/// identically off the same `Project` shape; only the lookup, canonical path,
+/// and not-found wording differ (see the two components below).
+fn detail_view(project: &'static data::Project, path: String) -> Element {
     rsx! {
         PageMeta {
             title: project.name.to_string(),
             description: project.headline.to_string(),
-            path: format!("/side-quests/{}", project.slug),
+            path,
         }
         div { class: "project-detail content-enter",
             section { class: "project-header",
@@ -91,4 +83,35 @@ pub fn SideQuestDetail(slug: String) -> Element {
             }
         }
     }
+}
+
+/// Not-found fallback shared by both routes. `kind` is Title-case ("Project" /
+/// "Side quest"); the body sentence lowercases it.
+fn not_found(kind: &str, slug: &str) -> Element {
+    let lower = kind.to_lowercase();
+    rsx! {
+        document::Title { "{kind} not found | Scotty Fermo" }
+        div { class: "not-found",
+            h1 { "{kind} not found" }
+            p { "No {lower} matches \"{slug}\"." }
+        }
+    }
+}
+
+/// Featured project detail page (`/projects/:slug`).
+#[component]
+pub fn ProjectDetail(slug: String) -> Element {
+    let Some(project) = data::find_project(&slug) else {
+        return not_found("Project", &slug);
+    };
+    detail_view(project, format!("/projects/{}", project.slug))
+}
+
+/// Side quest detail page (`/side-quests/:slug`).
+#[component]
+pub fn SideQuestDetail(slug: String) -> Element {
+    let Some(project) = data::find_side_quest(&slug) else {
+        return not_found("Side quest", &slug);
+    };
+    detail_view(project, format!("/side-quests/{}", project.slug))
 }
