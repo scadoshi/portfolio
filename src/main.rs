@@ -9,7 +9,7 @@ use pages::home::Home;
 use pages::project_detail::ProjectDetail;
 use pages::side_quest_detail::SideQuestDetail;
 use pages::side_quests::SideQuests;
-use zwipe_components::{COMPONENTS_CSS, THEMES_CSS, ThemeConfig};
+use zwipe_components::{ThemeConfig, COMPONENTS_CSS, THEMES_CSS};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 const FAVICON_ICO: Asset = asset!("/assets/favicon/favicon.ico");
