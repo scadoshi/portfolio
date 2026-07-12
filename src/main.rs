@@ -3,12 +3,15 @@ use dioxus::prelude::*;
 mod components;
 mod data;
 mod pages;
+mod theme_store;
 
-use pages::contribute::Contribute;
-use pages::detail::{ProjectDetail, SideQuestDetail};
-use pages::home::Home;
-use pages::side_quests::SideQuests;
-use zwipe_components::{ThemeConfig, COMPONENTS_CSS, THEMES_CSS};
+use pages::{
+    contribute::Contribute,
+    detail::{ProjectDetail, SideQuestDetail},
+    home::Home,
+    side_quests::SideQuests,
+};
+use zwipe_components::{COMPONENTS_CSS, THEMES_CSS, ThemeConfig};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 const FAVICON_ICO: Asset = asset!("/assets/favicon/favicon.ico");
@@ -68,8 +71,34 @@ async fn static_routes() -> ServerFnResult<Vec<String>> {
 
 #[component]
 fn App() -> Element {
-    let theme = use_signal(ThemeConfig::default);
+    // Start at the default so the client's first render matches the server's
+    // (localStorage is client-only). Seeding from storage here would desync SSR
+    // and hydration: hydration keeps the server DOM (e.g. the picker's label and
+    // the wrapper theme class) and won't reconcile the mismatch. Instead adopt
+    // the stored theme just after mount (below).
+    let mut theme = use_signal(ThemeConfig::default);
     use_context_provider(|| theme);
+    let mut loaded = use_signal(|| false);
+
+    // After hydration, adopt the last-used theme from localStorage. Being a
+    // post-mount state change, this re-renders the picker label and the theme
+    // wrapper too, not just future interactions.
+    use_effect(move || {
+        if let Some(stored) = theme_store::load() {
+            theme.set(stored);
+        }
+        loaded.set(true);
+    });
+
+    // Persist every theme change so the next visit opens in it. The `loaded`
+    // guard keeps the pre-load default render from clobbering the stored theme.
+    use_effect(move || {
+        let cfg = theme.read().clone();
+        if loaded() {
+            theme_store::save(&cfg);
+        }
+    });
+
     rsx! {
         document::Meta { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" }
         document::Link { rel: "icon", href: FAVICON_ICO }
