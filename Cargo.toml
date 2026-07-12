@@ -2,7 +2,7 @@
 name = "portfolio"
 version = "0.1.0"
 authors = ["Scotty Fermo <scottyfermo@hotmail.com>"]
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 dioxus = { version = "0.7.9", features = ["router", "fullstack"] }
@@ -20,3 +20,7 @@ getrandom = { version = "0.4", features = ["wasm_js"] }
 default = ["web"]
 web = ["dioxus/web"]
 server = ["dioxus/server"]
+
+# localStorage theme persistence (client only).
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+gloo-storage = "0.3"

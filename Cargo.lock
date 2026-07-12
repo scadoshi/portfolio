@@ -1596,6 +1596,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "gloo-storage"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fbc8031e8c92758af912f9bc08fbbadd3c6f3cfcbf6b64cdf3d6a81f0139277a"
+dependencies = [
+ "gloo-utils",
+ "js-sys",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "gloo-timers"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2453,6 +2468,7 @@ version = "0.1.0"
 dependencies = [
  "dioxus",
  "getrandom 0.4.3",
+ "gloo-storage",
  "gloo-timers 0.4.0",
  "zwipe-components",
 ]
@@ -4309,8 +4325,8 @@ checksum = "b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa"
 
 [[package]]
 name = "zwipe-components"
-version = "1.5.0"
-source = "git+https://github.com/scadoshi/zwipe#20cf4d15f6f58becb21f16a9413baec7e84b1f09"
+version = "1.6.0"
+source = "git+https://github.com/scadoshi/zwipe#ff9434b90b3eab94726675af1a2009f3b3ab2ea2"
 dependencies = [
  "dioxus",
  "uuid",
@@ -4319,8 +4335,8 @@ dependencies = [
 
 [[package]]
 name = "zwipe-core"
-version = "1.5.0"
-source = "git+https://github.com/scadoshi/zwipe#20cf4d15f6f58becb21f16a9413baec7e84b1f09"
+version = "1.6.0"
+source = "git+https://github.com/scadoshi/zwipe#ff9434b90b3eab94726675af1a2009f3b3ab2ea2"
 dependencies = [
  "chrono",
  "email_address",

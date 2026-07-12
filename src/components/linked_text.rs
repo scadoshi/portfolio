@@ -36,25 +36,25 @@ fn split_urls(text: &str) -> Vec<TextPart> {
         let rest = &text[i..];
 
         // Try markdown link: [label](https://url)
-        if let Some(after_bracket) = rest.strip_prefix('[') {
-            if let Some(close_bracket) = after_bracket.find(']') {
-                let after_label = &after_bracket[close_bracket + 1..];
-                if after_label.starts_with("(https://") {
-                    if let Some(close_paren) = after_label.find(')') {
-                        let label = &after_bracket[..close_bracket];
-                        let href = &after_label[1..close_paren];
-                        if i > plain_start {
-                            parts.push(TextPart::Plain(text[plain_start..i].to_string()));
-                        }
-                        parts.push(TextPart::Url {
-                            href: href.to_string(),
-                            label: label.to_string(),
-                        });
-                        i += 1 + close_bracket + 1 + close_paren + 1;
-                        plain_start = i;
-                        continue;
-                    }
+        if let Some(after_bracket) = rest.strip_prefix('[')
+            && let Some(close_bracket) = after_bracket.find(']')
+        {
+            let after_label = &after_bracket[close_bracket + 1..];
+            if after_label.starts_with("(https://")
+                && let Some(close_paren) = after_label.find(')')
+            {
+                let label = &after_bracket[..close_bracket];
+                let href = &after_label[1..close_paren];
+                if i > plain_start {
+                    parts.push(TextPart::Plain(text[plain_start..i].to_string()));
                 }
+                parts.push(TextPart::Url {
+                    href: href.to_string(),
+                    label: label.to_string(),
+                });
+                i += 1 + close_bracket + 1 + close_paren + 1;
+                plain_start = i;
+                continue;
             }
         }
 

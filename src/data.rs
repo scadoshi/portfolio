@@ -300,7 +300,9 @@ const HALO_ACTION_IMPORTER: Project = Project {
         MediaItem {
             src: asset!("/assets/projects/halo-action-importer/full_run.mp4"),
             alt: "Full import run with batching and only-parse validation",
-            caption: Some("Full run: batching across multiple sizes and only-parse mode validating inbound data"),
+            caption: Some(
+                "Full run: batching across multiple sizes and only-parse mode validating inbound data",
+            ),
             kind: MediaKind::Video,
         },
         MediaItem {
@@ -793,14 +795,12 @@ const DIPROTODON: Project = Project {
     impact_metric: "~5,500 lines, 227 tests, hand-written RESP + durability + pub/sub",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out \u{2014} all written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
-    media: &[
-        MediaItem {
-            src: asset!("/assets/projects/diprotodon/server_run_redis_cli_connect.mp4"),
-            alt: "redis-cli connecting to the server: SET, GET, DEL, PING",
-            caption: Some("redis-cli connecting: SET, GET, DEL, then PING repeatedly"),
-            kind: MediaKind::Video,
-        },
-    ],
+    media: &[MediaItem {
+        src: asset!("/assets/projects/diprotodon/server_run_redis_cli_connect.mp4"),
+        alt: "redis-cli connecting to the server: SET, GET, DEL, PING",
+        caption: Some("redis-cli connecting: SET, GET, DEL, then PING repeatedly"),
+        kind: MediaKind::Video,
+    }],
     approach: &[
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input \u{2014} no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
         "Storage is HashMap<Vec<u8>, Entry> where Entry { value, absolute_ttl: Option<u64> } \u{2014} one struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread for memory hygiene",
@@ -966,14 +966,12 @@ const UPSEE: Project = Project {
     impact_metric: "~145 lines, on-device ML",
     objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time from a webcam, using the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference \u{2014} everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
     tags: &["rust", "ml", "computer-vision", "real-time"],
-    media: &[
-        MediaItem {
-            src: asset!("/assets/projects/upsee/upsee-demo.mp4"),
-            alt: "Upsee counting pullups in real time from webcam input",
-            caption: Some("Real-time pose estimation and rep counting via on-device MoveNet inference"),
-            kind: MediaKind::Video,
-        },
-    ],
+    media: &[MediaItem {
+        src: asset!("/assets/projects/upsee/upsee-demo.mp4"),
+        alt: "Upsee counting pullups in real time from webcam input",
+        caption: Some("Real-time pose estimation and rep counting via on-device MoveNet inference"),
+        kind: MediaKind::Video,
+    }],
     approach: &[
         "tract ONNX runtime as the Rust-native inference path. Three method calls from ONNX file to runnable inference: model_for_path \u{2192} into_optimized \u{2192} into_runnable. No Python, no cloud",
         "Custom Square trait on ImageBuffer center-crops webcam frames to square aspect before resizing. Distortion-free resize meaningfully improved keypoint confidence",
@@ -1044,14 +1042,12 @@ const CAPTURE: Project = Project {
     impact_metric: "~225 lines, 2 platforms",
     objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
     tags: &["rust", "cross-platform", "security", "camera"],
-    media: &[
-        MediaItem {
-            src: asset!("/assets/projects/capture/demo.mp4"),
-            alt: "Keyboard and mouse input triggering intruder captures",
-            caption: Some("Keyboard and mouse input triggering intruder captures"),
-            kind: MediaKind::Video,
-        },
-    ],
+    media: &[MediaItem {
+        src: asset!("/assets/projects/capture/demo.mp4"),
+        alt: "Keyboard and mouse input triggering intruder captures",
+        caption: Some("Keyboard and mouse input triggering intruder captures"),
+        kind: MediaKind::Video,
+    }],
     approach: &[
         "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps via [target.'cfg(...)'.dependencies] in Cargo.toml",
         "Linux: enumerate /dev/input/event* devices, filter by capability heuristics (Identify trait on evdev::Device), grab each, poll with nix::poll, ungrab on exit",

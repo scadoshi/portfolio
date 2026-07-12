@@ -1,10 +1,12 @@
 use dioxus::prelude::*;
 
-use crate::components::code_block::CodeBlock;
-use crate::components::gallery::ProjectGallery;
-use crate::components::linked_text::LinkedText;
-use crate::components::page_meta::PageMeta;
-use crate::data;
+use crate::{
+    components::{
+        code_block::CodeBlock, gallery::ProjectGallery, linked_text::LinkedText,
+        page_meta::PageMeta,
+    },
+    data,
+};
 
 /// Shared body for both detail pages — projects and side quests render
 /// identically off the same `Project` shape; only the lookup, canonical path,

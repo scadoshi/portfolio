@@ -1,9 +1,7 @@
 use dioxus::prelude::*;
 use zwipe_components::Panel;
 
-use crate::components::page_meta::PageMeta;
-use crate::data;
-use crate::Route;
+use crate::{Route, components::page_meta::PageMeta, data};
 
 #[component]
 pub fn SideQuests() -> Element {

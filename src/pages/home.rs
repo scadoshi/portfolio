@@ -1,10 +1,11 @@
 use dioxus::prelude::*;
 use zwipe_components::{Banner, BannerStatus};
 
-use crate::components::page_meta::PageMeta;
-use crate::components::project_card::ProjectCard;
-use crate::data;
-use crate::Route;
+use crate::{
+    Route,
+    components::{page_meta::PageMeta, project_card::ProjectCard},
+    data,
+};
 
 const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
 

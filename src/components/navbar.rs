@@ -1,6 +1,5 @@
-use dioxus::document::eval;
-use dioxus::prelude::*;
-use zwipe_components::{NavBar, NavDropdown, ThemeConfig, ThemePicker, BRAND_RESET_JS};
+use dioxus::{document::eval, prelude::*};
+use zwipe_components::{BRAND_RESET_JS, NavBar, NavDropdown, ThemeConfig, ThemePicker};
 
 use crate::Route;
 
