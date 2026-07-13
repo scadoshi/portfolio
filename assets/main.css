@@ -99,8 +99,8 @@
 }
 
 /* .announcement-banner and its slide-in/leave/countdown animations are the
-   shared zwipe_components::Banner now; only the .banner-stack positioning
-   above (and its responsive overrides below) stays site-specific. */
+   shared zwipe_components::Banner now, as is the open-menu overlap slide; only
+   the .banner-stack positioning above stays site-specific. */
 
 /* === Base === */
 
@@ -835,16 +835,8 @@ a:visited {
         grid-template-columns: 1fr;
     }
 
-    /* Hamburger, collapsing panel, and all in-panel item/picker/dropdown
-       sizing come from zwipe-components. */
-
-    body:has(.nav-panel-open) .banner-stack {
-        /* slide out of the expanding menu's way, down to the bottom edge
-           (top/bottom auto-flips can't transition, transform can);
-           7.5rem = the 6rem top offset + a 1.5rem bottom margin */
-        transform: translateY(calc(100vh - 100% - 7.5rem));
-        transform: translateY(calc(100dvh - 100% - 7.5rem));
-    }
+    /* Hamburger, collapsing panel, in-panel sizing, and the banner-stack
+       slide-out-of-the-open-menu behavior all come from zwipe-components. */
 
     .quest-header {
         flex-direction: column;
@@ -853,15 +845,5 @@ a:visited {
 
     .project-name {
         font-size: 1.5rem;
-    }
-}
-
-/* short viewports (landscape phones): the open menu spans the full height,
-   so there is no clear bottom edge for the banners to retreat to — slide
-   them off-screen instead */
-@media (max-width: 60rem) and (max-height: 500px) {
-    body:has(.nav-panel-open) .banner-stack {
-        transform: translateY(100vh);
-        transform: translateY(100dvh);
     }
 }
