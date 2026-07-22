@@ -4326,7 +4326,7 @@ checksum = "b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa"
 [[package]]
 name = "zwipe-components"
 version = "1.7.2"
-source = "git+https://github.com/scadoshi/zwipe#6f7d69a790e8b027ca37e60764914fbc110696f0"
+source = "git+https://github.com/scadoshi/zwipe#d9c1f332605f12f2279692c874ec458e9e04296f"
 dependencies = [
  "dioxus",
  "uuid",
@@ -4336,7 +4336,7 @@ dependencies = [
 [[package]]
 name = "zwipe-core"
 version = "1.7.2"
-source = "git+https://github.com/scadoshi/zwipe#6f7d69a790e8b027ca37e60764914fbc110696f0"
+source = "git+https://github.com/scadoshi/zwipe#d9c1f332605f12f2279692c874ec458e9e04296f"
 dependencies = [
  "chrono",
  "email_address",
