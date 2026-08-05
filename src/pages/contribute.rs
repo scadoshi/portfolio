@@ -46,7 +46,7 @@ pub fn Contribute() -> Element {
                             target: "_blank",
                             rel: "noopener noreferrer",
                             class: "panel-action",
-                            "buymeacoffee.com/scadoshi \u{2197}"
+                            "Contribute \u{2197}"
                         }
                     },
                     p { class: "card-summary", "Quick one-off support through Buy Me a Coffee." }
@@ -60,7 +60,7 @@ pub fn Contribute() -> Element {
                             target: "_blank",
                             rel: "noopener noreferrer",
                             class: "panel-action",
-                            "github.com/sponsors/scadoshi \u{2197}"
+                            "Contribute \u{2197}"
                         }
                     },
                     p { class: "card-summary", "Recurring monthly support via GitHub Sponsors." }
