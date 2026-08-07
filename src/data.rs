@@ -149,7 +149,7 @@ const ZWIPE: Project = Project {
     snippets: &[
         Snippet {
             title: "Trait-Based Card Filtering & Grouping",
-            code: r#"// Extension traits on Vec<Card> — no wrapper types, just import the trait
+            code: r#"// Extension traits on Vec<Card>: no wrapper types, just import the trait
 pub trait FilterCards {
     fn filter_by(self, filter: &CardFilter) -> Vec<Card>;
 }
@@ -240,7 +240,7 @@ const SCRYFALL_DATA_FIELDS: &str = "
     ...  (88 fields total)
 ";
 
-// Derived helpers — all read from the same constant
+// Derived helpers, all reading from the same constant
 fn scryfall_data_fields() -> String { /* comma-join for INSERT */ }
 fn bulk_upsert_conflict_fields() -> String {
     // "ON CONFLICT (id) DO UPDATE SET arena_id = EXCLUDED.arena_id, ..."
@@ -262,7 +262,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     .push(bulk_upsert_conflict_fields())
     .push(" RETURNING *;")
 
-// Upsert strategy chain — each layer adds a capability:
+// Upsert strategy chain, each layer adding a capability:
 // BatchDeltaUpsertWithTx (chunk + skip unchanged)
 //   → BulkDeltaUpsertWithTx (PartialEq diff against DB)
 //     → BulkUpsertWithTx (single SQL statement)
@@ -339,11 +339,11 @@ Deserialization     → skip row, continue processing"#,
         Snippet {
             title: "Retry Strategy Evolution",
             code: r#"// v1: Binary search to find bad ticket in failed batch
-//     O(log(batch_size) * failures) — too many API calls
+//     O(log(batch_size) * failures): too many API calls
 //
 // v2: Ticket-grouped retry (current)
 //     Group actions by ticket_id, retry each group
-//     O(unique_tickets) — maximizes successful imports
+//     O(unique_tickets): maximizes successful imports
 //     Missing tickets marked permanently failed
 fn retry_by_ticket_group(batch: Vec<Action>) -> Result<Stats> {
     let groups = batch.group_by(|a| a.ticket_id);
@@ -433,8 +433,8 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     snippets: &[
         Snippet {
             title: "Layered Architecture",
-            code: r#"// bin/main.rs — orchestration only
-// lib/ — all logic lives here
+            code: r#"// bin/main.rs: orchestration only
+// lib/: all logic lives here
 //
 // inbound/
 //   readers.rs     CSV parsing, header-position detection
@@ -680,11 +680,11 @@ fn header_read_next(&mut self) -> anyhow::Result<Option<Entry>> {
                 self.reader.seek(SeekFrom::Current(-(HEADER_SIZE as i64 - 1)))?;
             }
             Err(CorruptionType::ChecksumMismatch) => {
-                // CRC32 doesn't match — skip this entry
+                // CRC32 doesn't match, skip this entry
                 self.reader.seek(SeekFrom::Current(-(HEADER_SIZE as i64 - 1)))?;
             }
             Err(CorruptionType::ParseError) => {
-                // Magic+CRC valid but wincode parse failed — skip entry
+                // Magic+CRC valid but wincode parse failed, skip entry
             }
         }
     }
@@ -753,7 +753,7 @@ impl<R: Read + Seek> BloomFilterReader for R {
                 if let Entry::Set { .. } = entry_ref {
                     memtable.process(entry_ref.clone())?;
                 }
-                // Entry::Delete: mark seen but drop — tombstone served its purpose
+                // Entry::Delete: mark seen but drop, the tombstone served its purpose
             }
             if is_participant {
                 *entry = sstable.read_next_entry()?;
@@ -879,7 +879,7 @@ impl From<MutatingCommand> for Frame {
     }
 }
 
-// Replay reuses Frame::parse_one + Command::try_from — the same inbound
+// Replay reuses Frame::parse_one + Command::try_from, the same inbound
 // parse path the network uses. Cache-only execute() so replay doesn't
 // re-write the log it's reading.
 pub fn replay(&self, cache: &Cache) -> Result<(), AofError> {
@@ -914,7 +914,7 @@ fn snapshot(&self, cache: &Cache) -> Result<(), RepositoryError> {
         Snippet {
             title: "Pub/Sub Fan-Out",
             code: r#"// The push is built once, then the raw bytes are dropped into each
-// subscriber's mpsc — the same channel their WriteHalf already drains
+// subscriber's mpsc, the same channel their WriteHalf already drains
 // to the socket. No per-subscriber thread: the session writer IS the
 // subscriber output.
 let push = Reply::Array(vec![
@@ -998,7 +998,7 @@ let tensor: Tensor = Array4::from_shape_fn(
     |(_, c, y, x)| resized[(x as _, y as _)][c] as f32 / 255.0
 ).into();
 
-// Run inference — output: [1, 1, 17, 3] (17 keypoints × y,x,confidence)
+// Run inference. Output: [1, 1, 17, 3] (17 keypoints × y,x,confidence)
 let result = model.run(tvec!(tensor.into()))?;"#,
             description: "Three lines to load the model, then per-frame: crop to square, resize, normalize into a tensor, and run inference. tract handles the ONNX graph execution.",
         },
@@ -1074,7 +1074,7 @@ const CAPTURE: Project = Project {
         },
         Snippet {
             title: "Trait Extensions on Third-Party Types",
-            code: r#"// Identify trait on evdev::Device — capability-based heuristics
+            code: r#"// Identify trait on evdev::Device: capability-based heuristics
 impl Identify for Device {
     fn is_probably_keyboard(&self) -> bool {
         self.supported_events().contains(EventType::REPEAT)
@@ -1089,7 +1089,7 @@ impl Identify for Device {
     }
 }
 
-// IsSecret trait on evdev::InputEvent — secret key detection
+// IsSecret trait on evdev::InputEvent: secret key detection
 impl IsSecret for InputEvent {
     fn is_secret(&self) -> bool {
         matches!(self.destructure(),
