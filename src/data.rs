@@ -268,12 +268,12 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
 //     → BulkUpsertWithTx (single SQL statement)
 //       → SingleUpsertWithTx (card-by-card fallback)
 // One bad card never blocks the rest of the batch"#,
-            description: "Strict hex-arch would demand a separate DatabaseScryfallData DTO, but maintaining 88 fields on two types is untenable solo. Compromise: feature-gated #[cfg_attr(feature = \"zerver\", derive(sqlx::FromRow))] on the domain type. A constant feeds all SQL generation. Trait-based binding keeps the calling code clean. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching respects PostgreSQL's 65k parameter limit, and automatic fallback to card-by-card ensures one bad record never blocks 100k others.",
+            description: "Strict hex-arch would demand a separate DatabaseScryfallData DTO, but maintaining 88 fields on two types is untenable solo. Compromise: feature-gated #[cfg_attr(feature = \"zerver\", derive(sqlx::FromRow))] on the domain type. A constant feeds all SQL generation. Trait-based binding keeps the calling code clean. Five upsert strategies compose via traits: delta detection skips unchanged cards, batching respects PostgreSQL's 65k parameter limit, and automatic fallback to card-by-card ensures one bad record never blocks 100k others.",
         },
     ],
     obstacles: &[
         "ScryfallData has 88 fields. Strict hexagonal architecture would demand a separate DatabaseScryfallData DTO, but maintaining 88 fields across two types plus mapping between them is untenable solo. Pragmatic compromise: feature-gated derive on the domain type, a single constant feeding all SQL generation, and trait-based binding automation. Bend the rule once, automate everything around it",
-        "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits — delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
+        "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits: delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
         "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, archetype tags, maybeboard/sideboard, import/export, and 14 themes. Security audit complete; nightly backups.",
@@ -909,7 +909,7 @@ fn snapshot(&self, cache: &Cache) -> Result<(), RepositoryError> {
     self.aof.clear()?;             // truncate log
     Ok(())
 }"#,
-            description: "The AOF being byte-for-byte the wire protocol means replay reuses the inbound parse path — no separate decoder, no version-skew between disk and network format. Snapshots use temp-file-then-rename for atomicity. Checkpointing holds the cache lock across snapshot+clear; the order (snapshot first, clear second) means a crash between them only causes harmless re-application of already-durable commands.",
+            description: "The AOF being byte-for-byte the wire protocol means replay reuses the inbound parse path: no separate decoder, no version-skew between disk and network format. Snapshots use temp-file-then-rename for atomicity. Checkpointing holds the cache lock across snapshot+clear; the order (snapshot first, clear second) means a crash between them only causes harmless re-application of already-durable commands.",
         },
         Snippet {
             title: "Pub/Sub Fan-Out",
