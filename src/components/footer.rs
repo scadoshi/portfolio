@@ -35,7 +35,7 @@ pub fn Footer() -> Element {
                 }
                 " is unofficial "
                 span { class: "footer-built-strong", "JavaScript-Free Content" }
-                ", hand-written in Rust and compiled to WebAssembly via Dioxus. Not approved or endorsed by the ECMAScript committee. No JavaScript was shipped, bundled, or harmed in the making of this page."
+                ", hand-written in Rust and compiled to WebAssembly via Dioxus. Not approved or endorsed by the ECMAScript committee. No JavaScript was written in the making of this page; one JS library visits on a day pass to color the code snippets, and it is escorted at all times."
             }
         }
     }

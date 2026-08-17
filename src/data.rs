@@ -89,14 +89,14 @@ pub fn find_side_quest(slug: &str) -> Option<&'static Project> {
 const ZWIPE: Project = Project {
     name: "Zwipe",
     slug: "zwipe",
-    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 110k+ cards.",
+    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 110k+ printings.",
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
     summary: "Mobile-first Magic: The Gathering deck builder with swipe-based navigation.",
     card_bullets: &[
         "Native iOS + Android from one Dioxus codebase",
-        "Axum + PostgreSQL backend, 110k+ cards, materialized search",
-        "5 workspace crates, 525 tests, zero unwrap in production code",
+        "Axum + PostgreSQL backend, 110k+ printings, materialized search",
+        "5 workspace crates, 600+ tests, unwrap banned by CI",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-components (shared UI components), zite (static marketing site). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
@@ -177,49 +177,35 @@ const ZWIPE: Project = Project {
     ],
     approach: &[
         "Rust on mobile via Dioxus: one Rust codebase compiles to a native mobile app, no JS bridge, no separate frontend repo",
-        "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardFilter type drives SQL queries server-side and in-memory filtering on the device, via extension traits on Vec<Card>",
-        "Production-grade auth: Argon2id with NIST-compliant 170+ pattern blocklist, rotating refresh tokens (replay-safe via delete-on-use), Password type consumed on hash so plaintext can't leak",
+        "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardCriteria predicate core (~50 fields) drives the server's SQL search and in-memory filtering on the device, both built from a single CardQueryBuilder so the filter UI can't drift from the API",
+        "Production-grade auth: Argon2id hashing, a structural password policy (length, character classes, unique-character and repeat limits), rotating refresh tokens (single-use, deleted on rotation), Password type consumed on hash so plaintext can't leak",
         "SQLx at scale: five-strategy upsert chain handles batching, PartialEq delta detection, and per-row fallback; 88-column Scryfall sync respects PostgreSQL's 65k parameter limit (~327 cards per batch)",
-        "Production posture: .unwrap, .expect, panic!, todo!, dbg!, print! all denied at compile time. 22 enforced Clippy rules, 525 tests, security audit complete, nightly Cloudflare R2 backups",
+        "Production posture: 22 clippy rules (unwrap, expect, panic, todo, dbg, print among them) promoted to errors in CI. 600+ tests, security audit complete, nightly PostgreSQL backups to Cloudflare R2",
     ],
     snippets: &[
         Snippet {
-            title: "Trait-Based Card Filtering & Grouping",
-            code: r#"// Extension traits on Vec<Card>: no wrapper types, just import the trait
-pub trait FilterCards {
-    fn filter_by(self, filter: &CardFilter) -> Vec<Card>;
-}
-pub trait GroupCards {
-    fn group_by(self, option: GroupByOption) -> Vec<CardGroup>;
-}
+            title: "One Search Predicate, Two Front Doors",
+            code: r#"// CardCriteria: the shared predicate core (~50 fields) with matches()
+// CardQuery:    criteria + Limit + offset + sort, the server's SQL path
+// Cards:        a Vec<Card> already in hand, criteria only, no pagination
 
-impl FilterCards for Vec<Card> {
-    fn filter_by(self, filter: &CardFilter) -> Vec<Card> {
-        let mut cards: Vec<Card> = self.into_iter()
-            .filter(|card| { /* 20+ criteria: text, color, CMC, power,
-                               rarity, type, set, artist, legality... */ })
-            .collect();
-        // Sort by enum dispatch (name, CMC, rarity, random, etc.)
-        // Paginate: .skip(offset).take(limit)
-        cards
-    }
-}
+let builder = CardQueryBuilder::with_name_contains("dragon");
 
-impl GroupCards for Vec<Card> {
-    fn group_by(self, option: GroupByOption) -> Vec<CardGroup> {
-        let labels = match option {
-            GroupByOption::CardType => vec!["lands", "creatures", ...],
-            GroupByOption::Cmc      => vec!["0", "1", "2", ... "6+"],
-            GroupByOption::Color    => vec!["white", "blue", ... "colorless"],
-        };
-        let mut buckets = vec![Vec::new(); labels.len()];
-        for card in self { buckets[classify(&card, option)].push(card); }
-        // zip labels + buckets, drop empties
-    }
-}
+// Server path: a bounded query POSTed to the API, compiled to SQL
+// against the latest_cards materialized view
+let query: CardQuery = builder.build()?;
 
-// Usage: deck_cards.filter_by(&filter).group_by(GroupByOption::CardType)"#,
-            description: "Same CardFilter drives both the SQL adapter (server-side) and these in-memory traits (client-side). The frontend can filter a local deck without a round-trip using the exact same criteria. Extension traits mean Vec<Card> gains these methods just by importing the trait.",
+// Device path: filter a loaded deck locally with the same predicate,
+// no round-trip
+let shown: Vec<Card> = Cards::from(deck_cards)
+    .matching(&builder.build_criteria()?)
+    .sorted(CardSortKey::Cmc, true)
+    .into();
+
+// Grouping stays an extension trait on Vec<Card>: fixed-order labelled
+// buckets, and CardRole grouping is multi-bucket (one card, many roles)
+let groups = deck_cards.group_by(GroupByOption::CardType);"#,
+            description: "One CardCriteria predicate core serves both sides. The server wraps it in a CardQuery with bounded pagination and compiles it to SQL; the app applies the same criteria in memory through the Cards wrapper, which by construction cannot express a limit (pagination is a query concern). One builder emits either shape, so the filter UI can never drift from the API.",
         },
         Snippet {
             title: "Swipe Gesture Engine",
@@ -265,7 +251,7 @@ rsx! { div {
     onmousedown, onmousemove, onmouseup,
     { children }
 } }"#,
-            description: "10 files, zero library dependencies. OnSwipe defines the gesture logic once; OnTouch and OnMouse adapt it to platform events. Axis locks on first movement so diagonal drags don't fire both directions. Velocity tracking (pixels/ms between consecutive points) lets quick flicks register even below the distance threshold. The Swipeable component renders a reactive CSS transform that follows the user's finger in real time.",
+            description: "11 files, zero library dependencies. OnSwipe defines the gesture logic once; OnTouch and OnMouse adapt it to platform events. Axis locks on first movement so diagonal drags don't fire both directions. Velocity tracking (pixels/ms between consecutive points) lets quick flicks register even below the distance threshold. The Swipeable component renders a reactive CSS transform that follows the user's finger in real time.",
         },
         Snippet {
             title: "88-Column Upsert Automation",
@@ -301,19 +287,22 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
 // Upsert strategy chain, each layer adding a capability:
 // BatchDeltaUpsertWithTx (chunk + skip unchanged)
 //   → BulkDeltaUpsertWithTx (PartialEq diff against DB)
-//     → BulkUpsertWithTx (single SQL statement)
-//       → SingleUpsertWithTx (card-by-card fallback)
+//     → BatchUpsertWithTx (chunk within the param limit,
+//         card-by-card fallback on a failed chunk)
+//       → BulkUpsertWithTx (one SQL statement per chunk)
+//         → SingleUpsertWithTx (the fallback unit)
 // One bad card never blocks the rest of the batch"#,
-            description: "Strict hex-arch would demand a separate DatabaseScryfallData DTO, but maintaining 88 fields on two types is untenable solo. Compromise: feature-gated #[cfg_attr(feature = \"zerver\", derive(sqlx::FromRow))] on the domain type. A constant feeds all SQL generation. Trait-based binding keeps the calling code clean. Five upsert strategies compose via traits: delta detection skips unchanged cards, batching respects PostgreSQL's 65k parameter limit, and automatic fallback to card-by-card ensures one bad record never blocks 100k others.",
+            description: "The 88-field constant is the single source of truth for all SQL generation, and trait-based binding keeps the calling code clean. On the read side a DatabaseScryfallData DTO in the outbound layer (primitives and Json wrappers sqlx maps natively) converts into the domain type, keeping the hexagonal boundary honest. Five upsert strategies compose via traits: delta detection skips unchanged cards, batching respects PostgreSQL's 65k parameter limit, and automatic fallback to card-by-card ensures one bad record never blocks 100k others.",
         },
     ],
     obstacles: &[
-        "ScryfallData has 88 fields. Strict hexagonal architecture would demand a separate DatabaseScryfallData DTO, but maintaining 88 fields across two types plus mapping between them is untenable solo. Pragmatic compromise: feature-gated derive on the domain type, a single constant feeding all SQL generation, and trait-based binding automation. Bend the rule once, automate everything around it",
+        "ScryfallData has 88 fields, and strict hexagonal architecture demands a separate database DTO. Maintaining 88 fields across two types felt untenable solo, so the domain type first carried a feature-gated sqlx derive instead: bend the rule once, automate everything around it. The bend eventually got unbent. A real DatabaseScryfallData now lives in the outbound layer (primitives and Json wrappers sqlx maps natively) and converts into the domain type, with the 88-field constant still feeding all SQL generation",
         "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits: delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
-        "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 10 files with a trait hierarchy rather than pulling in a gesture library",
+        "Card search at 110k+ printings returned duplicates: the same card exists once per printing, and substring search over the raw table crawled. The latest_cards materialized view pre-deduplicates to one row per name (English preferred) with trigram GIN indexes so ILIKE search hits an index; the zervice sync refreshes the views nightly",
+        "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 11 files with a trait hierarchy rather than pulling in a gesture library",
     ],
-    progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, archetype tags, maybeboard/sideboard, import/export, and 14 themes. Security audit complete; nightly backups.",
-    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. ~66,000 lines across five crates, 525 tests, zero unwrap.",
+    progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
+    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. ~100,000 lines across five crates, 600+ tests, unwrap banned by CI.",
     status: ProjectStatus::Doing,
 };
 
