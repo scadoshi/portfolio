@@ -280,11 +280,12 @@ a.panel-action:visited {
     }
 }
 
-/* Matches zite's nav Z exactly: 0.35rem fuses the block-glyph slivers into
-   solid bars, and the 1px hover spread reads stronger at this size. */
+/* zite's nav Z treatment, sized up a notch: small enough that the
+   block-glyph slivers fuse into solid bars, large enough that the S (11
+   chars to the Z's 14) doesn't read undersized in the bar. */
 .nav-logo {
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.35rem;
+    font-size: 0.4rem;
     line-height: 0.9;
     white-space: pre;
     display: block;
