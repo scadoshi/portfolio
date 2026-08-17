@@ -117,6 +117,27 @@ pub fn Home() -> Element {
                             class: "panel-action",
                             "Contribute"
                         }
+                        a {
+                            href: crate::pages::contribute::STRIPE_URL,
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                            class: "panel-action",
+                            "Stripe \u{2197}"
+                        }
+                        a {
+                            href: crate::pages::contribute::BMC_URL,
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                            class: "panel-action",
+                            "Buy Me a Coffee \u{2197}"
+                        }
+                        a {
+                            href: crate::pages::contribute::GITHUB_SPONSORS_URL,
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                            class: "panel-action",
+                            "GitHub Sponsors \u{2197}"
+                        }
                     },
                     p { class: "card-summary",
                         "I build open-source Rust tools. If my work has been useful, consider supporting continued development."

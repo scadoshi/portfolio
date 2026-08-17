@@ -3,9 +3,10 @@ use zwipe_components::Panel;
 
 use crate::components::page_meta::PageMeta;
 
-const STRIPE_URL: &str = "https://buy.stripe.com/5kQdRa5tUeNm9pd8BY9Zm00";
-const BMC_URL: &str = "https://buymeacoffee.com/scadoshi";
-const GITHUB_SPONSORS_URL: &str = "https://github.com/sponsors/scadoshi";
+// Public so the home page's contribute teaser can link the channels directly.
+pub const STRIPE_URL: &str = "https://buy.stripe.com/5kQdRa5tUeNm9pd8BY9Zm00";
+pub const BMC_URL: &str = "https://buymeacoffee.com/scadoshi";
+pub const GITHUB_SPONSORS_URL: &str = "https://github.com/sponsors/scadoshi";
 
 #[component]
 pub fn Contribute() -> Element {
