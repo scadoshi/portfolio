@@ -54,7 +54,14 @@ fn main() {
                                 .unwrap()
                                 .join("public"),
                         )
-                        .clear_cache(false),
+                        // Clear cached renders on startup: the incremental
+                        // renderer caches every visited path (404s included)
+                        // as HTML on disk, and stale copies from before a
+                        // redesign would otherwise keep being served in dev.
+                        // Only per-route .html files are cleared; assets and
+                        // the shell are untouched, and SSG re-renders every
+                        // route after the clear.
+                        .clear_cache(true),
                 )
         })
         .launch(App);
