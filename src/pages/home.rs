@@ -59,8 +59,10 @@ pub fn Home() -> Element {
         }
         section { class: "hero content-enter",
             h1 { class: "logo", "aria-label": "Scotty Fermo", "{LOGO_ASCII}" }
+            // Sizing wrapper only; the card itself is the shared Panel.
             div { class: "hero-panel",
-                p { class: "hero-tagline",
+                Panel {
+                    p { class: "hero-tagline",
                     "Production "
                     span { class: "hl-warning", "Rust" }
                     " for the work that has to actually run: "
@@ -68,8 +70,9 @@ pub fn Home() -> Element {
                     ", "
                     span { class: "hl-error", "internal tooling" }
                     ", and the "
-                    span { class: "hl-tertiary", "storage engines" }
-                    " underneath."
+                        span { class: "hl-tertiary", "storage engines" }
+                        " underneath."
+                    }
                 }
             }
         }

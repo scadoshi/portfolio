@@ -14,11 +14,10 @@ pub fn SideQuests() -> Element {
         }
         div { class: "side-quests content-enter",
             Panel {
-                section { class: "page-header",
-                    h1 { "Side Quests" }
-                    p { class: "page-subtitle",
-                        "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
-                    }
+                eyebrow: "Explore",
+                title: "Side Quests",
+                p { class: "card-summary",
+                    "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
                 }
             }
             div { class: "projects-grid",

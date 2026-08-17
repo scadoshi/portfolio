@@ -50,12 +50,6 @@ impl ProjectStatus {
             Self::Doing => "Doing",
         }
     }
-    pub fn css_class(&self) -> &'static str {
-        match self {
-            Self::Done => "status-done",
-            Self::Doing => "status-doing",
-        }
-    }
     /// Maps to the shared status pill; the label ("Done"/"Doing") is passed
     /// separately so the pill keeps our wording, not the component's default.
     pub fn banner_status(&self) -> zwipe_components::BannerStatus {

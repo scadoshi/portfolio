@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use zwipe_components::Panel;
 
 use crate::data::{MediaItem, MediaKind};
 
@@ -12,11 +13,13 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
     let total = items.len();
     let current = &items[index()];
 
+    // Same Panel grammar as zite's demo gallery: eyebrow + title head, the
+    // media body, then a shared rule above the caption/counter footer.
     rsx! {
         figure { class: "project-gallery",
-            div { class: "gallery-frame",
-                div { class: "gallery-header", "Demo" }
-                hr { class: "gallery-rule" }
+            Panel {
+                eyebrow: "Demo",
+                title: "Watch it work",
                 div { class: "gallery-body",
                     match current.kind {
                         MediaKind::Image => rsx! {
@@ -64,7 +67,7 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                         }
                     }
                 }
-                hr { class: "gallery-rule" }
+                hr { class: "panel-rule" }
                 div { class: "gallery-footer",
                     if let Some(caption) = current.caption {
                         figcaption { class: "gallery-caption", "{caption}" }

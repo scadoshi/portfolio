@@ -21,8 +21,13 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
         }
         div { class: "project-detail content-enter",
             // Header panel: identity, headline, and tags in one card so no
-            // text sits directly on the grid.
+            // text sits directly on the grid. Eyebrow/status/title all come
+            // from the shared Panel grammar.
             Panel {
+                eyebrow: project.category.to_string(),
+                status: project.status.banner_status(),
+                status_label: project.status.label().to_string(),
+                title: project.name.to_string(),
                 actions: rsx! {
                     a {
                         href: "{project.repo_url}",
@@ -41,11 +46,6 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                         }
                     }
                 },
-                span { class: "project-category-tag",
-                    "{project.category}"
-                    span { class: "status-tag {project.status.css_class()}", "{project.status.label()}" }
-                }
-                h1 { class: "project-name", "{project.name}" }
                 p { class: "project-headline", "{project.headline}" }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",
@@ -59,8 +59,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
             }
 
             Panel {
+                eyebrow: "Objective",
+                title: "The goal",
                 section { class: "project-section",
-                    h2 { "Objective" }
                     p { LinkedText { text: project.objective.to_string() } }
                 }
             }
@@ -73,8 +74,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 }
                 div { class: "band-col",
                     Panel {
+                        eyebrow: "Approach",
+                        title: "How it's built",
                         section { class: "project-section",
-                            h2 { "Approach" }
                             ul {
                                 for point in project.approach {
                                     li { LinkedText { text: point.to_string() } }
@@ -88,8 +90,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
             // Code wants the full column width, so implementation stays a
             // single wide panel.
             Panel {
+                eyebrow: "Implementation",
+                title: "The code up close",
                 section { class: "project-section",
-                    h2 { "Implementation" }
                     for snippet in project.snippets {
                         CodeBlock {
                             key: "{project.slug}-{snippet.title}",
@@ -103,8 +106,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
 
             div { class: "detail-band",
                 Panel {
+                    eyebrow: "Obstacles",
+                    title: "What fought back",
                     section { class: "project-section",
-                        h2 { "Obstacles" }
                         ul {
                             for obstacle in project.obstacles {
                                 li { LinkedText { text: obstacle.to_string() } }
@@ -113,8 +117,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                     }
                 }
                 Panel {
+                    eyebrow: "Progress & Impact",
+                    title: "Where it stands",
                     section { class: "project-section",
-                        h2 { "Progress & Impact" }
                         p { LinkedText { text: project.progress.to_string() } }
                         p { class: "impact-statement", "{project.impact}" }
                     }

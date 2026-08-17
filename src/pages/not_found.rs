@@ -7,7 +7,6 @@
 //! nav is right there for anyone who wants to explore.
 
 use dioxus::prelude::*;
-use zwipe_components::Panel;
 
 use crate::components::page_meta::PageMeta;
 
@@ -21,14 +20,16 @@ pub fn NotFound(segments: Vec<String>) -> Element {
         }
         // Keep dead paths out of search results.
         document::Meta { name: "robots", content: "noindex" }
-        div { class: "side-quests content-enter",
-            Panel {
-                section { class: "page-header",
-                    h1 { "Page not found" }
-                    p { class: "page-subtitle",
-                        "Nothing lives at this address. It may have moved with a site update, or the link may be incomplete."
-                    }
-                }
+        // Formatted like zite's dead-link state (inform-and-stop alert):
+        // deliberately a dead end, the nav is right there for anyone who
+        // wants to explore.
+        div { class: "form-page content-enter",
+            span { class: "sd-alert-title", "Page not found" }
+            hr {
+                style: "border: none; border-top: 1px solid var(--border-secondary); margin: 0.75rem -2rem;",
+            }
+            p { class: "subtitle", style: "text-align: center; margin-bottom: 0;",
+                "Nothing lives at this address. It may have moved with a site update, or the link may be incomplete."
             }
         }
     }

@@ -321,16 +321,12 @@ a.panel-action:visited {
     padding: 3rem 1.5rem 0;
 }
 
+/* Sizing wrapper only — the card chrome comes from the shared Panel inside.
+   Width matches zite's hero-card: the band (74rem) minus its 1.5rem side
+   padding, so the hero's edges align with the band below. */
 .hero-panel {
-    /* Matches zite's hero-card: the band width (74rem) minus its 1.5rem side
-       padding, so the hero's edges align with the band below. */
     max-width: 71rem;
     margin: 0 auto 1.5rem;
-    padding: 2rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 1rem;
-    box-shadow: var(--shadow-md);
 }
 
 .hero-tagline {
@@ -525,25 +521,6 @@ a.panel-action:visited {
     gap: 1.5rem;
 }
 
-.project-category-tag {
-    font-size: 0.75rem;
-    color: var(--border-success);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-/* The shared .status-tag spaces via flex gap; the detail header sets it inline,
-   so restore a small gap here. */
-.project-category-tag .status-tag {
-    margin-left: 0.5rem;
-}
-
-.project-name {
-    font-size: 2rem;
-    color: var(--text-primary);
-    margin: 0.5rem 0;
-}
-
 .project-headline {
     font-size: 1rem;
     color: var(--text-muted);
@@ -553,16 +530,6 @@ a.panel-action:visited {
 /* Sections now live inside panels; the page/band gap does the spacing. */
 .project-section {
     margin-bottom: 0;
-}
-
-.project-section h2 {
-    font-size: 1.3rem;
-    color: var(--color-warning);
-    /* Bleed the underline to the panel edges (panel-card pads 1.5rem), same
-       as the shared .panel-rule; the compensating padding keeps the text put. */
-    margin: 0 -1.5rem 1rem;
-    padding: 0 1.5rem 0.25rem;
-    border-bottom: 1px solid var(--border-muted);
 }
 
 .project-section p {
@@ -605,7 +572,7 @@ a.panel-action:visited {
     display: flex;
 }
 
-.band-col > .project-gallery .gallery-frame {
+.band-col > .project-gallery > .panel-card {
     flex: 1;
     width: 100%;
 }
@@ -617,31 +584,6 @@ a.panel-action:visited {
 
 .band-col > .project-gallery .gallery-image {
     max-height: 34rem;
-}
-
-.gallery-frame {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-secondary);
-    border-radius: 0.6rem;
-    box-shadow: var(--shadow-md);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 1.25rem;
-}
-
-.gallery-header {
-    text-align: center;
-    color: var(--accent-primary);
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-}
-
-.gallery-rule {
-    border: none;
-    border-top: 1px solid var(--border-secondary);
-    margin: 0.75rem -1.25rem;
 }
 
 .gallery-body {
@@ -822,6 +764,47 @@ a.panel-action:visited {
     background: var(--bg-primary);
 }
 
+/* === Not Found === */
+
+/* zite's form-page card and dead-end alert, copied verbatim for the 404. */
+.form-page {
+    max-width: 25rem;
+    /* bottom margin auto absorbs the free space in the flex column, pinning a
+       following footer to the bottom without stretching this card. */
+    margin: 3.75rem auto auto;
+    padding: 2rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-md);
+}
+
+.form-page .subtitle {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+}
+
+/* Dead-end alert title: red, centered, pulsing. */
+.sd-alert-title {
+    display: block;
+    color: var(--color-error);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    animation: sd-alert-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes sd-alert-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.45;
+    }
+}
+
 /* === Side Quests === */
 
 .side-quests {
@@ -831,21 +814,6 @@ a.panel-action:visited {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-}
-
-.page-header {
-    margin-bottom: 0;
-}
-
-.page-header h1 {
-    font-size: 2rem;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-    color: var(--text-muted);
-    font-size: 0.95rem;
 }
 
 .quest-section {
@@ -970,9 +938,5 @@ a.panel-action:visited {
     .quest-header {
         flex-direction: column;
         gap: 0.25rem;
-    }
-
-    .project-name {
-        font-size: 1.5rem;
     }
 }

@@ -18,11 +18,10 @@ pub fn Contribute() -> Element {
         }
         div { class: "side-quests content-enter",
             Panel {
-                section { class: "page-header",
-                    h1 { "Contribute" }
-                    p { class: "page-subtitle",
-                        "I build open-source Rust tools. If my work has been useful, consider supporting continued development."
-                    }
+                eyebrow: "Support",
+                title: "Contribute",
+                p { class: "card-summary",
+                    "I build open-source Rust tools. If my work has been useful, consider supporting continued development."
                 }
             }
             div { class: "projects-grid",
