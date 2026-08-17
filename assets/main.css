@@ -280,12 +280,16 @@ a.panel-action:visited {
     }
 }
 
+/* Matches zite's nav Z exactly: 0.35rem fuses the block-glyph slivers into
+   solid bars, and the 1px hover spread reads stronger at this size. */
 .nav-logo {
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.45rem;
+    font-size: 0.35rem;
     line-height: 0.9;
     white-space: pre;
+    display: block;
     margin: 0;
+    letter-spacing: 0;
     color: var(--text-primary);
     transition: letter-spacing 0.15s;
 }
@@ -293,7 +297,7 @@ a.panel-action:visited {
 @media (hover: hover) {
     .nav-brand:hover .nav-logo {
         letter-spacing: 1px;
-        color: var(--border-warning);
+        color: var(--accent-primary);
     }
 }
 
