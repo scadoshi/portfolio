@@ -94,7 +94,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    max-width: 420px;
+    /* Viewport-aware cap (mirrored upstream in zwipe-components): 420px on
+       desktop, viewport minus 3rem on phones so the stack keeps a 1.5rem
+       right margin instead of running long banner copy off the edge. */
+    max-width: min(420px, calc(100vw - 3rem));
     transition: transform 0.25s ease;
 }
 
