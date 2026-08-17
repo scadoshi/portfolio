@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use zwipe_components::Panel;
 
 use crate::{
     components::{
@@ -19,20 +20,24 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
             path,
         }
         div { class: "project-detail content-enter",
-            section { class: "project-header",
+            // Header panel: identity, headline, and tags in one card so no
+            // text sits directly on the grid.
+            Panel {
+                actions: rsx! {
+                    a {
+                        href: "{project.repo_url}",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        class: "panel-action",
+                        "View on GitHub \u{2197}"
+                    }
+                },
                 span { class: "project-category-tag",
                     "{project.category}"
                     span { class: "status-tag {project.status.css_class()}", "{project.status.label()}" }
                 }
                 h1 { class: "project-name", "{project.name}" }
                 p { class: "project-headline", "{project.headline}" }
-                a {
-                    href: "{project.repo_url}",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    class: "panel-action",
-                    "View on GitHub \u{2197}"
-                }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",
                         for tag in project.tags {
@@ -42,46 +47,67 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 }
             }
 
-            section { class: "project-section",
-                h2 { "Objective" }
-                p { LinkedText { text: project.objective.to_string() } }
-                ProjectGallery { items: project.media }
+            Panel {
+                section { class: "project-section",
+                    h2 { "Objective" }
+                    p { LinkedText { text: project.objective.to_string() } }
+                }
             }
 
-            section { class: "project-section",
-                h2 { "Approach" }
-                ul {
-                    for point in project.approach {
-                        li { LinkedText { text: point.to_string() } }
+            // Lateral band: the demo gallery keeps one column while the
+            // approach panel fills what would be its dead side-space.
+            div { class: "detail-band",
+                div { class: "band-col",
+                    ProjectGallery { items: project.media }
+                }
+                div { class: "band-col",
+                    Panel {
+                        section { class: "project-section",
+                            h2 { "Approach" }
+                            ul {
+                                for point in project.approach {
+                                    li { LinkedText { text: point.to_string() } }
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            section { class: "project-section",
-                h2 { "Implementation" }
-                for snippet in project.snippets {
-                    CodeBlock {
-                        key: "{project.slug}-{snippet.title}",
-                        title: snippet.title.to_string(),
-                        code: snippet.code.to_string(),
-                        description: snippet.description.to_string(),
+            // Code wants the full column width, so implementation stays a
+            // single wide panel.
+            Panel {
+                section { class: "project-section",
+                    h2 { "Implementation" }
+                    for snippet in project.snippets {
+                        CodeBlock {
+                            key: "{project.slug}-{snippet.title}",
+                            title: snippet.title.to_string(),
+                            code: snippet.code.to_string(),
+                            description: snippet.description.to_string(),
+                        }
                     }
                 }
             }
 
-            section { class: "project-section",
-                h2 { "Obstacles" }
-                ul {
-                    for obstacle in project.obstacles {
-                        li { LinkedText { text: obstacle.to_string() } }
+            div { class: "detail-band",
+                Panel {
+                    section { class: "project-section",
+                        h2 { "Obstacles" }
+                        ul {
+                            for obstacle in project.obstacles {
+                                li { LinkedText { text: obstacle.to_string() } }
+                            }
+                        }
                     }
                 }
-            }
-
-            section { class: "project-section",
-                h2 { "Progress & Impact" }
-                p { LinkedText { text: project.progress.to_string() } }
-                p { class: "impact-statement", "{project.impact}" }
+                Panel {
+                    section { class: "project-section",
+                        h2 { "Progress & Impact" }
+                        p { LinkedText { text: project.progress.to_string() } }
+                        p { class: "impact-statement", "{project.impact}" }
+                    }
+                }
             }
         }
     }

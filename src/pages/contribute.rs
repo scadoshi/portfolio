@@ -16,10 +16,12 @@ pub fn Contribute() -> Element {
             path: "/contribute",
         }
         div { class: "side-quests content-enter",
-            section { class: "page-header",
-                h1 { "Contribute" }
-                p { class: "page-subtitle",
-                    "I build open-source Rust tools. If my work has been useful, consider supporting continued development."
+            Panel {
+                section { class: "page-header",
+                    h1 { "Contribute" }
+                    p { class: "page-subtitle",
+                        "I build open-source Rust tools. If my work has been useful, consider supporting continued development."
+                    }
                 }
             }
             div { class: "projects-grid",

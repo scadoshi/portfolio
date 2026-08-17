@@ -323,39 +323,63 @@ a:visited {
     color: var(--text-primary);
 }
 
-/* === About === */
+/* === Lateral bands === */
 
-.about {
+/* Two-column bands, zite-style: panel stacks fill each other's dead
+   side-space instead of renting another screen below. Stack on narrow
+   viewports. */
+.home-band,
+.detail-band {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.home-band {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 2.5rem 2rem;
-    text-align: left;
+    padding: 0 2rem 3rem;
+}
+
+.band-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Panels in a column grow from their content to absorb the band's extra
+   height, so the two sides of a band bottom-align without any one panel
+   ballooning. */
+.band-col > .panel-card {
+    flex: 1 1 auto;
+}
+
+@media (max-width: 56rem) {
+    .home-band,
+    .detail-band {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Headings kept for document outline while the panel eyebrows do the
+   visible labeling. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.about-text {
     color: var(--text-muted);
     font-size: 0.95rem;
-}
-
-.about-subtitle {
-    color: var(--color-warning);
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-primary);
-}
-
-/* === Projects Section === */
-
-.projects-section {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 3rem 2rem;
-}
-
-.section-title {
-    font-size: 1.4rem;
-    color: var(--color-warning);
-    margin-bottom: 2rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-primary);
+    line-height: 1.6;
 }
 
 /* === Project Cards === */
@@ -412,13 +436,12 @@ a:visited {
 /* === Project Detail === */
 
 .project-detail {
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 2.5rem 2rem;
-}
-
-.project-header {
-    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .project-category-tag {
@@ -446,8 +469,9 @@ a:visited {
     margin-bottom: 1rem;
 }
 
+/* Sections now live inside panels; the page/band gap does the spacing. */
 .project-section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 0;
 }
 
 .project-section h2 {
@@ -485,6 +509,31 @@ a:visited {
     margin: 1.5rem auto 0;
     padding: 0;
     width: min(100%, 56rem);
+}
+
+/* Inside a band column the gallery is the column: full width, no outer
+   margin, and its frame stretches to bottom-align with the sibling column.
+   The body gives up its viewport-based floor and takes the height the band
+   hands it; the media cap keeps portrait demo videos from ballooning. */
+.band-col > .project-gallery {
+    margin: 0;
+    width: 100%;
+    flex: 1;
+    display: flex;
+}
+
+.band-col > .project-gallery .gallery-frame {
+    flex: 1;
+    width: 100%;
+}
+
+.band-col > .project-gallery .gallery-body {
+    min-height: 20rem;
+    flex: 1;
+}
+
+.band-col > .project-gallery .gallery-image {
+    max-height: 34rem;
 }
 
 .gallery-frame {
@@ -696,10 +745,13 @@ a:visited {
     max-width: 800px;
     margin: 0 auto;
     padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .page-header {
-    margin-bottom: 3rem;
+    margin-bottom: 0;
 }
 
 .page-header h1 {

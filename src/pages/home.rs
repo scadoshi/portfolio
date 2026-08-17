@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Banner, BannerStatus};
+use zwipe_components::{Banner, BannerStatus, Panel};
 
 use crate::{
     Route,
@@ -91,18 +91,58 @@ pub fn Home() -> Element {
                 }
             }
         }
-        section { class: "about",
-            p { class: "about-subtitle", "Software Engineer | Full-Stack | Rust" }
-            p {
-                "4+ years of building production systems and leading technical teams. "
-                "1+ years of intensive Rust development, from near-zero to shipping production systems. "
-                "At Halo Software I shipped CLI tools that turned multi-week manual migrations into one-command jobs. "
-                "On my own I built Zwipe (a full-stack mobile MTG deck builder, live on both app stores) and went deep on the storage engines and protocols underneath: an LSM-tree KV database and a Redis-compatible server, both hand-written."
+        // One lateral band below the hero, zite-style: the about/side-quest
+        // stack fills what used to be dead space beside the project cards, so
+        // nothing renders as bare text on the grid and the page stays compact.
+        section { class: "home-band",
+            div { class: "band-col",
+                h2 { class: "sr-only", "About" }
+                Panel {
+                    eyebrow: "About",
+                    title: "Software Engineer | Full-Stack | Rust",
+                    p { class: "about-text",
+                        "4+ years of building production systems and leading technical teams. "
+                        "1+ years of intensive Rust development, from near-zero to shipping production systems. "
+                        "At Halo Software I shipped CLI tools that turned multi-week manual migrations into one-command jobs. "
+                        "On my own I built Zwipe (a full-stack mobile MTG deck builder, live on both app stores) and went deep on the storage engines and protocols underneath: an LSM-tree KV database and a Redis-compatible server, both hand-written."
+                    }
+                }
+                Panel {
+                    eyebrow: "Explore",
+                    title: "Side Quests",
+                    actions: rsx! {
+                        Link {
+                            to: Route::SideQuests {},
+                            class: "panel-action",
+                            "View Side Quests"
+                        }
+                    },
+                    p { class: "card-summary",
+                        "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
+                    }
+                    ul { class: "card-bullets",
+                        for quest in data::side_quests() {
+                            li { "{quest.name}: {quest.category}" }
+                        }
+                    }
+                }
+                Panel {
+                    eyebrow: "Support",
+                    title: "Contribute",
+                    actions: rsx! {
+                        Link {
+                            to: Route::Contribute {},
+                            class: "panel-action",
+                            "Contribute"
+                        }
+                    },
+                    p { class: "card-summary",
+                        "I build open-source Rust tools. If my work has been useful, consider supporting continued development."
+                    }
+                }
             }
-        }
-        section { class: "projects-section",
-            h2 { class: "section-title", "Featured Projects" }
-            div { class: "projects-grid",
+            div { class: "band-col",
+                h2 { class: "sr-only", "Featured Projects" }
                 for project in projects {
                     ProjectCard {
                         name: project.name.to_string(),
