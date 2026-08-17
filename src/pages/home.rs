@@ -9,6 +9,22 @@ use crate::{
 
 const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
 
+/// JSON-LD `Person` markup emitted into `<head>` on the home page. Ties the
+/// domain to the GitHub/LinkedIn profiles for rich person results in search.
+const JSON_LD: &str = r#"{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Scotty Fermo",
+  "url": "https://scottyfermo.com",
+  "jobTitle": "Software Engineer",
+  "email": "mailto:scottyfermo@hotmail.com",
+  "sameAs": [
+    "https://github.com/scadoshi",
+    "https://www.linkedin.com/in/scotty-fermo-41a35b141/"
+  ],
+  "knowsAbout": ["Rust", "Full-stack development", "Mobile apps", "Storage engines", "Internal tooling"]
+}"#;
+
 #[component]
 pub fn Home() -> Element {
     let projects = data::featured_projects();
@@ -18,6 +34,7 @@ pub fn Home() -> Element {
             description: "Personal portfolio of Scotty Fermo. Production Rust systems, full-stack engineering, and side quests in protocol design, storage engines, and ML.",
             path: "/",
         }
+        document::Script { r#type: "application/ld+json", "{JSON_LD}" }
         div { class: "banner-stack",
             Banner {
                 category: "Announcement",
@@ -46,7 +63,7 @@ pub fn Home() -> Element {
                 p { class: "hero-tagline",
                     "Production "
                     span { class: "hero-tagline-accent", "Rust" }
-                    " for the work that has to actually run \u{2014} "
+                    " for the work that has to actually run: "
                     span { class: "hero-tagline-accent", "mobile apps" }
                     ", "
                     span { class: "hero-tagline-accent", "internal tooling" }
@@ -78,9 +95,9 @@ pub fn Home() -> Element {
             p { class: "about-subtitle", "Software Engineer | Full-Stack | Rust" }
             p {
                 "4+ years of building production systems and leading technical teams. "
-                "1+ years of intensive Rust development \u{2014} from near-zero to shipping production systems. "
+                "1+ years of intensive Rust development, from near-zero to shipping production systems. "
                 "At Halo Software I shipped CLI tools that turned multi-week manual migrations into one-command jobs. "
-                "On my own I built Zwipe (a full-stack mobile MTG deck builder, submitted to both app stores) and went deep on the storage engines and protocols underneath \u{2014} an LSM-tree KV database and a Redis-compatible server, both hand-written."
+                "On my own I built Zwipe (a full-stack mobile MTG deck builder, submitted to both app stores) and went deep on the storage engines and protocols underneath: an LSM-tree KV database and a Redis-compatible server, both hand-written."
             }
         }
         section { class: "projects-section",

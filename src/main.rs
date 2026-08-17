@@ -111,8 +111,11 @@ fn App() -> Element {
         document::Style { {THEMES_CSS} }
         document::Style { {COMPONENTS_CSS} }
         document::Stylesheet { href: MAIN_CSS }
-        document::Script { src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" }
-        document::Script { src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js" }
+        // Deferred so the CDN fetch doesn't block first paint; CodeBlock only
+        // calls hljs from a post-hydration effect (with a typeof guard), long
+        // after deferred scripts have executed.
+        document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" }
+        document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js" }
         Router::<Route> {}
     }
 }
