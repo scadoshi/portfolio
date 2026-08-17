@@ -98,17 +98,20 @@ pub fn Home() -> Element {
                             class: "panel-action",
                             "View Side Quests"
                         }
-                    },
-                    p { class: "card-summary",
-                        "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
-                    }
-                    div { class: "quest-links",
                         for quest in data::side_quests() {
                             Link {
                                 to: Route::SideQuestDetail { slug: quest.slug.to_string() },
                                 class: "panel-action",
                                 "{quest.name}"
                             }
+                        }
+                    },
+                    p { class: "card-summary",
+                        "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
+                    }
+                    ul { class: "card-bullets",
+                        for quest in data::side_quests() {
+                            li { "{quest.name}: {quest.category}" }
                         }
                     }
                 }

@@ -463,14 +463,6 @@ a.panel-action:visited {
     line-height: 1.6;
 }
 
-/* Per-quest pills in the home side-quest teaser body. */
-.quest-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
 /* === Project Cards === */
 
 .projects-grid {
