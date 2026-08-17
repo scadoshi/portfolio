@@ -71,7 +71,7 @@ pub fn featured_projects() -> &'static [Project] {
 }
 
 pub fn side_quests() -> &'static [Project] {
-    &[NIGHTHAWK, DIPROTODON, MARVIN, CAPTURE, UPSEE]
+    &[NIGHTHAWK, DIPROTODON, MARVIN, GOTCHA, UPSEE]
 }
 
 pub fn find_project(slug: &str) -> Option<&'static Project> {
@@ -1054,12 +1054,12 @@ match state {
     status: ProjectStatus::Done,
 };
 
-const CAPTURE: Project = Project {
-    name: "Capture",
-    slug: "capture",
+const GOTCHA: Project = Project {
+    name: "Gotcha",
+    slug: "gotcha",
     headline: "Cross-platform security camera. Input device grabbing, intruder photos, platform-specific I/O.",
     category: "Systems Programming",
-    repo_url: "https://github.com/scadoshi/capture",
+    repo_url: "https://github.com/scadoshi/gotcha",
     summary: "Cross-platform security camera. Grabs all input devices, snaps intruder photos, only releases with a secret key.",
     card_bullets: &[
         "Linux: raw evdev with nix::poll for selective device grabbing",
@@ -1071,7 +1071,7 @@ const CAPTURE: Project = Project {
     objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
     tags: &["rust", "cross-platform", "security", "camera"],
     media: &[MediaItem {
-        src: asset!("/assets/projects/capture/demo.mp4"),
+        src: asset!("/assets/projects/gotcha/demo.mp4"),
         alt: "Keyboard and mouse input triggering intruder captures",
         caption: Some("Keyboard and mouse input triggering intruder captures"),
         kind: MediaKind::Video,
