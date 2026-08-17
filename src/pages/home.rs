@@ -102,9 +102,13 @@ pub fn Home() -> Element {
                     p { class: "card-summary",
                         "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
                     }
-                    ul { class: "card-bullets",
+                    div { class: "quest-links",
                         for quest in data::side_quests() {
-                            li { "{quest.name}: {quest.category}" }
+                            Link {
+                                to: Route::SideQuestDetail { slug: quest.slug.to_string() },
+                                class: "panel-action",
+                                "{quest.name}"
+                            }
                         }
                     }
                 }

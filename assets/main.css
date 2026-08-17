@@ -191,9 +191,13 @@ a:visited {
 
 /* Outbound CTAs share the nav pill look (the .nav-links a rule in
    components.css), restated here for the standalone .store-link class, in
-   the warning color — same as zite's store buttons. */
+   the warning color — same as zite's store buttons. `:visited` rides in every
+   color declaration so the global `a:visited` rule (higher specificity than
+   a bare class) never recolors a visited pill. */
 .store-link,
-.nav-links a.store-link {
+.store-link:visited,
+.nav-links a.store-link,
+.nav-links a.store-link:visited {
     display: inline-flex;
     align-items: center;
     box-sizing: border-box;
@@ -215,9 +219,25 @@ a:visited {
 
 @media (hover: hover) {
     .store-link:hover,
-    .nav-links a.store-link:hover {
+    .store-link:visited:hover,
+    .nav-links a.store-link:hover,
+    .nav-links a.store-link:visited:hover {
         color: var(--color-warning);
         border-color: var(--color-warning);
+    }
+}
+
+/* Same visited-proofing for panel action pills (the shared class colors via
+   .panel-action only, which the global a:visited outranks). */
+a.panel-action,
+a.panel-action:visited {
+    color: var(--text-primary);
+}
+
+@media (hover: hover) {
+    a.panel-action:hover,
+    a.panel-action:visited:hover {
+        color: var(--accent-primary);
     }
 }
 
@@ -441,6 +461,14 @@ a:visited {
     color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.6;
+}
+
+/* Per-quest pills in the home side-quest teaser body. */
+.quest-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
 }
 
 /* === Project Cards === */
