@@ -29,9 +29,11 @@ const JSON_LD: &str = r#"{
 pub fn Home() -> Element {
     let projects = data::featured_projects();
     rsx! {
+        // Title lands at 60 chars with PageMeta's " | Scotty Fermo" suffix;
+        // description stays under the ~125-char social-preview cutoff.
         PageMeta {
-            title: "Scotty Fermo",
-            description: "Personal portfolio of Scotty Fermo. Production Rust systems, full-stack engineering, and side quests in protocol design, storage engines, and ML.",
+            title: "Software Engineer: Rust, Full-Stack & Systems",
+            description: "Personal portfolio of Scotty Fermo: production Rust systems, full-stack engineering, storage engines, and ML side quests.",
             path: "/",
         }
         document::Script { r#type: "application/ld+json", "{JSON_LD}" }
