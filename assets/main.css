@@ -302,28 +302,38 @@ a:visited {
     margin-top: 1rem;
 }
 
+/* Zwipe's chip formula: colored text on a faint same-hue tint with a soft
+   same-hue outline. The row cycles four accents via .tag-c0..3. */
 .tag {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-primary);
-    border-radius: 0.4rem;
+    border: 1px solid;
+    border-radius: 0.6rem;
     padding: 0.2rem 0.7rem;
     font-size: 0.78rem;
-    color: var(--text-subtle);
     letter-spacing: 0.02em;
-    transition:
-        border-color 0.15s,
-        color 0.15s;
 }
 
-.tag::before {
-    content: "#";
+.tag-c0 {
     color: var(--accent-primary);
-    margin-right: 0.15rem;
+    background-color: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--accent-primary) 40%, transparent);
 }
 
-.tag:hover {
-    border-color: var(--accent-primary);
-    color: var(--text-primary);
+.tag-c1 {
+    color: var(--color-warning);
+    background-color: color-mix(in srgb, var(--color-warning) 12%, transparent);
+    border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
+}
+
+.tag-c2 {
+    color: var(--accent-secondary);
+    background-color: color-mix(in srgb, var(--accent-secondary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--accent-secondary) 40%, transparent);
+}
+
+.tag-c3 {
+    color: var(--text-muted);
+    background-color: color-mix(in srgb, var(--text-muted) 12%, transparent);
+    border-color: color-mix(in srgb, var(--text-muted) 30%, transparent);
 }
 
 /* === Lateral bands === */

@@ -40,8 +40,10 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 p { class: "project-headline", "{project.headline}" }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",
-                        for tag in project.tags {
-                            span { class: "tag", "{tag}" }
+                        // Cycle the accent palette so the row reads like
+                        // zwipe's colored role chips.
+                        for (i, tag) in project.tags.iter().enumerate() {
+                            span { class: "tag tag-c{i % 4}", "{tag}" }
                         }
                     }
                 }
