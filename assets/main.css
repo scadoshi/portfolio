@@ -114,6 +114,16 @@ html {
     /* No elastic overscroll past the header or footer; the page stops
        dead at its vertical boundaries. */
     overscroll-behavior-y: none;
+    /* Native browser chrome (scrollbars, form controls) renders dark to
+       match the dark-by-default themes; no custom scrollbar styling. */
+    color-scheme: dark;
+}
+
+/* Light themes flip the native chrome to light. The viewport scrollbar is
+   painted at the root, so :has() reaches down to the wrapper's mode class
+   (same "-light" suffix match as the sink rule below). */
+html:has(.theme-wrapper[class$="-light"]) {
+    color-scheme: light;
 }
 
 body {
