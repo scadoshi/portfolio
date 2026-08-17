@@ -180,7 +180,7 @@ a:visited {
    this site sets its narrower column and keeps brand/logo/dropdown
    specifics below. */
 .nav-wrapper {
-    --nav-max-width: 760px;
+    --nav-max-width: none;
 }
 
 .nav-brand {
@@ -242,11 +242,14 @@ a:visited {
 
 .hero {
     text-align: center;
-    padding: 5rem 2rem 3rem;
+    /* zite's hero spacing: the wordmark sits close under the nav. */
+    padding: 3rem 1.5rem 3rem;
 }
 
 .hero-panel {
-    max-width: 1000px;
+    /* Matches zite's hero-card: the band width (74rem) minus its 1.5rem side
+       padding, so the hero's edges align with the band below. */
+    max-width: 71rem;
     margin: 0 auto 2rem;
     padding: 2rem;
     background: var(--bg-primary);
@@ -337,9 +340,10 @@ a:visited {
 }
 
 .home-band {
-    max-width: 1000px;
+    /* zite's .page column width. */
+    max-width: 74rem;
     margin: 0 auto;
-    padding: 0 2rem 3rem;
+    padding: 0 1.5rem 3rem;
 }
 
 .band-col {
@@ -436,9 +440,9 @@ a:visited {
 /* === Project Detail === */
 
 .project-detail {
-    max-width: 1100px;
+    max-width: 74rem;
     margin: 0 auto;
-    padding: 2.5rem 2rem;
+    padding: 2.5rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -742,9 +746,9 @@ a:visited {
 /* === Side Quests === */
 
 .side-quests {
-    max-width: 800px;
+    max-width: 74rem;
     margin: 0 auto;
-    padding: 2.5rem 2rem;
+    padding: 2.5rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
