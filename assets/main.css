@@ -183,6 +183,60 @@ a:visited {
     --nav-max-width: none;
 }
 
+.nav-stores-persistent {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Outbound CTAs share the nav pill look (the .nav-links a rule in
+   components.css), restated here for the standalone .store-link class, in
+   the warning color — same as zite's store buttons. */
+.store-link,
+.nav-links a.store-link {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 1.85rem;
+    text-decoration: none;
+    color: var(--color-warning);
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 0.4rem;
+    padding: 0 0.8rem;
+    font-family: inherit;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    transition:
+        color 0.15s,
+        border-color 0.15s;
+}
+
+@media (hover: hover) {
+    .store-link:hover,
+    .nav-links a.store-link:hover {
+        color: var(--color-warning);
+        border-color: var(--color-warning);
+    }
+}
+
+@media (max-width: 60rem) {
+    .nav-stores-persistent {
+        display: flex;
+        gap: 0.35rem;
+    }
+    .nav-stores-persistent .store-link {
+        height: 1.65rem;
+        padding: 0 0.55rem;
+        font-size: 0.7rem;
+    }
+    /* The persistent CTAs cover these at this width; hide the panel's. */
+    .nav-panel .nav-link-store {
+        display: none;
+    }
+}
+
 .nav-brand {
     font-weight: 700;
     font-size: 1.2rem;
@@ -264,33 +318,25 @@ a:visited {
     margin-bottom: 0;
 }
 
-.hero-tagline-accent {
-    color: var(--accent-primary);
+/* Keyword highlights cycle the palette, zite-tagline-style. */
+.hl-success {
+    color: var(--color-success);
+    font-weight: 600;
 }
 
-.hero-links {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
+.hl-error {
+    color: var(--color-error);
+    font-weight: 600;
 }
 
-.hero-links a {
-    color: var(--accent-primary);
-    text-decoration: none;
-    font-size: 0.85rem;
-    padding: 0.4rem 1rem;
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-primary);
-    border-radius: 0.4rem;
-    box-shadow: var(--shadow-sm);
-    transition:
-        border-color 0.2s,
-        color 0.2s;
+.hl-warning {
+    color: var(--color-warning);
+    font-weight: 600;
 }
 
-.hero-links a:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+.hl-tertiary {
+    color: var(--accent-tertiary);
+    font-weight: 600;
 }
 
 /* === Project Tags === */
@@ -889,12 +935,6 @@ a:visited {
 @media (max-width: 60rem) {
     .hero {
         padding: 3rem 1.5rem 2rem;
-    }
-
-    .hero-links {
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: center;
     }
 
     .projects-grid {

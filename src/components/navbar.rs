@@ -78,6 +78,62 @@ pub fn Navbar() -> Element {
                         "Contribute"
                     }
                 }
+                // Outbound CTAs, zite-style: store-link pills in the warning
+                // accent. Hidden in the collapsed panel on mobile, where the
+                // persistent copies below cover them.
+                li { class: "nav-link-store",
+                    a {
+                        class: "store-link",
+                        href: "https://github.com/scadoshi",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        onclick: move |_| open.set(false),
+                        "GitHub \u{2197}"
+                    }
+                }
+                li { class: "nav-link-store",
+                    a {
+                        class: "store-link",
+                        href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        onclick: move |_| open.set(false),
+                        "LinkedIn \u{2197}"
+                    }
+                }
+                li { class: "nav-link-store",
+                    a {
+                        class: "store-link",
+                        href: "mailto:scottyfermo@hotmail.com",
+                        onclick: move |_| open.set(false),
+                        "Email \u{2197}"
+                    }
+                }
+            },
+            // Mobile: the CTAs stay visible beside the hamburger instead of
+            // hiding inside the collapsed panel (same trick as zite).
+            persistent: rsx! {
+                div { class: "nav-stores-persistent",
+                    a {
+                        class: "store-link",
+                        href: "https://github.com/scadoshi",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        "GitHub \u{2197}"
+                    }
+                    a {
+                        class: "store-link",
+                        href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        "LinkedIn \u{2197}"
+                    }
+                    a {
+                        class: "store-link",
+                        href: "mailto:scottyfermo@hotmail.com",
+                        "Email \u{2197}"
+                    }
+                }
             },
             trailing: rsx! {
                 ThemePicker { theme }

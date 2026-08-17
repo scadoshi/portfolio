@@ -62,32 +62,14 @@ pub fn Home() -> Element {
             div { class: "hero-panel",
                 p { class: "hero-tagline",
                     "Production "
-                    span { class: "hero-tagline-accent", "Rust" }
+                    span { class: "hl-warning", "Rust" }
                     " for the work that has to actually run: "
-                    span { class: "hero-tagline-accent", "mobile apps" }
+                    span { class: "hl-success", "mobile apps" }
                     ", "
-                    span { class: "hero-tagline-accent", "internal tooling" }
+                    span { class: "hl-error", "internal tooling" }
                     ", and the "
-                    span { class: "hero-tagline-accent", "storage engines" }
+                    span { class: "hl-tertiary", "storage engines" }
                     " underneath."
-                }
-            }
-            div { class: "hero-links",
-                a {
-                    href: "https://github.com/scadoshi",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    "GitHub \u{2197}"
-                }
-                a {
-                    href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    "LinkedIn \u{2197}"
-                }
-                a {
-                    href: "mailto:scottyfermo@hotmail.com",
-                    "Email \u{2197}"
                 }
             }
         }
