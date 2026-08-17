@@ -558,8 +558,10 @@ a.panel-action:visited {
 .project-section h2 {
     font-size: 1.3rem;
     color: var(--color-warning);
-    margin-bottom: 1rem;
-    padding-bottom: 0.25rem;
+    /* Bleed the underline to the panel edges (panel-card pads 1.5rem), same
+       as the shared .panel-rule; the compensating padding keeps the text put. */
+    margin: 0 -1.5rem 1rem;
+    padding: 0 1.5rem 0.25rem;
     border-bottom: 1px solid var(--border-muted);
 }
 

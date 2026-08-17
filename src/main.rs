@@ -9,6 +9,7 @@ use pages::{
     contribute::Contribute,
     detail::{ProjectDetail, SideQuestDetail},
     home::Home,
+    not_found::NotFound,
     side_quests::SideQuests,
 };
 use zwipe_components::{COMPONENTS_CSS, THEMES_CSS, ThemeConfig};
@@ -33,6 +34,11 @@ pub enum Route {
         SideQuestDetail { slug: String },
         #[route("/contribute")]
         Contribute {},
+        // Catch-all 404: GitHub Pages serves 404.html (a copy of the app
+        // shell, made in deploy.yml) for unknown paths, and the router lands
+        // here. Excluded from static_routes automatically (dynamic segments).
+        #[route("/:..segments")]
+        NotFound { segments: Vec<String> },
 }
 
 fn main() {

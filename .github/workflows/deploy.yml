@@ -61,6 +61,11 @@ jobs:
       - name: Add CNAME
         run: echo "scottyfermo.com" > target/dx/portfolio/release/web/public/CNAME
 
+      - name: Add 404.html for SPA routing
+        # GitHub Pages serves this for unknown paths; the app shell boots and
+        # the router's catch-all renders the in-app 404.
+        run: cp target/dx/portfolio/release/web/public/index.html target/dx/portfolio/release/web/public/404.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

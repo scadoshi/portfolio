@@ -16,6 +16,8 @@ pub struct Project {
     pub progress: &'static str,
     pub impact: &'static str,
     pub status: ProjectStatus,
+    /// Live-site URL, when the project has one (rendered as an action pill).
+    pub site_url: Option<&'static str>,
 }
 
 use dioxus::prelude::*;
@@ -303,6 +305,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
     impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. ~100,000 lines across five crates, 600+ tests, unwrap banned by CI.",
+    site_url: Some("https://zwipe.net"),
     status: ProjectStatus::Doing,
 };
 
@@ -416,6 +419,7 @@ fn read_cached_ids() -> CacheData {
     ],
     progress: "Production. Actively used for real data migrations.",
     impact: "Reduced migration timelines from weeks to days. Runs unattended for hours against millions of records with automatic recovery from any transient failure.",
+    site_url: None,
     status: ProjectStatus::Done,
 };
 
@@ -509,6 +513,7 @@ impl From<&CustomField> for HttpCustomField {
     ],
     progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Actively used in production for client implementations.",
     impact: "Reduced enterprise configuration time from hours to minutes. Deployed across Fortune 500 client implementations.",
+    site_url: None,
     status: ProjectStatus::Done,
 };
 
@@ -650,6 +655,7 @@ async fn list_models(api_key: &str) -> Result<Vec<Model>> {
     ],
     progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
     impact: "Learning project that fed real signal back to its own framework. Flagged a production bug in Rig, proposed the architectural fix in-thread, and shipped the better pattern locally rather than waiting on the upstream refactor.",
+    site_url: None,
     status: ProjectStatus::Done,
 };
 
@@ -800,6 +806,7 @@ impl<R: Read + Seek> BloomFilterReader for R {
     ],
     progress: "Complete. All 6 phases done. 99 tests across 7 modules including TCP integration tests.",
     impact: "Started from a paper and built a complete, connectable key-value database: the storage architecture behind LevelDB, RocksDB, and Cassandra. Every layer built from scratch: binary protocol with corruption recovery, WAL durability, sorted memtable flush, bloom-filter-accelerated reads, k-way merge compaction, TCP server with concurrent access.",
+    site_url: None,
     status: ProjectStatus::Done,
 };
 
@@ -972,6 +979,7 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
     ],
     progress: "M1\u{2013}M5 complete. All commands over real RESP, snapshot + AOF persistence behind a hexagonal port, graceful shutdown, and Pub/Sub (SUBSCRIBE/UNSUBSCRIBE/PUBLISH) with per-session writer-thread fan-out. 227 tests. Next: async migration, then MULTI/EXEC.",
     impact: "Paired with nighthawk to cover both halves of how production KV systems are built: nighthawk the on-disk LSM storage engine, diprotodon the in-memory protocol server with WAL-style durability. Both hand-written, both interoperable with real clients (redis-cli for diprotodon, raw TCP for nighthawk).",
+    site_url: None,
     status: ProjectStatus::Doing,
 };
 
@@ -1048,6 +1056,7 @@ match state {
     ],
     progress: "Working prototype. Counts pullups in real time from webcam. Roadmap: threshold tuning, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
     impact: "ML inference in Rust without Python or cloud dependencies. ~145 lines from webcam frame to rep count.",
+    site_url: None,
     status: ProjectStatus::Done,
 };
 
@@ -1131,5 +1140,6 @@ impl IsSecret for InputEvent {
     ],
     progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with secret key. Clean ungrab on Linux, forced exit on macOS.",
     impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types for clean abstraction of platform-specific behavior.",
+    site_url: None,
     status: ProjectStatus::Done,
 };
