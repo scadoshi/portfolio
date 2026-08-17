@@ -296,15 +296,16 @@ a:visited {
 
 .hero {
     text-align: center;
-    /* zite's hero spacing: the wordmark sits close under the nav. */
-    padding: 3rem 1.5rem 3rem;
+    /* zite's hero spacing: the wordmark sits close under the nav. Bottom gap
+       is the panel margin below, matching the band's 1.5rem rhythm. */
+    padding: 3rem 1.5rem 0;
 }
 
 .hero-panel {
     /* Matches zite's hero-card: the band width (74rem) minus its 1.5rem side
        padding, so the hero's edges align with the band below. */
     max-width: 71rem;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1.5rem;
     padding: 2rem;
     background: var(--bg-primary);
     border: 1px solid var(--border-secondary);
@@ -934,7 +935,7 @@ a:visited {
    landscape phones (≤932px CSS width even on the largest models) */
 @media (max-width: 60rem) {
     .hero {
-        padding: 3rem 1.5rem 2rem;
+        padding: 3rem 1.5rem 0;
     }
 
     .projects-grid {
