@@ -1,35 +1,33 @@
 # scottyfermo.com
 
-Personal portfolio site showcasing Rust projects. Built in Rust with Dioxus, compiled to WASM, deployed to GitHub Pages.
-
-## Featured Projects
-
-- **Zwipe** — Full-stack MTG deck builder (Axum + Dioxus + PostgreSQL, ~45,200 LOC)
-- **Halo Action Importer** — Production bulk import tool for Halo Software
-- **Halo Custom Field Builder** — CLI for bulk-creating custom fields via API
-
-## Side Quests
-
-- **Nighthawk** — LSM-tree KV store (WAL, memtable, SSTables, bloom filters, k-way compaction)
-- **Diprotodon** — Redis-compatible in-memory KV server with hand-written RESP wire protocol
-- **Marvin** — CLI chatbot built on the Rig AI framework
-- **Capture** — V4L2 camera capture via raw Linux syscalls
-- **Upsee** — Real-time pullup counter with MoveNet ML inference
+My portfolio site. What it says about the projects lives on the site itself, so
+this file stays out of that business (and out of the business of going stale).
 
 ## Stack
 
-- [Dioxus](https://dioxuslabs.com/) 0.7.1 (Rust → WASM SPA, client-side routing)
-- 14 color themes with dark/light variants (3 colorblind-friendly)
-- Per-project media galleries (mp4 demos with controls)
-- Syntax highlighting via highlight.js
-- Auto-dismissing toast banners with progress line + hover-pause
-- JetBrains Mono throughout
-- Custom domain `scottyfermo.com` on GitHub Pages with GitHub Actions CI/CD
+- [Dioxus](https://dioxuslabs.com/) 0.7.9, Rust compiled to WASM, prerendered to
+  static HTML so crawlers and link unfurlers get real markup
+- Shared UI (panels, nav, themes, banners) from
+  [zwipe-components](https://github.com/scadoshi/zwipe), a git dependency pinned
+  in `Cargo.lock`
+- GitHub Pages on a custom domain, deployed by GitHub Actions on push to
+  `master`
 
 ## Build
 
 ```
 cargo install dioxus-cli --locked
-dx serve            # dev server
-dx build --release  # production build
+dx serve                                       # dev server
+dx build --release --ssg --force-sequential    # what CI runs
 ```
+
+`--force-sequential` is required: without it the parallel client build finishes
+last and overwrites the prerendered `index.html` with a bare shell.
+
+## Layout
+
+- `src/data.rs` is the content; every project and side quest is a const in there
+- `public/` is copied verbatim to the site root, so the OG card, `sitemap.xml`,
+  and `robots.txt` keep un-hashed URLs
+- `index.html` is a custom dx shell, kept only to set `lang="en"`
+- `context/rules/` holds the commit and CI conventions
