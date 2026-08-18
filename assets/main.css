@@ -441,6 +441,37 @@ a.panel-action:visited {
     .detail-band {
         grid-template-columns: 1fr;
     }
+
+    /* Single-stack order is about -> projects -> side quests -> contribute,
+       which no DOM order can give both columns at once. display:contents
+       dissolves the two column wrappers so all six panels become flex items
+       of the band itself, then order interleaves them. The .sr-only headings
+       are position:absolute, so they never become flex items and can't take
+       an order slot. Indices count those headings: child 1 in each column. */
+    .home-band {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .home-band .band-col {
+        display: contents;
+    }
+
+    .band-aside > :nth-child(2) {
+        order: 1;
+    }
+
+    .band-main > * {
+        order: 2;
+    }
+
+    .band-aside > :nth-child(3) {
+        order: 3;
+    }
+
+    .band-aside > :nth-child(4) {
+        order: 4;
+    }
 }
 
 /* Headings kept for document outline while the panel eyebrows do the

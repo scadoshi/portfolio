@@ -82,7 +82,7 @@ pub fn Home() -> Element {
         // stack fills what used to be dead space beside the project cards, so
         // nothing renders as bare text on the grid and the page stays compact.
         section { class: "home-band",
-            div { class: "band-col",
+            div { class: "band-col band-aside",
                 h2 { class: "sr-only", "About" }
                 Panel {
                     eyebrow: "About",
@@ -156,7 +156,7 @@ pub fn Home() -> Element {
                     }
                 }
             }
-            div { class: "band-col",
+            div { class: "band-col band-main",
                 h2 { class: "sr-only", "Featured Projects" }
                 for project in projects {
                     ProjectCard {
