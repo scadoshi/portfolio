@@ -25,6 +25,9 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # Backstop: a normal run is well under 10 minutes. Without this a wedged
+    # step burns the default job limit before anyone notices.
+    timeout-minutes: 30
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -46,7 +49,25 @@ jobs:
           cache-all-crates: true
 
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential
+        # apt is the only step here that talks to a network mirror, and it is
+        # the one that wedges: the zwipe repo's equivalent sat for 26 minutes on
+        # 2026-08-18 with GitHub reporting no incident. Explicit acquire
+        # timeouts, three attempts, and a step timeout turn a mirror stall into
+        # a fast failure you can re-run instead of a job that hangs unnoticed.
+        timeout-minutes: 6
+        run: |
+          set -euo pipefail
+          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=15 -o Acquire::https::Timeout=15"
+          for attempt in 1 2 3; do
+            if sudo apt-get $APT_OPTS update \
+              && sudo apt-get $APT_OPTS install -y build-essential; then
+              exit 0
+            fi
+            echo "apt attempt $attempt failed, retrying" >&2
+            sleep $((attempt * 10))
+          done
+          echo "apt failed three times; the mirror is likely degraded" >&2
+          exit 1
 
       - name: Install Dioxus CLI
         # Fetches a prebuilt dx binary instead of compiling dioxus-cli from
