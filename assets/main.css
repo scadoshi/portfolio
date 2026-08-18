@@ -685,8 +685,12 @@ a.panel-action:visited {
     right: 0;
 }
 
+/* Rides in Panel's `actions` slot, which is itself a flex row, so the footer
+   needs to claim the full width or it collapses to its content and the counter
+   stops sitting hard right. */
 .gallery-footer {
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;
