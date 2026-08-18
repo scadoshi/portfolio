@@ -7,6 +7,7 @@
 //! nav is right there for anyone who wants to explore.
 
 use dioxus::prelude::*;
+use zwipe_components::Panel;
 
 use crate::components::page_meta::PageMeta;
 
@@ -20,16 +21,18 @@ pub fn NotFound(segments: Vec<String>) -> Element {
         }
         // Keep dead paths out of search results.
         document::Meta { name: "robots", content: "noindex" }
-        // Formatted like zite's dead-link state (inform-and-stop alert):
-        // deliberately a dead end, the nav is right there for anyone who
-        // wants to explore.
-        div { class: "form-page content-enter",
-            span { class: "sd-alert-title", "Page not found" }
-            hr {
-                style: "border: none; border-top: 1px solid var(--border-secondary); margin: 0.75rem -2rem;",
-            }
-            p { class: "subtitle", style: "text-align: center; margin-bottom: 0;",
-                "Nothing lives at this address. It may have moved with a site update, or the link may be incomplete."
+        // The shared Panel already is this shape (title, rule, body); the
+        // wrapper only sets the narrow width and the dead-end voice, so the
+        // card chrome and the rule come from the component like everywhere
+        // else. Deliberately a dead end: the nav is right there.
+        div { class: "not-found-page content-enter",
+            Panel {
+                eyebrow: "404",
+                title: "Page not found",
+                title_h1: true,
+                p { class: "card-summary",
+                    "Nothing lives at this address. It may have moved with a site update, or the link may be incomplete."
+                }
             }
         }
     }
