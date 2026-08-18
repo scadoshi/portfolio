@@ -16,6 +16,8 @@ pub fn SideQuests() -> Element {
             Panel {
                 eyebrow: "Explore",
                 title: "Side Quests",
+                // Page hero, so the title is this page's h1 (see detail.rs).
+                title_h1: true,
                 p { class: "card-summary",
                     "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
                 }

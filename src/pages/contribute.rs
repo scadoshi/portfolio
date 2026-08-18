@@ -20,6 +20,8 @@ pub fn Contribute() -> Element {
             Panel {
                 eyebrow: "Support",
                 title: "Contribute",
+                // Page hero, so the title is this page's h1 (see detail.rs).
+                title_h1: true,
                 p { class: "card-summary",
                     "I build open-source Rust tools. If my work has been useful, consider supporting continued development."
                 }

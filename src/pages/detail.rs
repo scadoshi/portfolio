@@ -28,6 +28,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 status: project.status.banner_status(),
                 status_label: project.status.label().to_string(),
                 title: project.name.to_string(),
+                // Page hero: the shared Panel renders its title as an h3 by
+                // default (right for cards, wrong for a page's main heading).
+                title_h1: true,
                 actions: rsx! {
                     a {
                         href: "{project.repo_url}",
