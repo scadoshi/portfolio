@@ -10,7 +10,7 @@
 
 ## CI: how your commits get checked (run these BEFORE you push)
 
-Pushing to `master` triggers the GitHub Pages deploy
+Pushing to `main` triggers the GitHub Pages deploy
 (`.github/workflows/deploy.yml`, `dx build --release --ssg`). That workflow only
 builds and ships, so the checks below are **local discipline** — kept identical to
 zwipe's so this crate and the shared `zwipe-components` (consumed via git dep) hold
@@ -40,7 +40,7 @@ A static landing page with no test suite today — nothing to run. Add unit test
 transforms); don't stand up a suite for markup.
 
 ### Deploy
-Push to `master` deploys production (scottyfermo.com via GitHub Pages). The build
+Push to `main` deploys production (scottyfermo.com via GitHub Pages). The build
 must succeed (`dx build --release --ssg`) or the site won't update. CI does not yet
 gate on fmt/clippy — the local bar above is the guardrail; a lint job can be added
 to the workflow to enforce it.

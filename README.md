@@ -11,7 +11,7 @@ this file stays out of that business (and out of the business of going stale).
   [zwipe-components](https://github.com/scadoshi/zwipe), a git dependency pinned
   in `Cargo.lock`
 - GitHub Pages on a custom domain, deployed by GitHub Actions on push to
-  `master`
+  `main`
 
 ## Build
 

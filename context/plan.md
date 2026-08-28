@@ -99,7 +99,7 @@ src/
 
 ## Hosting
 
-- GitHub Actions workflow builds on push to master
+- GitHub Actions workflow builds on push to main
 - Installs Rust + wasm32-unknown-unknown target
 - Runs `dx build --release`
 - Adds CNAME file for custom domain
