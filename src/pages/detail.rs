@@ -27,7 +27,7 @@ fn approach_panel(project: &'static data::Project) -> Element {
     }
 }
 
-/// Shared body for both detail pages — projects and side quests render
+/// Shared body for both detail pages. Projects and side quests render
 /// identically off the same `Project` shape; only the lookup, canonical path,
 /// and not-found wording differ (see the two components below).
 fn detail_view(project: &'static data::Project, path: String) -> Element {

@@ -1149,7 +1149,7 @@ const RUSTMAS: Project = Project {
     summary: "Advent of Code tooling in Rust. One binary that downloads puzzle inputs, runs your solutions, validates the answers against an independent solver, and submits them.",
     card_bullets: &[
         "Ports and adapters: the domain imports no HTTP, no filesystem, no CLI",
-        "Two HTTP clients, split by who they talk to and what they can promise",
+        "Two HTTP clients, since only one of them needs your session cookie",
         "Validated addresses make an out-of-range year or day unrepresentable",
         "~2,180 lines, 72 tests",
     ],
@@ -1166,10 +1166,10 @@ const RUSTMAS: Project = Project {
     }],
     approach: &[
         "Ports and adapters. The domain holds the puzzle types and imports nothing outside itself. That only became true when solve() moved out of it: holding a SolverClient is a dependency the domain is not allowed to have, and it had been sitting there for a long time without anyone minding",
-        "Two clients, named for who they talk to. AocClient carries the session cookie and grades each part exactly once. SolverClient needs no account and answers the same question every time, which is what makes it usable as a regression check rather than a one-shot",
-        "Validated addresses. Year and Day are newtypes with private fields, and Day::new takes a built Year rather than a raw number, so a day cannot exist without a validated year behind it. Year::days_in is the single source of truth for how long an event ran, since 2025 was a 12-day event and everything else is 25",
-        "Dispatch returns a function pointer instead of calling. The registry can be asked whether a day exists without holding its input, so a run over every year skips unwritten days before downloading anything for them and a submit run can count what it is about to send",
-        "Types split by provenance. Answer is what the part computed, elapsed is measured, and the two verdicts arrive over the network. They were one type until timing broke it: a duration applies to every answer variant, so it could not live inside one of them",
+        "The two clients are named for who they talk to, not for which one is official. AocClient carries the session cookie and grades each part exactly once. SolverClient needs no account and answers the same question every time, which is what makes it usable as a regression check rather than a one-shot",
+        "Year and Day are newtypes with private fields, and Day::new takes a built Year rather than a raw number, so a day cannot exist without a validated year behind it. Year::days_in is the one place that knows how long an event ran: 2025 was 12 days, everything else 25",
+        "Dispatch hands back a function pointer instead of calling. The registry can be asked whether a day exists without holding its input, so a run over every year skips unwritten days before downloading anything for them, and a submit run can count what it is about to send",
+        "The answer, the timing, and the two verdicts are separate fields because they come from three different places. They were one type until timing broke it: a duration applies to every answer variant, so it could not live inside one of them",
         "The cache is plain files, one directory per day, each readable on its own. Each input carries a SHA-256 of the cookie that fetched it, since inputs are account specific and a swapped account is otherwise silent",
     ],
     snippets: &[
@@ -1195,7 +1195,7 @@ pub trait Solution: Sized {
             description: "Handing back a function pointer means the registry answers \"is this day written\" without an input in hand. A run over every year downloads nothing for the days nobody has solved yet. A macro generated these arms while inputs were embedded at compile time; reading at runtime removed the reason, and the longhand version formats, jumps to definition, and reports errors on real lines.",
         },
         Snippet {
-            title: "Two Verdicts, One Line",
+            title: "Merging the Two Verdicts",
             code: r#"// AOC's word supersedes the solver's, so a starred part reads as
 // starred rather than repeating that the solver agreed.
 let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
@@ -1228,14 +1228,14 @@ let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
 const SHARPMAS: Project = Project {
     name: "Sharpmas",
     slug: "sharpmas",
-    headline: "Rustmas rebuilt in C#. Same tool, same architecture, idiomatic in a second language.",
+    headline: "Advent of Code tooling in C#, rebuilt from the Rust original down to the output format.",
     category: "Cross-Language Port",
     repo_url: "https://github.com/scadoshi/sharpmas",
     summary: "The same Advent of Code tooling, rebuilt in C#. The design was already settled, so every decision left was a question about the language.",
     card_bullets: &[
-        "Static abstract interface members stand in for Rust's associated functions",
+        "Static abstract interface members where Rust has associated functions",
         "Closed record hierarchies stand in for Rust enums",
-        "AnswerResult carries a failure where C# has no Result",
+        "AnswerResult carries a failure, since C# has no Result",
         "~2,270 lines, 121 tests",
     ],
     impact_metric: "~2,270 lines, 121 tests, one design across two languages",
@@ -1251,7 +1251,7 @@ const SHARPMAS: Project = Project {
     }],
     approach: &[
         "ISolution<TSelf> with a static abstract Parse. Rust's trait has an associated function returning Self, and C#'s static abstract interface members are the nearest thing. A static interface member has nothing to dispatch on, so the runner is generic (Solve<T>) for that reason alone",
-        "Closed hierarchies where Rust has enums. Answer, AnswerResult, and both verdicts are abstract records with sealed nested leaves and a private base constructor, since only a nested type can reach a private constructor. That is as near as C# gets to a sum type nothing outside can extend",
+        "Where Rust has an enum, C# gets an abstract record with sealed nested leaves and a private base constructor, since only a nested type can reach a private constructor. Answer, AnswerResult, and both verdicts are built that way, which is as near as C# gets to a sum type nothing outside can extend",
         "AnswerResult stands in for Result. A failure is held rather than thrown out of the run, so one broken part does not hide the other's answer. Two nullable fields would allow both set and both null, and neither of those means anything",
         "The registry is a Dictionary from (year, day) to a delegate, holding the delegate rather than calling it. Same property as the Rust match: the tool can ask whether a day exists without holding its input",
         "Guard messages stayed in the C# dialect. ThrowIfGreaterThan already names the value and the live bound through CallerArgumentExpression, and the analyzer steers away from hand-rolled if-throw blocks, so the tests assert the values rather than Rust's range spelling",
@@ -1259,7 +1259,7 @@ const SHARPMAS: Project = Project {
     ],
     snippets: &[
         Snippet {
-            title: "The Same Contract, In C#",
+            title: "The Same Contract in C#",
             code: r#"// Rust: an associated function returning Self.
 //   fn new(input: impl AsRef<str>) -> anyhow::Result<Self>;
 //
@@ -1284,7 +1284,7 @@ public static async Task<Solved> Solve<T>(
             description: "The closest C# gets to Rust's trait. The consequence is structural: nothing can hold an ISolution and call Parse on it, so every caller down to the registry has to know the concrete type, exactly as the Rust side does through monomorphized generics.",
         },
         Snippet {
-            title: "A Sum Type C# Does Not Have",
+            title: "Closing the Set of Cases",
             code: r#"public abstract record Answer
 {
     // Private, so the set of cases is closed: only nested types
@@ -1316,7 +1316,7 @@ public static async Task<Solved> Solve<T>(
         "Porting a settled design makes it easy to transliterate Rust into C# that compiles and reads badly. The guard messages are the example that stuck: rewriting them to match Rust's 1..=12 phrasing would have meant fighting the analyzer for a worse message than the framework already produces",
     ],
     progress: "The tool is finished and matches rustmas feature for feature, with 121 tests passing and no build warnings. The last catch-up landed on 2026-08-23: the eager Filter type, Answer.Unwritten, the day 25 gate, and all four hierarchies closed. Two days are solved so far, 2015 day 1 and 2016 day 1, with every answer confirmed by the solver and matching rustmas. What is left is solutions and the shared helpers they will want.",
-    impact: "A cross-language port carried end to end, with both sides public and comparable file by file. The design was fixed going in, so what the repo records is where two languages actually diverge and where one of them has no good answer.",
+    impact: "A cross-language port carried end to end, with both sides public and comparable file by file. The design was fixed going in, so what the repo records is where the two languages actually diverge, and where C# has no good answer at all.",
     site_url: None,
     status: ProjectStatus::Done,
 };
