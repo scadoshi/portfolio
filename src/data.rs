@@ -176,9 +176,9 @@ const ZWIPE: Project = Project {
     approach: &[
         "Rust on mobile via Dioxus: one Rust codebase compiles to a native mobile app, no JS bridge, no separate frontend repo",
         "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardCriteria predicate core (~50 fields) drives the server's SQL search and in-memory filtering on the device, both built from a single CardQueryBuilder so the filter UI can't drift from the API",
-        "Production-grade auth: Argon2id hashing, a structural password policy (length, character classes, unique-character and repeat limits), rotating refresh tokens (single-use, deleted on rotation), Password type consumed on hash so plaintext can't leak",
+        "Auth: Argon2id hashing, a structural password policy (length, character classes, unique-character and repeat limits), rotating refresh tokens (single-use, deleted on rotation), Password type consumed on hash so plaintext can't leak",
         "SQLx at scale: five-strategy upsert chain handles batching, PartialEq delta detection, and per-row fallback; 88-column Scryfall sync respects PostgreSQL's 65k parameter limit (~327 cards per batch)",
-        "Production posture: 22 clippy rules (unwrap, expect, panic, todo, dbg, print among them) promoted to errors in CI. 600+ tests, security audit complete, nightly PostgreSQL backups to Cloudflare R2",
+        "Enforced in CI: 22 clippy rules (unwrap, expect, panic, todo, dbg, print among them) promoted to errors in CI. 600+ tests, security audit complete, nightly PostgreSQL backups to Cloudflare R2",
     ],
     snippets: &[
         Snippet {
@@ -508,7 +508,7 @@ impl From<&CustomField> for HttpCustomField {
         "Log auto-cleanup (max 100 files, 7-day retention). Without it, repeated production runs accumulate unbounded log files",
     ],
     progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Actively used in production for client implementations.",
-    impact: "Reduced enterprise configuration time from hours to minutes. Deployed across Fortune 500 client implementations.",
+    impact: "Reduced enterprise configuration time from hours to minutes. Ships as tagged cross-platform binaries, so an implementer runs it without a Rust toolchain.",
     site_url: None,
     status: ProjectStatus::Done,
 };
@@ -650,7 +650,7 @@ async fn list_models(api_key: &str) -> Result<Vec<Model>> {
         "Architecture outgrew the 220-line monolith. Refactored to command pattern with per-command modules. Each command independently testable",
     ],
     progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
-    impact: "Learning project that fed real signal back to its own framework. Flagged a production bug in Rig, proposed the architectural fix in-thread, and shipped the better pattern locally rather than waiting on the upstream refactor.",
+    impact: "A learning project that ended up sending a fix back to the framework it was built on. Flagged a production bug in Rig, proposed the architectural fix in-thread, and shipped the better pattern locally rather than waiting on the upstream refactor.",
     site_url: None,
     status: ProjectStatus::Done,
 };
@@ -1135,7 +1135,7 @@ impl IsSecret for InputEvent {
         "Linux poll loop must rebuild PollFd vec each iteration: PollFd borrows the device file descriptor, so holding it across the loop body fails the borrow check",
     ],
     progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with secret key. Clean ungrab on Linux, forced exit on macOS.",
-    impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types for clean abstraction of platform-specific behavior.",
+    impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types, so each platform's quirks stay behind one interface.",
     site_url: None,
     status: ProjectStatus::Done,
 };
