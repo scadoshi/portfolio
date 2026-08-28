@@ -71,7 +71,9 @@ pub fn featured_projects() -> &'static [Project] {
 }
 
 pub fn side_quests() -> &'static [Project] {
-    &[NIGHTHAWK, DIPROTODON, MARVIN, GOTCHA, UPSEE]
+    &[
+        NIGHTHAWK, DIPROTODON, MARVIN, GOTCHA, UPSEE, RUSTMAS, SHARPMAS,
+    ]
 }
 
 pub fn find_project(slug: &str) -> Option<&'static Project> {
@@ -1134,6 +1136,173 @@ impl IsSecret for InputEvent {
     ],
     progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with secret key. Clean ungrab on Linux, forced exit on macOS.",
     impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types for clean abstraction of platform-specific behavior.",
+    site_url: None,
+    status: ProjectStatus::Done,
+};
+
+const RUSTMAS: Project = Project {
+    name: "Rustmas",
+    slug: "rustmas",
+    headline: "Advent of Code tooling in Rust. Fetches inputs, runs solutions, checks them against an independent solver, submits for stars.",
+    category: "Developer Tooling",
+    repo_url: "https://github.com/scadoshi/rustmas",
+    summary: "Advent of Code tooling in Rust. One binary that downloads puzzle inputs, runs your solutions, validates the answers against an independent solver, and submits them.",
+    card_bullets: &[
+        "Ports and adapters: the domain imports no HTTP, no filesystem, no CLI",
+        "Two HTTP clients, split by who they talk to and what they can promise",
+        "Validated addresses make an out-of-range year or day unrepresentable",
+        "~2,180 lines, 72 tests",
+    ],
+    impact_metric: "~2,180 lines, 72 tests, both service contracts verified live",
+    objective: "Build the tooling around Advent of Code rather than just the puzzles: fetch an input, run a day, and know whether the answer is right before spending a submission. Wrong answers to adventofcode.com cost an escalating cooldown, so the tool checks every answer against an independent solver (https://github.com/fornwall/advent-of-code) first and only sends what that solver agrees with.",
+    tags: &["rust", "cli", "http", "tooling"],
+    media: &[],
+    approach: &[
+        "Ports and adapters. The domain holds the puzzle types and imports nothing outside itself. That only became true when solve() moved out of it: holding a SolverClient is a dependency the domain is not allowed to have, and it had been sitting there for a long time without anyone minding",
+        "Two clients, named for who they talk to. AocClient carries the session cookie and grades each part exactly once. SolverClient needs no account and answers the same question every time, which is what makes it usable as a regression check rather than a one-shot",
+        "Validated addresses. Year and Day are newtypes with private fields, and Day::new takes a built Year rather than a raw number, so a day cannot exist without a validated year behind it. Year::days_in is the single source of truth for how long an event ran, since 2025 was a 12-day event and everything else is 25",
+        "Dispatch returns a function pointer instead of calling. The registry can be asked whether a day exists without holding its input, so a run over every year skips unwritten days before downloading anything for them and a submit run can count what it is about to send",
+        "Types split by provenance. Answer is what the part computed, elapsed is measured, and the two verdicts arrive over the network. They were one type until timing broke it: a duration applies to every answer variant, so it could not live inside one of them",
+        "The cache is plain files, one directory per day, each readable on its own. Each input carries a SHA-256 of the cookie that fetched it, since inputs are account specific and a swapped account is otherwise silent",
+    ],
+    snippets: &[
+        Snippet {
+            title: "The Day Registry",
+            code: r#"// One arm per day. Returns the solver rather than calling it.
+fn solver_for(year: i32, day: i32) -> Option<Solver> {
+    Some(match (year, day) {
+        (2015, 1) => solve::<year_2015::day_01::Puzzle>,
+        (2016, 1) => solve::<year_2016::day_01::Puzzle>,
+        _ => return None,
+    })
+}
+
+// The trait each day implements. Sized on purpose: new returns Self,
+// so it could never go through a vtable, and the match above already
+// knows every concrete type.
+pub trait Solution: Sized {
+    fn new(input: impl AsRef<str>) -> anyhow::Result<Self>;
+    fn part_one(&self) -> anyhow::Result<Answer>;
+    fn part_two(&self) -> anyhow::Result<Answer>;
+}"#,
+            description: "Handing back a function pointer means the registry answers \"is this day written\" without an input in hand. A run over every year downloads nothing for the days nobody has solved yet. A macro generated these arms while inputs were embedded at compile time; reading at runtime removed the reason, and the longhand version formats, jumps to definition, and reports errors on real lines.",
+        },
+        Snippet {
+            title: "Two Verdicts, One Line",
+            code: r#"// AOC's word supersedes the solver's, so a starred part reads as
+// starred rather than repeating that the solver agreed.
+let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
+    (_, Some(AocVerdict::Correct)) => "new star".to_string(),
+    (_, Some(AocVerdict::AlreadySolved)) => "starred".to_string(),
+    (Some(v), Some(s)) => format!("{}, {}", v, s),
+    (Some(v), None) => v.to_string(),
+    (None, Some(s)) => s.to_string(),
+    (None, None) => String::new(),
+};
+
+// year 2015 day 1 in 12.707us (3.291us parsing)
+//   part one: 138 (correct) [7.125us]
+//   part two: 1771 (new star) [2.291us]"#,
+            description: "Two sources with different authority collapse into one set of parentheses. AlreadySolved reads like a rejection but it is the site confirming the star exists, which is why it renders as \"starred\" rather than as a complaint. Verdicts only attach to a submittable answer, so art and absent answers never pick one up.",
+        },
+    ],
+    obstacles: &[
+        "Swapping the session cookie silently invalidated every cached input. 2015 day 1 answered 280 one day and 138 the next, and only the changed answers gave it away. Inputs now carry a SHA-256 of the cookie that fetched them, and a mismatch refetches",
+        "Inputs were embedded with include_str! for the first week, which meant a fresh clone could not compile until fetch had run. Reading at runtime fixed that and retired the dispatch macro, which existed mostly to build those paths from literals",
+        "A single Verdict enum could not be produced in full by either client: Unsupported only ever comes from the solver, Cooldown and AlreadySolved only from adventofcode.com. Every exhaustive match carried arms that could not happen for the call being made. Two types deleted those arms rather than documenting them",
+        "A local cache of confirmed answers was designed in detail and then dropped. The argument for it was that AOC grades each part exactly once, so a cache looked like the only durable record. That was wrong: the site is stateful and reports AlreadySolved, so the fact called irreplaceable was always one request away",
+    ],
+    progress: "Feature complete. fetch, solve, --validate and --submit all work against both services, 72 tests pass, and both service contracts are recorded in context/references.md from live probing rather than guesswork. Day one of every year except 2019 is solved. Next are the day twos.",
+    impact: "A finished tool with its reasoning written down, including the options that were rejected and why. The design notes are what made the C# rebuild (Sharpmas) a language exercise rather than a redesign.",
+    site_url: None,
+    status: ProjectStatus::Done,
+};
+
+const SHARPMAS: Project = Project {
+    name: "Sharpmas",
+    slug: "sharpmas",
+    headline: "Rustmas rebuilt in C#. Same tool, same architecture, idiomatic in a second language.",
+    category: "Cross-Language Port",
+    repo_url: "https://github.com/scadoshi/sharpmas",
+    summary: "The same Advent of Code tooling, rebuilt in C#. The design was already settled, so every decision left was a question about the language.",
+    card_bullets: &[
+        "Static abstract interface members stand in for Rust's associated functions",
+        "Closed record hierarchies stand in for Rust enums",
+        "AnswerResult carries a failure where C# has no Result",
+        "~2,270 lines, 121 tests",
+    ],
+    impact_metric: "~2,270 lines, 121 tests, one design across two languages",
+    objective: "Learn C# by rebuilding a finished Rust tool rather than by reading about it. Rustmas (https://github.com/scadoshi/rustmas) already settled what the tool should do and recorded why, so nothing here is a design question. Every open question is a language question: what is the C# idiom for this, and where is there honestly no analogue.",
+    tags: &["csharp", "dotnet", "cli", "port"],
+    media: &[],
+    approach: &[
+        "ISolution<TSelf> with a static abstract Parse. Rust's trait has an associated function returning Self, and C#'s static abstract interface members are the nearest thing. A static interface member has nothing to dispatch on, so the runner is generic (Solve<T>) for that reason alone",
+        "Closed hierarchies where Rust has enums. Answer, AnswerResult, and both verdicts are abstract records with sealed nested leaves and a private base constructor, since only a nested type can reach a private constructor. That is as near as C# gets to a sum type nothing outside can extend",
+        "AnswerResult stands in for Result. A failure is held rather than thrown out of the run, so one broken part does not hide the other's answer. Two nullable fields would allow both set and both null, and neither of those means anything",
+        "The registry is a Dictionary from (year, day) to a delegate, holding the delegate rather than calling it. Same property as the Rust match: the tool can ask whether a day exists without holding its input",
+        "Guard messages stayed in the C# dialect. ThrowIfGreaterThan already names the value and the live bound through CallerArgumentExpression, and the analyzer steers away from hand-rolled if-throw blocks, so the tests assert the values rather than Rust's range spelling",
+        "Tests mirror rustmas's unless C# genuinely needs more, which so far has meant guarding the things Rust's compiler guarantees and C#'s does not",
+    ],
+    snippets: &[
+        Snippet {
+            title: "The Same Contract, In C#",
+            code: r#"// Rust: an associated function returning Self.
+//   fn new(input: impl AsRef<str>) -> anyhow::Result<Self>;
+//
+// C#: a static abstract interface member, reachable only through a
+// type parameter, since a static member has no receiver.
+public interface ISolution<TSelf>
+    where TSelf : ISolution<TSelf>
+{
+    public static abstract TSelf Parse(string input);
+    public Answer PartOne();
+    public Answer PartTwo();
+}
+
+// Which is why the runner is generic rather than taking an interface.
+public static async Task<Solved> Solve<T>(
+    SolverClient client, bool validate, string input, Day day
+) where T : ISolution<T>
+{
+    var solution = T.Parse(input);   // only reachable via T
+    ...
+}"#,
+            description: "The closest C# gets to Rust's trait. The consequence is structural: nothing can hold an ISolution and call Parse on it, so every caller down to the registry has to know the concrete type, exactly as the Rust side does through monomorphized generics.",
+        },
+        Snippet {
+            title: "A Sum Type C# Does Not Have",
+            code: r#"public abstract record Answer
+{
+    // Private, so the set of cases is closed: only nested types
+    // can reach it.
+    private Answer() { }
+
+    public sealed record Value(string Data) : Answer;   // submittable
+    public sealed record Visual(string Art) : Answer;   // art, not an answer
+    public sealed record None : Answer;                 // day 25 part two
+    public sealed record Unwritten : Answer;            // nobody wrote it yet
+
+    public sealed override string ToString() => this switch
+    {
+        Value(string data) => $"{data}",
+        Visual(string art) => $"\n{art}\n",
+        None => "(none)",
+        Unwritten => "(unwritten)",
+        // Rust's compiler proves this unreachable. C#'s does not.
+        _ => throw new UnreachableException($"unhandled: {GetType().Name}"),
+    };
+}"#,
+            description: "Four cases that must not grow outside this file. The private constructor closes the hierarchy, and the sealed override stops a case generating its own string and silently replacing this one. The last arm is the honest part: C# cannot prove the switch exhaustive, so the impossible case still needs writing down.",
+        },
+    ],
+    obstacles: &[
+        "None was doing two jobs, covering both \"this part has no answer\" and \"nobody has written this part\". A day 25 part two and an untouched template stub printed the same thing. Unwritten split the second off, and the template returns it, so a stub cannot read as a finished part with nothing to say",
+        "Enumerable.Range takes a count, not an end. It cost two bugs while porting the day filter, both caught by tests mirrored from rustmas before anything ran, and one of them had already been recorded weeks earlier in the same repo's journal",
+        "Nothing stopped outside code adding a case to Answer or either verdict, so a switch that looked exhaustive was not. Private base constructors closed all four hierarchies, which C# allows only because a nested type can reach its parent's private members",
+        "Porting a settled design makes it easy to transliterate Rust into C# that compiles and reads badly. The guard messages are the example that stuck: rewriting them to match Rust's 1..=12 phrasing would have meant fighting the analyzer for a worse message than the framework already produces",
+    ],
+    progress: "The tool is finished and matches rustmas feature for feature, with 121 tests passing and no build warnings. The last catch-up landed on 2026-08-23: the eager Filter type, Answer.Unwritten, the day 25 gate, and all four hierarchies closed. Two days are solved so far, 2015 day 1 and 2016 day 1, with every answer confirmed by the solver and matching rustmas. What is left is solutions and the shared helpers they will want.",
+    impact: "A cross-language port carried end to end, with both sides public and comparable file by file. The design was fixed going in, so what the repo records is where two languages actually diverge and where one of them has no good answer.",
     site_url: None,
     status: ProjectStatus::Done,
 };

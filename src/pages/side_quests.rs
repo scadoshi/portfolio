@@ -9,7 +9,7 @@ pub fn SideQuests() -> Element {
     rsx! {
         PageMeta {
             title: "Side Quests",
-            description: "Rust side quests: an LSM-tree KV store, a Redis-compatible server, camera capture, and on-device ML inference.",
+            description: "Side quests: an LSM-tree KV store, a Redis-compatible server, camera capture, on-device ML inference, and Advent of Code tooling in Rust and C#.",
             path: "/side-quests",
         }
         div { class: "side-quests content-enter",
