@@ -1156,7 +1156,14 @@ const RUSTMAS: Project = Project {
     impact_metric: "~2,180 lines, 72 tests, both service contracts verified live",
     objective: "Build the tooling around Advent of Code rather than just the puzzles: fetch an input, run a day, and know whether the answer is right before spending a submission. Wrong answers to adventofcode.com cost an escalating cooldown, so the tool checks every answer against an independent solver (https://github.com/fornwall/advent-of-code) first and only sends what that solver agrees with.",
     tags: &["rust", "cli", "http", "tooling"],
-    media: &[],
+    media: &[MediaItem {
+        src: asset!("/assets/projects/rustmas/demo.mp4"),
+        alt: "The rustmas CLI fetching a puzzle input, solving both parts, validating the answers, then submitting them",
+        caption: Some(
+            "One day end to end: fetch, solve, check against the solver, then submit for the stars",
+        ),
+        kind: MediaKind::Video,
+    }],
     approach: &[
         "Ports and adapters. The domain holds the puzzle types and imports nothing outside itself. That only became true when solve() moved out of it: holding a SolverClient is a dependency the domain is not allowed to have, and it had been sitting there for a long time without anyone minding",
         "Two clients, named for who they talk to. AocClient carries the session cookie and grades each part exactly once. SolverClient needs no account and answers the same question every time, which is what makes it usable as a regression check rather than a one-shot",
@@ -1234,7 +1241,14 @@ const SHARPMAS: Project = Project {
     impact_metric: "~2,270 lines, 121 tests, one design across two languages",
     objective: "Learn C# by rebuilding a finished Rust tool rather than by reading about it. Rustmas (https://github.com/scadoshi/rustmas) already settled what the tool should do and recorded why, so nothing here is a design question. Every open question is a language question: what is the C# idiom for this, and where is there honestly no analogue.",
     tags: &["csharp", "dotnet", "cli", "port"],
-    media: &[],
+    media: &[MediaItem {
+        src: asset!("/assets/projects/sharpmas/demo.mp4"),
+        alt: "The sharpmas CLI running the same fetch, solve, validate and submit sequence in C#",
+        caption: Some(
+            "The same run rebuilt in C#, down to the answers and the shape of the output",
+        ),
+        kind: MediaKind::Video,
+    }],
     approach: &[
         "ISolution<TSelf> with a static abstract Parse. Rust's trait has an associated function returning Self, and C#'s static abstract interface members are the nearest thing. A static interface member has nothing to dispatch on, so the runner is generic (Solve<T>) for that reason alone",
         "Closed hierarchies where Rust has enums. Answer, AnswerResult, and both verdicts are abstract records with sealed nested leaves and a private base constructor, since only a nested type can reach a private constructor. That is as near as C# gets to a sum type nothing outside can extend",
