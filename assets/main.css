@@ -86,10 +86,10 @@
 
 /* === Announcement Banner === */
 
-/* The whole banner system — .banner-stack positioning (with its
-   viewport-aware phone margin), .announcement-banner, and the slide/leave/
-   countdown animations — is the shared zwipe_components::Banner as of the
-   824ff96 pin; nothing site-specific remains. */
+/* The whole banner system is the shared zwipe_components::Banner as of the
+   824ff96 pin: .banner-stack positioning (with its viewport-aware phone
+   margin), .announcement-banner, and the slide/leave/countdown animations.
+   Nothing site-specific remains. */
 
 /* === Base === */
 
@@ -190,7 +190,7 @@ a:visited {
 
 /* Outbound CTAs share the nav pill look (the .nav-links a rule in
    components.css), restated here for the standalone .store-link class, in
-   the warning color — same as zite's store buttons. `:visited` rides in every
+   the warning color, same as zite's store buttons. `:visited` rides in every
    color declaration so the global `a:visited` rule (higher specificity than
    a bare class) never recolors a visited pill. */
 .store-link,
@@ -295,7 +295,7 @@ a.panel-action:visited {
 
 /* NavDropdown (trigger pill, floating menu, backdrop, hover bridge,
    anchor-item support) comes from zwipe-components. One site preference:
-   menus open with left edges aligned to the trigger, jutting right — the
+   menus open with left edges aligned to the trigger, jutting right. The
    crate default (right: 0, jutting left, sized for zite's edge-hugging
    picker) reads off-balance in this nav. The crate's in-panel rules are
    more specific, so hamburger behavior is untouched. */
@@ -325,7 +325,7 @@ a.panel-action:visited {
     padding: 3rem 1.5rem 0;
 }
 
-/* Sizing wrapper only — the card chrome comes from the shared Panel inside.
+/* Sizing wrapper only. The card chrome comes from the shared Panel inside.
    Width matches zite's hero-card: the band (74rem) minus its 1.5rem side
    padding, so the hero's edges align with the band below. */
 .hero-panel {

@@ -42,7 +42,7 @@ jobs:
       - name: Cache Rust
         # Caches the compiled dependency graph (native + wasm). Prunes
         # portfolio's own artifacts so the cache stays lean, and uses
-        # restore-keys for partial hits when Cargo.lock changes — far
+        # restore-keys for partial hits when Cargo.lock changes, a far
         # better hit rate than a raw target/ cache.
         uses: Swatinem/rust-cache@v2
         with:
