@@ -9,6 +9,24 @@ use crate::{
     data,
 };
 
+/// Pulled out of [`detail_view`] because it renders in two places: inside the
+/// media band, and on its own when a project has nothing to show beside it.
+fn approach_panel(project: &'static data::Project) -> Element {
+    rsx! {
+        Panel {
+            eyebrow: "Approach",
+            title: "How it's built",
+            section { class: "project-section",
+                ul {
+                    for point in project.approach {
+                        li { LinkedText { text: point.to_string() } }
+                    }
+                }
+            }
+        }
+    }
+}
+
 /// Shared body for both detail pages — projects and side quests render
 /// identically off the same `Project` shape; only the lookup, canonical path,
 /// and not-found wording differ (see the two components below).
@@ -70,23 +88,17 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
             }
 
             // Lateral band: the demo gallery keeps one column while the
-            // approach panel fills what would be its dead side-space.
-            div { class: "detail-band",
-                div { class: "band-col",
-                    ProjectGallery { items: project.media }
-                }
-                div { class: "band-col",
-                    Panel {
-                        eyebrow: "Approach",
-                        title: "How it's built",
-                        section { class: "project-section",
-                            ul {
-                                for point in project.approach {
-                                    li { LinkedText { text: point.to_string() } }
-                                }
-                            }
-                        }
+            // approach panel fills what would be its dead side-space. A
+            // project with no media has nothing to pair, so the approach
+            // panel takes the whole row instead of leaving half of it empty.
+            if project.media.is_empty() {
+                {approach_panel(project)}
+            } else {
+                div { class: "detail-band",
+                    div { class: "band-col",
+                        ProjectGallery { items: project.media }
                     }
+                    div { class: "band-col", {approach_panel(project)} }
                 }
             }
 
