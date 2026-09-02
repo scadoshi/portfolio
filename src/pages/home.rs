@@ -44,8 +44,6 @@ pub fn Home() -> Element {
                 "Zwipe, the deck builder MTG deserved. "
                 a {
                     href: "https://zwipe.net",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
                     "Try it now \u{2197}"
                 }
             }
@@ -145,22 +143,16 @@ pub fn Home() -> Element {
                         }
                         a {
                             href: crate::pages::contribute::STRIPE_URL,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
                             class: "panel-action",
                             "Stripe \u{2197}"
                         }
                         a {
                             href: crate::pages::contribute::BMC_URL,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
                             class: "panel-action",
                             "Buy Me a Coffee \u{2197}"
                         }
                         a {
                             href: crate::pages::contribute::GITHUB_SPONSORS_URL,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
                             class: "panel-action",
                             "GitHub Sponsors \u{2197}"
                         }

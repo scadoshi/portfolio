@@ -33,8 +33,6 @@ pub fn Contribute() -> Element {
                     actions: rsx! {
                         a {
                             href: STRIPE_URL,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
                             class: "panel-action",
                             "Contribute \u{2197}"
                         }
@@ -47,8 +45,6 @@ pub fn Contribute() -> Element {
                     actions: rsx! {
                         a {
                             href: BMC_URL,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
                             class: "panel-action",
                             "Contribute \u{2197}"
                         }
@@ -61,8 +57,6 @@ pub fn Contribute() -> Element {
                     actions: rsx! {
                         a {
                             href: GITHUB_SPONSORS_URL,
-                            target: "_blank",
-                            rel: "noopener noreferrer",
                             class: "panel-action",
                             "Contribute \u{2197}"
                         }

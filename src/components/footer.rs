@@ -8,15 +8,11 @@ pub fn Footer() -> Element {
                 "\u{00a9} 2026 Scotty Fermo | "
                 a {
                     href: "https://github.com/scadoshi",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
                     "GitHub \u{2197}"
                 }
                 " | "
                 a {
                     href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
                     "LinkedIn \u{2197}"
                 }
                 " | "
@@ -29,8 +25,6 @@ pub fn Footer() -> Element {
                 a {
                     class: "footer-built-repo",
                     href: "https://github.com/scadoshi/portfolio",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
                     "This site"
                 }
                 " is unofficial "

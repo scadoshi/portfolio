@@ -37,8 +37,6 @@ pub fn SideQuests() -> Element {
                             }
                             a {
                                 href: "{quest.repo_url}",
-                                target: "_blank",
-                                rel: "noopener noreferrer",
                                 class: "panel-action",
                                 "GitHub \u{2197}"
                             }

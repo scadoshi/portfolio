@@ -85,8 +85,6 @@ pub fn Navbar() -> Element {
                     a {
                         class: "store-link",
                         href: "https://github.com/scadoshi",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
                         onclick: move |_| open.set(false),
                         "GitHub \u{2197}"
                     }
@@ -95,8 +93,6 @@ pub fn Navbar() -> Element {
                     a {
                         class: "store-link",
                         href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
                         onclick: move |_| open.set(false),
                         "LinkedIn \u{2197}"
                     }
@@ -117,15 +113,11 @@ pub fn Navbar() -> Element {
                     a {
                         class: "store-link",
                         href: "https://github.com/scadoshi",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
                         "GitHub \u{2197}"
                     }
                     a {
                         class: "store-link",
                         href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
                         "LinkedIn \u{2197}"
                     }
                     a {

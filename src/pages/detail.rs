@@ -52,16 +52,12 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 actions: rsx! {
                     a {
                         href: "{project.repo_url}",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
                         class: "panel-action",
                         "View on GitHub \u{2197}"
                     }
                     if let Some(site) = project.site_url {
                         a {
                             href: "{site}",
-                            target: "_blank",
-                            rel: "noopener noreferrer",
                             class: "panel-action",
                             {format!("{} \u{2197}", site.trim_start_matches("https://"))}
                         }

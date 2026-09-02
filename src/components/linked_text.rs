@@ -12,8 +12,6 @@ pub fn LinkedText(text: String) -> Element {
                 TextPart::Url { href, label } => rsx! {
                     a {
                         href: "{href}",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
                         "{label}"
                     }
                 },

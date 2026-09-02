@@ -30,16 +30,12 @@ pub fn ProjectCard(
                 }
                 a {
                     href: "{repo_url}",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
                     class: "panel-action",
                     "GitHub \u{2197}"
                 }
                 if let Some(site) = site_url {
                     a {
                         href: "{site}",
-                        target: "_blank",
-                        rel: "noopener noreferrer",
                         class: "panel-action",
                         {format!("{} \u{2197}", site.trim_start_matches("https://"))}
                     }
