@@ -95,6 +95,20 @@ pub fn Home() -> Element {
                     }
                 }
                 Panel {
+                    eyebrow: "Process",
+                    title: "How I Use AI",
+                    p { class: "card-summary",
+                        "Slow on purpose while learning. Fast once I understand it."
+                    }
+                    ul { class: "card-bullets",
+                        li { "New domains start with my own research, cross-referenced with a model, until I can pick an approach and defend it" }
+                        li { "Learning projects I write by hand, taking a beat to rely on my own brain instead of passing the mental cycles to a model. The reps are the point" }
+                        li { "Once I can explain and type every line myself, AI takes over the iteration and refactoring. That's where the speed comes from" }
+                        li { "Either way I read all of it: security checked at every stop, implementations validated against other models, everything tested" }
+                        li { "All of it is open source. Read the code; criticism is welcome" }
+                    }
+                }
+                Panel {
                     eyebrow: "Explore",
                     title: "Side Quests",
                     actions: rsx! {
