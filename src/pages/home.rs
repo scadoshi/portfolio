@@ -63,13 +63,13 @@ pub fn Home() -> Element {
             div { class: "hero-panel",
                 Panel {
                     p { class: "hero-tagline",
-                    "Production "
-                    span { class: "hl-warning", "Rust" }
-                    " for the work that has to actually run: "
-                    span { class: "hl-success", "mobile apps" }
-                    ", "
-                    span { class: "hl-error", "internal tooling" }
-                    ", and the "
+                        "Production "
+                        span { class: "hl-warning", "Rust" }
+                        " for the work that has to actually run: "
+                        span { class: "hl-success", "mobile apps" }
+                        ", "
+                        span { class: "hl-error", "internal tooling" }
+                        ", and the "
                         span { class: "hl-tertiary", "storage engines" }
                         " underneath."
                     }

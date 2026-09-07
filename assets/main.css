@@ -1,7 +1,6 @@
 @import url("https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@latest/400.css");
 @import url("https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@latest/700.css");
 
-
 /* ==================
    colors (default: gruvbox-dark)
  ==================== */
@@ -166,17 +165,57 @@ a:visited {
     transition: color 0.2s;
 }
 
+/* Hover states that actually answer the cursor: links brighten toward the
+   text color, panels lift a few pixels with a deeper shadow. Both sit inside
+   (hover: hover) so touch devices never get a stuck state.
+
+   The panel rules carry the .theme-wrapper prefix on purpose: the crate's
+   components.css is inlined in a <style> block AFTER the main.css <link>,
+   so a bare .panel-card here loses the cascade to the crate's
+   `transition: border-color 0.2s` and the lift snaps with no transition
+   at all. The extra class outranks it regardless of order. */
 @media (hover: hover) {
     a:hover {
-        color: var(--accent-primary);
+        color: color-mix(
+            in srgb,
+            var(--accent-primary) 55%,
+            var(--text-primary)
+        );
+    }
+
+    .theme-wrapper .panel-card {
+        transition:
+            border-color 0.4s ease,
+            transform 0.4s ease,
+            box-shadow 0.4s ease;
+    }
+
+    .theme-wrapper .panel-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+}
+
+/* Respect reduced-motion for the lift and the entrance animations alike. */
+@media (prefers-reduced-motion: reduce) {
+    .theme-wrapper .panel-card:hover {
+        transform: none;
+    }
+
+    .content-enter,
+    .hero-panel,
+    .home-band,
+    .logo {
+        animation: none;
     }
 }
 
 /* === Navbar === */
 
 /* The nav shell (sticky wrapper, hamburger, collapsing panel, link pills)
-   comes from zwipe-components (components.css, inlined before this sheet);
-   this site sets its narrower column and keeps brand/logo/dropdown
+   comes from zwipe-components; note its components.css is inlined AFTER this
+   sheet in the built head, so equal-specificity overrides here lose the
+   cascade. This site sets its narrower column and keeps brand/logo/dropdown
    specifics below. */
 .nav-wrapper {
     --nav-max-width: none;
@@ -308,7 +347,7 @@ a.panel-action:visited {
 
 /* The theme picker (switcher, dropdown, mode toggle) comes from
    zwipe-components: rules ship in its components.css, inlined in <head>
-   before this stylesheet. */
+   after this stylesheet. */
 
 /* === Content === */
 
@@ -327,10 +366,12 @@ a.panel-action:visited {
 
 /* Sizing wrapper only. The card chrome comes from the shared Panel inside.
    Width matches zite's hero-card: the band (74rem) minus its 1.5rem side
-   padding, so the hero's edges align with the band below. */
+   padding, so the hero's edges align with the band below. The card enters a
+   beat after the wordmark so the hero lands in two steps. */
 .hero-panel {
     max-width: 71rem;
     margin: 0 auto 1.5rem;
+    animation: content-enter 0.5s ease-out 0.15s backwards;
 }
 
 .hero-tagline {
@@ -381,7 +422,11 @@ a.panel-action:visited {
 
 .tag-c0 {
     color: var(--accent-primary);
-    background-color: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+    background-color: color-mix(
+        in srgb,
+        var(--accent-primary) 12%,
+        transparent
+    );
     border-color: color-mix(in srgb, var(--accent-primary) 40%, transparent);
 }
 
@@ -393,7 +438,11 @@ a.panel-action:visited {
 
 .tag-c2 {
     color: var(--accent-secondary);
-    background-color: color-mix(in srgb, var(--accent-secondary) 12%, transparent);
+    background-color: color-mix(
+        in srgb,
+        var(--accent-secondary) 12%,
+        transparent
+    );
     border-color: color-mix(in srgb, var(--accent-secondary) 40%, transparent);
 }
 
@@ -421,6 +470,9 @@ a.panel-action:visited {
     max-width: 74rem;
     margin: 0 auto;
     padding: 0 1.5rem 3rem;
+    /* Third beat of the home entrance: wordmark (0s), hero card (0.15s),
+       then the band. */
+    animation: content-enter 0.5s ease-out 0.3s backwards;
 }
 
 .band-col {
