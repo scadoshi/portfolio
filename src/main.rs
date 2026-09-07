@@ -108,6 +108,10 @@ fn App() -> Element {
 
     rsx! {
         document::Meta { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" }
+        // Tells Dark Reader to leave the site alone (same lock zite carries):
+        // theming is first-class here, and Dark Reader's dynamic mode mangles
+        // the color-mix()/var() palette.
+        document::Meta { name: "darkreader-lock" }
         // Fonts are self-hosted in public/fonts (see the @font-face block in
         // main.css); preloading the two latin weights starts those fetches
         // before CSS parsing discovers them, closing the fallback-font flash.
