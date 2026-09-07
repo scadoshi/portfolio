@@ -228,13 +228,39 @@ a:visited {
    so a bare .panel-card here loses the cascade to the crate's
    `transition: border-color 0.2s` and the lift snaps with no transition
    at all. The extra class outranks it regardless of order. */
+/* Selected text in the accent tint instead of the browser's default blue,
+   which clashes with every theme in the palette. */
+::selection {
+    background-color: color-mix(in srgb, var(--accent-primary) 35%, transparent);
+    color: var(--text-primary);
+}
+
+/* Trailing external-link arrows (the \u{2197} glyphs, wrapped in .ext spans)
+   nudge along their own diagonal on hover. inline-block because transforms
+   don't apply to inline boxes. The gap to the label lives here rather than
+   as a space in the markup: the pills are flex containers, and a trailing
+   space in a flex item collapses, which crowded the arrow against the
+   label. 1ch matches the mono space the labels used to carry. */
+.ext {
+    display: inline-block;
+    margin-left: 1ch;
+    transition: transform 0.25s ease;
+}
+
 @media (hover: hover) {
     a:hover {
+        /* 30% keeps a trace of the accent hue but reads as a clear
+           brighten; the earlier 55% mix was too close to the resting
+           color to register as a hover at all. */
         color: color-mix(
             in srgb,
-            var(--accent-primary) 55%,
+            var(--accent-primary) 30%,
             var(--text-primary)
         );
+    }
+
+    a:hover .ext {
+        transform: translate(0.12em, -0.12em);
     }
 
     .theme-wrapper .panel-card {
@@ -271,7 +297,8 @@ a:visited {
 
 /* Respect reduced-motion for the lift and the entrance animations alike. */
 @media (prefers-reduced-motion: reduce) {
-    .theme-wrapper .panel-card:hover {
+    .theme-wrapper .panel-card:hover,
+    a:hover .ext {
         transform: none;
     }
 

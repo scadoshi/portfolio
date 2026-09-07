@@ -31,13 +31,14 @@ pub fn ProjectCard(
                 a {
                     href: "{repo_url}",
                     class: "panel-action",
-                    "GitHub \u{2197}"
+                    "GitHub" span { class: "ext", "\u{2197}" }
                 }
                 if let Some(site) = site_url {
                     a {
                         href: "{site}",
                         class: "panel-action",
-                        {format!("{} \u{2197}", site.trim_start_matches("https://"))}
+                        {site.trim_start_matches("https://")}
+                        span { class: "ext", "\u{2197}" }
                     }
                 }
             },

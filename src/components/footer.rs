@@ -8,17 +8,17 @@ pub fn Footer() -> Element {
                 "\u{00a9} 2026 Scotty Fermo | "
                 a {
                     href: "https://github.com/scadoshi",
-                    "GitHub \u{2197}"
+                    "GitHub" span { class: "ext", "\u{2197}" }
                 }
                 " | "
                 a {
                     href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                    "LinkedIn \u{2197}"
+                    "LinkedIn" span { class: "ext", "\u{2197}" }
                 }
                 " | "
                 a {
                     href: "mailto:scottyfermo@hotmail.com",
-                    "Email \u{2197}"
+                    "Email" span { class: "ext", "\u{2197}" }
                 }
             }
             p { class: "footer-built-text",

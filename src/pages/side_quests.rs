@@ -38,7 +38,7 @@ pub fn SideQuests() -> Element {
                             a {
                                 href: "{quest.repo_url}",
                                 class: "panel-action",
-                                "GitHub \u{2197}"
+                                "GitHub" span { class: "ext", "\u{2197}" }
                             }
                         },
                         p { class: "card-summary", "{quest.summary}" }

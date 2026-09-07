@@ -44,7 +44,7 @@ pub fn Home() -> Element {
                 "Zwipe, the deck builder MTG deserved. "
                 a {
                     href: "https://zwipe.net",
-                    "Try it now \u{2197}"
+                    "Try it now" span { class: "ext", "\u{2197}" }
                 }
             }
             Banner {
@@ -144,17 +144,17 @@ pub fn Home() -> Element {
                         a {
                             href: crate::pages::contribute::STRIPE_URL,
                             class: "panel-action",
-                            "Stripe \u{2197}"
+                            "Stripe" span { class: "ext", "\u{2197}" }
                         }
                         a {
                             href: crate::pages::contribute::BMC_URL,
                             class: "panel-action",
-                            "Buy Me a Coffee \u{2197}"
+                            "Buy Me a Coffee" span { class: "ext", "\u{2197}" }
                         }
                         a {
                             href: crate::pages::contribute::GITHUB_SPONSORS_URL,
                             class: "panel-action",
-                            "GitHub Sponsors \u{2197}"
+                            "GitHub Sponsors" span { class: "ext", "\u{2197}" }
                         }
                     },
                     p { class: "card-summary",

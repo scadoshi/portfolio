@@ -86,7 +86,7 @@ pub fn Navbar() -> Element {
                         class: "store-link",
                         href: "https://github.com/scadoshi",
                         onclick: move |_| open.set(false),
-                        "GitHub \u{2197}"
+                        "GitHub" span { class: "ext", "\u{2197}" }
                     }
                 }
                 li { class: "nav-link-store",
@@ -94,7 +94,7 @@ pub fn Navbar() -> Element {
                         class: "store-link",
                         href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
                         onclick: move |_| open.set(false),
-                        "LinkedIn \u{2197}"
+                        "LinkedIn" span { class: "ext", "\u{2197}" }
                     }
                 }
                 li { class: "nav-link-store",
@@ -102,7 +102,7 @@ pub fn Navbar() -> Element {
                         class: "store-link",
                         href: "mailto:scottyfermo@hotmail.com",
                         onclick: move |_| open.set(false),
-                        "Email \u{2197}"
+                        "Email" span { class: "ext", "\u{2197}" }
                     }
                 }
             },
@@ -113,17 +113,17 @@ pub fn Navbar() -> Element {
                     a {
                         class: "store-link",
                         href: "https://github.com/scadoshi",
-                        "GitHub \u{2197}"
+                        "GitHub" span { class: "ext", "\u{2197}" }
                     }
                     a {
                         class: "store-link",
                         href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                        "LinkedIn \u{2197}"
+                        "LinkedIn" span { class: "ext", "\u{2197}" }
                     }
                     a {
                         class: "store-link",
                         href: "mailto:scottyfermo@hotmail.com",
-                        "Email \u{2197}"
+                        "Email" span { class: "ext", "\u{2197}" }
                     }
                 }
             },
