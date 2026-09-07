@@ -108,6 +108,11 @@ fn App() -> Element {
 
     rsx! {
         document::Meta { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" }
+        // Fonts are self-hosted in public/fonts (see the @font-face block in
+        // main.css); preloading the two latin weights starts those fetches
+        // before CSS parsing discovers them, closing the fallback-font flash.
+        document::Link { rel: "preload", href: "/fonts/jetbrains-mono-latin-400-normal.woff2", r#as: "font", r#type: "font/woff2", crossorigin: "anonymous" }
+        document::Link { rel: "preload", href: "/fonts/jetbrains-mono-latin-700-normal.woff2", r#as: "font", r#type: "font/woff2", crossorigin: "anonymous" }
         document::Link { rel: "icon", href: FAVICON_ICO }
         document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
