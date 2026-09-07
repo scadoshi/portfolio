@@ -15,6 +15,7 @@ use pages::{
 use zwipe_components::{COMPONENTS_CSS, THEMES_CSS, ThemeConfig};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
+const REVEAL_JS: Asset = asset!("/assets/reveal.js");
 const FAVICON_ICO: Asset = asset!("/assets/favicon/favicon.ico");
 const FAVICON_16: Asset = asset!("/assets/favicon/favicon-16x16.png");
 const FAVICON_32: Asset = asset!("/assets/favicon/favicon-32x32.png");
@@ -122,6 +123,9 @@ fn App() -> Element {
         // after deferred scripts have executed.
         document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" }
         document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js" }
+        // Scroll reveal for panels below the fold; deferred for the same
+        // first-paint reason, and everything it does is progressive.
+        document::Script { defer: true, src: REVEAL_JS }
         Router::<Route> {}
     }
 }

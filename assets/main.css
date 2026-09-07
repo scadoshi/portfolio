@@ -196,6 +196,25 @@ a:visited {
     }
 }
 
+/* Scroll reveal (assets/reveal.js): panels start sunk and faded, then ease
+   up when the observer flags them on screen. The .theme-wrapper prefix
+   outranks the hover block's transition on the same elements while the
+   reveal runs; the script strips both classes afterward, handing the panel
+   back to its normal hover behavior. Without JS nothing gets the pending
+   class and content simply shows. */
+.theme-wrapper .reveal-pending {
+    opacity: 0;
+    transform: translateY(14px);
+}
+
+.theme-wrapper .reveal-pending.reveal-in {
+    opacity: 1;
+    transform: none;
+    transition:
+        opacity 0.55s ease-out,
+        transform 0.55s ease-out;
+}
+
 /* Respect reduced-motion for the lift and the entrance animations alike. */
 @media (prefers-reduced-motion: reduce) {
     .theme-wrapper .panel-card:hover {
