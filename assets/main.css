@@ -179,6 +179,9 @@ body {
 
 .theme-wrapper {
     --grid-line: color-mix(in srgb, var(--text-primary) 4%, transparent);
+    /* Every 4th line, drawn a notch stronger (see the ::before layers), so
+       the backdrop reads as drafting paper instead of a flat mesh. */
+    --grid-line-major: color-mix(in srgb, var(--text-primary) 9%, transparent);
     --grid-size: 28px;
     --bg-sink: color-mix(in srgb, var(--bg-primary), #000 15%);
     min-height: 100vh;
@@ -206,10 +209,18 @@ body {
     z-index: -1;
     pointer-events: none;
     background-color: var(--bg-sink);
+    /* Major lines every 4 cells layered over the minor mesh; the sizes pair
+       up with background-size below (majors at 4x the cell, minors at 1x). */
     background-image:
+        linear-gradient(var(--grid-line-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line-major) 1px, transparent 1px),
         linear-gradient(var(--grid-line) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: var(--grid-size) var(--grid-size);
+    background-size:
+        calc(var(--grid-size) * 4) calc(var(--grid-size) * 4),
+        calc(var(--grid-size) * 4) calc(var(--grid-size) * 4),
+        var(--grid-size) var(--grid-size),
+        var(--grid-size) var(--grid-size);
 }
 
 a,
