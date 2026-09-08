@@ -602,7 +602,20 @@ a.panel-action:visited {
 @media (max-width: 56rem) {
     .home-band,
     .detail-band {
-        grid-template-columns: 1fr;
+        /* minmax(0, ...) matches the wide-screen tracks: a bare 1fr floors
+           at the content's min-width, and a demo video's intrinsic width
+           (1560px) would push the whole column past the viewport. */
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* Phone-scale media: without these the desktop floors (20rem body,
+       34rem image cap) make the demo panel swallow the screen. */
+    .band-col > .project-gallery .gallery-body {
+        min-height: 0;
+    }
+
+    .band-col > .project-gallery .gallery-image {
+        max-height: 55vh;
     }
 
     /* Single-stack order is about -> projects -> side quests -> contribute,
@@ -794,6 +807,7 @@ a.panel-action:visited {
 
 .gallery-image {
     display: block;
+    min-width: 0;
     max-width: 100%;
     max-height: 70vh;
     height: auto;
