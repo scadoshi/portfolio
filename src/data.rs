@@ -200,78 +200,38 @@ let shown: Vec<Card> = Cards::from(deck_cards)
 // Grouping stays an extension trait on Vec<Card>: fixed-order labelled
 // buckets, and CardRole grouping is multi-bucket (one card, many roles)
 let groups = deck_cards.group_by(GroupByOption::CardType);"#,
-            description: "One CardCriteria predicate core serves both sides. The server wraps it in a CardQuery with bounded pagination and compiles it to SQL; the app applies the same criteria in memory through the Cards wrapper, which by construction cannot express a limit (pagination is a query concern). One builder emits either shape, so the filter UI can never drift from the API.",
+            description: "One predicate core, two front doors. The server compiles it to SQL, the app runs it in memory, and the same builder emits either, so the filter UI cannot drift from the API.",
         },
         Snippet {
             title: "Swipe Gesture Engine",
-            code: r#"// Core trait: platform-agnostic swipe logic
+            code: r#"// The gesture logic lives once, in a trait. Touch and mouse adapt to it.
 trait OnSwipe {
     fn onswipestart(&mut self, point: ClientPoint);
     fn onswipemove(&mut self, point: ClientPoint);
     fn onswipeend(&mut self, point: ClientPoint, config: &SwipeConfig);
 }
 
-// Platform adapters: same core, different event types
-impl OnTouch for Signal<SwipeState> {
-    fn ontouchstart(&mut self, e: Event<TouchData>) {
-        self.with_mut(|ss| ss.onswipestart(e.client_coordinates()));
+// A swipe registers on distance OR velocity, and the axis locks on the
+// first movement so a diagonal drag cannot fire two directions.
+if distance > config.distance_threshold
+    || (distance > 10.0 && speed > config.speed_threshold)
+{
+    match self.traversing_axis {
+        Some(Axis::X) if delta.x < 0.0 => self.latest_swipe = Some(Dir::Left),
+        Some(Axis::X) if delta.x > 0.0 => self.latest_swipe = Some(Dir::Right),
+        _ => {}
     }
-}
-impl OnMouse for Signal<SwipeState> {
-    fn onmousedown(&mut self, e: Event<MouseData>) {
-        self.with_mut(|ss| ss.onswipestart(e.client_coordinates()));
-    }
-}
-
-// Detection: dual threshold (distance OR velocity) + axis locking
-fn set_latest_swipe(&mut self, config: &SwipeConfig) {
-    if distance > config.distance_threshold
-        || (distance > 10.0 && speed > config.speed_threshold)
-    {
-        match self.traversing_axis {
-            Some(Axis::X) if delta.x < 0.0 => self.latest_swipe = Some(Dir::Left),
-            Some(Axis::X) if delta.x > 0.0 => self.latest_swipe = Some(Dir::Right),
-            Some(Axis::Y) if delta.y < 0.0 => self.latest_swipe = Some(Dir::Up),
-            Some(Axis::Y) if delta.y > 0.0 => self.latest_swipe = Some(Dir::Down),
-            _ => {}
-        }
-    }
-}
-
-// Swipeable component: reactive transform follows finger/cursor
-rsx! { div {
-    style: "transform: translate({xpx}px, {ypx}px);
-            transition: transform {return_seconds}s;",
-    ontouchstart, ontouchmove, ontouchend,
-    onmousedown, onmousemove, onmouseup,
-    { children }
-} }"#,
-            description: "11 files, zero library dependencies. OnSwipe defines the gesture logic once; OnTouch and OnMouse adapt it to platform events. Axis locks on first movement so diagonal drags don't fire both directions. Velocity tracking (pixels/ms between consecutive points) lets quick flicks register even below the distance threshold. The Swipeable component renders a reactive CSS transform that follows the user's finger in real time.",
+}"#,
+            description: "Built across 11 files with no gesture library. Axis locking and a velocity threshold are what make quick flicks register without diagonal drags firing twice.",
         },
         Snippet {
             title: "88-Column Upsert Automation",
-            code: r#"// Single source of truth: 88 field names, line-separated
-const SCRYFALL_DATA_FIELDS: &str = "
-    arena_id  id  lang  mtgo_id  oracle_id  cmc
-    color_identity  colors  power  toughness  type_line
-    ...  (88 fields total)
-";
+            code: r#"// One constant holds all 88 field names; everything else derives from it,
+// so a new Scryfall column never has to be added in five places.
+const FIELDS: &str = "arena_id id lang mtgo_id oracle_id cmc ...";
 
-// Derived helpers, all reading from the same constant
-fn scryfall_data_fields() -> String { /* comma-join for INSERT */ }
-fn bulk_upsert_conflict_fields() -> String {
-    // "ON CONFLICT (id) DO UPDATE SET arena_id = EXCLUDED.arena_id, ..."
-}
-
-// Trait-based binding: QueryBuilder gains card methods
-trait BindScryfallDataFields {
-    fn bind_scryfall_fields(&mut self, card: &ScryfallData) -> &mut Self;
-}
-trait BindCards {
-    fn bind_cards(&mut self, data: &[ScryfallData]) -> &mut Self;
-}
-
-// Result: one fluent chain builds the entire 88-column upsert
+// Traits give QueryBuilder the card-shaped methods, so the whole
+// 88-column upsert is one chain.
 QueryBuilder::new("INSERT INTO scryfall_data (")
     .push(scryfall_data_fields())
     .push(") VALUES ")
@@ -279,15 +239,10 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     .push(bulk_upsert_conflict_fields())
     .push(" RETURNING *;")
 
-// Upsert strategy chain, each layer adding a capability:
-// BatchDeltaUpsertWithTx (chunk + skip unchanged)
-//   → BulkDeltaUpsertWithTx (PartialEq diff against DB)
-//     → BatchUpsertWithTx (chunk within the param limit,
-//         card-by-card fallback on a failed chunk)
-//       → BulkUpsertWithTx (one SQL statement per chunk)
-//         → SingleUpsertWithTx (the fallback unit)
-// One bad card never blocks the rest of the batch"#,
-            description: "The 88-field constant is the single source of truth for all SQL generation, and trait-based binding keeps the calling code clean. On the read side a DatabaseScryfallData DTO in the outbound layer (primitives and Json wrappers sqlx maps natively) converts into the domain type, keeping the hexagonal boundary honest. Five upsert strategies compose via traits: delta detection skips unchanged cards, batching respects PostgreSQL's 65k parameter limit, and automatic fallback to card-by-card ensures one bad record never blocks 100k others.",
+// Five strategies compose, each adding one capability: chunk and skip
+// unchanged, diff against the DB, chunk within the parameter limit, one
+// statement per chunk, then single-card fallback."#,
+            description: "Postgres caps a statement at 65,535 parameters, which at 88 fields a card means chunking. The single-card fallback is what stops one bad record taking 100k others with it.",
         },
     ],
     obstacles: &[
@@ -578,35 +533,22 @@ impl Tool for SearchWeb {
         },
         Snippet {
             title: "Command Dispatch",
-            code: r#"// Every line of user input parses into a ChatInput variant,
-// then the runner pattern-matches it to a command module.
+            code: r#"// Every line of input parses into a ChatInput variant, then the runner
+// matches it to a command module. Adding a command is a variant and an arm.
 enum ChatInput {
     Message(String),
-    Help,
-    Clear,
-    Save,
-    Load(String),
     Model(String),
-    Tokens,
     Compact,
     Exit,
     // ...one variant per slash command
 }
 
-loop {
-    let line = read_line()?;
-    match ChatInput::parse(&line) {
-        ChatInput::Message(text) => chat.stream(text).await?,
-        ChatInput::Help          => commands::help::run(),
-        ChatInput::Clear         => commands::clear::run(&mut chat),
-        ChatInput::Save          => commands::save::run(&chat)?,
-        ChatInput::Load(name)    => commands::load::run(&mut chat, &name)?,
-        ChatInput::Model(name)   => commands::model::run(&mut chat, &name).await?,
-        ChatInput::Tokens        => commands::tokens::run(&chat),
-        ChatInput::Compact       => commands::compact::run(&mut chat).await?,
-        ChatInput::Exit          => break,
-        // ...
-    }
+match ChatInput::parse(&read_line()?) {
+    ChatInput::Message(text) => chat.stream(text).await?,
+    ChatInput::Model(name)   => commands::model::run(&mut chat, &name).await?,
+    ChatInput::Compact       => commands::compact::run(&mut chat).await?,
+    ChatInput::Exit          => break,
+    // ...
 }"#,
             description: "Adding a command is a two-step change: a new ChatInput variant and a new module. No conditionals in the loop, no flag-string soup. The 220-line main.rs grew into this; the architecture earned its complexity.",
         },
@@ -755,50 +697,28 @@ impl<R: Read + Seek> BloomFilterReader for R {
         },
         Snippet {
             title: "K-Way Merge: compact()",
-            code: r#"pub fn compact(&mut self) -> anyhow::Result<()> {
-    let mut entries: Vec<_> = read_dir(&self.sstables_path)?.collect::<Result<_, _>>()?;
-    entries.sort_by_key(|e| Reverse(e.file_name())); // newest-to-oldest
-    let to_delete: Vec<_> = entries.iter().map(|e| e.path()).collect();
+            code: r#"// Every SSTable is merged at once rather than pairwise. Each holds a
+// cursor, and each pass takes the globally smallest key across all of them.
+loop {
+    sstables.retain(|(entry, _)| entry.is_some());
+    if sstables.is_empty() { break; }
 
-    let mut sstables: Vec<(Option<Entry>, SSTable)> = entries
-        .into_iter()
-        .filter_map(|e| SSTable::from_path(e.path()).ok().flatten())
-        .map(|sst| (None, sst))
-        .collect();
+    let min = /* smallest key across all active cursors */;
+
     for (entry, sstable) in sstables.iter_mut() {
-        *entry = sstable.read_next_entry()?;
-    }
-
-    let mut memtable = MemTable::new();
-    let mut seen_keys: HashSet<String> = HashSet::new();
-    loop {
-        sstables.retain(|(entry, _)| entry.is_some());
-        if sstables.is_empty() { break; }
-
-        let min = { /* global minimum key across all active cursors */ };
-
-        for (entry, sstable) in sstables.iter_mut() {
-            let entry_ref = entry.as_ref().unwrap();
-            let is_participant = entry_ref.key() == min;
-            let winner_found = seen_keys.contains(min.as_str());
-            if is_participant && !winner_found {
-                seen_keys.insert(min.clone());
-                if let Entry::Set { .. } = entry_ref {
-                    memtable.process(entry_ref.clone())?;
-                }
-                // Entry::Delete: mark seen but drop, the tombstone served its purpose
+        let is_participant = entry.as_ref().unwrap().key() == min;
+        // Newest file wins: seen_keys means a later version already landed.
+        if is_participant && !seen_keys.contains(min.as_str()) {
+            seen_keys.insert(min.clone());
+            if let Entry::Set { .. } = entry.as_ref().unwrap() {
+                memtable.process(entry.as_ref().unwrap().clone())?;
             }
-            if is_participant {
-                *entry = sstable.read_next_entry()?;
-            }
+            // A tombstone is marked seen and dropped. It has done its job.
         }
-        if memtable.should_flush() { memtable.flush_to(self.sstables_path.clone())?; }
+        if is_participant { *entry = sstable.read_next_entry()?; }
     }
-    if !memtable.is_empty() { memtable.flush_to(self.sstables_path.clone())?; }
-    for path in to_delete { remove_file(path)?; }
-    Ok(())
 }"#,
-            description: "Files newest-to-oldest means the first participant is the winner by definition. seen_keys tracks all winners so all copies advance. The Entry::Set guard is the tombstone suppression point: recorded as seen so older copies lose, never written to output.",
+            description: "Files are read newest-to-oldest, so the first version of a key wins and the rest are skipped. Tombstones get recorded and then dropped, which is what stops them accumulating forever.",
         },
     ],
     obstacles: &[
@@ -1143,7 +1063,7 @@ pub trait Solution: Sized {
     fn part_one(&self) -> anyhow::Result<Answer>;
     fn part_two(&self) -> anyhow::Result<Answer>;
 }"#,
-            description: "Handing back a function pointer means the registry answers \"is this day written\" without an input in hand. A run over every year downloads nothing for the days nobody has solved yet. A macro generated these arms while inputs were embedded at compile time; reading at runtime removed the reason, and the longhand version formats, jumps to definition, and reports errors on real lines.",
+            description: "Handing back a function pointer means the registry can answer \"is this day written\" without an input in hand, so a run over every year downloads nothing for days nobody has solved.",
         },
         Snippet {
             title: "Merging the Two Verdicts",
@@ -1161,7 +1081,7 @@ let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
 // year 2015 day 1 in 12.707us (3.291us parsing)
 //   part one: 138 (correct) [7.125us]
 //   part two: 1771 (new star) [2.291us]"#,
-            description: "Two sources with different authority collapse into one set of parentheses. AlreadySolved reads like a rejection but it is the site confirming the star exists, which is why it renders as \"starred\" rather than as a complaint. Verdicts only attach to a submittable answer, so art and absent answers never pick one up.",
+            description: "AlreadySolved reads like a rejection but it is the site confirming the star exists, which is why it renders as starred rather than as a complaint.",
         },
     ],
     obstacles: &[
@@ -1252,7 +1172,7 @@ public static async Task<Solved> Solve<T>(
         _ => throw new UnreachableException($"unhandled: {GetType().Name}"),
     };
 }"#,
-            description: "Four cases that must not grow outside this file. The private constructor closes the hierarchy, and the sealed override stops a case generating its own string and silently replacing this one. The last arm is the honest part: C# cannot prove the switch exhaustive, so the impossible case still needs writing down.",
+            description: "The private constructor closes the hierarchy so no case can be added outside this file. The last arm is the honest part: C# cannot prove the switch exhaustive, so the impossible case still gets written down.",
         },
     ],
     obstacles: &[
