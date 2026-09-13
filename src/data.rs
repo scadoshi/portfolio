@@ -931,10 +931,10 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
         "Self-deadlock on the TTL read path. get_absolute_ttl held the mutex guard and then called self.remove() on the expired branch. std mutexes are not reentrant, so the thread hung forever. Guards live to the end of scope, not the end of the statement",
         "A read-before-parse bug in the frame loop. TCP coalesces writes, so one read can deliver two frames; reading first meant the second sat in the buffer unseen until EOF. Parse first, read only on Incomplete",
     ],
-    progress: "M1 through M6 done: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. 237 tests. Async migration next, then MULTI/EXEC.",
+    progress: "Done through M6: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. 237 tests. Active development is finished; an async migration and MULTI/EXEC are there if I come back to it.",
     impact: "The in-memory half of a pair with chickadee, which is the on-disk LSM engine. Between them they cover both sides of how a KV system gets built. Real clients drive both.",
     site_url: None,
-    status: ProjectStatus::Doing,
+    status: ProjectStatus::Done,
 };
 
 const UPSEE: Project = Project {

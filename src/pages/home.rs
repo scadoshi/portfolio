@@ -49,7 +49,8 @@ pub fn Home() -> Element {
             }
             Banner {
                 category: "Featured",
-                status: BannerStatus::Doing,
+                status: BannerStatus::Done,
+                status_label: "Just finished",
                 "Steller, a hand-written Redis-compatible KV server. "
                 Link {
                     to: Route::SideQuestDetail { slug: "steller".to_string() },
