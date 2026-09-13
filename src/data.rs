@@ -822,12 +822,40 @@ const STELLER: Project = Project {
     impact_metric: "~5,900 lines, 237 tests, hand-written RESP + durability + pub/sub",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out. All written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
-    media: &[MediaItem {
-        src: asset!("/assets/projects/steller/server_run_redis_cli_connect.mp4"),
-        alt: "redis-cli connecting to the server: SET, GET, DEL, PING",
-        caption: Some("redis-cli connecting: SET, GET, DEL, then PING repeatedly"),
-        kind: MediaKind::Video,
-    }],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/steller/01-basics.mp4"),
+            alt: "redis-cli connecting to steller: PING, SET, GET, EXISTS, DEL",
+            caption: Some("A real redis-cli connects and never notices it isn't Redis"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/steller/02-ttl-and-set-options.mp4"),
+            alt: "SET with EX and PX options, and a key expiring on its own",
+            caption: Some("SET options on millisecond deadlines, and a PX key expiring live"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/steller/03-pubsub.mp4"),
+            alt: "Two clients: one subscribed, one publishing, with the push delivered out of band",
+            caption: Some(
+                "Pub/sub without async: the push lands while the subscriber's reader is blocked",
+            ),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/steller/04-persistence-across-restart.mp4"),
+            alt: "Server shut down and restarted, with the value and its TTL both surviving",
+            caption: Some("Restart: the value survives and the TTL comes back lower, not reset"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/steller/05-error-handling.mp4"),
+            alt: "Three malformed commands answered with errors, session still serving",
+            caption: Some("Bad input gets an error and the session keeps going"),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input, with no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
         "Storage is HashMap<Vec<u8>, Entry> where Entry { value, expires_at: Option<Milliseconds> }. One struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread for memory hygiene",
