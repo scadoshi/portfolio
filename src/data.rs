@@ -1030,14 +1030,38 @@ const RUSTMAS: Project = Project {
     impact_metric: "~2,180 lines, 72 tests, both service contracts verified live",
     objective: "Build the tooling around Advent of Code rather than just the puzzles: fetch an input, run a day, and know whether the answer is right before spending a submission. Wrong answers to adventofcode.com cost an escalating cooldown, so the tool checks every answer against an independent solver (https://github.com/fornwall/advent-of-code) first and only sends what that solver agrees with.",
     tags: &["rust", "cli", "http", "tooling"],
-    media: &[MediaItem {
-        src: asset!("/assets/projects/rustmas/demo.mp4"),
-        alt: "The rustmas CLI fetching a puzzle input, solving both parts, validating the answers, then submitting them",
-        caption: Some(
-            "One day end to end: fetch, solve, check against the solver, then submit for the stars",
-        ),
-        kind: MediaKind::Video,
-    }],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/rustmas/01-run-a-day.mp4"),
+            alt: "Running one day's solution, showing both answers and their timings",
+            caption: Some("One day, both parts, and what each one cost. Offline, from cache"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/rustmas/02-independent-solver.mp4"),
+            alt: "The same day validated against an independent solver, both parts marked correct",
+            caption: Some(
+                "Someone else's implementation, used as a regression check. No account needed",
+            ),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/rustmas/03-every-year-at-once.mp4"),
+            alt: "Every written solution across eleven years running in under half a second",
+            caption: Some(
+                "Drop the filters and it runs everything, skipping unwritten days before they download",
+            ),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/rustmas/04-the-cache.mp4"),
+            alt: "The cache on disk: puzzle text, input, and a SHA-256 of the cookie that fetched it",
+            caption: Some(
+                "The cache keeps the whole puzzle, plus a hash of the cookie that fetched the input",
+            ),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "The two clients are named for who they talk to, not which one is official. AocClient carries the session cookie and grades each part exactly once. SolverClient needs no account and answers the same question every time, which is what makes it a regression check rather than a one-shot",
         "Dispatch hands back a function pointer instead of calling it. The registry can be asked whether a day exists without holding its input, so a run over every year skips unwritten days before downloading anything for them",
@@ -1110,14 +1134,38 @@ const SHARPMAS: Project = Project {
     impact_metric: "~2,270 lines, 121 tests, one design across two languages",
     objective: "Learn C# by rebuilding a finished Rust tool rather than by reading about it. Rustmas (https://github.com/scadoshi/rustmas) already settled what the tool should do and recorded why, so nothing here is a design question. Every open question is a language question: what is the C# idiom for this, and where is there honestly no analogue.",
     tags: &["csharp", "dotnet", "cli", "port"],
-    media: &[MediaItem {
-        src: asset!("/assets/projects/sharpmas/demo.mp4"),
-        alt: "The sharpmas CLI running the same fetch, solve, validate and submit sequence in C#",
-        caption: Some(
-            "The same run rebuilt in C#, down to the answers and the shape of the output",
-        ),
-        kind: MediaKind::Video,
-    }],
+    media: &[
+        MediaItem {
+            src: asset!("/assets/projects/sharpmas/01-run-a-day.mp4"),
+            alt: "The C# port running one day's solution with the same output shape as rustmas",
+            caption: Some(
+                "Same subcommands, same filters, same output. Different language under it",
+            ),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/sharpmas/02-independent-solver.mp4"),
+            alt: "Answers validated against the independent solver, both parts marked correct",
+            caption: Some("The same check against the same independent solver"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/sharpmas/03-sum-types-in-csharp.mp4"),
+            alt: "An abstract record with a private constructor and sealed nested cases",
+            caption: Some(
+                "What C# has instead of an enum: a private constructor closing the set of cases",
+            ),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/sharpmas/04-same-tool-two-languages.mp4"),
+            alt: "rustmas and sharpmas side by side running the same command on the same puzzle",
+            caption: Some(
+                "Side by side on the same puzzle. Same answers, same verdicts, honest timings",
+            ),
+            kind: MediaKind::Video,
+        },
+    ],
     approach: &[
         "ISolution<TSelf> with a static abstract Parse. Rust's trait has an associated function returning Self, and C#'s static abstract interface members are the nearest thing. A static member has nothing to dispatch on, so the runner is generic for that reason alone",
         "Where Rust has an enum, C# gets an abstract record with sealed nested leaves and a private base constructor, since only a nested type can reach a private constructor. That is as near as C# gets to a sum type nothing outside can extend",
