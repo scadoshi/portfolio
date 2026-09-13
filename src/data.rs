@@ -671,15 +671,35 @@ const CHICKADEE: Project = Project {
     tags: &["rust", "kv-store", "lsm-tree", "networking"],
     media: &[
         MediaItem {
-            src: asset!("/assets/projects/chickadee/cli_repl.mp4"),
-            alt: "Interactive CLI REPL session",
-            caption: Some("Interactive CLI REPL"),
+            src: asset!("/assets/projects/chickadee/01-cli-basics.mp4"),
+            alt: "CLI REPL: set, get, and a delete that writes a tombstone",
+            caption: Some("Set, get, and a delete that writes a tombstone rather than erasing"),
             kind: MediaKind::Video,
         },
         MediaItem {
-            src: asset!("/assets/projects/chickadee/server_and_two_clients.mp4"),
-            alt: "TCP server handling two concurrent clients",
-            caption: Some("TCP server handling two concurrent clients"),
+            src: asset!("/assets/projects/chickadee/02-wal-on-disk.mp4"),
+            alt: "Hex dump of the write-ahead log showing headers, magic bytes, keys and values",
+            caption: Some(
+                "The WAL in hex: a 10-byte header per entry, and CD marking every boundary",
+            ),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/chickadee/03-durability.mp4"),
+            alt: "Process killed and restarted, with keys rebuilt by replaying the log",
+            caption: Some("Kill the process and the memtable dies with it. The log rebuilds it"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/chickadee/04-corruption-recovery.mp4"),
+            alt: "One byte flipped in the log; the bad entry is dropped and later entries survive",
+            caption: Some("One flipped byte: the bad entry is dropped, everything after it lives"),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/chickadee/05-concurrent-clients.mp4"),
+            alt: "Two TCP clients reading and writing the same store on separate threads",
+            caption: Some("Two connections, two threads, one store"),
             kind: MediaKind::Video,
         },
     ],
