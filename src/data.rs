@@ -172,11 +172,10 @@ const ZWIPE: Project = Project {
         },
     ],
     approach: &[
-        "Rust on mobile via Dioxus: one Rust codebase compiles to a native mobile app, no JS bridge, no separate frontend repo",
-        "Shared domain crate (zwipe-core) used by both the Axum API and the Dioxus app: one CardCriteria predicate core (~50 fields) drives the server's SQL search and in-memory filtering on the device, both built from a single CardQueryBuilder so the filter UI can't drift from the API",
-        "Auth: Argon2id hashing, a structural password policy (length, character classes, unique-character and repeat limits), rotating refresh tokens (single-use, deleted on rotation), Password type consumed on hash so plaintext can't leak",
-        "SQLx at scale: five-strategy upsert chain handles batching, PartialEq delta detection, and per-row fallback; 88-column Scryfall sync respects PostgreSQL's 65k parameter limit (~327 cards per batch)",
-        "Enforced in CI: 22 clippy rules (unwrap, expect, panic, todo, dbg, print among them) promoted to errors in CI. 600+ tests, security audit complete, nightly PostgreSQL backups to Cloudflare R2",
+        "One Rust codebase compiles to native iOS and Android through Dioxus. No JS bridge, no separate frontend repo",
+        "A shared domain crate backs both the Axum API and the app, so the filter UI and the server's SQL search are built from the same query builder and cannot drift apart",
+        "Argon2id, single-use rotating refresh tokens, and a Password type that is consumed on hash so plaintext has nowhere to leak to",
+        "CI promotes 22 clippy rules to errors, unwrap among them. 600+ tests, nightly Postgres backups to R2",
     ],
     snippets: &[
         Snippet {
@@ -292,10 +291,9 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         },
     ],
     obstacles: &[
-        "ScryfallData has 88 fields, and strict hexagonal architecture demands a separate database DTO. Maintaining 88 fields across two types felt untenable solo, so the domain type first carried a feature-gated sqlx derive instead: bend the rule once, automate everything around it. The bend eventually got unbent. A real DatabaseScryfallData now lives in the outbound layer (primitives and Json wrappers sqlx maps natively) and converts into the domain type, with the 88-field constant still feeding all SQL generation",
-        "PostgreSQL's 65,535 parameter limit meets 88 fields per card: max ~327 cards per batch. Five upsert strategies compose via traits: delta detection skips unchanged cards, batching chunks within the parameter limit, and automatic card-by-card fallback ensures one bad record never blocks 100k others",
-        "Card search at 110k+ printings returned duplicates: the same card exists once per printing, and substring search over the raw table crawled. The latest_cards materialized view pre-deduplicates to one row per name (English preferred) with trigram GIN indexes so ILIKE search hits an index; the zervice sync refreshes the views nightly",
-        "Swipe gesture detection required solving axis locking, velocity vs distance thresholds, and cross-platform input (touch vs mouse). Built from scratch across 11 files with a trait hierarchy rather than pulling in a gesture library",
+        "ScryfallData has 88 fields, and hexagonal architecture wants a separate database type. Maintaining 88 fields twice felt untenable solo, so the domain type carried a feature-gated sqlx derive for a while. That bend has since been unbent: a real database type lives in the outbound layer and converts inward",
+        "Postgres caps a statement at 65,535 parameters, and 88 fields per card puts the ceiling around 327 cards a batch. Five upsert strategies compose to handle it, with card-by-card fallback so one bad record never blocks 100k others",
+        "Search over 110k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
     impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. ~100,000 lines across five crates, 600+ tests, unwrap banned by CI.",
@@ -341,11 +339,9 @@ const HALO_ACTION_IMPORTER: Project = Project {
         },
     ],
     approach: &[
-        "Per-failure-mode recovery, not blanket retry-with-backoff. 401 \u{2192} refresh token; 504/network \u{2192} retry immediately; missing ticket \u{2192} permanent skip via run-wide HashSet<u32>; deserialization error \u{2192} skip row and continue",
-        "Ticket-grouped retry: when a batch fails, group actions by ticket_id and retry each group independently. Maximizes successful imports and identifies exactly which tickets don't exist",
-        "Cache evolution as the dataset grew: single Halo report endpoint \u{2192} split across resources \u{2192} fully local cache from a direct DB query of ~8M existing action IDs. Each stage rethought how the tool remembers its own work",
-        "Two-tier cache with fs2 file locking: JSON tracks existing IDs per resource (per-run cache), text file tracks IDs imported during the current run (append-only). Both survive restarts and concurrent writes",
-        "Structured per-run output: log/YYYY-MM-DD_HH-MM-SS/ with full.log, retry.csv (re-importable), and summary.json with performance metrics, error breakdown by type, affected ticket IDs",
+        "Recovery is per failure mode rather than blanket retry. A 401 refreshes the token, a 504 retries immediately, a missing ticket is skipped for the rest of the run, and a bad row is skipped without taking the batch with it",
+        "When a batch fails, actions are regrouped by ticket and retried per group. That salvages the most imports and names exactly which tickets do not exist",
+        "Deduplication moved from a Halo report, to a split across resources, to a local cache of roughly 8M existing action IDs pulled straight from the database. Each stage was the previous one falling over",
     ],
     snippets: &[
         Snippet {
@@ -407,9 +403,8 @@ fn read_cached_ids() -> CacheData {
         },
     ],
     obstacles: &[
-        "Deduplication at scale: single Halo report worked at ~100k IDs but timed out as the dataset grew. Splitting across resources bought time; still timed out at millions. Final answer: direct DB query for all ~8M existing action IDs, local cache as source of truth (safe because I was the only importer)",
-        "Binary search retry was the wrong abstraction for batch failures: O(log(batch) * failures) is too many API calls. Ticket-grouped retry is simpler and more efficient",
-        "Parallel instances against the same cache directory hit corruption bugs. Fixed with fs2 exclusive locks on both cache files",
+        "Dedup at scale. A single report worked at ~100k IDs and timed out as the data grew; splitting it bought time and then timed out too. The answer was a direct DB query for all ~8M IDs, safe only because I was the sole importer",
+        "Binary search was the wrong abstraction for batch failures. Too many API calls for what ticket-grouped retry does more simply",
     ],
     progress: "Production. Actively used for real data migrations.",
     impact: "Reduced migration timelines from weeks to days. Runs unattended for hours against millions of records with automatic recovery from any transient failure.",
@@ -447,11 +442,9 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
         },
     ],
     approach: &[
-        "Type-safe domain modeling: Name (max 64, alphanumeric + underscore), Label (max 256), FieldType (8 variants with sub-type enums). All validated at construction, so invalid data is rejected before any API call",
-        "OAuth 2.0 client credentials flow with Arc<Mutex<Option<AuthToken>>> caching. 30-second expiry buffer prevents the edge-case 401 between check and call",
-        "Layered architecture (inbound/domain/outbound) with bin/lib crate split. Same pattern Zwipe uses at larger scale; lets the library logic be tested independently of the CLI",
-        "Interactive debug TUI with colored output: import mode runs everything, debug mode walks field-by-field with process/skip/quit. Per-field import results tracked with timestamps",
-        "GitHub Actions matrix build: Windows, macOS Intel + ARM, Linux. Cargo caching, distribution packaging with README + sample CSV",
+        "Name, Label and FieldType validate at construction, so a malformed field is rejected before anything reaches the API",
+        "OAuth tokens cache behind an Arc<Mutex> with a 30-second expiry buffer, which closes the window where a token passes the check and expires before the call",
+        "Import mode runs straight through; debug mode walks field by field with process, skip or quit, which is what made it usable against real client data",
     ],
     snippets: &[
         Snippet {
@@ -501,9 +494,8 @@ impl From<&CustomField> for HttpCustomField {
         },
     ],
     obstacles: &[
-        "Selection options for SingleSelect/MultiSelect fields contain commas, which collide with Halo's comma-separated API format. Built selection_options_string() to strip commas from individual options before joining",
-        "CSV header-position parsing instead of fixed column indices: real client CSVs don't always have columns in the expected order. Row-level error messages include row number + specific field issue",
-        "Log auto-cleanup (max 100 files, 7-day retention). Without it, repeated production runs accumulate unbounded log files",
+        "Selection options contain commas, and Halo's API separates options by comma. Options get stripped before joining",
+        "Real client CSVs do not keep columns in the expected order, so parsing goes by header position rather than index, and errors name the row and the field",
     ],
     progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Actively used in production for client implementations.",
     impact: "Reduced enterprise configuration time from hours to minutes. Ships as tagged cross-platform binaries, so an implementer runs it without a Rust toolchain.",
@@ -560,11 +552,9 @@ const MARVIN: Project = Project {
         },
     ],
     approach: &[
-        "Flagged a production bug in [Rig](https://github.com/0xPlaygrounds/rig): hardcoded [Anthropic](https://www.anthropic.com) model constants resolving to deprecated IDs and 404ing the API. Filed [issue #1370](https://github.com/0xPlaygrounds/rig/issues/1370), submitted a stopgap PR, and argued in-thread that constants tied to an external source of truth are the wrong primitive; suggested fetching /v1/models at runtime instead. Maintainers acknowledged the deeper fix is a larger refactor; Marvin implements the runtime-discovery pattern locally",
-        "Command pattern architecture: each slash command is a trait impl routed via a ChatInput enum. Started as a 220-line monolith, refactored to clean module boundaries as complexity grew",
-        "4 [Tavily](https://tavily.com) web tools (search, extract, crawl, sitemap) sharing an Arc<TavilyClient> for efficient client reuse",
-        "schemars derives JSON Schema from Rust types at compile time: no manual schema maintenance, no drift between types and definitions",
-        "Dynamic model discovery from [Anthropic's](https://www.anthropic.com) /v1/models API instead of hardcoded constants that go stale",
+        "Found a live bug in [Rig](https://github.com/0xPlaygrounds/rig): hardcoded model constants had gone stale and were 404ing the API. Filed [issue #1370](https://github.com/0xPlaygrounds/rig/issues/1370) with a stopgap PR, and argued in the thread that constants pinned to someone else's source of truth are the wrong primitive. Marvin fetches the model list at runtime instead",
+        "Each slash command is a trait impl routed through an enum. It started as a 220-line monolith and grew module boundaries as it earned them",
+        "schemars derives the JSON schema for each tool from the Rust types, so the definitions cannot drift from the code",
     ],
     snippets: &[
         Snippet {
@@ -643,9 +633,8 @@ async fn list_models(api_key: &str) -> Result<Vec<Model>> {
         },
     ],
     obstacles: &[
-        "Stdout buffering: print!() without a newline requires manual flush() for immediate display during streaming",
-        "[Tavily](https://tavily.com) API rejects null values for optional fields. Fixed with #[serde(skip_serializing_if = \"Option::is_none\")]",
-        "Architecture outgrew the 220-line monolith. Refactored to command pattern with per-command modules. Each command independently testable",
+        "Streaming output appeared in chunks until it turned out print!() without a newline needs a manual flush()",
+        "Tavily rejects null for optional fields, which serde sends by default. #[serde(skip_serializing_if)] fixed it",
     ],
     progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
     impact: "A learning project that ended up sending a fix back to the framework it was built on. Flagged a production bug in Rig, proposed the architectural fix in-thread, and shipped the better pattern locally rather than waiting on the upstream refactor.",
@@ -704,11 +693,10 @@ const CHICKADEE: Project = Project {
         },
     ],
     approach: &[
-        "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to full LSM-tree: WAL, memtable, SSTables, bloom filters, k-way compaction, TCP server, concurrency. Six distinct architectural layers, each one a real piece of how production KV systems work",
-        "WAL with sync_all() after every write; 10-byte binary header (magic 0x4443 + CRC32 + length); corruption recovery scans byte-by-byte past garbage, typed via a CorruptionType enum so callers know exactly what went wrong",
-        "Bloom filters as in-file SSTable footers. Kirsch-Mitzenmacher double hashing with two xxh3 seeds, k=7, ~1% false positive rate. BloomFilterReader as a blanket impl on R: Read + Seek, so any file handle gains it",
-        "K-way compaction across all SSTables simultaneously, not sequentially. seen_keys HashSet drops tombstone winners so they never accumulate. Single Entry enum threads tombstones through every layer (WAL, memtable, SSTables)",
-        "TCP server: thread-per-connection, Arc<Mutex<Log>>, per-command locking (lock \u{2192} execute \u{2192} drop \u{2192} flush). Generic Runner<R: BufRead, W: Write> powers both the CLI and the TCP server from the same loop",
+        "Built phase by phase from the Bitcask paper up to a full LSM-tree: WAL, memtable, SSTables, bloom filters, k-way compaction, then a TCP server on top",
+        "Every entry carries a 10-byte header with magic bytes and a CRC32. When a checksum fails the reader scans byte-by-byte to the next magic marker, so corruption costs one entry instead of the file",
+        "Bloom filters sit in each SSTable as a footer. Kirsch-Mitzenmacher double hashing, two xxh3 seeds, about 1% false positives, which keeps negative lookups off the disk",
+        "Compaction merges every SSTable at once rather than pairwise, and drops tombstones that have outlived what they were hiding",
     ],
     snippets: &[
         Snippet {
@@ -814,12 +802,11 @@ impl<R: Read + Seek> BloomFilterReader for R {
         },
     ],
     obstacles: &[
-        "Tombstone resurrection: splitting Entry into WalEntry/SstEntry assumed SSTables only needed Sets. Deleting a flushed key cleared the memtable but the SSTable still had the original Set, and get() would find it again. Fix: single Entry enum threading tombstones through all layers; compact() suppresses them via an Entry::Set guard. Regression test written before the refactor",
-        "flush_count must be initialized from the existing SSTable count on startup, not zero. A restart after writes would otherwise compact on the wrong schedule",
-        "Per-command vs per-connection locking: holding the Mutex for an entire connection lifetime would serialize all clients. Per-command locking (lock \u{2192} execute \u{2192} drop) keeps the critical section short so clients actually make progress",
+        "Tombstone resurrection. Splitting Entry into separate WAL and SSTable types assumed SSTables only ever held writes, so deleting a flushed key cleared the memtable while the SSTable still had the original. The key came back on the next read. One Entry enum now threads tombstones through every layer",
+        "flush_count has to be read from the existing SSTable count at startup rather than starting at zero, or a restart compacts on the wrong schedule",
     ],
     progress: "Complete. All 6 phases done. 99 tests across 7 modules including TCP integration tests.",
-    impact: "Started from a paper and built a complete, connectable key-value database: the storage architecture behind LevelDB, RocksDB, and Cassandra. Every layer built from scratch: binary protocol with corruption recovery, WAL durability, sorted memtable flush, bloom-filter-accelerated reads, k-way merge compaction, TCP server with concurrent access.",
+    impact: "Started from a paper and ended with a database you can connect to. The same storage architecture behind LevelDB, RocksDB and Cassandra, built a layer at a time.",
     site_url: None,
     status: ProjectStatus::Done,
 };
@@ -832,12 +819,10 @@ const STELLER: Project = Project {
     repo_url: "https://github.com/scadoshi/steller",
     summary: "Redis-compatible in-memory KV server in Rust. Real redis-cli clients connect.",
     card_bullets: &[
-        "Hand-written RESP wire protocol: no library does the work",
-        "Hexagonal ports: domain Service orchestrates the cache + a CacheRepository persister",
-        "Durability: atomic snapshot (temp+rename) + AOF replay through the same RESP parse path",
-        "Pub/Sub fan-out over a per-session writer thread, delivering out of band while the reader blocks",
-        "SET options (EX/PX/EXAT/PXAT) on millisecond deadlines, with Seconds and Milliseconds as newtypes so the compiler catches unit mismatches",
-        "~5,900 LOC, 237 tests across protocol, storage, persistence, and pub/sub",
+        "Hand-written RESP parser. No protocol crate, no async runtime",
+        "The append-only log is the wire format, so replay reuses the inbound parse path",
+        "Pub/sub fan-out over per-session writer threads",
+        "~5,900 lines, 237 tests",
     ],
     impact_metric: "~5,900 lines, 237 tests, hand-written RESP + durability + pub/sub",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out. All written without reaching for a protocol crate.",
@@ -877,13 +862,10 @@ const STELLER: Project = Project {
         },
     ],
     approach: &[
-        "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input, with no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
-        "Storage is HashMap<Vec<u8>, Entry> where Entry { value, expires_at: Option<Milliseconds> }. One struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread for memory hygiene",
-        "Hexagonal ports: the domain defines two trait boundaries: CacheRepository (the persister implements it) and CacheService (the domain Service implements it; the session calls it). Adapter errors map into a domain-owned RepositoryError at the boundary, so the domain never names an outbound type",
-        "Durability via snapshot + AOF, hybrid recovery. Snapshot is a wincode dump written temp-file-then-rename (atomic; never a half-written file). AOF is the wire protocol: each mutating command is appended as the exact RESP bytes a client would have sent, so replay reuses Frame::parse_one + Command::try_from. Snapshot-then-truncate compaction holds the cache lock across both so no mutation escapes between the two",
-        "Units as newtypes, not u64. Honoring PX means sub-second deadlines, so storage moved from seconds to milliseconds. Rather than trust discipline, Seconds and Milliseconds are distinct types and Seconds only exists between the parser reading a wire token and converting it. The migration surfaced a bug that a bare u64 had been hiding: the AOF encoder wrote a second-granular verb for a millisecond value, so replay multiplied by 1000 a second time and pushed every deadline 1000x further out on each restart, silently, visible only after a restart",
-        "Graceful shutdown without a signal-handling crate: Arc<AtomicBool> flag, TcpListener::set_nonblocking(true) so accept() returns WouldBlock and the loop can check the flag, stdin EOF or \"quit\" as the trigger. Every spawned thread is collected as a JoinHandle and joined cleanly before run() returns",
-        "Pub/Sub without async: each session splits into a ReadHalf (parse + execute) and a WriteHalf that solely owns the socket's write end and drains a per-session mpsc. PUBLISH serializes the [\"message\", channel, payload] push once and drops the bytes into every subscriber's mpsc, so a subscriber receives out of band while its own reader is blocked on a client read, with no extra thread per subscriber. The registry (channel \u{2192} senders keyed by session id) prunes dead senders on fan-out and unsubscribes a session from every channel on disconnect",
+        "The parser is the framer. parse_one returns the frame plus whatever bytes are left over, and Incomplete is a real error variant rather than an Option, because the read loop leans on the difference between \"need more\" and \"malformed\"",
+        "The AOF is the wire protocol. Every mutation is logged as the exact RESP bytes a client would have sent, so replay reuses Frame::parse_one and Command::try_from instead of a second decoder that could drift",
+        "Units are newtypes. Seconds and Milliseconds are distinct types, and Seconds only survives between the parser reading a token and converting it. That caught a live bug where replay was multiplying every deadline by 1000 on each restart",
+        "Pub/sub with no async. Each session splits into a reader and a writer thread, so a published message lands on a subscriber while its own reader is still blocked on the socket",
     ],
     snippets: &[
         Snippet {
@@ -898,51 +880,11 @@ const STELLER: Project = Project {
         _ => Err(FrameError::UnknownSigil),
     }
 }"#,
-            description: "Frame::parse_one returns the parsed frame and a leftover slice borrowing from the input. Incomplete is a real error variant, not an Option; it's load-bearing for the session reader's read-more loop. split_crlf returns None when no CRLF is found, which is the Incomplete signal at the byte-splitter layer.",
+            description: "Returns the frame plus whatever bytes were left over. Incomplete is an error variant rather than an Option because the read loop has to tell \"need more\" from \"malformed\".",
         },
         Snippet {
-            title: "Graceful Shutdown, No Signal Crate",
-            code: r#"let listener = TcpListener::bind(BIND_ADDRESS)?;
-listener.set_nonblocking(true)?;  // accept() returns WouldBlock instead of parking
-let shutdown = Arc::new(AtomicBool::new(false));
-let mut handles = Vec::<JoinHandle<()>>::new();
-
-// stdin trigger: EOF or "quit"/"exit" flips the flag
-let shutdown_clone = shutdown.clone();
-handles.push(spawn(move || {
-    let mut s = String::new();
-    loop {
-        s.clear();
-        match std::io::stdin().read_line(&mut s) {
-            Ok(0) => { shutdown_clone.store(true, Ordering::Relaxed); break; }
-            Ok(_) if matches!(s.trim().to_lowercase().as_str(), "quit" | "exit") => {
-                shutdown_clone.store(true, Ordering::Relaxed); break;
-            }
-            _ => (),
-        }
-    }
-}));
-
-// main loop: check flag, throttle WouldBlock, prune finished handles
-loop {
-    if shutdown.load(Ordering::Relaxed) { break; }
-    handles.retain(|h| !h.is_finished());
-    match listener.accept() {
-        Ok((stream, _)) => { /* spawn session, push handle */ }
-        Err(e) if e.kind() == ErrorKind::WouldBlock => {
-            std::thread::sleep(Duration::from_millis(50));  // don't burn a core
-        }
-        Err(e) => eprintln!("accept failed: {e}"),
-    }
-}
-for h in handles { let _ = h.join(); }"#,
-            description: "No ctrlc/signal-hook crate. set_nonblocking turns accept() into a poll; pair it with a 50ms sleep on WouldBlock so the loop checks the shutdown flag instead of burning a CPU. A stdin thread is the trigger (EOF or \"quit\"). Every spawned worker (sessions, persistence, sweeper) is collected as a JoinHandle and joined before run() returns, so in-flight work finishes cleanly.",
-        },
-        Snippet {
-            title: "AOF Is the Wire Protocol",
-            code: r#"// Every mutation logged as the exact RESP bytes a client would have sent.
-// One serializer (Frame::write_to) for both the network and the log.
-impl From<WriteCommand> for Frame {
+            title: "The Log Is the Wire Protocol",
+            code: r#"impl From<WriteCommand> for Frame {
     fn from(value: WriteCommand) -> Self {
         match value {
             WC::Set { key, value, expires_at } => {
@@ -951,12 +893,9 @@ impl From<WriteCommand> for Frame {
                     Frame::BulkString(key),
                     Frame::BulkString(value),
                 ];
-                // PXAT, not EXAT. The millisecond verb is the one the
-                // parser reads back without converting, so a logged
-                // command round-trips unchanged. Writing the seconds
-                // verb would hand replay a millisecond value that the
-                // seconds arm multiplies again, pushing every deadline
-                // 1000x further out on each restart.
+                // PXAT, not EXAT. The millisecond verb is the one the parser
+                // reads back without converting. The seconds verb would hand
+                // replay a millisecond value and multiply it by 1000 again.
                 if let Some(at) = expires_at {
                     parts.push(Frame::BulkString(b"PXAT".to_vec()));
                     parts.push(Frame::BulkString(at.get().to_string().into_bytes()));
@@ -966,76 +905,34 @@ impl From<WriteCommand> for Frame {
             // ...DEL, PEXPIREAT, PERSIST
         }
     }
-}
-
-// Replay reuses Frame::parse_one + Command::try_from, the same inbound
-// parse path the network uses. Cache-only execute() so replay doesn't
-// re-write the log it's reading.
-pub fn replay(&self, cache: &Cache) -> Result<(), AofError> {
-    let mut bytes = fs::read(&*self.path)?;
-    let mut buf = bytes.as_slice();
-    loop {
-        match Frame::parse_one(buf) {
-            Ok((frame, rest)) => {
-                buf = rest;
-                cache.execute(Command::try_from(frame)?)?;
-            }
-            // Trailing torn frame = crash mid-append. Stop cleanly,
-            // keep everything parsed so far.
-            Err(FrameError::Incomplete) => break,
-            Err(e) => return Err(e.into()),
-        }
-    }
-    Ok(())
-}
-
-// Checkpoint: snapshot then truncate, both under the cache lock so
-// no mutation escapes between the two. Crash between = re-apply
-// already-snapshotted commands. Harmless.
-fn snapshot(&self, cache: &Cache) -> Result<(), RepositoryError> {
-    let guard = cache.lock().map_err(|_| PersisterError::MutexPoisoned)?;
-    self.snapshot.store(&guard)?;  // wincode dump via temp+rename
-    self.aof.clear()?;             // truncate log
-    Ok(())
 }"#,
-            description: "The AOF being byte-for-byte the wire protocol means replay reuses the inbound parse path: no separate decoder, no version skew between disk and network format. It also means the encoder has to pick its verbs carefully, since whatever it writes gets re-parsed by arms that may convert units. Deadlines go out as PXAT and PEXPIREAT because those need no conversion on the way back in. Replay staying time-invariant rests on a second property: relative TTLs are made absolute at parse time and have no representation in WriteCommand at all, so a relative deadline can never reach the log. Snapshots use temp-file-then-rename for atomicity, and checkpointing holds the cache lock across snapshot and clear so no mutation escapes between the two.",
+            description: "Mutations are logged as the exact bytes a client would have sent, so replay reuses the inbound parser. Which means the encoder has to pick verbs that read back unchanged. This one nearly shipped wrong.",
         },
         Snippet {
             title: "Pub/Sub Fan-Out",
-            code: r#"// The push is built once, then the raw bytes are dropped into each
-// subscriber's mpsc, the same channel their WriteHalf already drains
-// to the socket. No per-subscriber thread: the session writer IS the
-// subscriber output.
-let push = Reply::Array(vec![
-    Reply::BulkString(b"message".to_vec()),
-    Reply::BulkString(channel.clone()),
-    Reply::BulkString(payload),
-])
-.to_bytes();
-
+            code: r#"// The push is serialized once, then the bytes go into each subscriber's
+// mpsc: the same channel their writer thread already drains to the socket.
 pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsError> {
     let mut reached = 0;
     let mut guard = self.channels.lock().map_err(|_| ChannelsError::MutexPoisoned)?;
     if let Some(subs) = guard.get_mut(channel) {
-        // retain() fans out and prunes in one pass: a send error means the
-        // receiver was dropped (dead session), so drop that sender too.
+        // retain() fans out and prunes dead sessions in one pass
         subs.retain(|_id, tx| match tx.send(message.clone()) {
             Ok(()) => { reached += 1; true }
             Err(_) => false,
         });
     }
-    Ok(reached) // live subscribers that actually received it
+    Ok(reached)
 }"#,
-            description: "PUBLISH serializes the [\"message\", channel, payload] array once and drops the bytes into each subscriber's mpsc: the exact channel that subscriber's WriteHalf already drains to its socket, so delivery happens out of band while the subscriber's reader is blocked on a client read, with no separate per-subscriber thread. retain() prunes any receiver that's been dropped (a disconnected session) in the same pass that counts reach, so the returned :N is always live subscribers.",
+            description: "No thread per subscriber. The session's own writer thread is the subscriber output.",
         },
     ],
     obstacles: &[
-        "Self-deadlock on the TTL read path: get_absolute_ttl held the mutex guard, then called self.remove() on the expired branch, which tries to re-lock the same std::sync::Mutex from the same thread. std mutexes aren't reentrant; the thread hangs forever. Fix: drop(guard) explicitly before the re-entry. Guards live to end of scope, not end of statement",
-        "get_frame read-before-parse bug: original loop called reader.read() first, then parse_frame(). When one TCP read delivered multiple frames (common, since TCP coalesces small writes), the first call returned the first frame fine; the second call's first move was a read that hit EOF, returned None, and the queued second frame in the buffer was never seen. Fix: parse first, only read on Incomplete, return None when an Incomplete is followed by a zero-byte read",
-        "AOF/snapshot atomicity: between the snapshot read and the AOF truncate, a writer could land a new mutation that gets wiped without ever being captured. Fix: hold the cache lock across both. Order matters too: snapshot first, then clear, so a crash between just re-applies already-durable commands. Harmless.",
+        "Self-deadlock on the TTL read path. get_absolute_ttl held the mutex guard and then called self.remove() on the expired branch. std mutexes are not reentrant, so the thread hung forever. Guards live to the end of scope, not the end of the statement",
+        "A read-before-parse bug in the frame loop. TCP coalesces writes, so one read can deliver two frames; reading first meant the second sat in the buffer unseen until EOF. Parse first, read only on Incomplete",
     ],
-    progress: "M1\u{2013}M6 complete. All commands over real RESP, snapshot + AOF persistence behind a hexagonal port, graceful shutdown, Pub/Sub with per-session writer-thread fan-out, and SET options (EX/PX/EXAT/PXAT) on millisecond deadlines. 237 tests. Next: async migration, then MULTI/EXEC.",
-    impact: "Paired with chickadee to cover both halves of how production KV systems get built: chickadee the on-disk LSM storage engine, steller the in-memory protocol server with WAL-style durability. Both hand-written, both driven by real clients (redis-cli for steller, raw TCP for chickadee).",
+    progress: "M1 through M6 done: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. 237 tests. Async migration next, then MULTI/EXEC.",
+    impact: "The in-memory half of a pair with chickadee, which is the on-disk LSM engine. Between them they cover both sides of how a KV system gets built. Real clients drive both.",
     site_url: None,
     status: ProjectStatus::Doing,
 };
@@ -1063,11 +960,10 @@ const UPSEE: Project = Project {
         kind: MediaKind::Video,
     }],
     approach: &[
-        "tract ONNX runtime as the Rust-native inference path. Three method calls from ONNX file to runnable inference: model_for_path \u{2192} into_optimized \u{2192} into_runnable. No Python, no cloud",
-        "Custom Square trait on ImageBuffer center-crops webcam frames to square aspect before resizing. Distortion-free resize meaningfully improved keypoint confidence",
-        "Tensor build via Array4::from_shape_fn: reshapes a 192x192 RGB image into a [1, 3, 192, 192] NCHW tensor with 0-1 normalization in one pass",
-        "Confidence threshold filtering: averages scores across 4 keypoints (shoulders + wrists), skips frames below 0.4 so the counter never acts on unreliable data",
-        "Hysteresis state machine: UP at 0.05 (arms high), DOWN at 0.15 (arms extended). Dead zone between thresholds absorbs sensor noise so jitter doesn't false-count",
+        "tract is the Rust-native inference path. Three calls take an ONNX file to runnable: model_for_path, into_optimized, into_runnable. No Python, no cloud",
+        "A Square trait center-crops webcam frames before the resize. Skipping the distortion measurably improved keypoint confidence",
+        "Scores are averaged across four keypoints and frames below 0.4 are skipped, so the counter never acts on a bad read",
+        "A hysteresis state machine separates up from down by a dead zone, which is what stops jitter from false-counting",
     ],
     snippets: &[
         Snippet {
@@ -1140,11 +1036,9 @@ const GOTCHA: Project = Project {
         kind: MediaKind::Video,
     }],
     approach: &[
-        "Conditional compilation: cfg(target_os) switches between platform modules. Platform-specific deps via [target.'cfg(...)'.dependencies] in Cargo.toml",
-        "Linux: enumerate /dev/input/event* devices, filter by capability heuristics (Identify trait on evdev::Device), grab each, poll with nix::poll, ungrab on exit",
-        "macOS: rdev::grab with Accessibility API callbacks. Callback returns None to swallow events. No clean stop API: process::exit(0) on secret key",
-        "Custom traits on third-party types: Identify on evdev::Device (is_probably_keyboard, is_probably_mouse), IsSecret on InputEvent. Extension beats wrapping",
-        "CaptureState with jiff timestamps for 1-second photo debounce. Rc<Mutex<CaptureState>> for interior mutability inside event callbacks",
+        "cfg(target_os) switches between platform modules, with the platform-only dependencies scoped in Cargo.toml so neither target pulls the other's crates",
+        "Linux enumerates /dev/input/event*, filters by capability, grabs each device and polls with nix::poll. macOS goes through rdev and Accessibility callbacks, returning None to swallow the event",
+        "Custom traits on third-party types rather than wrappers: Identify on evdev::Device, IsSecret on InputEvent. Extension keeps each platform's quirks behind one interface",
     ],
     snippets: &[
         Snippet {
@@ -1191,9 +1085,8 @@ impl IsSecret for InputEvent {
         },
     ],
     obstacles: &[
-        "rdev grabs ALL evdev devices on Linux (Bluetooth controllers, network adapters), causing disconnects. Discovered at runtime. Dropped to raw evdev with selective grabbing by capability",
-        "macOS rdev::grab has no clean stop API. The grab loop blocks forever with no break mechanism. Forced to process::exit(0), with no cleanup or graceful shutdown on macOS",
-        "Linux poll loop must rebuild PollFd vec each iteration: PollFd borrows the device file descriptor, so holding it across the loop body fails the borrow check",
+        "rdev grabs every evdev device on Linux, including Bluetooth controllers and network adapters, which disconnects them. Only visible at runtime. Dropped to raw evdev and grab by capability instead",
+        "rdev::grab on macOS has no clean stop. The loop blocks forever with nothing to break it, so the secret key calls process::exit(0) and macOS gets no graceful shutdown",
     ],
     progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with secret key. Clean ungrab on Linux, forced exit on macOS.",
     impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types, so each platform's quirks stay behind one interface.",
@@ -1226,12 +1119,9 @@ const RUSTMAS: Project = Project {
         kind: MediaKind::Video,
     }],
     approach: &[
-        "Ports and adapters. The domain holds the puzzle types and imports nothing outside itself. That only became true when solve() moved out of it: holding a SolverClient is a dependency the domain is not allowed to have, and it had been sitting there for a long time without anyone minding",
-        "The two clients are named for who they talk to, not for which one is official. AocClient carries the session cookie and grades each part exactly once. SolverClient needs no account and answers the same question every time, which is what makes it usable as a regression check rather than a one-shot",
-        "Year and Day are newtypes with private fields, and Day::new takes a built Year rather than a raw number, so a day cannot exist without a validated year behind it. Year::days_in is the one place that knows how long an event ran: 2025 was 12 days, everything else 25",
-        "Dispatch hands back a function pointer instead of calling. The registry can be asked whether a day exists without holding its input, so a run over every year skips unwritten days before downloading anything for them, and a submit run can count what it is about to send",
-        "The answer, the timing, and the two verdicts are separate fields because they come from three different places. They were one type until timing broke it: a duration applies to every answer variant, so it could not live inside one of them",
-        "The cache is plain files, one directory per day, each readable on its own. Each input carries a SHA-256 of the cookie that fetched it, since inputs are account specific and a swapped account is otherwise silent",
+        "The two clients are named for who they talk to, not which one is official. AocClient carries the session cookie and grades each part exactly once. SolverClient needs no account and answers the same question every time, which is what makes it a regression check rather than a one-shot",
+        "Dispatch hands back a function pointer instead of calling it. The registry can be asked whether a day exists without holding its input, so a run over every year skips unwritten days before downloading anything for them",
+        "Year and Day are newtypes with private fields, and Day::new takes a built Year rather than a raw number, so a day cannot exist without a validated year behind it",
     ],
     snippets: &[
         Snippet {
@@ -1275,10 +1165,8 @@ let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
         },
     ],
     obstacles: &[
-        "Swapping the session cookie silently invalidated every cached input. 2015 day 1 answered 280 one day and 138 the next, and only the changed answers gave it away. Inputs now carry a SHA-256 of the cookie that fetched them, and a mismatch refetches",
-        "Inputs were embedded with include_str! for the first week, which meant a fresh clone could not compile until fetch had run. Reading at runtime fixed that and retired the dispatch macro, which existed mostly to build those paths from literals",
-        "A single Verdict enum could not be produced in full by either client: Unsupported only ever comes from the solver, Cooldown and AlreadySolved only from adventofcode.com. Every exhaustive match carried arms that could not happen for the call being made. Two types deleted those arms rather than documenting them",
-        "A local cache of confirmed answers was designed in detail and then dropped. The argument for it was that AOC grades each part exactly once, so a cache looked like the only durable record. That was wrong: the site is stateful and reports AlreadySolved, so the fact called irreplaceable was always one request away",
+        "Swapping the session cookie silently invalidated every cached input. 2015 day 1 answered 280 one day and 138 the next, and only the changed answers gave it away. Inputs now carry a SHA-256 of the cookie that fetched them",
+        "A local cache of confirmed answers was designed in detail and then dropped. The argument for it was that AOC grades each part exactly once, so a cache looked like the only durable record. The site is stateful and reports AlreadySolved, so the fact called irreplaceable was always one request away",
     ],
     progress: "Feature complete. fetch, solve, --validate and --submit all work against both services, 72 tests pass, and both service contracts are recorded in context/references.md from live probing rather than guesswork. Day one of every year except 2019 is solved. Next are the day twos.",
     impact: "A finished tool with its reasoning written down, including the options that were rejected and why. The design notes are what made the C# rebuild (Sharpmas) a language exercise rather than a redesign.",
@@ -1311,12 +1199,9 @@ const SHARPMAS: Project = Project {
         kind: MediaKind::Video,
     }],
     approach: &[
-        "ISolution<TSelf> with a static abstract Parse. Rust's trait has an associated function returning Self, and C#'s static abstract interface members are the nearest thing. A static interface member has nothing to dispatch on, so the runner is generic (Solve<T>) for that reason alone",
-        "Where Rust has an enum, C# gets an abstract record with sealed nested leaves and a private base constructor, since only a nested type can reach a private constructor. Answer, AnswerResult, and both verdicts are built that way, which is as near as C# gets to a sum type nothing outside can extend",
-        "AnswerResult stands in for Result. A failure is held rather than thrown out of the run, so one broken part does not hide the other's answer. Two nullable fields would allow both set and both null, and neither of those means anything",
-        "The registry is a Dictionary from (year, day) to a delegate, holding the delegate rather than calling it. Same property as the Rust match: the tool can ask whether a day exists without holding its input",
-        "Guard messages stayed in the C# dialect. ThrowIfGreaterThan already names the value and the live bound through CallerArgumentExpression, and the analyzer steers away from hand-rolled if-throw blocks, so the tests assert the values rather than Rust's range spelling",
-        "Tests mirror rustmas's unless C# genuinely needs more, which so far has meant guarding the things Rust's compiler guarantees and C#'s does not",
+        "ISolution<TSelf> with a static abstract Parse. Rust's trait has an associated function returning Self, and C#'s static abstract interface members are the nearest thing. A static member has nothing to dispatch on, so the runner is generic for that reason alone",
+        "Where Rust has an enum, C# gets an abstract record with sealed nested leaves and a private base constructor, since only a nested type can reach a private constructor. That is as near as C# gets to a sum type nothing outside can extend",
+        "AnswerResult stands in for Result. A failure is held rather than thrown out of the run, so one broken part does not hide the other's answer",
     ],
     snippets: &[
         Snippet {
@@ -1371,10 +1256,8 @@ public static async Task<Solved> Solve<T>(
         },
     ],
     obstacles: &[
-        "None was doing two jobs, covering both \"this part has no answer\" and \"nobody has written this part\". A day 25 part two and an untouched template stub printed the same thing. Unwritten split the second off, and the template returns it, so a stub cannot read as a finished part with nothing to say",
         "Enumerable.Range takes a count, not an end. It cost two bugs while porting the day filter, both caught by tests mirrored from rustmas before anything ran, and one of them had already been recorded weeks earlier in the same repo's journal",
-        "Nothing stopped outside code adding a case to Answer or either verdict, so a switch that looked exhaustive was not. Private base constructors closed all four hierarchies, which C# allows only because a nested type can reach its parent's private members",
-        "Porting a settled design makes it easy to transliterate Rust into C# that compiles and reads badly. The guard messages are the example that stuck: rewriting them to match Rust's 1..=12 phrasing would have meant fighting the analyzer for a worse message than the framework already produces",
+        "Porting a settled design makes it easy to transliterate Rust into C# that compiles and reads badly. The guard messages are the example that stuck: matching Rust's phrasing would have meant fighting the analyzer for a worse message than the framework already produces",
     ],
     progress: "The tool is finished and matches rustmas feature for feature, with 121 tests passing and no build warnings. The last catch-up landed on 2026-08-23: the eager Filter type, Answer.Unwritten, the day 25 gate, and all four hierarchies closed. Two days are solved so far, 2015 day 1 and 2016 day 1, with every answer confirmed by the solver and matching rustmas. What is left is solutions and the shared helpers they will want.",
     impact: "A cross-language port carried end to end, with both sides public and comparable file by file. The design was fixed going in, so what the repo records is where the two languages actually diverge, and where C# has no good answer at all.",
