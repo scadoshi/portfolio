@@ -50,9 +50,9 @@ pub fn Home() -> Element {
             Banner {
                 category: "Featured",
                 status: BannerStatus::Doing,
-                "Diprotodon, a hand-written Redis-compatible KV server. "
+                "Steller, a hand-written Redis-compatible KV server. "
                 Link {
-                    to: Route::SideQuestDetail { slug: "diprotodon".to_string() },
+                    to: Route::SideQuestDetail { slug: "steller".to_string() },
                     "Check it out"
                 }
             }

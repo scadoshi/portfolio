@@ -53,7 +53,7 @@ Card-based index linking to individual detail pages. Subtitle explains these are
 
 Same full detail structure as featured projects. Each side quest gets its own page:
 - **Marvin** - AI Tooling
-- **Nighthawk** - Database Internals
+- **Chickadee** - Database Internals
 - **Upsee** - ML Inference
 - **Capture** - Systems Programming
 
@@ -72,7 +72,7 @@ Same full detail structure as featured projects. Each side quest gets its own pa
 - https://github.com/scadoshi/halo_action_importer
 - https://github.com/scadoshi/halo_custom_field_builder
 - https://github.com/scadoshi/marvin
-- https://github.com/scadoshi/nighthawk
+- https://github.com/scadoshi/chickadee
 - https://github.com/scadoshi/upsee
 - https://github.com/scadoshi/capture
 
@@ -110,6 +110,6 @@ src/
 
 - GIF/screenshot assets for project cards
 - Architecture diagrams (SVG)
-- Nighthawk WASM REPL
+- Chickadee WASM REPL
 - Transitions and scroll animations
 - SEO metadata

@@ -1,4 +1,4 @@
-# Nighthawk
+# Chickadee
 
 ## Headline
 
@@ -52,4 +52,4 @@ Phases 1-5 and entry consolidation complete. WAL, memtable, SSTable flush and re
 
 ## Repo
 
-~/Work/nighthawk
+~/Developer/chickadee

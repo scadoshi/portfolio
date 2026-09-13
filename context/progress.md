@@ -16,7 +16,7 @@
 - [x] Home page with hero, about blurb, 3 project cards
 - [x] Individual project detail pages (Zwipe, Halo Action Importer, Halo Custom Field Builder)
 - [x] Side quest index page with cards linking to individual detail pages
-- [x] Individual side quest detail pages (Marvin, Nighthawk, Upsee, Capture)
+- [x] Individual side quest detail pages (Marvin, Chickadee, Upsee, Capture)
 - [x] Navbar with [SRF] brand, Projects dropdown (full names), Side Quests link
 - [x] Projects dropdown hover fix (bridge element for stable hover)
 - [x] All GitHub repo links verified and accurate (underscore naming)
@@ -37,14 +37,14 @@
 All 7 project descriptions reviewed against actual source code and updated:
 
 - [x] Marvin — open source contribution, architecture evolution, LOC
-- [x] Nighthawk — Bitcask paper link, compaction details, LOC
+- [x] Chickadee — Bitcask paper link, compaction details, LOC
 - [x] Upsee — MoveNet/Hugging Face links, fall detection algorithm
 - [x] Capture — raw pointer FFI, V4L2 ioctls, memory-mapped buffers
 - [x] Halo Custom Field Builder — corrected LOC, layered architecture, CI/CD
 - [x] Halo Action Importer — cache evolution story, data normalization, two-tier caching
 - [x] Zwipe — 100k+ cards, 3 binaries, error chain, strict linting, shared types
 - [x] Zwipe deep refresh — replaced Option<Option<T>> and JSONB snippets with FilterCards/GroupCards traits, CardFilter builder pipeline, swipe gesture engine, 88-column upsert automation. Added frontend approach bullets (swipe engine, Dioxus signals). Rewrote obstacles. Updated LOC to ~25,800
-- [x] Nighthawk — updated to reflect all 6 phases complete: TCP server, concurrency, corruption recovery snippet, bloom filter, k-way compaction. ~2,100 LOC, 99 tests
+- [x] Chickadee — updated to reflect all 6 phases complete: TCP server, concurrency, corruption recovery snippet, bloom filter, k-way compaction. ~2,100 LOC, 99 tests
 
 ## Hosting (COMPLETE)
 
@@ -58,7 +58,7 @@ All 7 project descriptions reviewed against actual source code and updated:
 ## Phase 2 — Interactive Elements (FUTURE)
 
 - [ ] Architecture diagrams (SVG or canvas)
-- [ ] Nighthawk WASM REPL (embed terminal, run storage engine in-browser)
+- [ ] Chickadee WASM REPL (embed terminal, run storage engine in-browser)
 
 ## Phase 3 — Polish (FUTURE)
 

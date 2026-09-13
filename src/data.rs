@@ -71,9 +71,7 @@ pub fn featured_projects() -> &'static [Project] {
 }
 
 pub fn side_quests() -> &'static [Project] {
-    &[
-        NIGHTHAWK, DIPROTODON, MARVIN, GOTCHA, UPSEE, RUSTMAS, SHARPMAS,
-    ]
+    &[CHICKADEE, STELLER, MARVIN, GOTCHA, UPSEE, RUSTMAS, SHARPMAS]
 }
 
 pub fn find_project(slug: &str) -> Option<&'static Project> {
@@ -655,31 +653,31 @@ async fn list_models(api_key: &str) -> Result<Vec<Model>> {
     status: ProjectStatus::Done,
 };
 
-const NIGHTHAWK: Project = Project {
-    name: "Nighthawk",
-    slug: "nighthawk",
+const CHICKADEE: Project = Project {
+    name: "Chickadee",
+    slug: "chickadee",
     headline: "LSM-tree key-value database from scratch. TCP server, concurrent connections, WAL, SSTables, bloom filters, k-way compaction.",
     category: "Database Internals",
-    repo_url: "https://github.com/scadoshi/nighthawk",
+    repo_url: "https://github.com/scadoshi/chickadee",
     summary: "LSM-tree key-value database built phase by phase from the Bitcask paper. The architecture behind LevelDB, RocksDB, and Cassandra.",
     card_bullets: &[
         "TCP server with thread-per-connection concurrency, per-command locking",
         "WAL durability, BTreeMap memtable, bloom-filtered SSTables",
         "K-way merge compaction; byte-level corruption recovery",
-        "~2,100 LOC, 99 tests",
+        "~2,250 LOC, 99 tests",
     ],
-    impact_metric: "~2,100 lines, 99 tests, 6 phases",
+    impact_metric: "~2,250 lines, 99 tests, 6 phases",
     objective: "Build a key-value database incrementally from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, concurrency.",
     tags: &["rust", "kv-store", "lsm-tree", "networking"],
     media: &[
         MediaItem {
-            src: asset!("/assets/projects/nighthawk/cli_repl.mp4"),
+            src: asset!("/assets/projects/chickadee/cli_repl.mp4"),
             alt: "Interactive CLI REPL session",
             caption: Some("Interactive CLI REPL"),
             kind: MediaKind::Video,
         },
         MediaItem {
-            src: asset!("/assets/projects/nighthawk/server_and_two_clients.mp4"),
+            src: asset!("/assets/projects/chickadee/server_and_two_clients.mp4"),
             alt: "TCP server handling two concurrent clients",
             caption: Some("TCP server handling two concurrent clients"),
             kind: MediaKind::Video,
@@ -687,7 +685,7 @@ const NIGHTHAWK: Project = Project {
     ],
     approach: &[
         "Built phase by phase from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) to full LSM-tree: WAL, memtable, SSTables, bloom filters, k-way compaction, TCP server, concurrency. Six distinct architectural layers, each one a real piece of how production KV systems work",
-        "WAL with sync_all() after every write; 10-byte binary header (magic 0x4E48 + CRC32 + length); corruption recovery scans byte-by-byte past garbage, typed via a CorruptionType enum so callers know exactly what went wrong",
+        "WAL with sync_all() after every write; 10-byte binary header (magic 0x4443 + CRC32 + length); corruption recovery scans byte-by-byte past garbage, typed via a CorruptionType enum so callers know exactly what went wrong",
         "Bloom filters as in-file SSTable footers. Kirsch-Mitzenmacher double hashing with two xxh3 seeds, k=7, ~1% false positive rate. BloomFilterReader as a blanket impl on R: Read + Seek, so any file handle gains it",
         "K-way compaction across all SSTables simultaneously, not sequentially. seen_keys HashSet drops tombstone winners so they never accumulate. Single Entry enum threads tombstones through every layer (WAL, memtable, SSTables)",
         "TCP server: thread-per-connection, Arc<Mutex<Log>>, per-command locking (lock \u{2192} execute \u{2192} drop \u{2192} flush). Generic Runner<R: BufRead, W: Write> powers both the CLI and the TCP server from the same loop",
@@ -695,7 +693,7 @@ const NIGHTHAWK: Project = Project {
     snippets: &[
         Snippet {
             title: "Corruption Recovery",
-            code: r#"// 10-byte header: [magic: 0x4E48 (2B)][crc32 (4B)][len (4B)]
+            code: r#"// 10-byte header: [magic: 0x4443 (2B)][crc32 (4B)][len (4B)]
 // If magic or checksum fails, scan forward byte-by-byte
 fn header_read_next(&mut self) -> anyhow::Result<Option<Entry>> {
     loop {
@@ -806,34 +804,36 @@ impl<R: Read + Seek> BloomFilterReader for R {
     status: ProjectStatus::Done,
 };
 
-const DIPROTODON: Project = Project {
-    name: "Diprotodon",
-    slug: "diprotodon",
+const STELLER: Project = Project {
+    name: "Steller",
+    slug: "steller",
     headline: "Redis-compatible in-memory KV server in Rust. Hand-written RESP wire protocol, real redis-cli clients connect.",
     category: "Network Protocols & Systems",
-    repo_url: "https://github.com/scadoshi/diprotodon",
+    repo_url: "https://github.com/scadoshi/steller",
     summary: "Redis-compatible in-memory KV server in Rust. Real redis-cli clients connect.",
     card_bullets: &[
         "Hand-written RESP wire protocol: no library does the work",
         "Hexagonal ports: domain Service orchestrates the cache + a CacheRepository persister",
         "Durability: atomic snapshot (temp+rename) + AOF replay through the same RESP parse path",
         "Pub/Sub fan-out over a per-session writer thread, delivering out of band while the reader blocks",
-        "~5,500 LOC, 227 tests across protocol, storage, persistence, and pub/sub",
+        "SET options (EX/PX/EXAT/PXAT) on millisecond deadlines, with Seconds and Milliseconds as newtypes so the compiler catches unit mismatches",
+        "~5,900 LOC, 237 tests across protocol, storage, persistence, and pub/sub",
     ],
-    impact_metric: "~5,500 lines, 227 tests, hand-written RESP + durability + pub/sub",
+    impact_metric: "~5,900 lines, 237 tests, hand-written RESP + durability + pub/sub",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out. All written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
     media: &[MediaItem {
-        src: asset!("/assets/projects/diprotodon/server_run_redis_cli_connect.mp4"),
+        src: asset!("/assets/projects/steller/server_run_redis_cli_connect.mp4"),
         alt: "redis-cli connecting to the server: SET, GET, DEL, PING",
         caption: Some("redis-cli connecting: SET, GET, DEL, then PING repeatedly"),
         kind: MediaKind::Video,
     }],
     approach: &[
         "Parser-as-framer: Frame::parse_one(&[u8]) -> Result<(Frame, &[u8]), FrameError>. Returns the parsed frame plus a leftover slice borrowing from the input, with no allocation for the rest-of-buffer. Incomplete is a load-bearing error variant, not an Option",
-        "Storage is HashMap<Vec<u8>, Entry> where Entry { value, absolute_ttl: Option<u64> }. One struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread for memory hygiene",
+        "Storage is HashMap<Vec<u8>, Entry> where Entry { value, expires_at: Option<Milliseconds> }. One struct per key, not parallel maps. Lazy expiry on every read path so clients never see expired keys, plus a background sweeper thread for memory hygiene",
         "Hexagonal ports: the domain defines two trait boundaries: CacheRepository (the persister implements it) and CacheService (the domain Service implements it; the session calls it). Adapter errors map into a domain-owned RepositoryError at the boundary, so the domain never names an outbound type",
         "Durability via snapshot + AOF, hybrid recovery. Snapshot is a wincode dump written temp-file-then-rename (atomic; never a half-written file). AOF is the wire protocol: each mutating command is appended as the exact RESP bytes a client would have sent, so replay reuses Frame::parse_one + Command::try_from. Snapshot-then-truncate compaction holds the cache lock across both so no mutation escapes between the two",
+        "Units as newtypes, not u64. Honoring PX means sub-second deadlines, so storage moved from seconds to milliseconds. Rather than trust discipline, Seconds and Milliseconds are distinct types and Seconds only exists between the parser reading a wire token and converting it. The migration surfaced a bug that a bare u64 had been hiding: the AOF encoder wrote a second-granular verb for a millisecond value, so replay multiplied by 1000 a second time and pushed every deadline 1000x further out on each restart, silently, visible only after a restart",
         "Graceful shutdown without a signal-handling crate: Arc<AtomicBool> flag, TcpListener::set_nonblocking(true) so accept() returns WouldBlock and the loop can check the flag, stdin EOF or \"quit\" as the trigger. Every spawned thread is collected as a JoinHandle and joined cleanly before run() returns",
         "Pub/Sub without async: each session splits into a ReadHalf (parse + execute) and a WriteHalf that solely owns the socket's write end and drains a per-session mpsc. PUBLISH serializes the [\"message\", channel, payload] push once and drops the bytes into every subscriber's mpsc, so a subscriber receives out of band while its own reader is blocked on a client read, with no extra thread per subscriber. The registry (channel \u{2192} senders keyed by session id) prunes dead senders on fan-out and unsubscribes a session from every channel on disconnect",
     ],
@@ -894,15 +894,28 @@ for h in handles { let _ = h.join(); }"#,
             title: "AOF Is the Wire Protocol",
             code: r#"// Every mutation logged as the exact RESP bytes a client would have sent.
 // One serializer (Frame::write_to) for both the network and the log.
-impl From<MutatingCommand> for Frame {
-    fn from(value: MutatingCommand) -> Self {
+impl From<WriteCommand> for Frame {
+    fn from(value: WriteCommand) -> Self {
         match value {
-            MC::Set { key, value } => Frame::Array(vec![
-                Frame::BulkString(b"SET".to_vec()),
-                Frame::BulkString(key),
-                Frame::BulkString(value),
-            ]),
-            // ...DEL, EXPIRE, EXPIREAT, PERSIST
+            WC::Set { key, value, expires_at } => {
+                let mut parts = vec![
+                    Frame::BulkString(b"SET".to_vec()),
+                    Frame::BulkString(key),
+                    Frame::BulkString(value),
+                ];
+                // PXAT, not EXAT. The millisecond verb is the one the
+                // parser reads back without converting, so a logged
+                // command round-trips unchanged. Writing the seconds
+                // verb would hand replay a millisecond value that the
+                // seconds arm multiplies again, pushing every deadline
+                // 1000x further out on each restart.
+                if let Some(at) = expires_at {
+                    parts.push(Frame::BulkString(b"PXAT".to_vec()));
+                    parts.push(Frame::BulkString(at.get().to_string().into_bytes()));
+                }
+                Frame::Array(parts)
+            }
+            // ...DEL, PEXPIREAT, PERSIST
         }
     }
 }
@@ -937,7 +950,7 @@ fn snapshot(&self, cache: &Cache) -> Result<(), RepositoryError> {
     self.aof.clear()?;             // truncate log
     Ok(())
 }"#,
-            description: "The AOF being byte-for-byte the wire protocol means replay reuses the inbound parse path: no separate decoder, no version-skew between disk and network format. Snapshots use temp-file-then-rename for atomicity. Checkpointing holds the cache lock across snapshot+clear; the order (snapshot first, clear second) means a crash between them only causes harmless re-application of already-durable commands.",
+            description: "The AOF being byte-for-byte the wire protocol means replay reuses the inbound parse path: no separate decoder, no version skew between disk and network format. It also means the encoder has to pick its verbs carefully, since whatever it writes gets re-parsed by arms that may convert units. Deadlines go out as PXAT and PEXPIREAT because those need no conversion on the way back in. Replay staying time-invariant rests on a second property: relative TTLs are made absolute at parse time and have no representation in WriteCommand at all, so a relative deadline can never reach the log. Snapshots use temp-file-then-rename for atomicity, and checkpointing holds the cache lock across snapshot and clear so no mutation escapes between the two.",
         },
         Snippet {
             title: "Pub/Sub Fan-Out",
@@ -973,8 +986,8 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
         "get_frame read-before-parse bug: original loop called reader.read() first, then parse_frame(). When one TCP read delivered multiple frames (common, since TCP coalesces small writes), the first call returned the first frame fine; the second call's first move was a read that hit EOF, returned None, and the queued second frame in the buffer was never seen. Fix: parse first, only read on Incomplete, return None when an Incomplete is followed by a zero-byte read",
         "AOF/snapshot atomicity: between the snapshot read and the AOF truncate, a writer could land a new mutation that gets wiped without ever being captured. Fix: hold the cache lock across both. Order matters too: snapshot first, then clear, so a crash between just re-applies already-durable commands. Harmless.",
     ],
-    progress: "M1\u{2013}M5 complete. All commands over real RESP, snapshot + AOF persistence behind a hexagonal port, graceful shutdown, and Pub/Sub (SUBSCRIBE/UNSUBSCRIBE/PUBLISH) with per-session writer-thread fan-out. 227 tests. Next: async migration, then MULTI/EXEC.",
-    impact: "Paired with nighthawk to cover both halves of how production KV systems are built: nighthawk the on-disk LSM storage engine, diprotodon the in-memory protocol server with WAL-style durability. Both hand-written, both interoperable with real clients (redis-cli for diprotodon, raw TCP for nighthawk).",
+    progress: "M1\u{2013}M6 complete. All commands over real RESP, snapshot + AOF persistence behind a hexagonal port, graceful shutdown, Pub/Sub with per-session writer-thread fan-out, and SET options (EX/PX/EXAT/PXAT) on millisecond deadlines. 237 tests. Next: async migration, then MULTI/EXEC.",
+    impact: "Paired with chickadee to cover both halves of how production KV systems get built: chickadee the on-disk LSM storage engine, steller the in-memory protocol server with WAL-style durability. Both hand-written, both driven by real clients (redis-cli for steller, raw TCP for chickadee).",
     site_url: None,
     status: ProjectStatus::Doing,
 };

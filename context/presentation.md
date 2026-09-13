@@ -13,7 +13,7 @@ Lead with strongest signal, end with breadth.
 4. **Marvin** - AI agent tooling in Rust (tool use, streaming, context management)
 
 ### Tier 3 — "I go deep on things I don't know"
-5. **Nighthawk** - database internals from scratch
+5. **Chickadee** - database internals from scratch
 6. **Upsee** - ML inference pipeline on-device
 7. **Capture** - cross-platform systems programming
 

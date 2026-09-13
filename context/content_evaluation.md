@@ -29,7 +29,7 @@ During evaluation of Marvin, we realized the side quest card format (one shared 
 
 - **Marvin** - COMPLETE. Added open source contribution story (Rig issue #1370, PR across 17 files), architecture evolution (220-line monolith to command pattern), tool system detail (Arc<TavilyClient>, schemars JSON Schema generation), LOC count (~1,750).
 
-- **Nighthawk** - COMPLETE. Added Bitcask paper link, corrected technical details about append-only log compaction, added LOC count, linked to Bitcask paper PDF.
+- **Chickadee** - COMPLETE. Added Bitcask paper link, corrected technical details about append-only log compaction, added LOC count, linked to Bitcask paper PDF.
 
 - **Upsee** - COMPLETE. Added MoveNet model details, Hugging Face model source link, fall detection algorithm specifics (acceleration magnitude thresholds), LOC count.
 
