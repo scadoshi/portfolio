@@ -848,7 +848,7 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
         },
     ],
     obstacles: &[
-        "Self-deadlock on the TTL read path. get_absolute_ttl held the mutex guard and then called self.remove() on the expired branch. std mutexes are not reentrant, so the thread hung forever. Guards live to the end of scope, not the end of the statement",
+        "Self-deadlock on the TTL read path. get_expires_at held the mutex guard and then called self.remove() on the expired branch. std mutexes are not reentrant, so the thread hung forever. Guards live to the end of scope, not the end of the statement",
         "A read-before-parse bug in the frame loop. TCP coalesces writes, so one read can deliver two frames; reading first meant the second sat in the buffer unseen until EOF. Parse first, read only on Incomplete",
     ],
     progress: "Done through M6: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. 237 tests. Active development is finished; an async migration and MULTI/EXEC are there if I come back to it.",
