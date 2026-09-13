@@ -9,8 +9,8 @@ use crate::{
     data,
 };
 
-/// Pulled out of [`detail_view`] because it renders in two places: inside the
-/// media band, and on its own when a project has nothing to show beside it.
+/// Kept as a function rather than inlined so the panel's shape stays readable
+/// next to the rest of the page's sections.
 fn approach_panel(project: &'static data::Project) -> Element {
     rsx! {
         Panel {
@@ -84,20 +84,17 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 }
             }
 
-            // Lateral band: the demo gallery keeps one column while the
-            // approach panel fills what would be its dead side-space. A
-            // project with no media has nothing to pair, so the approach
-            // panel takes the whole row instead of leaving half of it empty.
-            if project.media.is_empty() {
-                {approach_panel(project)}
-            } else {
-                div { class: "detail-band",
-                    div { class: "band-col",
-                        ProjectGallery { items: project.media }
-                    }
-                    div { class: "band-col", {approach_panel(project)} }
-                }
+            // The demo takes the full column. It used to share a lateral band
+            // with the approach panel, but the pairing only flattered projects
+            // with a single screenshot: the row's height comes from the taller
+            // side, and approach runs to several paragraphs, so the gallery sat
+            // at the top of a cell twice its height with dead space beneath.
+            // Full width also suits the media, which is 16:9 terminal capture.
+            if !project.media.is_empty() {
+                ProjectGallery { items: project.media }
             }
+
+            {approach_panel(project)}
 
             // Code wants the full column width, so implementation stays a
             // single wide panel.

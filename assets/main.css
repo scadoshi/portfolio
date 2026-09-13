@@ -608,13 +608,13 @@ a.panel-action:visited {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    /* Phone-scale media: without these the desktop floors (20rem body,
-       34rem image cap) make the demo panel swallow the screen. */
-    .band-col > .project-gallery .gallery-body {
+    /* Phone-scale media: the desktop 70vh floor makes the demo panel swallow
+       a small screen, so let the body collapse to the video and cap its height. */
+    .project-gallery .gallery-body {
         min-height: 0;
     }
 
-    .band-col > .project-gallery .gallery-image {
+    .project-gallery .gallery-image {
         max-height: 55vh;
     }
 
@@ -766,35 +766,13 @@ a.panel-action:visited {
 
 /* === Project Gallery === */
 
+/* A direct child of .project-detail, which is a flex column with its own gap,
+   so the gallery carries no margin of its own and matches the panels' width.
+   It used to be capped and centred for life inside a half-width band column. */
 .project-gallery {
-    margin: 1.5rem auto 0;
-    padding: 0;
-    width: min(100%, 56rem);
-}
-
-/* Inside a band column the gallery is the column: full width, no outer
-   margin, and its frame stretches to bottom-align with the sibling column.
-   The body gives up its viewport-based floor and takes the height the band
-   hands it; the media cap keeps portrait demo videos from ballooning. */
-.band-col > .project-gallery {
     margin: 0;
+    padding: 0;
     width: 100%;
-    flex: 1;
-    display: flex;
-}
-
-.band-col > .project-gallery > .panel-card {
-    flex: 1;
-    width: 100%;
-}
-
-.band-col > .project-gallery .gallery-body {
-    min-height: 20rem;
-    flex: 1;
-}
-
-.band-col > .project-gallery .gallery-image {
-    max-height: 34rem;
 }
 
 .gallery-body {
