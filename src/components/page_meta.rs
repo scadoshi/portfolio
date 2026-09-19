@@ -4,7 +4,7 @@ use zwipe_components::{PageMeta as SharedPageMeta, SiteMeta};
 /// This site's constants for the shared head-meta component. The OG image
 /// (which also selects the `summary_large_image` Twitter card) lives in
 /// public/ so dx serves it verbatim at this literal URL; regenerate it from
-/// context/marketing/og_default.html (instructions in that file).
+/// `context/marketing/og_default.html` (instructions in that file).
 const SITE: SiteMeta = SiteMeta {
     base_url: "https://scottyfermo.com",
     site_name: "Scotty Fermo",

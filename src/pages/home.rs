@@ -171,7 +171,7 @@ pub fn Home() -> Element {
                         slug: project.slug.to_string(),
                         category: project.category.to_string(),
                         summary: project.summary.to_string(),
-                        bullets: project.card_bullets.iter().map(|b| b.to_string()).collect(),
+                        bullets: project.card_bullets.iter().map(std::string::ToString::to_string).collect(),
                         impact_metric: project.impact_metric.to_string(),
                         repo_url: project.repo_url.to_string(),
                         site_url: project.site_url.map(str::to_string),

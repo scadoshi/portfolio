@@ -81,7 +81,7 @@ fn split_urls(text: &str) -> Vec<TextPart> {
             continue;
         }
 
-        i += text[i..].chars().next().map(|c| c.len_utf8()).unwrap_or(1);
+        i += text[i..].chars().next().map_or(1, char::len_utf8);
     }
 
     if plain_start < text.len() {

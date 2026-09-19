@@ -44,7 +44,7 @@ pub enum ProjectStatus {
 }
 
 impl ProjectStatus {
-    pub fn label(&self) -> &'static str {
+    pub fn label(self) -> &'static str {
         match self {
             Self::Done => "Done",
             Self::Doing => "Doing",
@@ -52,7 +52,7 @@ impl ProjectStatus {
     }
     /// Maps to the shared status pill; the label ("Done"/"Doing") is passed
     /// separately so the pill keeps our wording, not the component's default.
-    pub fn banner_status(&self) -> zwipe_components::BannerStatus {
+    pub fn banner_status(self) -> zwipe_components::BannerStatus {
         match self {
             Self::Done => zwipe_components::BannerStatus::Done,
             Self::Doing => zwipe_components::BannerStatus::Doing,
@@ -204,7 +204,7 @@ let groups = deck_cards.group_by(GroupByOption::CardType);"#,
         },
         Snippet {
             title: "Swipe Gesture Engine",
-            code: r#"// The gesture logic lives once, in a trait. Touch and mouse adapt to it.
+            code: r"// The gesture logic lives once, in a trait. Touch and mouse adapt to it.
 trait OnSwipe {
     fn onswipestart(&mut self, point: ClientPoint);
     fn onswipemove(&mut self, point: ClientPoint);
@@ -221,7 +221,7 @@ if distance > config.distance_threshold
         Some(Axis::X) if delta.x > 0.0 => self.latest_swipe = Some(Dir::Right),
         _ => {}
     }
-}"#,
+}",
             description: "Built across 11 files with no gesture library. Axis locking and a velocity threshold are what make quick flicks register without diagonal drags firing twice.",
         },
         Snippet {
@@ -301,17 +301,17 @@ const HALO_ACTION_IMPORTER: Project = Project {
     snippets: &[
         Snippet {
             title: "Resilience Pattern",
-            code: r#"// Every failure mode has a specific recovery strategy
+            code: r"// Every failure mode has a specific recovery strategy
 401 Unauthorized    → refresh token, retry immediately
 504 Gateway Timeout → retry immediately (no delay)
 Network error       → retry immediately
 Missing ticket      → mark ticket as missing, skip future actions
-Deserialization     → skip row, continue processing"#,
+Deserialization     → skip row, continue processing",
             description: "No blanket retry-with-backoff. Each failure mode gets the recovery strategy that actually makes sense for it.",
         },
         Snippet {
             title: "Retry Strategy Evolution",
-            code: r#"// v1: Binary search to find bad ticket in failed batch
+            code: r"// v1: Binary search to find bad ticket in failed batch
 //     O(log(batch_size) * failures): too many API calls
 //
 // v2: Ticket-grouped retry (current)
@@ -330,12 +330,12 @@ fn retry_by_ticket_group(batch: Vec<Action>) -> Result<Stats> {
             Err(e) => return Err(e),
         }
     }
-}"#,
+}",
             description: "The commit history shows this progression. Binary search was clever but wrong. Ticket-grouped retry is simpler and more efficient.",
         },
         Snippet {
             title: "Cache Evolution",
-            code: r#"// v1: Single report endpoint
+            code: r"// v1: Single report endpoint
 //     Fetch all existing IDs from Halo before each run
 //     Worked fine at ~100k IDs. Timed out at ~1M+
 //
@@ -353,7 +353,7 @@ fn read_cached_ids() -> CacheData {
     // JSON cache: resource-grouped existing IDs
     // Text cache: imported IDs (append-only per run)
     // Both locked with fs2 for concurrent access
-}"#,
+}",
             description: "The biggest obstacle was remembering work already done. Each stage worked until the dataset outgrew it. I was the only one importing so a local cache was safe as the source of truth.",
         },
     ],
@@ -404,7 +404,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     snippets: &[
         Snippet {
             title: "Layered Architecture",
-            code: r#"// bin/main.rs: orchestration only
+            code: r"// bin/main.rs: orchestration only
 // lib/: all logic lives here
 //
 // inbound/
@@ -420,12 +420,12 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
 //   auth/client    OAuth 2.0 with token caching (Arc<Mutex<Option<AuthToken>>>)
 //   auth/token     Expiry check with 30-second buffer
 //   field_client   API calls with rate limiting
-//   http_custom_field  Domain-to-API type mapping via From impl"#,
+//   http_custom_field  Domain-to-API type mapping via From impl",
             description: "Same inbound/domain/outbound pattern used in Zwipe. Each layer has a clear responsibility. Domain types know nothing about CSV or HTTP. The bin crate just wires the layers together.",
         },
         Snippet {
             title: "Domain Validation",
-            code: r#"// Newtypes with validation at construction
+            code: r"// Newtypes with validation at construction
 struct Name(String);  // max 64, alphanumeric + underscore only
 struct Label(String); // max 256 characters
 
@@ -444,7 +444,7 @@ impl From<&CustomField> for HttpCustomField {
         // Validated domain type maps to Halo's expected JSON shape
         // type_id, input_type_id, selection_options all derived from FieldType
     }
-}"#,
+}",
             description: "Invalid data is rejected at parse time with specific error messages (row number + field name). By the time a CustomField reaches the API client, it is guaranteed valid.",
         },
     ],
@@ -514,7 +514,7 @@ const MARVIN: Project = Project {
     snippets: &[
         Snippet {
             title: "Tool Architecture",
-            code: r#"// Each tool uses schemars for automatic JSON Schema generation
+            code: r"// Each tool uses schemars for automatic JSON Schema generation
 #[derive(JsonSchema, Deserialize)]
 struct SearchArgs {
     query: String,
@@ -528,12 +528,12 @@ impl Tool for SearchWeb {
     async fn call(&self, args: SearchArgs) -> Result<String, ToolError> {
         self.client.search(args).await  // Arc<TavilyClient>
     }
-}"#,
+}",
             description: "schemars derives JSON Schema from Rust types at compile time. No manual schema writing, no drift between types and definitions. Arc sharing keeps a single HTTP client across all 4 web tools.",
         },
         Snippet {
             title: "Command Dispatch",
-            code: r#"// Every line of input parses into a ChatInput variant, then the runner
+            code: r"// Every line of input parses into a ChatInput variant, then the runner
 // matches it to a command module. Adding a command is a variant and an arm.
 enum ChatInput {
     Message(String),
@@ -549,7 +549,7 @@ match ChatInput::parse(&read_line()?) {
     ChatInput::Compact       => commands::compact::run(&mut chat).await?,
     ChatInput::Exit          => break,
     // ...
-}"#,
+}",
             description: "Adding a command is a two-step change: a new ChatInput variant and a new module. No conditionals in the loop, no flag-string soup. The 220-line main.rs grew into this; the architecture earned its complexity.",
         },
         Snippet {
@@ -643,7 +643,7 @@ const CHICKADEE: Project = Project {
     snippets: &[
         Snippet {
             title: "Corruption Recovery",
-            code: r#"// 10-byte header: [magic: 0x4443 (2B)][crc32 (4B)][len (4B)]
+            code: r"// 10-byte header: [magic: 0x4443 (2B)][crc32 (4B)][len (4B)]
 // If magic or checksum fails, scan forward byte-by-byte
 fn header_read_next(&mut self) -> anyhow::Result<Option<Entry>> {
     loop {
@@ -663,12 +663,12 @@ fn header_read_next(&mut self) -> anyhow::Result<Option<Entry>> {
             }
         }
     }
-}"#,
+}",
             description: "A crash mid-write can leave partial data in the WAL. Instead of failing on startup, the reader scans past garbage to find the next valid entry. Four distinct corruption types so callers know exactly what went wrong.",
         },
         Snippet {
             title: "Bloom Filter",
-            code: r#"// Kirsch-Mitzenmacher: two xxh3 seeds, k=7, ~1% false positive rate
+            code: r"// Kirsch-Mitzenmacher: two xxh3 seeds, k=7, ~1% false positive rate
 fn positions(key: &[u8], bit_count: usize) -> impl Iterator<Item = usize> {
     let h1 = xxh3::hash64_with_seed(key, 0);
     let h2 = xxh3::hash64_with_seed(key, 1);
@@ -692,12 +692,12 @@ impl BloomFilter {
 // blanket impl: any R: Read + Seek gains read_bloom_filter() automatically
 impl<R: Read + Seek> BloomFilterReader for R {
     fn read_bloom_filter(&mut self) -> anyhow::Result<Option<BloomFilter>> { ... }
-}"#,
+}",
             description: "insert() and may_contain() are symmetric: same positions(), opposite bit operations. Two hash seeds replace k separate functions. The blanket impl makes the trait the extension point: no wrapper, just import it.",
         },
         Snippet {
             title: "K-Way Merge: compact()",
-            code: r#"// Every SSTable is merged at once rather than pairwise. Each holds a
+            code: r"// Every SSTable is merged at once rather than pairwise. Each holds a
 // cursor, and each pass takes the globally smallest key across all of them.
 loop {
     sstables.retain(|(entry, _)| entry.is_some());
@@ -717,7 +717,7 @@ loop {
         }
         if is_participant { *entry = sstable.read_next_entry()?; }
     }
-}"#,
+}",
             description: "Files are read newest-to-oldest, so the first version of a key wins and the rest are skipped. Tombstones get recorded and then dropped, which is what stops them accumulating forever.",
         },
     ],
@@ -790,7 +790,7 @@ const STELLER: Project = Project {
     snippets: &[
         Snippet {
             title: "Parser-as-Framer",
-            code: r#"pub fn parse_one(bytes: &[u8]) -> Result<(Frame, &[u8]), FrameError> {
+            code: r"pub fn parse_one(bytes: &[u8]) -> Result<(Frame, &[u8]), FrameError> {
     let (header, rest) = bytes.split_crlf().ok_or(FrameError::Incomplete)?;
     let (sigil, len_bytes) = header.split_first().ok_or(FrameError::Malformed)?;
     let len: usize = std::str::from_utf8(len_bytes)?.parse()?;
@@ -799,7 +799,7 @@ const STELLER: Project = Project {
         b'*' => Self::parse_array(rest, len),
         _ => Err(FrameError::UnknownSigil),
     }
-}"#,
+}",
             description: "Returns the frame plus whatever bytes were left over. Incomplete is an error variant rather than an Option because the read loop has to tell \"need more\" from \"malformed\".",
         },
         Snippet {
@@ -830,7 +830,7 @@ const STELLER: Project = Project {
         },
         Snippet {
             title: "Pub/Sub Fan-Out",
-            code: r#"// The push is serialized once, then the bytes go into each subscriber's
+            code: r"// The push is serialized once, then the bytes go into each subscriber's
 // mpsc: the same channel their writer thread already drains to the socket.
 pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsError> {
     let mut reached = 0;
@@ -843,7 +843,7 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
         });
     }
     Ok(reached)
-}"#,
+}",
             description: "No thread per subscriber. The session's own writer thread is the subscriber output.",
         },
     ],
@@ -888,7 +888,7 @@ const UPSEE: Project = Project {
     snippets: &[
         Snippet {
             title: "Inference Pipeline",
-            code: r#"// Load and optimize MoveNet ONNX model
+            code: r"// Load and optimize MoveNet ONNX model
 let model = tract_onnx::onnx()
     .model_for_path(MODEL_PATH)?
     .into_optimized()?
@@ -905,12 +905,12 @@ let tensor: Tensor = Array4::from_shape_fn(
 ).into();
 
 // Run inference. Output: [1, 1, 17, 3] (17 keypoints × y,x,confidence)
-let result = model.run(tvec!(tensor.into()))?;"#,
+let result = model.run(tvec!(tensor.into()))?;",
             description: "Three lines to load the model, then per-frame: crop to square, resize, normalize into a tensor, and run inference. tract handles the ONNX graph execution.",
         },
         Snippet {
             title: "Hysteresis State Machine",
-            code: r#"// Two separate thresholds prevent oscillation:
+            code: r"// Two separate thresholds prevent oscillation:
 const UP_THRESHOLD: f32 = 0.05;   // shoulders near wrist level
 const DOWN_THRESHOLD: f32 = 0.15;  // shoulders dropped away
 // Gap (0.05 to 0.15) = dead zone that absorbs noise
@@ -918,7 +918,7 @@ const DOWN_THRESHOLD: f32 = 0.15;  // shoulders dropped away
 match state {
     Down => if diff < UP_THRESHOLD { state = Up; reps += 1; }
     Up   => if diff > DOWN_THRESHOLD { state = Down; }
-}"#,
+}",
             description: "Without hysteresis, noise near the threshold causes rapid state flipping and false counts. The dead zone between thresholds means the signal must move decisively before a transition registers.",
         },
     ],
@@ -963,7 +963,7 @@ const GOTCHA: Project = Project {
     snippets: &[
         Snippet {
             title: "Platform Divergence",
-            code: r#"// Same goal, completely different implementations:
+            code: r"// Same goal, completely different implementations:
 //
 // | Concern        | macOS                     | Linux                      |
 // |----------------|---------------------------|----------------------------|
@@ -974,12 +974,12 @@ const GOTCHA: Project = Project {
 //
 // Capability-based heuristics for device identification:
 // is_probably_keyboard() = EV_REPEAT + KEY_A + KEY_ENTER + KEY_SPACE
-// is_probably_mouse()    = REL_X + REL_Y relative axes"#,
+// is_probably_mouse()    = REL_X + REL_Y relative axes",
             description: "The same feature requires fundamentally different system APIs on each platform. Conditional compilation keeps both behind a shared interface.",
         },
         Snippet {
             title: "Trait Extensions on Third-Party Types",
-            code: r#"// Identify trait on evdev::Device: capability-based heuristics
+            code: r"// Identify trait on evdev::Device: capability-based heuristics
 impl Identify for Device {
     fn is_probably_keyboard(&self) -> bool {
         self.supported_events().contains(EventType::REPEAT)
@@ -1000,7 +1000,7 @@ impl IsSecret for InputEvent {
         matches!(self.destructure(),
             EventSummary::Key(_, KeyCode::KEY_ESC, 1))
     }
-}"#,
+}",
             description: "Custom traits on third-party types. Linux doesn't label devices as 'keyboard' or 'mouse', so you detect them by what they can do. Same pattern for secret key detection: extend the event type rather than match inline.",
         },
     ],
@@ -1070,7 +1070,7 @@ const RUSTMAS: Project = Project {
     snippets: &[
         Snippet {
             title: "The Day Registry",
-            code: r#"// One arm per day. Returns the solver rather than calling it.
+            code: r"// One arm per day. Returns the solver rather than calling it.
 fn solver_for(year: i32, day: i32) -> Option<Solver> {
     Some(match (year, day) {
         (2015, 1) => solve::<year_2015::day_01::Puzzle>,
@@ -1086,7 +1086,7 @@ pub trait Solution: Sized {
     fn new(input: impl AsRef<str>) -> anyhow::Result<Self>;
     fn part_one(&self) -> anyhow::Result<Answer>;
     fn part_two(&self) -> anyhow::Result<Answer>;
-}"#,
+}",
             description: "Handing back a function pointer means the registry can answer \"is this day written\" without an input in hand, so a run over every year downloads nothing for days nobody has solved.",
         },
         Snippet {
@@ -1174,7 +1174,7 @@ const SHARPMAS: Project = Project {
     snippets: &[
         Snippet {
             title: "The Same Contract in C#",
-            code: r#"// Rust: an associated function returning Self.
+            code: r"// Rust: an associated function returning Self.
 //   fn new(input: impl AsRef<str>) -> anyhow::Result<Self>;
 //
 // C#: a static abstract interface member, reachable only through a
@@ -1194,7 +1194,7 @@ public static async Task<Solved> Solve<T>(
 {
     var solution = T.Parse(input);   // only reachable via T
     ...
-}"#,
+}",
             description: "The closest C# gets to Rust's trait. The consequence is structural: nothing can hold an ISolution and call Parse on it, so every caller down to the registry has to know the concrete type, exactly as the Rust side does through monomorphized generics.",
         },
         Snippet {

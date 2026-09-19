@@ -17,14 +17,13 @@ pub fn CodeBlock(title: String, code: String, description: String) -> Element {
         spawn(async move {
             gloo_timers::future::TimeoutFuture::new(50).await;
             let js = format!(
-                r#"
-                var el = document.querySelector('#{} code');
+                r"
+                var el = document.querySelector('#{id} code');
                 if (el && typeof hljs !== 'undefined') {{
                     el.removeAttribute('data-highlighted');
                     hljs.highlightElement(el);
                 }}
-                "#,
-                id
+                "
             );
             let _ = document::eval(&js).await;
         });

@@ -24,3 +24,14 @@ server = ["dioxus/server"]
 # localStorage theme persistence (client only).
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 gloo-storage = "0.3"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+module_name_repetitions = "allow"
+todo = "deny"
+dbg_macro = "deny"
+unimplemented = "deny"
+unwrap_used = "warn"
