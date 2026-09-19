@@ -9,6 +9,7 @@ mod imp {
     use super::ThemeConfig;
     use gloo_storage::{LocalStorage, Storage};
 
+    /// `localStorage` key for the JSON-serialized [`ThemeConfig`].
     const KEY: &str = "zwipe.theme";
 
     pub fn load() -> Option<ThemeConfig> {

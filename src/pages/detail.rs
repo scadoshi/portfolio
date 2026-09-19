@@ -83,10 +83,8 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 }
             }
 
-            // The demo used to share a band with the approach panel, but the
-            // row takes the taller side's height and approach runs to several
-            // paragraphs, so the gallery sat above dead space. Full width also
-            // suits 16:9 terminal capture.
+            // Full width on its own: pairing it with the approach panel leaves
+            // the gallery above dead space, and the media is 16:9 anyway.
             if !project.media.is_empty() {
                 ProjectGallery { items: project.media }
             }
@@ -148,6 +146,7 @@ fn not_found(kind: &str, slug: &str) -> Element {
     }
 }
 
+/// Featured project page at `/projects/:slug`.
 #[component]
 pub fn ProjectDetail(slug: String) -> Element {
     let Some(project) = data::find_project(&slug) else {
@@ -156,6 +155,7 @@ pub fn ProjectDetail(slug: String) -> Element {
     detail_view(project, format!("/projects/{}", project.slug))
 }
 
+/// Side quest page at `/side-quests/:slug`.
 #[component]
 pub fn SideQuestDetail(slug: String) -> Element {
     let Some(project) = data::find_side_quest(&slug) else {

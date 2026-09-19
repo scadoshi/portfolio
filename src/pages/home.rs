@@ -78,8 +78,8 @@ pub fn Home() -> Element {
             }
         }
         // One lateral band below the hero, zite-style: the about/side-quest
-        // stack fills what used to be dead space beside the project cards, so
-        // nothing renders as bare text on the grid and the page stays compact.
+        // stack sits beside the project cards so nothing renders as bare text
+        // on the grid and the page stays compact.
         section { class: "home-band",
             div { class: "band-col band-aside",
                 h2 { class: "sr-only", "About" }
