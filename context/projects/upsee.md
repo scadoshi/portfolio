@@ -60,4 +60,4 @@ Working proof of concept. Next: threshold tuning with more data, temporal smooth
 
 ## Repo
 
-~/Work/upsee
+~/Developer/upsee

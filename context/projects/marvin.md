@@ -77,4 +77,4 @@ Active. Core chatbot with streaming, tools, persistence, and context management 
 
 ## Repo
 
-~/Work/marvin
+~/Developer/marvin

@@ -66,4 +66,4 @@ Active development. Auth, card database, deck management, and card search are co
 
 ## Repo
 
-~/Work/zwipe
+~/Developer/zwipe

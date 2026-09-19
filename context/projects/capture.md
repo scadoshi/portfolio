@@ -55,4 +55,4 @@ Working on both platforms. Next: configurable secret key sequence, configurable 
 
 ## Repo
 
-~/Work/capture
+~/Developer/capture

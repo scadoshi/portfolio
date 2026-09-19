@@ -50,7 +50,7 @@ During evaluation of Marvin, we realized the side quest card format (one shared 
 
 ## Source of Truth
 
-Each project has its own context directory at `~/Work/<project>/context/` with purpose files, progress logs, and technical notes. These are the source of truth for what was actually built and learned. The portfolio descriptions in `src/data.rs` should accurately reflect those files.
+Each project has its own context directory at `~/Developer/<project>/context/` with purpose files, progress logs, and technical notes. These are the source of truth for what was actually built and learned. The portfolio descriptions in `src/data.rs` should accurately reflect those files.
 
 ## Tone Reminders (from presentation.md)
 
