@@ -35,9 +35,8 @@ pub enum Route {
         SideQuestDetail { slug: String },
         #[route("/contribute")]
         Contribute {},
-        // Catch-all 404: GitHub Pages serves 404.html (a copy of the app
-        // shell, made in deploy.yml) for unknown paths, and the router lands
-        // here. Excluded from static_routes automatically (dynamic segments).
+        // GitHub Pages serves 404.html (a copy of the app shell, made in
+        // deploy.yml) for unknown paths, and the router lands here.
         #[route("/:..segments")]
         NotFound { segments: Vec<String> },
 }
@@ -78,18 +77,15 @@ async fn static_routes() -> ServerFnResult<Vec<String>> {
 
 #[component]
 fn App() -> Element {
-    // Start at the default so the client's first render matches the server's
-    // (localStorage is client-only). Seeding from storage here would desync SSR
-    // and hydration: hydration keeps the server DOM (e.g. the picker's label and
-    // the wrapper theme class) and won't reconcile the mismatch. Instead adopt
-    // the stored theme just after mount (below).
+    // Start at the default so the first client render matches the server's.
+    // Seeding from localStorage here would desync hydration: it keeps the
+    // server DOM (picker label, wrapper theme class) and won't reconcile the
+    // mismatch. The stored theme is adopted after mount instead.
     let mut theme = use_signal(ThemeConfig::default);
     use_context_provider(|| theme);
     let mut loaded = use_signal(|| false);
 
-    // After hydration, adopt the last-used theme from localStorage. Being a
-    // post-mount state change, this re-renders the picker label and the theme
-    // wrapper too, not just future interactions.
+    // Post-mount state change, so the picker label and theme wrapper re-render.
     use_effect(move || {
         if let Some(stored) = theme_store::load() {
             theme.set(stored);

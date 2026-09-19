@@ -11,10 +11,8 @@ const SITE: SiteMeta = SiteMeta {
     og_image_path: Some("/assets/og-default.png"),
 };
 
-/// Thin wrapper over the shared [`SharedPageMeta`]: bakes in the site config
-/// so pages keep calling `PageMeta { title, description, path }` unchanged.
-/// The home page passes the bare site name and renders unsuffixed, same as
-/// before (the shared component's bare-brand rule).
+/// Bakes the site config into [`SharedPageMeta`] so pages only pass title,
+/// description, and path. A title equal to the site name renders unsuffixed.
 #[component]
 pub fn PageMeta(title: String, description: String, path: String) -> Element {
     rsx! {

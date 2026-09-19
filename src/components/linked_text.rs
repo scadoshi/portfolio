@@ -33,7 +33,6 @@ fn split_urls(text: &str) -> Vec<TextPart> {
     while i < text.len() {
         let rest = &text[i..];
 
-        // Try markdown link: [label](https://url)
         if let Some(after_bracket) = rest.strip_prefix('[')
             && let Some(close_bracket) = after_bracket.find(']')
         {
@@ -56,9 +55,8 @@ fn split_urls(text: &str) -> Vec<TextPart> {
             }
         }
 
-        // Try bare URL: https://...
         if rest.starts_with("https://") {
-            // URL ends at whitespace or any trailing punctuation that's clearly not part of a URL
+            // Stop at whitespace or punctuation that can't be part of the URL.
             let end = rest
                 .find(|c: char| {
                     c.is_whitespace() || matches!(c, ')' | '>' | ']' | ';' | ',' | '"' | '\'')

@@ -13,14 +13,11 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
     let total = items.len();
     let current = &items[index()];
 
-    // Same Panel grammar as zite's demo gallery: eyebrow + title head, the
-    // media body, then the caption/counter footer. The footer goes through
-    // Panel's `actions` slot rather than being written into the body, so it
-    // pins to the panel's bottom edge: `.panel-card` is a flex column and
-    // `.panel-body` takes the slack, which only pushes the footer down when
-    // the footer is a sibling of the body. Written into the body instead, it
-    // sits right under the image with the dead space below it, and stops
-    // bottom-aligning with the panel beside it in a `.detail-band`.
+    // The caption/counter footer goes through Panel's `actions` slot so it
+    // pins to the bottom edge: `.panel-card` is a flex column and
+    // `.panel-body` takes the slack, which only works when the footer is a
+    // sibling of the body. Inside the body it sits under the image with dead
+    // space below and stops bottom-aligning with its `.detail-band` neighbor.
     rsx! {
         figure { class: "project-gallery",
             Panel {

@@ -38,9 +38,8 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
             path,
         }
         div { class: "project-detail content-enter",
-            // Header panel: identity, headline, and tags in one card so no
-            // text sits directly on the grid. Eyebrow/status/title all come
-            // from the shared Panel grammar.
+            // Identity, headline, and tags in one card so no text sits
+            // directly on the grid.
             Panel {
                 eyebrow: project.category.to_string(),
                 status: project.status.banner_status(),
@@ -84,12 +83,10 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 }
             }
 
-            // The demo takes the full column. It used to share a lateral band
-            // with the approach panel, but the pairing only flattered projects
-            // with a single screenshot: the row's height comes from the taller
-            // side, and approach runs to several paragraphs, so the gallery sat
-            // at the top of a cell twice its height with dead space beneath.
-            // Full width also suits the media, which is 16:9 terminal capture.
+            // The demo used to share a band with the approach panel, but the
+            // row takes the taller side's height and approach runs to several
+            // paragraphs, so the gallery sat above dead space. Full width also
+            // suits 16:9 terminal capture.
             if !project.media.is_empty() {
                 ProjectGallery { items: project.media }
             }
@@ -151,7 +148,6 @@ fn not_found(kind: &str, slug: &str) -> Element {
     }
 }
 
-/// Featured project detail page (`/projects/:slug`).
 #[component]
 pub fn ProjectDetail(slug: String) -> Element {
     let Some(project) = data::find_project(&slug) else {
@@ -160,7 +156,6 @@ pub fn ProjectDetail(slug: String) -> Element {
     detail_view(project, format!("/projects/{}", project.slug))
 }
 
-/// Side quest detail page (`/side-quests/:slug`).
 #[component]
 pub fn SideQuestDetail(slug: String) -> Element {
     let Some(project) = data::find_side_quest(&slug) else {

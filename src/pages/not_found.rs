@@ -1,10 +1,5 @@
-//! Catch-all 404 page.
-//!
-//! The deploy copies `index.html` to `404.html`, so GitHub Pages boots the
-//! app shell for any unknown path and the router lands here (same trick as
-//! zite). Not prerendered: catch-all segments are dynamic, so
-//! `static_routes()` excludes it automatically. Deliberately a dead end; the
-//! nav is right there for anyone who wants to explore.
+//! Catch-all 404 page. Not prerendered: the segments are dynamic, so
+//! `static_routes()` skips it.
 
 use dioxus::prelude::*;
 use zwipe_components::Panel;
@@ -21,10 +16,8 @@ pub fn NotFound(segments: Vec<String>) -> Element {
         }
         // Keep dead paths out of search results.
         document::Meta { name: "robots", content: "noindex" }
-        // The shared Panel already is this shape (title, rule, body); the
-        // wrapper only sets the narrow width and the dead-end voice, so the
-        // card chrome and the rule come from the component like everywhere
-        // else. Deliberately a dead end: the nav is right there.
+        // The wrapper only sets the narrow width; card chrome comes from Panel.
+        // Deliberately a dead end, the nav is right there.
         div { class: "not-found-page content-enter",
             Panel {
                 eyebrow: "404",
