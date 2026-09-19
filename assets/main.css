@@ -768,7 +768,7 @@ a.panel-action:visited {
 
 /* A direct child of .project-detail, which is a flex column with its own gap,
    so the gallery carries no margin of its own and matches the panels' width.
-   It used to be capped and centred for life inside a half-width band column. */
+   It used to be capped and centered for life inside a half-width band column. */
 .project-gallery {
     margin: 0;
     padding: 0;
@@ -962,7 +962,7 @@ a.panel-action:visited {
 
 /* The card, its rule, and the body come from the shared Panel; this wrapper
    only narrows it and keeps the dead-end voice zite uses for a stopped page:
-   the title red, uppercase, centred and slowly pulsing rather than the usual
+   the title red, uppercase, centered and slowly pulsing rather than the usual
    left-aligned accent heading. */
 .not-found-page {
     max-width: 25rem;

@@ -197,7 +197,7 @@ let shown: Vec<Card> = Cards::from(deck_cards)
     .sorted(CardSortKey::Cmc, true)
     .into();
 
-// Grouping stays an extension trait on Vec<Card>: fixed-order labelled
+// Grouping stays an extension trait on Vec<Card>: fixed-order labeled
 // buckets, and CardRole grouping is multi-bucket (one card, many roles)
 let groups = deck_cards.group_by(GroupByOption::CardType);"#,
             description: "One predicate core, two front doors. The server compiles it to SQL, the app runs it in memory, and the same builder emits either, so the filter UI cannot drift from the API.",
