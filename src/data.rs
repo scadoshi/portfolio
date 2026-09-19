@@ -742,9 +742,9 @@ const STELLER: Project = Project {
         "Hand-written RESP parser. No protocol crate, no async runtime",
         "The append-only log is the wire format, so replay reuses the inbound parse path",
         "Pub/sub fan-out over per-session writer threads",
-        "~5,900 lines, 237 tests",
+        "~5,900 lines, 238 tests, benchmarked against Redis 8",
     ],
-    impact_metric: "~5,900 lines, 237 tests, hand-written RESP + durability + pub/sub",
+    impact_metric: "~5,900 lines, 238 tests, benchmarked against Redis 8",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out. All written without reaching for a protocol crate.",
     tags: &["rust", "redis", "tcp", "protocol"],
     media: &[
@@ -780,12 +780,21 @@ const STELLER: Project = Project {
             caption: Some("Bad input gets an error and the session keeps going"),
             kind: MediaKind::Video,
         },
+        MediaItem {
+            src: asset!("/assets/projects/steller/06-benchmark-vs-redis.svg"),
+            alt: "SET throughput by client count, steller against Redis 8, from one to 256 clients",
+            caption: Some(
+                "Against Redis 8, median of three runs. Ahead under 32 clients, flat above it, and the process dies near 3,000",
+            ),
+            kind: MediaKind::Image,
+        },
     ],
     approach: &[
         "The parser is the framer. parse_one returns the frame plus whatever bytes are left over, and Incomplete is a real error variant rather than an Option, because the read loop leans on the difference between \"need more\" and \"malformed\"",
         "The AOF is the wire protocol. Every mutation is logged as the exact RESP bytes a client would have sent, so replay reuses Frame::parse_one and Command::try_from instead of a second decoder that could drift",
         "Units are newtypes. Seconds and Milliseconds are distinct types, and Seconds only survives between the parser reading a token and converting it. That caught a live bug where replay was multiplying every deadline by 1000 on each restart",
         "Pub/sub with no async. Each session splits into a reader and a writer thread, so a published message lands on a subscriber while its own reader is still blocked on the socket",
+        "Blocking accept, woken on shutdown by a self-connect. The stdin thread flips the flag with Release, then opens one throwaway connection to the listener's own address; the accept loop loads with Acquire as it comes in, drops it, and exits. An idle server costs nothing and a new connection is picked up at once. The non-blocking loop with a 50ms sleep it replaced put 49ms on every connection's first request, which the first benchmark run made visible",
     ],
     snippets: &[
         Snippet {
@@ -846,12 +855,23 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
 }",
             description: "No thread per subscriber. The session's own writer thread is the subscriber output.",
         },
+        Snippet {
+            title: "Drain, Then Truncate",
+            code: r"pub fn clear(&self) -> Result<(), AofError> {
+    let mut guard = self.writer.lock().map_err(|_| AofError::MutexPoisoned)?;
+    guard.flush()?;
+    guard.get_ref().set_len(0)?;
+    Ok(())
+}",
+            description: "Compaction empties the log once a snapshot holds everything in it. The first version opened a second, non-append handle to truncate and then dropped the old BufWriter, whose pending bytes flushed at the stale cursor into the emptied file. The OS filled the gap with zeros and replay refused the file. Drain first, and never let a second handle exist.",
+        },
     ],
     obstacles: &[
         "Self-deadlock on the TTL read path. get_expires_at held the mutex guard and then called self.remove() on the expired branch. std mutexes are not reentrant, so the thread hung forever. Guards live to the end of scope, not the end of the statement",
         "A read-before-parse bug in the frame loop. TCP coalesces writes, so one read can deliver two frames; reading first meant the second sat in the buffer unseen until EOF. Parse first, read only on Incomplete",
+        "The server could not restart after the first benchmark run. Compaction truncated the log through a second, non-append handle before draining the old BufWriter, so up to 8 KiB of pending bytes landed at a stale offset in an empty file and the OS filled the gap with zeros: 8,992,628 NULs, then 7,372 bytes of real frames. Replay read byte 0 and refused, correctly. It only fires past 8 KiB of writes between snapshots, so no manual session could have hit it. Fixed, with a regression test that fails on the old body",
     ],
-    progress: "Done through M6: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. 237 tests. Active development is finished; an async migration and MULTI/EXEC are there if I come back to it.",
+    progress: "Done through M6: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. 238 tests. Benchmarked against Redis 8 in September 2026; the first run found a compaction bug and a 49ms accept stall, both fixed. An async migration and MULTI/EXEC are there if I come back to it.",
     impact: "The in-memory half of a pair with chickadee, which is the on-disk LSM engine. Between them they cover both sides of how a KV system gets built. Real clients drive both.",
     site_url: None,
     status: ProjectStatus::Done,
