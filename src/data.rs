@@ -85,17 +85,17 @@ pub fn find_side_quest(slug: &str) -> Option<&'static Project> {
 const ZWIPE: Project = Project {
     name: "Zwipe",
     slug: "zwipe",
-    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 110k+ printings.",
+    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 118k+ printings.",
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
     summary: "Mobile-first Magic: The Gathering deck builder with swipe-based navigation.",
     card_bullets: &[
         "Native iOS + Android from one Dioxus codebase",
-        "Axum + PostgreSQL backend, 110k+ printings, materialized search",
-        "5 workspace crates, 600+ tests, unwrap banned by CI",
+        "Axum + PostgreSQL backend, 118k+ printings, materialized search",
+        "6 workspace crates, 736 tests, unwrap banned by CI",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
-    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Five workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-components (shared UI components), zite (static marketing site). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
+    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Six workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-client (the typed API client both clients call), zwipe-components (shared UI), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
     tags: &["rust", "full-stack", "ios", "dioxus", "postgresql"],
     media: &[
         MediaItem {
@@ -175,7 +175,8 @@ const ZWIPE: Project = Project {
         "One Rust codebase compiles to native iOS and Android through Dioxus. No JS bridge, no separate frontend repo",
         "A shared domain crate backs both the Axum API and the app, so the filter UI and the server's SQL search are built from the same query builder and cannot drift apart",
         "Argon2id, single-use rotating refresh tokens, and a Password type that is consumed on hash so plaintext has nowhere to leak to",
-        "CI promotes 22 clippy rules to errors, unwrap among them. 600+ tests, nightly Postgres backups to R2",
+        "Every API call is described once, method and path and response type together, and one generic function sends them all. The app and the site cannot disagree about what an endpoint looks like",
+        "CI promotes 22 clippy rules to errors, unwrap among them. 736 tests, nightly Postgres backups to R2",
     ],
     snippets: &[
         Snippet {
