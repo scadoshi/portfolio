@@ -11,8 +11,13 @@ Learning Project — Language Port
 ## What It Is
 
 The same Advent of Code tooling as rustmas, written in C#: fetch input, run the
-solution, check it against an independent solver, submit. About 3,600 lines with 134
-tests, run with `dotnet test`.
+solution, check it against an independent solver, submit.
+
+Counts depend on the branch. `main`, the tool alone, is ~2,600 lines. `scadoshi`, with
+solutions, is ~3,600 lines and `dotnet test` reports 134 passing. That 134 is test
+cases, not test methods: `[Theory]` with several `InlineData` rows counts once in the
+source and many times in the run, which is why attribute counts and run counts
+disagree here and not in rustmas.
 
 The design was settled before the port started, which is the point. What the repo
 records is where the two languages actually diverge, and where C# has no good answer.

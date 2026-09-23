@@ -12,8 +12,11 @@ Learning Project — CLI Tooling
 
 A CLI that handles everything around an Advent of Code puzzle except the puzzle: it
 downloads the input with your session cookie, runs your solution, verifies the answer
-against a second independent solver before anything is submitted, and posts it. About
-9,100 lines with 186 tests.
+against a second independent solver before anything is submitted, and posts it.
+
+Counts depend on the branch, so name it. `main`, the tool alone, is ~2,400 lines and
+52 tests. `scadoshi`, with the solutions attached, is ~9,100 lines and 186 tests.
+Anyone visiting the repo lands on `main`.
 
 ## Branch Layout
 
