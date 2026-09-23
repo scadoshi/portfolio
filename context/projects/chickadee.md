@@ -10,12 +10,12 @@ Learning Project — Database Internals
 
 ## What It Is
 
-A log-structured storage engine built phase by phase. Started from the Bitcask paper as a simple append-only log, then evolved into a full LSM-tree: BTreeMap memtable, WAL-backed durability, SSTable flush, k-way merge compaction, and per-SSTable bloom filters. The architecture behind LevelDB, RocksDB, and Cassandra. ~1,000 lines of engine code with 89 tests covering every layer.
+A log-structured storage engine built phase by phase. Started from the Bitcask paper as a simple append-only log, then evolved into a full LSM-tree: BTreeMap memtable, WAL-backed durability, SSTable flush, k-way merge compaction, and per-SSTable bloom filters. The architecture behind LevelDB, RocksDB, and Cassandra. ~2,100 lines of engine code with 99 tests covering every layer.
 
 ## What It Proves
 
 - Understanding of foundational database concepts: append-only logs, in-memory indexes (key → file offset), tombstone deletes, log compaction
-- Custom binary format: [magic: 2B (0x4E48 "NH")][crc32: 4B][entry_len: 4B][wincode-serialized Entry]
+- Custom binary format: [magic: 2B (0x4443 "CD")][crc32: 4B][entry_len: 4B][wincode-serialized Entry]
 - Corruption recovery: byte-by-byte scanning to find next valid entry after corruption
 - Crash safety: sync_all() after every write, atomic rename for compaction (POSIX semantics)
 - Trait-based design: Header trait on File, Index trait on HashMap, Execute trait on Log
@@ -24,8 +24,8 @@ A log-structured storage engine built phase by phase. Started from the Bitcask p
 
 ### On-Disk Format
 ```
-[magic: 0x4E48] [crc32: 4 bytes] [entry_len: 4 bytes] [wincode Entry]
-     "NH"        integrity check    length prefix        serialized data
+[magic: 0x4443] [crc32: 4 bytes] [entry_len: 4 bytes] [wincode Entry]
+     "CD"        integrity check    length prefix        serialized data
 ```
 
 ### Corruption Recovery
@@ -42,13 +42,9 @@ Scan all entries, deduplicate (keep latest per key), write to temp file with syn
 - CRC32 for data integrity — what it catches and what it doesn't
 - POSIX rename semantics for crash-safe file replacement
 
-## Roadmap
-
-Planned phases: SSTable/LSM-tree (sorted on-disk segments, bloom filters), TCP network layer, concurrency with RwLock. Currently through Phase 3 of 6.
-
 ## Status
 
-Phases 1-5 and entry consolidation complete. WAL, memtable, SSTable flush and read path, k-way compaction, per-SSTable bloom filters, and tombstone resurrection fix all working with 89 tests. Next: leveled compaction (L0/L1).
+WAL, memtable, SSTable flush and read path, k-way compaction, per-SSTable bloom filters, and the tombstone resurrection fix all work, with 99 tests. Next: leveled compaction (L0/L1), and a real CLI with clap.
 
 ## Repo
 

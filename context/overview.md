@@ -33,10 +33,9 @@ Its CSS is inlined as a string constant because a git dep cannot be reached by a
 asset pipeline. That also means a fix to shared CSS has to land in zwipe first, and
 pushing zwipe's `main` deploys zwipe's production.
 
-`projects/` holds per-project background notes, but it is not a mirror of the site:
-steller, gotcha, rustmas and sharpmas have no file there, and `capture.md` describes
-a project that is not on the site at all. `data.rs` is the source of truth for what
-exists.
+`projects/` holds per-project background notes, one per entry in `data.rs`. They go
+deeper than the site does and are where the numbers came from. `data.rs` is still the
+source of truth for what the site shows; these are the working notes behind it.
 
 ## Build and deploy
 

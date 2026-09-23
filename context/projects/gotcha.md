@@ -1,4 +1,4 @@
-# Capture
+# Gotcha
 
 ## Headline
 
@@ -55,4 +55,4 @@ Working on both platforms. Next: configurable secret key sequence, configurable 
 
 ## Repo
 
-~/Developer/capture
+~/Developer/gotcha
