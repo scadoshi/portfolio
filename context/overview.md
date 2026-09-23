@@ -1,67 +1,70 @@
 # Portfolio
 
-Personal portfolio site presenting seven Rust projects. Built with Dioxus targeting WASM for web deployment. The site itself is a portfolio piece: a Rust developer's portfolio written in Rust.
+scottyfermo.com. A Rust developer's portfolio written in Rust: Dioxus, prerendered
+to static HTML, served by GitHub Pages.
 
-## Goal
+## Where things live
 
-Present projects in a way that highlights what was learned, what was built, and why it matters. Not a resume. A technical showcase with interactive elements where possible.
-
-## Tech Stack
-
-| Crate | Purpose |
-|-------|---------|
-| `dioxus` 0.7.1 | Cross-platform UI framework (targeting web/WASM) |
-| `dioxus-router` | Client-side routing between project pages |
-| `gloo-timers` 0.3 | Async delays for highlight.js integration in WASM |
-
-### Later
-
-| Crate | Purpose |
-|-------|---------|
-| `xterm-js-rs` | Embedded terminal emulator for interactive demos |
-| `wasm-bindgen` | JS interop for terminal integration |
-
-## Architecture
-
-Dioxus WASM SPA. Flat module structure:
+Content is data, not markup. Every project is a `Project` const in `src/data.rs`, and
+`featured_projects()` / `side_quests()` are the only two lists that decide what the
+site shows. Adding a project means adding a const, putting it in one of those lists,
+and adding its `<loc>` to `public/sitemap.xml`. The navbar dropdown and the cards
+build themselves from the same data.
 
 ```
 src/
-├── main.rs                 # Entry point, Router enum, App, NavbarLayout
-├── data.rs                 # All project content as static data (Project struct, ProjectType enum)
-├── theme.rs                # ThemeConfig, 8 themes, light/dark toggle logic
-├── components/
-│   ├── navbar.rs           # [SRF] brand, nav links, Projects dropdown
-│   ├── project_card.rs     # Home page card with impact tooltip
-│   ├── code_block.rs       # Syntax-highlighted code via highlight.js + unique IDs
-│   ├── linked_text.rs      # Auto-detects URLs in text and renders as <a> tags
-│   ├── theme_switcher.rs   # Theme dropdown + light/dark toggle
-│   └── footer.rs           # GitHub, LinkedIn, Email
-└── pages/
-    ├── home.rs             # Hero + about + project cards grid
-    ├── project_detail.rs   # Dynamic :slug lookup, full detail page
-    ├── side_quests.rs      # Index page with cards linking to detail pages
-    └── side_quest_detail.rs # Dynamic :slug lookup for side quests
+  main.rs            Route enum, App, the head tags, static_routes() for SSG
+  data.rs            every Project and Snippet; the two ordering functions
+  theme_store.rs     localStorage theme persistence, no-ops on the server build
+  components/        navbar, footer, project_card, gallery, code_block,
+                     linked_text, page_meta
+  pages/             home, detail (shared by projects and side quests),
+                     side_quests, contribute, not_found
+assets/              CSS, fonts, per-project media, the two ascii logos
+public/              copied to the site root verbatim: sitemap, robots, og image,
+                     redirect stubs for renamed slugs
+context/             this, the commit rules, per-project notes, marketing
 ```
 
-## Design Direction
+The shared UI (themes, `Panel`, `Banner`, `NavBar`, `ThemePicker`, `PageMeta`) comes
+from `zwipe-components`, a git dependency on the zwipe repo. `Cargo.lock` pins the
+exact commit, so pulling changes is a deliberate `cargo update -p zwipe-components`.
+Its CSS is inlined as a string constant because a git dep cannot be reached by an
+asset pipeline. That also means a fix to shared CSS has to land in zwipe first, and
+pushing zwipe's `main` deploys zwipe's production.
 
-- Terminal aesthetic with Iosevka Nerd Font, monospace everywhere
-- 8 color themes: Rustbox (default), Gruvbox, Dracula, Everforest, Catppuccin, Tokyo Night, Nord, Vantablack
-- Each theme has dark/light variants (Vantablack dark-only)
-- Theme switcher in navbar
-- Each project (featured and side quest) gets its own page with objective, approach, implementation, obstacles, progress
-- Syntax highlighting via highlight.js CDN with CSS overrides mapping tokens to theme variables
-- Mobile responsive
+`projects/` holds per-project background notes, but it is not a mirror of the site:
+steller, gotcha, rustmas and sharpmas have no file there, and `capture.md` describes
+a project that is not on the site at all. `data.rs` is the source of truth for what
+exists.
 
-## Hosting
+## Build and deploy
 
-- GitHub Pages with GitHub Actions CI/CD
-- Custom domain: scottyfermo.com (Namecheap)
-- DNS: 4 A records to GitHub Pages IPs + CNAME www -> scadoshi.github.io
-- Free SSL via GitHub Pages (Let's Encrypt)
-- SPA routing handled via 404.html copy of index.html
+```bash
+dx build --release --ssg --force-sequential
+```
 
-## Current State
+`--force-sequential` is what makes `index.html` a real prerendered page rather than a
+bare shell. Pushing to `main` runs the same build in Actions and publishes it. Tests
+and clippy gate that deploy: red means the site does not update. See
+`rules/commit_guidelines.md` for the exact commands, which are worth running before
+you push rather than after.
 
-Live at https://scottyfermo.com. Phase 1 complete. All pages, routing, 8 themes, syntax highlighting, and content evaluation done. GitHub Actions deploys automatically on push to main.
+Two things the build does that are easy to miss. `/404` is prerendered through the
+catch-all route so the workflow can ship it as `404.html`, which is why unknown URLs
+get a real title and a noindex instead of the home page's. And `asset!()`
+content-hashes filenames, so anything referenced by a literal path has to live in
+`public/`, not `assets/`.
+
+## Writing content
+
+The bar is in `rules/commit_guidelines.md` and in the humanizer skill: short enough
+that a person reads it, specific enough to be checkable, and the code is the real
+evidence. Long comprehensive prose reads as machine-written and gets skipped, which
+is worse than saying less.
+
+## History
+
+`history/` holds the planning and progress docs from the original build. They record
+what was intended in 2026, not what is true now. Read them for background, never as a
+description of the current tree.
