@@ -351,8 +351,8 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     ],
     obstacles: &[
         "ScryfallData has 87 fields, and hexagonal architecture wants a separate database type. Maintaining 87 fields twice felt untenable solo, so the domain type carried a feature-gated sqlx derive for a while. That bend has since been unbent: a real database type lives in the outbound layer and converts inward",
-        "Postgres caps a statement at 65,535 parameters, and 87 fields per card puts the ceiling around 327 cards a batch. Five upsert strategies compose to handle it, with card-by-card fallback so one bad record never blocks 100k others",
-        "Search over 110k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
+        "Postgres caps a statement at 65,535 parameters, and 87 fields per card means batching. Zwipe uses half the limit, which works out to 376 cards a batch. Five upsert strategies compose to handle it, with card-by-card fallback so one bad record never blocks 100k others",
+        "Search over 118k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
     impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. over 100,000 lines across five crates, 600+ tests, unwrap banned by CI.",
