@@ -1375,6 +1375,10 @@ mod tests {
     /// public/sitemap.xml is hand-maintained, so it drifts. It already has:
     /// cairn landed in 3c17f1c and never made it into the file. Compare it
     /// against the routes SSG actually renders.
+    ///
+    /// `/404` is the one route SSG renders that belongs nowhere near here: it
+    /// is prerendered for deploy.yml to ship as 404.html, and it carries
+    /// noindex. `static_routes()` in main.rs appends it, this does not.
     #[test]
     fn sitemap_lists_every_prerendered_route() {
         let sitemap = include_str!("../public/sitemap.xml");

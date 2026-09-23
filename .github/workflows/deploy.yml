@@ -83,9 +83,11 @@ jobs:
         run: echo "scottyfermo.com" > target/dx/portfolio/release/web/public/CNAME
 
       - name: Add 404.html for SPA routing
-        # GitHub Pages serves this for unknown paths; the app shell boots and
-        # the router's catch-all renders the in-app 404.
-        run: cp target/dx/portfolio/release/web/public/index.html target/dx/portfolio/release/web/public/404.html
+        # GitHub Pages serves this for unknown paths. It is the prerendered
+        # /404 page (see static_routes in main.rs), not a copy of index.html:
+        # the copy carried Home's title, canonical and JSON-LD onto every
+        # unknown URL, with no noindex.
+        run: cp target/dx/portfolio/release/web/public/404/index.html target/dx/portfolio/release/web/public/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
