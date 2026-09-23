@@ -62,6 +62,9 @@ impl ProjectStatus {
 
 pub struct Snippet {
     pub title: &'static str,
+    /// highlight.js language class, e.g. "rust" or "csharp". Only the
+    /// grammars loaded in main.rs will actually color.
+    pub lang: &'static str,
     pub code: &'static str,
     pub description: &'static str,
 }
@@ -125,6 +128,7 @@ const CAIRN: Project = Project {
     snippets: &[
         Snippet {
             title: "The quote with no state",
+            lang: "rust",
             code: r"/// The quote for the hour that `at` falls in.
 pub fn for_time<Tz: TimeZone>(at: &DateTime<Tz>) -> Option<&'static Quote> {
     at_hour(at.timestamp().div_euclid(3600))
@@ -145,6 +149,7 @@ pub fn at_hour(hours: i64) -> Option<&'static Quote> {
         },
         Snippet {
             title: "The test the suite was missing",
+            lang: "rust",
             code: r#"/// Every other store test starts from `in_memory()`, which is version 0,
 /// so all five rungs always run and the version guards are never
 /// exercised. That leaves the path a real phone takes, an existing
@@ -292,6 +297,7 @@ const ZWIPE: Project = Project {
     snippets: &[
         Snippet {
             title: "One Search Predicate, Two Front Doors",
+            lang: "rust",
             code: r#"// CardCriteria: the shared predicate core (~50 fields) with matches()
 // CardQuery:    criteria + Limit + offset + sort, the server's SQL path
 // Cards:        a Vec<Card> already in hand, criteria only, no pagination
@@ -316,6 +322,7 @@ let groups = deck_cards.group_by(GroupByOption::CardType);"#,
         },
         Snippet {
             title: "Swipe Gesture Engine",
+            lang: "rust",
             code: r"// The gesture logic lives once, in a trait. Touch and mouse adapt to it.
 trait OnSwipe {
     fn onswipestart(&mut self, point: ClientPoint);
@@ -338,6 +345,7 @@ if distance > config.distance_threshold
         },
         Snippet {
             title: "87-Column Upsert Automation",
+            lang: "rust",
             code: r#"// One constant holds all 87 field names; everything else derives from it,
 // so a new Scryfall column never has to be added in five places.
 const FIELDS: &str = "arena_id id lang mtgo_id oracle_id cmc ...";
@@ -413,6 +421,7 @@ const HALO_ACTION_IMPORTER: Project = Project {
     snippets: &[
         Snippet {
             title: "Resilience Pattern",
+            lang: "rust",
             code: r"// Every failure mode has a specific recovery strategy
 401 Unauthorized    → refresh token, retry immediately
 504 Gateway Timeout → retry immediately (no delay)
@@ -423,6 +432,7 @@ Deserialization     → skip row, continue processing",
         },
         Snippet {
             title: "Retry Strategy Evolution",
+            lang: "rust",
             code: r"// v1: Binary search to find bad ticket in failed batch
 //     O(log(batch_size) * failures): too many API calls
 //
@@ -447,6 +457,7 @@ fn retry_by_ticket_group(batch: Vec<Action>) -> Result<Stats> {
         },
         Snippet {
             title: "Cache Evolution",
+            lang: "rust",
             code: r"// v1: Single report endpoint
 //     Fetch all existing IDs from Halo before each run
 //     Worked fine at ~100k IDs. Timed out at ~1M+
@@ -516,6 +527,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     snippets: &[
         Snippet {
             title: "Layered Architecture",
+            lang: "rust",
             code: r"// bin/main.rs: orchestration only
 // lib/: all logic lives here
 //
@@ -537,6 +549,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
         },
         Snippet {
             title: "Domain Validation",
+            lang: "rust",
             code: r"// Newtypes with validation at construction
 struct Name(String);  // max 64, alphanumeric + underscore only
 struct Label(String); // max 256 characters
@@ -626,6 +639,7 @@ const MARVIN: Project = Project {
     snippets: &[
         Snippet {
             title: "Tool Architecture",
+            lang: "rust",
             code: r"// Each tool uses schemars for automatic JSON Schema generation
 #[derive(JsonSchema, Deserialize)]
 struct SearchArgs {
@@ -645,6 +659,7 @@ impl Tool for SearchWeb {
         },
         Snippet {
             title: "Command Dispatch",
+            lang: "rust",
             code: r"// Every line of input parses into a ChatInput variant, then the runner
 // matches it to a command module. Adding a command is a variant and an arm.
 enum ChatInput {
@@ -666,6 +681,7 @@ match ChatInput::parse(&read_line()?) {
         },
         Snippet {
             title: "Dynamic Model Discovery",
+            lang: "rust",
             code: r#"// Hardcoded model constants in Rig were 404ing on Anthropic's API.
 // Fix: fetch the live model list at startup instead of trusting constants.
 async fn list_models(api_key: &str) -> Result<Vec<Model>> {
@@ -755,6 +771,7 @@ const CHICKADEE: Project = Project {
     snippets: &[
         Snippet {
             title: "Corruption Recovery",
+            lang: "rust",
             code: r"// 10-byte header: [magic: 0x4443 (2B)][crc32 (4B)][len (4B)]
 // If magic or checksum fails, scan forward byte-by-byte
 fn header_read_next(&mut self) -> anyhow::Result<Option<Entry>> {
@@ -780,6 +797,7 @@ fn header_read_next(&mut self) -> anyhow::Result<Option<Entry>> {
         },
         Snippet {
             title: "Bloom Filter",
+            lang: "rust",
             code: r"// Kirsch-Mitzenmacher: two xxh3 seeds, k=7, ~1% false positive rate
 fn positions(key: &[u8], bit_count: usize) -> impl Iterator<Item = usize> {
     let h1 = xxh3::hash64_with_seed(key, 0);
@@ -809,6 +827,7 @@ impl<R: Read + Seek> BloomFilterReader for R {
         },
         Snippet {
             title: "K-Way Merge: compact()",
+            lang: "rust",
             code: r"// Every SSTable is merged at once rather than pairwise. Each holds a
 // cursor, and each pass takes the globally smallest key across all of them.
 loop {
@@ -911,6 +930,7 @@ const STELLER: Project = Project {
     snippets: &[
         Snippet {
             title: "Parser-as-Framer",
+            lang: "rust",
             code: r"pub fn parse_one(bytes: &[u8]) -> Result<(Frame, &[u8]), FrameError> {
     let (header, rest) = bytes.split_crlf().ok_or(FrameError::Incomplete)?;
     let (sigil, len_bytes) = header.split_first().ok_or(FrameError::Malformed)?;
@@ -925,6 +945,7 @@ const STELLER: Project = Project {
         },
         Snippet {
             title: "The Log Is the Wire Protocol",
+            lang: "rust",
             code: r#"impl From<WriteCommand> for Frame {
     fn from(value: WriteCommand) -> Self {
         match value {
@@ -951,6 +972,7 @@ const STELLER: Project = Project {
         },
         Snippet {
             title: "Pub/Sub Fan-Out",
+            lang: "rust",
             code: r"// The push is serialized once, then the bytes go into each subscriber's
 // mpsc: the same channel their writer thread already drains to the socket.
 pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsError> {
@@ -969,6 +991,7 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
         },
         Snippet {
             title: "Drain, Then Truncate",
+            lang: "rust",
             code: r"pub fn clear(&self) -> Result<(), AofError> {
     let mut guard = self.writer.lock().map_err(|_| AofError::MutexPoisoned)?;
     guard.flush()?;
@@ -1020,6 +1043,7 @@ const UPSEE: Project = Project {
     snippets: &[
         Snippet {
             title: "Inference Pipeline",
+            lang: "rust",
             code: r"// Load and optimize MoveNet ONNX model
 let model = tract_onnx::onnx()
     .model_for_path(MODEL_PATH)?
@@ -1042,6 +1066,7 @@ let result = model.run(tvec!(tensor.into()))?;",
         },
         Snippet {
             title: "Hysteresis State Machine",
+            lang: "rust",
             code: r"// Two separate thresholds prevent oscillation:
 const UP_THRESHOLD: f32 = 0.05;   // shoulders near wrist level
 const DOWN_THRESHOLD: f32 = 0.15;  // shoulders dropped away
@@ -1095,6 +1120,7 @@ const GOTCHA: Project = Project {
     snippets: &[
         Snippet {
             title: "Platform Divergence",
+            lang: "rust",
             code: r"// Same goal, completely different implementations:
 //
 // | Concern        | macOS                     | Linux                      |
@@ -1111,6 +1137,7 @@ const GOTCHA: Project = Project {
         },
         Snippet {
             title: "Trait Extensions on Third-Party Types",
+            lang: "rust",
             code: r"// Identify trait on evdev::Device: capability-based heuristics
 impl Identify for Device {
     fn is_probably_keyboard(&self) -> bool {
@@ -1202,6 +1229,7 @@ const RUSTMAS: Project = Project {
     snippets: &[
         Snippet {
             title: "The Day Registry",
+            lang: "rust",
             code: r"// One arm per day. Returns the solver rather than calling it.
 fn solver_for(year: i32, day: i32) -> Option<Solver> {
     Some(match (year, day) {
@@ -1223,6 +1251,7 @@ pub trait Solution: Sized {
         },
         Snippet {
             title: "Merging the Two Verdicts",
+            lang: "rust",
             code: r#"// AOC's word supersedes the solver's, so a starred part reads as
 // starred rather than repeating that the solver agreed.
 let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
@@ -1306,6 +1335,7 @@ const SHARPMAS: Project = Project {
     snippets: &[
         Snippet {
             title: "The Same Contract in C#",
+            lang: "csharp",
             code: r"// Rust: an associated function returning Self.
 //   fn new(input: impl AsRef<str>) -> anyhow::Result<Self>;
 //
@@ -1331,6 +1361,7 @@ public static async Task<Solved> Solve<T>(
         },
         Snippet {
             title: "Closing the Set of Cases",
+            lang: "csharp",
             code: r#"public abstract record Answer
 {
     // Private, so the set of cases is closed: only nested types

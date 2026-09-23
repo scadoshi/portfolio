@@ -103,6 +103,7 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                             title: snippet.title.to_string(),
                             code: snippet.code.to_string(),
                             description: snippet.description.to_string(),
+                            lang: snippet.lang.to_string(),
                         }
                     }
                 }

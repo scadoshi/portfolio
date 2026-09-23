@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 static BLOCK_ID: GlobalSignal<u32> = Signal::global(|| 0);
 
 #[component]
-pub fn CodeBlock(title: String, code: String, description: String) -> Element {
+pub fn CodeBlock(title: String, code: String, description: String, lang: String) -> Element {
     let trimmed = code.trim().to_string();
     let id = use_hook(|| {
         let current = *BLOCK_ID.peek();
@@ -33,7 +33,7 @@ pub fn CodeBlock(title: String, code: String, description: String) -> Element {
         div { class: "code-block",
             div { class: "code-header", "{title}" }
             pre { class: "code-content", id: "{id}",
-                code { class: "language-rust", "{trimmed}" }
+                code { class: "language-{lang}", "{trimmed}" }
             }
             if !description.is_empty() {
                 p { class: "code-description", "{description}" }

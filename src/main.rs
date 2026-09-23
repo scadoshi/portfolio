@@ -140,6 +140,10 @@ fn App() -> Element {
         // after deferred scripts have executed.
         document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" }
         document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js" }
+        // Sharpmas's snippets are C#. Without this grammar they fell back to
+        // Rust's, which colors five keywords the two languages share and
+        // leaves public, sealed, record, interface, var and switch plain.
+        document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js" }
         // Scroll reveal for panels below the fold; deferred for the same
         // first-paint reason, and everything it does is progressive.
         document::Script { defer: true, src: REVEAL_JS }
