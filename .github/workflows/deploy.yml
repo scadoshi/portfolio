@@ -10,6 +10,10 @@ on:
       - 'index.html'
       - 'Cargo.toml'
       - 'Cargo.lock'
+      # Sets the app name that every target/dx/portfolio/... path below is
+      # hard-coded to, and the default page title. Editing it without this
+      # entry changes where the build lands and deploys nothing.
+      - 'Dioxus.toml'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
