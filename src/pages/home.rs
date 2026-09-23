@@ -16,7 +16,8 @@ const JSON_LD: &str = r#"{
   "@type": "Person",
   "name": "Scotty Fermo",
   "url": "https://scottyfermo.com",
-  "jobTitle": "Software Engineer",
+  "jobTitle": "Software Developer",
+  "worksFor": { "@type": "Organization", "name": "Halo Software" },
   "email": "mailto:scottyfermo@hotmail.com",
   "sameAs": [
     "https://github.com/scadoshi",
@@ -67,11 +68,11 @@ pub fn Home() -> Element {
                         "Production "
                         span { class: "hl-warning", "Rust" }
                         " for the work that has to actually run: "
-                        span { class: "hl-success", "mobile apps" }
+                        span { class: "hl-success", "storage engines" }
                         ", "
-                        span { class: "hl-error", "internal tooling" }
+                        span { class: "hl-error", "wire protocols" }
                         ", and the "
-                        span { class: "hl-tertiary", "storage engines" }
+                        span { class: "hl-tertiary", "systems" }
                         " underneath."
                     }
                 }
@@ -85,12 +86,11 @@ pub fn Home() -> Element {
                 h2 { class: "sr-only", "About" }
                 Panel {
                     eyebrow: "About",
-                    title: "Software Engineer | Full-Stack | Rust",
+                    title: "Software Engineer | Systems | Rust",
                     p { class: "about-text",
-                        "4+ years of building production systems and leading technical teams. "
-                        "2+ years of intensive Rust development, from near-zero to shipping production systems. "
-                        "At Halo Software I shipped CLI tools that turned multi-week manual migrations into one-command jobs. "
-                        "On my own I built Zwipe (a full-stack mobile MTG deck builder, live on both app stores) and went deep on the storage engines and protocols underneath: an LSM-tree KV database and a Redis-compatible server, both hand-written."
+                        "I write production C# into Halo Software's core product, a large legacy enterprise codebase, shipping through the same pipeline their staff engineers use. "
+                        "Four years there before that designing enterprise request-management systems for universities, government entities, and financial institutions, and building the CLI tools that turned multi-week migrations into one-command jobs. "
+                        "My own work is Rust and systems: a hand-written LSM-tree storage engine and a Redis-compatible server. Zwipe, a full-stack mobile app live on both stores, is the proof I can ship the whole thing alone."
                     }
                 }
                 Panel {
