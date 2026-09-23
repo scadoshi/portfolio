@@ -72,7 +72,7 @@ const CAIRN: Project = Project {
     headline: "Lifetime rep counter for iOS. Local SQLite, no server, no account. Nine months of my own training data.",
     category: "Mobile App",
     repo_url: "https://github.com/scadoshi/cairn",
-    summary: "A counter for things you do every day. Name the thing, tap a button, and it keeps the running total plus the rates that make a total mean something. Built in Rust with Dioxus, running on my phone daily.",
+    summary: "A counter for things you do every day. It keeps the lifetime total plus the rates that make a total mean something.",
     card_bullets: &[
         "Rust + Dioxus 0.7, single crate, hexagonal: the domain has no UI, no SQLite, no clock",
         "Local SQLite with a five-step migration ladder; no server and nothing to sign into",
@@ -103,10 +103,10 @@ const CAIRN: Project = Project {
         },
     ],
     approach: &[
-        "Hexagonal, sized for one crate. The domain is 2,400 lines that never touch Dioxus, rusqlite or the clock: today is passed in as an argument, which is what makes the stats testable and what will let them run on a watch later",
-        "Events are the source of truth. Every tap is stored with its local time, and the per-day totals are derived, so changing when a day starts rebuilds history instead of losing it",
-        "The hourly quote is a pure function of the clock hour rather than stored state, so there is no cache to invalidate: every launch in the same hour shows the same one, and the stride through the list is coprime with its length so all 41 appear before any repeat",
-        "Backups run before every deploy. The phone holds taps that exist nowhere else, so the deploy script pulls the database off, checks its integrity, and refuses to keep a copy that fails",
+        "Hexagonal in one crate. The domain never touches Dioxus, rusqlite or the clock: today is an argument, which is what makes the stats testable and what will let them run on a watch",
+        "Events are the source of truth and daily totals are derived, so changing when a day starts rebuilds history instead of losing it",
+        "The hourly quote is a pure function of the clock hour, so there is no cache to invalidate. The stride through the list is coprime with its length, so all 41 appear before any repeat",
+        "Every deploy backs the phone up first, because it holds taps that exist nowhere else",
     ],
     snippets: &[
         Snippet {
@@ -151,12 +151,12 @@ fn opens_a_database_left_at_every_older_version() {
         },
     ],
     obstacles: &[
-        "The home screen died on launch with \"Unable to retrieve the hook that was initialized at this index\". The counter list loads a moment after the first render, and I was reading context inside the loop over counters, so the first render ran zero hooks and the second ran three. Dioxus treats a changed hook count as fatal. `dx check` catches this class, but it had been failing on an unrelated call for weeks, so nobody could run it",
-        "`-delta.min(n)` negates the whole comparison rather than `delta` first, which turned every subtraction into an addition. It shipped to my phone and lasted about a minute. The clamp now lives in the domain with a test that asserts subtracting always stays negative",
-        "Most of the famous quotes people attribute to a given author are not theirs. \"You don't stop running because you get old\" is Jack Kirk, not McDougall. \"You have power over your mind\" appears in no published translation of Meditations. Tyson never said \"punched in the mouth\". Every quote in the app is sourced to a book, newsletter or interview, and about a third of the candidates were rejected",
+        "The home screen died on launch. I read context inside the loop over counters, so the first render ran zero hooks and the second ran three, and Dioxus treats a changed hook count as fatal. `dx check` catches it, but it had been red on an unrelated call for weeks",
+        "`-delta.min(n)` negates the comparison rather than `delta`, so every subtraction became an addition. It lasted about a minute on my phone",
+        "Most famous quotes are misattributed. \"You don't stop running because you get old\" is Jack Kirk, not McDougall, and Tyson never said \"punched in the mouth\". A third of the candidates were rejected",
     ],
-    progress: "Running on my phone since 22 September 2026, with nine months of imported history: 224 days, 9,829 taps, 97,600 reps across pushups, pullups and squats. Counters, goals with pace, trend charts, streaks with rest days, CSV export and an hourly quote are all in. TestFlight and App Store review are next, along with drawing the mark properly.",
-    impact: "The thing I open every day, which is the only real test of a personal tool. It also became the place I learned to distrust a green test suite: mutation testing found three assertions that could not fail, including a migration path that would have broken the one install that has real data in it.",
+    progress: "On my phone since 22 September 2026, with nine months of imported history: 224 days, 9,829 taps, 97,600 reps. Counters, goals with pace, trend charts, streaks, CSV export and the hourly quote are in. TestFlight is next.",
+    impact: "The thing I open every day, which is the only real test of a personal tool. It also taught me to distrust a green suite: mutation testing found three assertions that could not fail.",
     site_url: None,
     status: ProjectStatus::Doing,
 };
