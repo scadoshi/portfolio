@@ -35,3 +35,12 @@ todo = "deny"
 dbg_macro = "deny"
 unimplemented = "deny"
 unwrap_used = "warn"
+
+# dx builds wasm under its own `wasm-release` profile. Left to dioxus-cli's
+# default it keeps DWARF, and wasm-opt then aborts inside binaryen's DWARF
+# emitter (UNREACHABLE at DWARFEmitter.cpp:201). dx logs that as an ERROR and
+# exits 0, so CI stayed green while shipping an unoptimized 2.75MB binary.
+# Stripping debug info is what lets wasm-opt run at all.
+[profile.wasm-release]
+inherits = "release"
+strip = "debuginfo"
