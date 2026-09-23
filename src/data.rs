@@ -1436,4 +1436,18 @@ mod tests {
         expected.sort_unstable();
         assert_eq!(listed, expected);
     }
+
+    /// The footer quotes this number at the reader. The previous version of
+    /// that sentence claimed the site shipped no hand-written JavaScript at
+    /// all and stayed wrong for fifteen days, so pin it here: edit the file,
+    /// fail the build, update the footer.
+    #[test]
+    fn the_footer_quotes_the_real_reveal_js_line_count() {
+        let lines = include_str!("../assets/reveal.js").lines().count();
+        assert_eq!(
+            lines, 54,
+            "assets/reveal.js changed; update the line count in \
+             src/components/footer.rs to match"
+        );
+    }
 }
