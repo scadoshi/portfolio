@@ -5,7 +5,7 @@ authors = ["Scotty Fermo <scottyfermo@hotmail.com>"]
 edition = "2024"
 
 [dependencies]
-dioxus = { version = "0.7.9", features = ["router", "fullstack"] }
+dioxus = { version = "0.7.10", features = ["router", "fullstack"] }
 gloo-timers = { version = "0.4", features = ["futures"] }
 # Shared UI with zwipe.net (themes, ThemePicker, PageMeta, NavBar shell).
 # Cargo.lock pins the exact commit; `cargo update -p zwipe-components` pulls
