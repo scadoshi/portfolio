@@ -30,35 +30,24 @@ pub fn Navbar() -> Element {
             },
             links: rsx! {
                 li {
+                    // Built from data so the dropdown cannot drift from the
+                    // cards, the sitemap and the routes SSG renders. The
+                    // diprotodon/nighthawk rename is the kind of change that
+                    // used to leave this list pointing at a dead slug.
                     NavDropdown {
                         open: projects_open,
                         label: "Projects",
-                        Link {
-                            to: Route::ProjectDetail { slug: "zwipe".to_string() },
-                            class: "nav-dropdown-item",
-                            onclick: move |_| {
-                                projects_open.set(false);
-                                open.set(false);
-                            },
-                            "Zwipe"
-                        }
-                        Link {
-                            to: Route::ProjectDetail { slug: "halo-action-importer".to_string() },
-                            class: "nav-dropdown-item",
-                            onclick: move |_| {
-                                projects_open.set(false);
-                                open.set(false);
-                            },
-                            "Halo Action Importer"
-                        }
-                        Link {
-                            to: Route::ProjectDetail { slug: "halo-custom-field-builder".to_string() },
-                            class: "nav-dropdown-item",
-                            onclick: move |_| {
-                                projects_open.set(false);
-                                open.set(false);
-                            },
-                            "Halo Custom Field Builder"
+                        for project in crate::data::featured_projects() {
+                            Link {
+                                key: "{project.slug}",
+                                to: Route::ProjectDetail { slug: project.slug.to_string() },
+                                class: "nav-dropdown-item",
+                                onclick: move |_| {
+                                    projects_open.set(false);
+                                    open.set(false);
+                                },
+                                "{project.name}"
+                            }
                         }
                     }
                 }
