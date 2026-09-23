@@ -84,6 +84,14 @@ const CAIRN: Project = Project {
     tags: &["rust", "dioxus", "ios", "sqlite"],
     media: &[
         MediaItem {
+            src: asset!("/assets/projects/cairn/00-demo.mp4"),
+            alt: "Logging reps across three counters, opening one, and changing a setting",
+            caption: Some(
+                "A minute of ordinary use: tap, watch the goal tag close, open a counter",
+            ),
+            kind: MediaKind::Video,
+        },
+        MediaItem {
             src: asset!("/assets/projects/cairn/01-home.jpeg"),
             alt: "Cairn home screen: the mark, today's totals across every counter, a quote, and the first counter card",
             caption: Some("One screen. Today across every counter, then the counters themselves"),
