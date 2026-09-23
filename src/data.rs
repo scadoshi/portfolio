@@ -195,7 +195,7 @@ const ZWIPE: Project = Project {
     card_bullets: &[
         "Native iOS + Android from one Dioxus codebase",
         "Axum + PostgreSQL backend, 118k+ printings, materialized search",
-        "6 workspace crates, 736 tests, unwrap banned by CI",
+        "6 workspace crates, 745 tests, unwrap banned by CI",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Six workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-client (the typed API client both clients call), zwipe-components (shared UI), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
@@ -279,7 +279,7 @@ const ZWIPE: Project = Project {
         "A shared domain crate backs both the Axum API and the app, so the filter UI and the server's SQL search are built from the same query builder and cannot drift apart",
         "Argon2id, single-use rotating refresh tokens, and a Password type that is consumed on hash so plaintext has nowhere to leak to",
         "Every API call is described once, method and path and response type together, and one generic function sends them all. The app and the site cannot disagree about what an endpoint looks like",
-        "CI promotes 22 clippy rules to errors, unwrap among them. 736 tests, nightly Postgres backups to R2",
+        "CI promotes 22 clippy rules to errors, unwrap among them. 745 tests, nightly Postgres backups to R2",
     ],
     snippets: &[
         Snippet {
@@ -329,13 +329,13 @@ if distance > config.distance_threshold
             description: "Built across 11 files with no gesture library. Axis locking and a velocity threshold are what make quick flicks register without diagonal drags firing twice.",
         },
         Snippet {
-            title: "88-Column Upsert Automation",
-            code: r#"// One constant holds all 88 field names; everything else derives from it,
+            title: "87-Column Upsert Automation",
+            code: r#"// One constant holds all 87 field names; everything else derives from it,
 // so a new Scryfall column never has to be added in five places.
 const FIELDS: &str = "arena_id id lang mtgo_id oracle_id cmc ...";
 
 // Traits give QueryBuilder the card-shaped methods, so the whole
-// 88-column upsert is one chain.
+// 87-column upsert is one chain.
 QueryBuilder::new("INSERT INTO scryfall_data (")
     .push(scryfall_data_fields())
     .push(") VALUES ")
@@ -346,16 +346,16 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
 // Five strategies compose, each adding one capability: chunk and skip
 // unchanged, diff against the DB, chunk within the parameter limit, one
 // statement per chunk, then single-card fallback."#,
-            description: "Postgres caps a statement at 65,535 parameters, which at 88 fields a card means chunking. The single-card fallback is what stops one bad record taking 100k others with it.",
+            description: "Postgres caps a statement at 65,535 parameters, which at 87 fields a card means chunking. The single-card fallback is what stops one bad record taking 100k others with it.",
         },
     ],
     obstacles: &[
-        "ScryfallData has 88 fields, and hexagonal architecture wants a separate database type. Maintaining 88 fields twice felt untenable solo, so the domain type carried a feature-gated sqlx derive for a while. That bend has since been unbent: a real database type lives in the outbound layer and converts inward",
-        "Postgres caps a statement at 65,535 parameters, and 88 fields per card puts the ceiling around 327 cards a batch. Five upsert strategies compose to handle it, with card-by-card fallback so one bad record never blocks 100k others",
+        "ScryfallData has 87 fields, and hexagonal architecture wants a separate database type. Maintaining 87 fields twice felt untenable solo, so the domain type carried a feature-gated sqlx derive for a while. That bend has since been unbent: a real database type lives in the outbound layer and converts inward",
+        "Postgres caps a statement at 65,535 parameters, and 87 fields per card puts the ceiling around 327 cards a batch. Five upsert strategies compose to handle it, with card-by-card fallback so one bad record never blocks 100k others",
         "Search over 110k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
-    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. ~100,000 lines across five crates, 600+ tests, unwrap banned by CI.",
+    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. over 100,000 lines across five crates, 600+ tests, unwrap banned by CI.",
     site_url: Some("https://zwipe.net"),
     status: ProjectStatus::Doing,
 };
