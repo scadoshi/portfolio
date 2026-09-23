@@ -90,13 +90,19 @@ const CAIRN: Project = Project {
             kind: MediaKind::Image,
         },
         MediaItem {
-            src: asset!("/assets/projects/cairn/02-counter.jpeg"),
+            src: asset!("/assets/projects/cairn/02-counters.jpeg"),
+            alt: "Three counter cards with goal tags counting down, and a +10 toast over the last one",
+            caption: Some("Every counter, each with what today still owes. A tap logs and says so"),
+            kind: MediaKind::Image,
+        },
+        MediaItem {
+            src: asset!("/assets/projects/cairn/03-counter.jpeg"),
             alt: "One counter: goal pace figures and a 60-day chart with a 7-day average",
             caption: Some("Pace against a 200-a-day goal, and 60 days with the 7-day average"),
             kind: MediaKind::Image,
         },
         MediaItem {
-            src: asset!("/assets/projects/cairn/03-config.jpeg"),
+            src: asset!("/assets/projects/cairn/04-config.jpeg"),
             alt: "Config screen showing theme, mark, dark mode, date format, day and week start, and rest days",
             caption: Some("Every setting explains itself behind the question mark beside it"),
             kind: MediaKind::Image,
