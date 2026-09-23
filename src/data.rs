@@ -208,7 +208,7 @@ const ZWIPE: Project = Project {
     card_bullets: &[
         "Native iOS + Android from one Dioxus codebase",
         "Axum + PostgreSQL backend, 118k+ printings, materialized search",
-        "6 workspace crates, 745 tests, unwrap banned by CI",
+        "6 workspace crates, 749 tests, unwrap banned by CI",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Six workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-client (the typed API client both clients call), zwipe-components (shared UI), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
@@ -292,7 +292,7 @@ const ZWIPE: Project = Project {
         "A shared domain crate backs both the Axum API and the app, so the filter UI and the server's SQL search are built from the same query builder and cannot drift apart",
         "Argon2id, single-use rotating refresh tokens, and a Password type that is consumed on hash so plaintext has nowhere to leak to",
         "Every API call is described once, method and path and response type together, and one generic function sends them all. The app and the site cannot disagree about what an endpoint looks like",
-        "CI promotes 22 clippy rules to errors, unwrap among them. 745 tests, nightly Postgres backups to R2",
+        "CI promotes 22 clippy rules to errors, unwrap among them. 749 tests, nightly Postgres backups to R2",
     ],
     snippets: &[
         Snippet {
@@ -371,7 +371,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         "Search over 118k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
-    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. over 100,000 lines across five crates, 600+ tests, unwrap banned by CI.",
+    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. over 140,000 lines across six crates, 749 tests, unwrap banned by CI.",
     site_url: Some("https://zwipe.net"),
     status: ProjectStatus::Doing,
 };
@@ -723,9 +723,9 @@ const CHICKADEE: Project = Project {
         "TCP server with thread-per-connection concurrency, per-command locking",
         "WAL durability, BTreeMap memtable, bloom-filtered SSTables",
         "K-way merge compaction; byte-level corruption recovery",
-        "~2,250 LOC, 99 tests",
+        "~2,150 LOC, 99 tests",
     ],
-    impact_metric: "~2,250 lines, 99 tests, 6 phases",
+    impact_metric: "~2,150 lines, 99 tests, 6 phases",
     objective: "Build a key-value database incrementally from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, concurrency.",
     tags: &["rust", "kv-store", "lsm-tree", "networking"],
     media: &[
@@ -1025,7 +1025,7 @@ const UPSEE: Project = Project {
         "Confidence filtering + hysteresis state machine for accurate counts",
         "~145 LOC",
     ],
-    impact_metric: "~145 lines, on-device ML",
+    impact_metric: "~155 lines, on-device ML",
     objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time from a webcam, using the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference: everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
     tags: &["rust", "ml", "computer-vision", "real-time"],
     media: &[MediaItem {
@@ -1085,7 +1085,7 @@ match state {
         "tract documentation is sparse compared to Python ML libraries. Required reading source, ONNX model metadata, and tract examples to get the pipeline working",
     ],
     progress: "Working prototype. Counts pullups in real time from webcam. Roadmap: threshold tuning, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
-    impact: "ML inference in Rust without Python or cloud dependencies. ~145 lines from webcam frame to rep count.",
+    impact: "ML inference in Rust without Python or cloud dependencies. ~155 lines from webcam frame to rep count.",
     site_url: None,
     status: ProjectStatus::Done,
 };
@@ -1184,9 +1184,9 @@ const RUSTMAS: Project = Project {
         "Ports and adapters: the domain imports no HTTP, no filesystem, no CLI",
         "Two HTTP clients, since only one of them needs your session cookie",
         "Validated addresses make an out-of-range year or day unrepresentable",
-        "~2,180 lines, 72 tests",
+        "~2,400 lines, 52 tests on the tool branch",
     ],
-    impact_metric: "~2,180 lines, 72 tests, both service contracts verified live",
+    impact_metric: "~2,400 lines, 52 tests, both service contracts verified live",
     objective: "Build the tooling around Advent of Code rather than just the puzzles: fetch an input, run a day, and know whether the answer is right before spending a submission. Wrong answers to adventofcode.com cost an escalating cooldown, so the tool checks every answer against an independent solver (https://github.com/fornwall/advent-of-code) first and only sends what that solver agrees with.",
     tags: &["rust", "cli", "http", "tooling"],
     media: &[
@@ -1273,7 +1273,7 @@ let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
         "Swapping the session cookie silently invalidated every cached input. 2015 day 1 answered 280 one day and 138 the next, and only the changed answers gave it away. Inputs now carry a SHA-256 of the cookie that fetched them",
         "A local cache of confirmed answers was designed in detail and then dropped. The argument for it was that AOC grades each part exactly once, so a cache looked like the only durable record. The site is stateful and reports AlreadySolved, so the fact called irreplaceable was always one request away",
     ],
-    progress: "Feature complete. fetch, solve, --validate and --submit all work against both services, 72 tests pass, and both service contracts are recorded in context/references.md from live probing rather than guesswork. Day one of every year except 2019 is solved. Next are the day twos.",
+    progress: "Feature complete. fetch, solve, --validate and --submit all work against both services, 52 tests pass, and both service contracts are recorded in context/references.md from live probing rather than guesswork. Day one of every year except 2019 is solved. Next are the day twos.",
     impact: "A finished tool with its reasoning written down, including the options that were rejected and why. The design notes are what made the C# rebuild (Sharpmas) a language exercise rather than a redesign.",
     site_url: None,
     status: ProjectStatus::Done,
@@ -1290,9 +1290,9 @@ const SHARPMAS: Project = Project {
         "Static abstract interface members where Rust has associated functions",
         "Closed record hierarchies stand in for Rust enums",
         "AnswerResult carries a failure, since C# has no Result",
-        "~2,270 lines, 121 tests",
+        "~2,600 lines, 62 tests on the tool branch",
     ],
-    impact_metric: "~2,270 lines, 121 tests, one design across two languages",
+    impact_metric: "~2,600 lines, 62 tests, one design across two languages",
     objective: "Learn C# by rebuilding a finished Rust tool rather than by reading about it. Rustmas (https://github.com/scadoshi/rustmas) already settled what the tool should do and recorded why, so nothing here is a design question. Every open question is a language question: what is the C# idiom for this, and where is there honestly no analogue.",
     tags: &["csharp", "dotnet", "cli", "port"],
     media: &[
@@ -1390,7 +1390,7 @@ public static async Task<Solved> Solve<T>(
         "Enumerable.Range takes a count, not an end. It cost two bugs while porting the day filter, both caught by tests mirrored from rustmas before anything ran, and one of them had already been recorded weeks earlier in the same repo's journal",
         "Porting a settled design makes it easy to transliterate Rust into C# that compiles and reads badly. The guard messages are the example that stuck: matching Rust's phrasing would have meant fighting the analyzer for a worse message than the framework already produces",
     ],
-    progress: "The tool is finished and matches rustmas feature for feature, with 121 tests passing and no build warnings. The last catch-up landed on 2026-08-23: the eager Filter type, Answer.Unwritten, the day 25 gate, and all four hierarchies closed. Two days are solved so far, 2015 day 1 and 2016 day 1, with every answer confirmed by the solver and matching rustmas. What is left is solutions and the shared helpers they will want.",
+    progress: "The tool is finished and matches rustmas feature for feature, with 62 tests passing and no build warnings. The last catch-up landed on 2026-08-23: the eager Filter type, Answer.Unwritten, the day 25 gate, and all four hierarchies closed. Two days are solved so far, 2015 day 1 and 2016 day 1, with every answer confirmed by the solver and matching rustmas. What is left is solutions and the shared helpers they will want.",
     impact: "A cross-language port carried end to end, with both sides public and comparable file by file. The design was fixed going in, so what the repo records is where the two languages actually diverge, and where C# has no good answer at all.",
     site_url: None,
     status: ProjectStatus::Done,
