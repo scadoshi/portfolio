@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Hand-maintained alongside src/data.rs: one url per static route
      (Route::static_routes + featured_projects + side_quests). Add an entry
-     when a project or side quest lands. -->
+     when a project or side quest lands; sitemap_lists_every_prerendered_route
+     in src/data.rs fails the build if you forget. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://scottyfermo.com/</loc>
@@ -50,6 +51,11 @@
   </url>
   <url>
     <loc>https://scottyfermo.com/side-quests/upsee</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://scottyfermo.com/side-quests/cairn</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

@@ -35,9 +35,13 @@ cargo clippy --target wasm32-unknown-unknown -- -D warnings
 ```
 
 ### 3. Tests
-A static landing page with no test suite today — nothing to run. Add unit tests
-(and `cargo test`) only if real logic appears (parsing, non-trivial data
-transforms); don't stand up a suite for markup.
+```bash
+cargo test
+```
+Mostly markup, so the bar for a new test is high: real logic (parsing, non-trivial
+data transforms) or a guardrail on something hand-maintained that has already
+drifted. `sitemap_lists_every_prerendered_route` is the second kind. Don't stand up
+a suite for markup.
 
 ### Deploy
 Push to `main` deploys production (scottyfermo.com via GitHub Pages). The build

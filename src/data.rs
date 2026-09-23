@@ -1364,3 +1364,41 @@ public static async Task<Solved> Solve<T>(
     site_url: None,
     status: ProjectStatus::Done,
 };
+
+#[cfg(test)]
+mod tests {
+    use super::{featured_projects, side_quests};
+    // `static_routes` is a `Routable` method; without the trait in scope the
+    // test does not compile.
+    use dioxus::prelude::Routable as _;
+
+    /// public/sitemap.xml is hand-maintained, so it drifts. It already has:
+    /// cairn landed in 3c17f1c and never made it into the file. Compare it
+    /// against the routes SSG actually renders.
+    #[test]
+    fn sitemap_lists_every_prerendered_route() {
+        let sitemap = include_str!("../public/sitemap.xml");
+        let mut listed: Vec<&str> = sitemap
+            .split("<loc>https://scottyfermo.com")
+            .skip(1)
+            .filter_map(|s| s.split_once("</loc>").map(|(path, _)| path))
+            .collect();
+        let mut expected: Vec<String> = crate::Route::static_routes()
+            .iter()
+            .map(ToString::to_string)
+            .chain(
+                featured_projects()
+                    .iter()
+                    .map(|p| format!("/projects/{}", p.slug)),
+            )
+            .chain(
+                side_quests()
+                    .iter()
+                    .map(|p| format!("/side-quests/{}", p.slug)),
+            )
+            .collect();
+        listed.sort_unstable();
+        expected.sort_unstable();
+        assert_eq!(listed, expected);
+    }
+}
