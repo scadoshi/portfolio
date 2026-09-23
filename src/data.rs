@@ -173,7 +173,7 @@ pub fn featured_projects() -> &'static [Project] {
 
 pub fn side_quests() -> &'static [Project] {
     &[
-        CAIRN, CHICKADEE, STELLER, MARVIN, GOTCHA, UPSEE, RUSTMAS, SHARPMAS,
+        CHICKADEE, STELLER, MARVIN, GOTCHA, UPSEE, CAIRN, RUSTMAS, SHARPMAS,
     ]
 }
 
