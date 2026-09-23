@@ -38,6 +38,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
+          components: clippy
 
       - name: Cache Rust
         # Caches the compiled dependency graph (native + wasm). Prunes
@@ -68,6 +69,22 @@ jobs:
           done
           echo "apt failed three times; the mirror is likely degraded" >&2
           exit 1
+
+      - name: Test
+        # sitemap_lists_every_prerendered_route lives here: the sitemap is
+        # hand-maintained and has drifted before.
+        run: cargo test --locked
+
+      - name: Clippy
+        # Three targets because the code differs per target: theme_store is
+        # wasm-only, and `server` is the feature the prerender actually runs
+        # under. Linting only the default target missed three errors in
+        # main.rs for as long as this workflow has existed.
+        run: |
+          set -euo pipefail
+          cargo clippy --locked --all-targets -- -D warnings
+          cargo clippy --locked --target wasm32-unknown-unknown -- -D warnings
+          cargo clippy --locked --no-default-features --features server --all-targets -- -D warnings
 
       - name: Install Dioxus CLI
         # Fetches a prebuilt dx binary instead of compiling dioxus-cli from

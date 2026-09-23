@@ -11,10 +11,10 @@
 ## CI: how your commits get checked (run these BEFORE you push)
 
 Pushing to `main` triggers the GitHub Pages deploy
-(`.github/workflows/deploy.yml`, `dx build --release --ssg`). That workflow only
-builds and ships, so the checks below are **local discipline** — kept identical to
-zwipe's so this crate and the shared `zwipe-components` (consumed via git dep) hold
-the same bar.
+(`.github/workflows/deploy.yml`, `dx build --release --ssg`). Tests and clippy now
+gate the deploy: a red check means the site does not update. Formatting is still
+local discipline, kept identical to zwipe's so this crate and the shared
+`zwipe-components` (consumed via git dep) hold the same bar.
 
 ### 1. Format with **nightly** — the one that bites
 `rustfmt.toml` enables `imports_granularity = "Crate"`, an *unstable* option, so
@@ -44,7 +44,8 @@ drifted. `sitemap_lists_every_prerendered_route` is the second kind. Don't stand
 a suite for markup.
 
 ### Deploy
-Push to `main` deploys production (scottyfermo.com via GitHub Pages). The build
-must succeed (`dx build --release --ssg`) or the site won't update. CI does not yet
-gate on fmt/clippy — the local bar above is the guardrail; a lint job can be added
-to the workflow to enforce it.
+Push to `main` deploys production (scottyfermo.com via GitHub Pages). Test and
+Clippy run before Build, so either one failing stops the deploy and the live site
+stays on the old version. `cargo +nightly fmt` is not in the workflow: it needs a
+nightly toolchain on every deploy and bad formatting cannot break the site. That
+one is on you.

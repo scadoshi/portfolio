@@ -47,11 +47,15 @@ fn main() {
             dioxus::server::ServeConfig::builder()
                 .incremental(
                     dioxus::server::IncrementalRendererConfig::new()
+                        // Both of these are fatal and unrecoverable: without
+                        // the exe's directory there is nowhere to write the
+                        // prerendered pages, so panicking with a real message
+                        // beats a bare unwrap in a build log.
                         .static_dir(
                             std::env::current_exe()
-                                .unwrap()
+                                .expect("current exe path unavailable")
                                 .parent()
-                                .unwrap()
+                                .expect("current exe has no parent directory")
                                 .join("public"),
                         )
                         .clear_cache(false),
@@ -60,6 +64,10 @@ fn main() {
         .launch(App);
 }
 
+// Nothing here awaits, but `#[server]` only accepts an async fn: it wraps the
+// body in a future and calls it across the network boundary. Removing `async`
+// to satisfy clippy stops it compiling.
+#[allow(clippy::unused_async)]
 #[server(endpoint = "static_routes")]
 async fn static_routes() -> ServerFnResult<Vec<String>> {
     let mut routes: Vec<String> = Route::static_routes()
