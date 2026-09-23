@@ -1005,52 +1005,6 @@ a.panel-action:visited {
     gap: 1.5rem;
 }
 
-.quest-section {
-    margin-bottom: 3rem;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid var(--border-muted);
-}
-
-.quest-section:last-child {
-    border-bottom: none;
-}
-
-.quest-header {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-}
-
-.quest-header h2 {
-    font-size: 1.3rem;
-    color: var(--text-primary);
-}
-
-.quest-category {
-    font-size: 0.75rem;
-    color: var(--border-success);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.quest-description {
-    color: var(--text-subtle);
-    margin-bottom: 1rem;
-    line-height: 1.6;
-}
-
-.quest-highlights {
-    margin-left: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.quest-highlights li {
-    margin-bottom: 0.5rem;
-    color: var(--text-subtle);
-}
-
 /* === Not Found === */
 
 .not-found {
@@ -1123,9 +1077,4 @@ a.panel-action:visited {
 
     /* Hamburger, collapsing panel, in-panel sizing, and the banner-stack
        slide-out-of-the-open-menu behavior all come from zwipe-components. */
-
-    .quest-header {
-        flex-direction: column;
-        gap: 0.25rem;
-    }
 }
