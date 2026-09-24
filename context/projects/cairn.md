@@ -23,7 +23,7 @@ A cairn is a waymarker built one stone at a time by whoever walks the path, and 
 
 ## Key Technical Highlights
 
-Which quote shows is a pure function of the clock hour. Nothing is stored, so nothing can drift, and the stride through the list is coprime with its length so all 41 appear before any repeat.
+Which quote shows is a pure function of the clock hour. Nothing is stored, so nothing can drift, and the stride through the list is coprime with its length so all 72 appear before any repeat.
 
 ```rust
 pub fn at_hour(hours: i64) -> Option<&'static Quote> {

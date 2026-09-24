@@ -122,7 +122,7 @@ const CAIRN: Project = Project {
     approach: &[
         "Hexagonal in one crate. The domain never touches Dioxus, rusqlite or the clock: today is an argument, which is what makes the stats testable and what will let them run on a watch",
         "Events are the source of truth and daily totals are derived, so changing when a day starts rebuilds history instead of losing it",
-        "The hourly quote is a pure function of the clock hour, so there is no cache to invalidate. The stride through the list is coprime with its length, so all 41 appear before any repeat",
+        "The hourly quote is a pure function of the clock hour, so there is no cache to invalidate. The stride through the list is coprime with its length, so all 72 appear before any repeat",
         "Every deploy backs the phone up first, because it holds taps that exist nowhere else",
     ],
     snippets: &[
