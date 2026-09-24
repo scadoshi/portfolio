@@ -12,13 +12,13 @@ Personal App — Mobile
 
 A counter for things you do every day. Tap a button and it keeps the lifetime total plus the rates that make a total mean something: this year, per day, where you stand against a goal, what today still owes. Rust and Dioxus 0.7, one crate, on my phone since 22 September 2026 with nine months of imported training history.
 
-A cairn is the pile of stones on a mountain path where everyone who passes adds one. The act is identical every time and the pile is the point, which is what a lifetime counter is.
+A cairn is a waymarker built one stone at a time by whoever walks the path, and here the walker is you: the same path, the same small act, every day. The pile is the record of having done it.
 
 ## What It Proves
 
-- Hexagonal architecture that held: 2,400 lines of domain that never touch Dioxus, rusqlite or the clock. `today` is an argument, not a call, which is what makes the stats testable and what will let them run on a watch
+- Hexagonal architecture that held: 2,600 lines of domain that never touch Dioxus, rusqlite or the clock. `today` is an argument, not a call, which is what makes the stats testable and what will let them run on a watch
 - Events as the source of truth, with daily totals derived, so changing when a day starts rebuilds history rather than losing it
-- Five schema versions migrated on a database holding real data
+- Six schema versions migrated on a database holding real data, with the upgrade path tested at every one
 - Shipping to a physical device end to end: signing, provisioning, install, and a backup that runs before every deploy
 
 ## Key Technical Highlights
@@ -55,7 +55,7 @@ TestFlight and App Store review. Editing a past day, CSV import, a yearly heat s
 
 ## Status
 
-Doing. In daily use: 224 days, 9,829 taps, 97,600 reps. 6,250 lines, 73 tests.
+Doing. In daily use: 225 days, 9,914 taps, 98,300 reps. 6,700 lines, 79 tests.
 
 ## Repo
 
