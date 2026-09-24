@@ -80,7 +80,7 @@ const CAIRN: Project = Project {
         "Rust + Dioxus 0.7, single crate, hexagonal: the domain has no UI, no SQLite, no clock",
         "Local SQLite with a five-step migration ladder; no server and nothing to sign into",
         "Goals per day, week or year, with pace and a tag counting down the day's share",
-        "~6,700 lines, 79 tests, 2,600 of them pure domain",
+        "~7,900 lines, 96 tests, 3,200 of them pure domain",
     ],
     impact_metric: "98,300 reps logged across 225 days",
     objective: "Count the things I actually do, forever, without an account or a subscription. A lifetime total is only interesting next to the rates around it: this year, per day, where I stand against a goal, what today still owes. Everything lives on the phone.",
@@ -298,7 +298,7 @@ const ZWIPE: Project = Project {
         Snippet {
             title: "One Search Predicate, Two Front Doors",
             lang: "rust",
-            code: r#"// CardCriteria: the shared predicate core (~50 fields) with matches()
+            code: r#"// CardCriteria: the shared predicate core (~60 fields) with matches()
 // CardQuery:    criteria + Limit + offset + sort, the server's SQL path
 // Cards:        a Vec<Card> already in hand, criteria only, no pagination
 
@@ -371,7 +371,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
         "Search over 118k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
-    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. over 140,000 lines across six crates, 749 tests, unwrap banned by CI.",
+    impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. over 105,000 lines of Rust across six crates, 749 tests, unwrap banned by CI.",
     site_url: Some("https://zwipe.net"),
     status: ProjectStatus::Doing,
 };

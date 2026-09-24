@@ -16,9 +16,9 @@ A cairn is a waymarker built one stone at a time by whoever walks the path, and 
 
 ## What It Proves
 
-- Hexagonal architecture that held: 2,600 lines of domain that never touch Dioxus, rusqlite or the clock. `today` is an argument, not a call, which is what makes the stats testable and what will let them run on a watch
+- Hexagonal architecture that held: 3,200 lines of domain that never touch Dioxus, rusqlite or the clock. `today` is an argument, not a call, which is what makes the stats testable and what will let them run on a watch
 - Events as the source of truth, with daily totals derived, so changing when a day starts rebuilds history rather than losing it
-- Six schema versions migrated on a database holding real data, with the upgrade path tested at every one
+- Seven schema versions migrated on a database holding real data, with the upgrade path tested at every one
 - Shipping to a physical device end to end: signing, provisioning, install, and a backup that runs before every deploy
 
 ## Key Technical Highlights
@@ -55,7 +55,7 @@ TestFlight and App Store review. Editing a past day, CSV import, a yearly heat s
 
 ## Status
 
-Doing. In daily use: 225 days, 9,914 taps, 98,300 reps. 6,700 lines, 79 tests.
+Doing. In daily use: 225 days, 9,914 taps, 98,300 reps. 7,900 lines, 96 tests.
 
 ## Repo
 
