@@ -76,6 +76,7 @@ pub fn Home() -> Element {
                         " underneath."
                     }
                     // Same strip as zwipe.net's hero: a rule, then the numbers.
+                    // A second rule sets off where they come from.
                     if let Some(totals) = stats::totals() {
                         hr { class: "hero-rule" }
                         section { class: "stats-strip",
@@ -92,6 +93,7 @@ pub fn Home() -> Element {
                                 span { class: "stat-label", "Stars" }
                             }
                         }
+                        hr { class: "hero-rule" }
                         p { class: "stats-source",
                             "Counted by "
                             a { href: "https://github.com/scadoshi/heron", "heron" }

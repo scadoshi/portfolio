@@ -734,7 +734,7 @@ a.panel-action:visited {
 .hero-rule {
     border: none;
     border-top: 1px solid var(--border-secondary);
-    margin: 1.25rem -1.5rem 1rem;
+    margin: 1.25rem -1.5rem;
 }
 
 .stats-strip {
@@ -768,10 +768,10 @@ a.panel-action:visited {
 }
 
 .stats-source {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     color: var(--text-subtle);
     letter-spacing: 0.04em;
-    margin-top: 0.9rem;
+    margin: 0;
 }
 
 /* === Project Detail === */
