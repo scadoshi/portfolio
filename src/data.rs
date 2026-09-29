@@ -181,12 +181,20 @@ fn opens_a_database_left_at_every_older_version() {
 };
 
 pub fn featured_projects() -> &'static [Project] {
-    &[ZWIPE, HALO_ACTION_IMPORTER, HALO_CUSTOM_FIELD_BUILDER]
+    &[ZWIPE, STELLER]
 }
 
 pub fn side_quests() -> &'static [Project] {
     &[
-        CHICKADEE, STELLER, MARVIN, GOTCHA, UPSEE, CAIRN, RUSTMAS, SHARPMAS,
+        CHICKADEE,
+        HALO_ACTION_IMPORTER,
+        HALO_CUSTOM_FIELD_BUILDER,
+        MARVIN,
+        GOTCHA,
+        UPSEE,
+        CAIRN,
+        RUSTMAS,
+        SHARPMAS,
     ]
 }
 
