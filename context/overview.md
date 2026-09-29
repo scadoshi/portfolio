@@ -23,8 +23,7 @@ src/
   pages/             home, detail (shared by projects and side quests),
                      side_quests, contribute, not_found
 assets/              CSS, fonts, per-project media, the two ascii logos
-public/              copied to the site root verbatim: sitemap, robots, og image,
-                     redirect stubs for renamed slugs
+public/              copied to the site root verbatim: sitemap, robots, og image
 context/             this, the commit rules, per-project notes, marketing
 ```
 
@@ -38,6 +37,10 @@ pushing zwipe's `main` deploys zwipe's production.
 `projects/` holds per-project background notes, one per entry in `data.rs`. They go
 deeper than the site does and are where the numbers came from. `data.rs` is still the
 source of truth for what the site shows; these are the working notes behind it.
+
+## Moving a page
+
+GitHub Pages cannot answer with a redirect. When a project is renamed or changes lists, add its old address to `MOVED` in `src/data.rs`. SSG then prerenders the old address as a page carrying a refresh and a canonical to the new one. Tests check that every entry leads to a live page and that none shadows one.
 
 ## GitHub numbers
 

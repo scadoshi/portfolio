@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use zwipe_components::Panel;
 
 use crate::{
+    Route,
     components::{
         code_block::CodeBlock, gallery::ProjectGallery, linked_text::LinkedText,
         page_meta::PageMeta,
@@ -137,6 +138,36 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
     }
 }
 
+/// A page that has moved.
+///
+/// Prerendered with a refresh and a canonical, which is what a direct visit and a
+/// crawler see. A visit from inside the app never loads that HTML, so the route is
+/// replaced here as well.
+#[component]
+fn Moved(to: &'static str) -> Element {
+    use_effect(move || {
+        if let Ok(route) = to.parse::<Route>() {
+            navigator().replace(route);
+        }
+    });
+    rsx! {
+        PageMeta {
+            title: "Moved",
+            description: "This page is now at {to}.",
+            path: to,
+        }
+        document::Meta { http_equiv: "refresh", content: "0; url={to}" }
+        div { class: "not-found",
+            h1 { "Moved" }
+            p {
+                "This page is now at "
+                a { href: "{to}", "{to}" }
+                "."
+            }
+        }
+    }
+}
+
 /// Not-found fallback shared by both routes. `kind` is Title-case ("Project" /
 /// "Side quest"); the body sentence lowercases it.
 fn not_found(kind: &str, slug: &str) -> Element {
@@ -153,6 +184,9 @@ fn not_found(kind: &str, slug: &str) -> Element {
 /// Featured project page at `/projects/:slug`.
 #[component]
 pub fn ProjectDetail(slug: String) -> Element {
+    if let Some(to) = data::moved_to(&format!("/projects/{slug}")) {
+        return rsx! { Moved { to } };
+    }
     let Some(project) = data::find_project(&slug) else {
         return not_found("Project", &slug);
     };
@@ -162,6 +196,9 @@ pub fn ProjectDetail(slug: String) -> Element {
 /// Side quest page at `/side-quests/:slug`.
 #[component]
 pub fn SideQuestDetail(slug: String) -> Element {
+    if let Some(to) = data::moved_to(&format!("/side-quests/{slug}")) {
+        return rsx! { Moved { to } };
+    }
     let Some(project) = data::find_side_quest(&slug) else {
         return not_found("Side quest", &slug);
     };

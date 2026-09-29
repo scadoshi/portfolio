@@ -198,6 +198,45 @@ pub fn side_quests() -> &'static [Project] {
     ]
 }
 
+/// An address that used to hold a page, and where that page is.
+pub struct Moved {
+    pub from: &'static str,
+    pub to: &'static str,
+}
+
+/// Every address that has moved. Each `from` is prerendered as a page that sends
+/// the visitor on to `to`, since GitHub Pages cannot answer with a redirect.
+pub const MOVED: &[Moved] = &[
+    Moved {
+        from: "/side-quests/diprotodon",
+        to: "/projects/steller",
+    },
+    Moved {
+        from: "/side-quests/steller",
+        to: "/projects/steller",
+    },
+    Moved {
+        from: "/side-quests/nighthawk",
+        to: "/side-quests/chickadee",
+    },
+    Moved {
+        from: "/projects/halo-action-importer",
+        to: "/side-quests/halo-action-importer",
+    },
+    Moved {
+        from: "/projects/halo-custom-field-builder",
+        to: "/side-quests/halo-custom-field-builder",
+    },
+];
+
+/// Where the page at `path` went, if it moved.
+pub fn moved_to(path: &str) -> Option<&'static str> {
+    MOVED
+        .iter()
+        .find(|moved| moved.from == path)
+        .map(|moved| moved.to)
+}
+
 pub fn find_project(slug: &str) -> Option<&'static Project> {
     featured_projects().iter().find(|p| p.slug == slug)
 }
@@ -1406,7 +1445,7 @@ public static async Task<Solved> Solve<T>(
 
 #[cfg(test)]
 mod tests {
-    use super::{featured_projects, side_quests};
+    use super::{MOVED, featured_projects, side_quests};
     // `static_routes` is a `Routable` method; without the trait in scope the
     // test does not compile.
     use dioxus::prelude::Routable as _;
@@ -1443,6 +1482,67 @@ mod tests {
         listed.sort_unstable();
         expected.sort_unstable();
         assert_eq!(listed, expected);
+    }
+
+    /// Every page the site serves, by path.
+    fn live_pages() -> Vec<String> {
+        crate::Route::static_routes()
+            .iter()
+            .map(ToString::to_string)
+            .chain(
+                featured_projects()
+                    .iter()
+                    .map(|p| format!("/projects/{}", p.slug)),
+            )
+            .chain(
+                side_quests()
+                    .iter()
+                    .map(|p| format!("/side-quests/{}", p.slug)),
+            )
+            .collect()
+    }
+
+    #[test]
+    fn every_moved_address_leads_to_a_live_page() {
+        let live = live_pages();
+        for moved in MOVED {
+            assert!(
+                live.iter().any(|page| page == moved.to),
+                "{} leads to {}, which is not a page",
+                moved.from,
+                moved.to
+            );
+        }
+    }
+
+    /// A live page at a moved address would be served in place of the redirect.
+    #[test]
+    fn no_moved_address_is_also_a_live_page() {
+        let live = live_pages();
+        for moved in MOVED {
+            assert!(
+                !live.iter().any(|page| page == moved.from),
+                "{} is both moved and live",
+                moved.from
+            );
+        }
+    }
+
+    #[test]
+    fn every_moved_address_parses_as_a_route() {
+        for moved in MOVED {
+            for path in [moved.from, moved.to] {
+                let route = path.parse::<crate::Route>();
+                assert!(
+                    matches!(
+                        route,
+                        Ok(crate::Route::ProjectDetail { .. }
+                            | crate::Route::SideQuestDetail { .. })
+                    ),
+                    "{path} is not a project or side quest address"
+                );
+            }
+        }
     }
 
     /// The footer quotes this number at the reader. The previous version of

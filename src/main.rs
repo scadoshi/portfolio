@@ -81,6 +81,9 @@ async fn static_routes() -> ServerFnResult<Vec<String>> {
     for p in data::side_quests() {
         routes.push(format!("/side-quests/{}", p.slug));
     }
+    for moved in data::MOVED {
+        routes.push(moved.from.to_string());
+    }
     // Prerendered through the catch-all so deploy.yml can ship the result as
     // 404.html. Copying index.html there instead gives every unknown URL the
     // Home page's title, canonical and JSON-LD, with no noindex.
