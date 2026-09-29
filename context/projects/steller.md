@@ -13,8 +13,8 @@ Learning Project — Network Protocols and Durability
 An in-memory key-value server that real `redis-cli` clients connect to without knowing
 the difference. It speaks RESP over TCP and handles ping, get, set, delete, exists,
 relative and absolute TTLs, TTL queries, persist, and channel subscription. Data
-survives a restart on a snapshot baseline plus an append-only command log. About 5,900
-lines with 238 tests.
+survives a restart on a snapshot baseline plus an append-only command log. About 5,950
+lines with 240 tests.
 
 Named for the Steller's jay. It was diprotodon until 2026-09-13; anything still saying
 diprotodon is stale.
@@ -69,7 +69,14 @@ two threads per client. That is the tradeoff of the design, measured.
 
 ## Status
 
-Done. Set/expiry work merged and the smoke tests are green.
+Done, and in production since 2026-09-29 as the cache behind heron. It shuts down
+cleanly on SIGTERM and runs under systemd with a memory cap.
+
+Known bug, found by heron on its first day: a command that reaches steller in more
+than one read is rejected with `ERR missing crlf terminator`. `parse_bulk_string`
+returns `MissingTerminator` for a payload that has not all arrived, where `Incomplete`
+would make the session read more. The write-up is in heron's
+`context/architecture/decisions.md`.
 
 ## Repo
 
