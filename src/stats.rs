@@ -15,6 +15,7 @@ const SNAPSHOT: &str = include_str!("stats.json");
 pub struct Totals {
     pub repos: u32,
     pub commits: u64,
+    pub stars: u64,
 }
 
 /// What heron reports for one repository. Only the fields the site shows.

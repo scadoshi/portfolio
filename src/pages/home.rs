@@ -75,16 +75,28 @@ pub fn Home() -> Element {
                         span { class: "hl-tertiary", "systems" }
                         " underneath."
                     }
+                    // Same strip as zwipe.net's hero: a rule, then the numbers.
                     if let Some(totals) = stats::totals() {
-                        p { class: "hero-stats",
-                            {stats::with_separators(totals.commits)}
-                            " commits across "
-                            "{totals.repos}"
-                            " public repos, counted by "
+                        hr { class: "hero-rule" }
+                        section { class: "stats-strip",
+                            div { class: "stat",
+                                span { class: "stat-num", {stats::with_separators(totals.commits)} }
+                                span { class: "stat-label", "Commits" }
+                            }
+                            div { class: "stat",
+                                span { class: "stat-num", "{totals.repos}" }
+                                span { class: "stat-label", "Public repos" }
+                            }
+                            div { class: "stat",
+                                span { class: "stat-num", {stats::with_separators(totals.stars)} }
+                                span { class: "stat-label", "Stars" }
+                            }
+                        }
+                        p { class: "stats-source",
+                            "Counted by "
                             a { href: "https://github.com/scadoshi/heron", "heron" }
-                            " and cached in "
+                            ", cached in "
                             a { href: "https://github.com/scadoshi/steller", "steller" }
-                            "."
                         }
                     }
                 }
