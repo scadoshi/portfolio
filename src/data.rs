@@ -181,7 +181,7 @@ fn opens_a_database_left_at_every_older_version() {
 };
 
 pub fn featured_projects() -> &'static [Project] {
-    &[ZWIPE, STELLER]
+    &[ZWIPE, STELLER, HERON]
 }
 
 pub fn side_quests() -> &'static [Project] {
@@ -907,6 +907,74 @@ loop {
     impact: "Started from a paper and ended with a database you can connect to. The same storage architecture behind LevelDB, RocksDB and Cassandra, built a layer at a time.",
     site_url: None,
     status: ProjectStatus::Done,
+};
+
+const HERON: Project = Project {
+    name: "Heron",
+    slug: "heron",
+    headline: "My personal server. It serves the commit counts on this site, cached in steller.",
+    category: "Production Service",
+    repo_url: "https://github.com/scadoshi/heron",
+    summary: "Serves the commit counts on this site and caches them in steller.",
+    card_bullets: &[
+        "Axum, one crate. The domain never sees HTTP, GitHub or the clock",
+        "The cache is a port: a map, steller, or steller with the map behind it",
+        "RESP client written here, about 300 lines",
+    ],
+    impact_metric: "Found a bug in steller on its first day live",
+    objective: "Give steller a real job. Twelve small JSON values would fit in a HashMap, and heron runs on one if asked. It runs on steller because steller's best bugs were found by running it, never by its tests.",
+    tags: &["rust", "axum", "resp", "systemd"],
+    media: &[],
+    approach: &[
+        "A snapshot carries its own freshness and the cache keeps it longer than that. When GitHub is down there is still something to serve, marked stale",
+        "The cache cannot fail a request. A failed read is a miss, a failed write is logged, and the error type has no variant for either",
+        "Repo names are a validated type. A path traversal or a smuggled header cannot be built, so no adapter has to check for one",
+    ],
+    snippets: &[
+        Snippet {
+            title: "After a rejection, hang up",
+            lang: "rust",
+            code: r#"fn keep_unless_rejected(
+    slot: &mut Option<Connection>,
+    connection: Connection,
+    reply: Reply,
+) -> Result<Reply, CacheError> {
+    match reply {
+        Reply::Error(message) => Err(CacheError(anyhow::anyhow!(
+            "steller rejected the command: {}",
+            String::from_utf8_lossy(&message)
+        ))),
+        reply => {
+            *slot = Some(connection);
+            Ok(reply)
+        }
+    }
+}"#,
+            description: "The connection goes back in its slot only after a good reply. A rejected command leaves answers behind, and the next command would read one as its own.",
+        },
+        Snippet {
+            title: "Three caches, one type",
+            lang: "rust",
+            code: r"let (stats_service, health_service) = match config.cache_backend {
+    CacheBackend::Memory => services(github, MemoryCache::new(), settings),
+    CacheBackend::Steller(address) => services(github, StellerCache::new(address)?, settings),
+    CacheBackend::Layered(address) => services(
+        github,
+        LayeredCache::new(StellerCache::new(address)?, MemoryCache::new(), retain),
+        settings,
+    ),
+};",
+            description: "Each arm builds a service of a different type and hands back the same Arc<dyn ErasedStatsService>. The backend is an environment variable.",
+        },
+    ],
+    obstacles: &[
+        "steller rejects any command that reaches it in more than one read. A 14-byte PING showed it on the production box. It then answers the leftovers, so heron hangs up after any rejection",
+        "Every unit test passed with the fallback empty. After a restart the snapshots came from steller and nothing copied them into memory. Stopping steller for real is what showed it",
+    ],
+    progress: "Live at api.scadoshi.dev on its own Hetzner box, behind a Cloudflare Tunnel, with steller beside it. The steller fix is next.",
+    impact: "steller has a production workload, and a bug report it would not have had otherwise.",
+    site_url: Some("https://api.scadoshi.dev/stats"),
+    status: ProjectStatus::Doing,
 };
 
 const STELLER: Project = Project {
