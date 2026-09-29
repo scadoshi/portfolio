@@ -721,6 +721,20 @@ a.panel-action:visited {
     border-radius: 0.4rem;
 }
 
+/* GitHub numbers from heron: quieter than the impact line above them. */
+.card-stats {
+    font-size: 0.78rem;
+    color: var(--text-subtle);
+    letter-spacing: 0.02em;
+    margin-bottom: 1rem;
+}
+
+.hero-stats {
+    font-size: 0.82rem;
+    color: var(--text-subtle);
+    margin-top: 0.9rem;
+}
+
 /* === Project Detail === */
 
 .project-detail {

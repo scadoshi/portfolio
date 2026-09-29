@@ -15,6 +15,8 @@ build themselves from the same data.
 src/
   main.rs            Route enum, App, the head tags, static_routes() for SSG
   data.rs            every Project and Snippet; the two ordering functions
+  stats.rs           GitHub numbers from heron, read from stats.json
+  stats.json         heron's answer, replaced before each build
   theme_store.rs     localStorage theme persistence, no-ops on the server build
   components/        navbar, footer, project_card, gallery, code_block,
                      linked_text, page_meta
@@ -36,6 +38,16 @@ pushing zwipe's `main` deploys zwipe's production.
 `projects/` holds per-project background notes, one per entry in `data.rs`. They go
 deeper than the site does and are where the numbers came from. `data.rs` is still the
 source of truth for what the site shows; these are the working notes behind it.
+
+## GitHub numbers
+
+The commit counts and last-push dates on the cards come from heron (`~/Developer/heron`, live at `https://api.scadoshi.dev`), not from `data.rs`. `src/stats.json` is the body of heron's `GET /stats` and `src/stats.rs` reads it.
+
+The numbers are baked in when the site builds. The deploy workflow asks heron for a new answer before each build and keeps the committed `src/stats.json` when heron is down or could not resolve every repository, so a build never waits on heron and the site never calls it from a browser. The workflow also runs every morning, which is what keeps the numbers current.
+
+A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as well. Until it is, `every_project_on_the_site_is_in_the_snapshot` fails and names it.
+
+Test counts and line counts are still typed by hand in `data.rs`. GitHub's API has neither.
 
 ## Build and deploy
 

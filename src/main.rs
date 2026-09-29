@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 mod components;
 mod data;
 mod pages;
+mod stats;
 mod theme_store;
 
 use pages::{

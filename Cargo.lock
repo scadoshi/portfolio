@@ -2470,6 +2470,8 @@ dependencies = [
  "getrandom 0.4.3",
  "gloo-storage",
  "gloo-timers 0.4.0",
+ "serde",
+ "serde_json",
  "zwipe-components",
 ]
 

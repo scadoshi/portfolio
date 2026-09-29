@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use zwipe_components::Panel;
 
-use crate::{Route, components::page_meta::PageMeta, data};
+use crate::{Route, components::page_meta::PageMeta, data, stats};
 
 #[component]
 pub fn SideQuests() -> Element {
@@ -46,6 +46,9 @@ pub fn SideQuests() -> Element {
                             for bullet in quest.card_bullets {
                                 li { "{bullet}" }
                             }
+                        }
+                        if let Some(repo) = stats::for_repo(quest.repo_url) {
+                            p { class: "card-stats", {repo.line()} }
                         }
                     }
                 }

@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use zwipe_components::{BannerStatus, Panel};
 
-use crate::Route;
+use crate::{Route, stats};
 
 #[component]
 pub fn ProjectCard(
@@ -49,6 +49,9 @@ pub fn ProjectCard(
                 }
             }
             div { class: "card-impact", "{impact_metric}" }
+            if let Some(repo) = stats::for_repo(&repo_url) {
+                p { class: "card-stats", {repo.line()} }
+            }
         }
     }
 }

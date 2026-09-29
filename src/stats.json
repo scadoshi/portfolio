@@ -1,0 +1,234 @@
+{
+    "generated_at": "2026-09-29T21:43:40Z",
+    "totals": {
+        "repos": 11,
+        "commits": 3534,
+        "stars": 19
+    },
+    "unavailable": [],
+    "repos": [
+        {
+            "repo": "scadoshi/zwipe",
+            "commits": 2968,
+            "stars": 10,
+            "default_branch": "main",
+            "pushed_at": "2026-09-29T12:13:17Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 3971240
+                },
+                {
+                    "name": "CSS",
+                    "bytes": 264128
+                },
+                {
+                    "name": "HTML",
+                    "bytes": 71797
+                },
+                {
+                    "name": "Shell",
+                    "bytes": 44842
+                },
+                {
+                    "name": "JavaScript",
+                    "bytes": 23501
+                },
+                {
+                    "name": "PLpgSQL",
+                    "bytes": 3589
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/halo_action_importer",
+            "commits": 71,
+            "stars": 0,
+            "default_branch": "main",
+            "pushed_at": "2026-01-28T06:27:46Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 129143
+                },
+                {
+                    "name": "TSQL",
+                    "bytes": 1810
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/halo_custom_field_builder",
+            "commits": 35,
+            "stars": 0,
+            "default_branch": "main",
+            "pushed_at": "2025-12-23T16:00:57Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 39531
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/chickadee",
+            "commits": 86,
+            "stars": 1,
+            "default_branch": "main",
+            "pushed_at": "2026-09-19T12:51:06Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 75257
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/steller",
+            "commits": 71,
+            "stars": 2,
+            "default_branch": "main",
+            "pushed_at": "2026-09-29T16:04:14Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 207124
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/marvin",
+            "commits": 31,
+            "stars": 0,
+            "default_branch": "main",
+            "pushed_at": "2026-09-19T09:25:18Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 54373
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/gotcha",
+            "commits": 12,
+            "stars": 1,
+            "default_branch": "main",
+            "pushed_at": "2026-09-19T12:51:11Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 6354
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/upsee",
+            "commits": 4,
+            "stars": 0,
+            "default_branch": "main",
+            "pushed_at": "2026-09-19T09:25:24Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 5288
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/cairn",
+            "commits": 96,
+            "stars": 0,
+            "default_branch": "main",
+            "pushed_at": "2026-09-28T21:15:01Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 316974
+                },
+                {
+                    "name": "CSS",
+                    "bytes": 43895
+                },
+                {
+                    "name": "Shell",
+                    "bytes": 17661
+                },
+                {
+                    "name": "Python",
+                    "bytes": 13470
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/rustmas",
+            "commits": 110,
+            "stars": 3,
+            "default_branch": "main",
+            "pushed_at": "2026-09-19T13:54:23Z",
+            "languages": [
+                {
+                    "name": "Rust",
+                    "bytes": 77431
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        },
+        {
+            "repo": "scadoshi/sharpmas",
+            "commits": 50,
+            "stars": 2,
+            "default_branch": "main",
+            "pushed_at": "2026-09-17T16:34:32Z",
+            "languages": [
+                {
+                    "name": "C#",
+                    "bytes": 90990
+                }
+            ],
+            "additions": null,
+            "deletions": null,
+            "fetched_at": "2026-09-29T21:39:09Z",
+            "stale": false
+        }
+    ]
+}

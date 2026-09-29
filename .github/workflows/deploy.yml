@@ -15,6 +15,10 @@ on:
       # entry changes where the build lands and deploys nothing.
       - 'Dioxus.toml'
       - '.github/workflows/deploy.yml'
+  # The commit counts on the site come from heron and are baked in at build time,
+  # so a build each morning is what keeps them current. 06:00 UTC.
+  schedule:
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -73,6 +77,20 @@ jobs:
           done
           echo "apt failed three times; the mirror is likely degraded" >&2
           exit 1
+
+      - name: Refresh GitHub stats from heron
+        # src/stats.json is committed, so the build has numbers whatever happens
+        # here. The new answer replaces it only when heron resolved every
+        # repository. One it could not resolve would drop a project's numbers.
+        run: |
+          if curl -fsS --max-time 20 https://api.scadoshi.dev/stats -o stats.new \
+            && jq -e '(.repos | length > 0) and (.unavailable | length == 0)' stats.new > /dev/null; then
+            mv stats.new src/stats.json
+            echo "refreshed: $(jq -c .totals src/stats.json)"
+          else
+            rm -f stats.new
+            echo "::warning::heron gave no complete answer; building with the committed snapshot"
+          fi
 
       - name: Test
         # sitemap_lists_every_prerendered_route lives here: the sitemap is

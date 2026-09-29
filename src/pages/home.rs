@@ -4,7 +4,7 @@ use zwipe_components::{Banner, BannerStatus, Panel};
 use crate::{
     Route,
     components::{page_meta::PageMeta, project_card::ProjectCard},
-    data,
+    data, stats,
 };
 
 const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
@@ -74,6 +74,18 @@ pub fn Home() -> Element {
                         ", and the "
                         span { class: "hl-tertiary", "systems" }
                         " underneath."
+                    }
+                    if let Some(totals) = stats::totals() {
+                        p { class: "hero-stats",
+                            {stats::with_separators(totals.commits)}
+                            " commits across "
+                            "{totals.repos}"
+                            " public repos, counted by "
+                            a { href: "https://github.com/scadoshi/heron", "heron" }
+                            " and cached in "
+                            a { href: "https://github.com/scadoshi/steller", "steller" }
+                            "."
+                        }
                     }
                 }
             }

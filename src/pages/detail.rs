@@ -6,7 +6,7 @@ use crate::{
         code_block::CodeBlock, gallery::ProjectGallery, linked_text::LinkedText,
         page_meta::PageMeta,
     },
-    data,
+    data, stats,
 };
 
 /// Kept as a function rather than inlined so the panel's shape stays readable
@@ -64,6 +64,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                     }
                 },
                 p { class: "project-headline", "{project.headline}" }
+                if let Some(repo) = stats::for_repo(project.repo_url) {
+                    p { class: "card-stats", {repo.line()} }
+                }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",
                         // Cycle the accent palette so the row reads like
