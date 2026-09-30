@@ -563,6 +563,30 @@ a.panel-action:visited {
     border-color: color-mix(in srgb, var(--text-muted) 30%, transparent);
 }
 
+/* The measured chips cycle these three as well, so seven in a row before a
+   colour repeats. */
+.tag-c4 {
+    color: var(--color-success);
+    background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
+    border-color: color-mix(in srgb, var(--color-success) 40%, transparent);
+}
+
+.tag-c5 {
+    color: var(--color-error);
+    background-color: color-mix(in srgb, var(--color-error) 12%, transparent);
+    border-color: color-mix(in srgb, var(--color-error) 40%, transparent);
+}
+
+.tag-c6 {
+    color: var(--accent-tertiary);
+    background-color: color-mix(
+        in srgb,
+        var(--accent-tertiary) 12%,
+        transparent
+    );
+    border-color: color-mix(in srgb, var(--accent-tertiary) 40%, transparent);
+}
+
 /* === Lateral bands === */
 
 /* Two-column bands, zite-style: panel stacks fill each other's dead

@@ -19,7 +19,7 @@ pub fn Measured(repo_url: String) -> Element {
     rsx! {
         div { class: "tag-row measured",
             for (i, chip) in chips.iter().enumerate() {
-                span { class: "tag tag-c{i % 4}", "{chip}" }
+                span { class: "tag tag-c{i % 7}", "{chip}" }
             }
         }
     }
