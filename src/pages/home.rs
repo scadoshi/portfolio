@@ -47,7 +47,7 @@ pub fn Home() -> Element {
                 status_label: "Live",
                 "The numbers on this page come from heron, my server, cached in steller, my Redis. "
                 Link {
-                    to: Route::ProjectDetail { slug: "heron".to_string() },
+                    to: Route::SideQuestDetail { slug: "heron".to_string() },
                     "How it works"
                 }
             }

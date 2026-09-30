@@ -181,12 +181,12 @@ fn opens_a_database_left_at_every_older_version() {
 };
 
 pub fn featured_projects() -> &'static [Project] {
-    &[ZWIPE, STELLER, HERON]
+    &[ZWIPE, STELLER, CHICKADEE]
 }
 
 pub fn side_quests() -> &'static [Project] {
     &[
-        CHICKADEE,
+        HERON,
         CAIRN,
         HALO_ACTION_IMPORTER,
         RUSTMAS,
@@ -217,7 +217,15 @@ pub const MOVED: &[Moved] = &[
     },
     Moved {
         from: "/side-quests/nighthawk",
-        to: "/side-quests/chickadee",
+        to: "/projects/chickadee",
+    },
+    Moved {
+        from: "/side-quests/chickadee",
+        to: "/projects/chickadee",
+    },
+    Moved {
+        from: "/projects/heron",
+        to: "/side-quests/heron",
     },
     Moved {
         from: "/projects/halo-action-importer",
