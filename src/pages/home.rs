@@ -23,7 +23,7 @@ const JSON_LD: &str = r#"{
     "https://github.com/scadoshi",
     "https://www.linkedin.com/in/scotty-fermo-41a35b141/"
   ],
-  "knowsAbout": ["Rust", "Full-stack development", "Mobile apps", "Storage engines", "Internal tooling"]
+  "knowsAbout": ["Rust", "Full-stack development", "Mobile apps", "Servers", "Storage engines"]
 }"#;
 
 #[component]
