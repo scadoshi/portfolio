@@ -84,7 +84,7 @@ const CAIRN: Project = Project {
     ],
     impact_metric: "98,300 reps logged across 225 days",
     objective: "Count the things I actually do, forever, without an account or a subscription. A lifetime total is only interesting next to the rates around it: this year, per day, where I stand against a goal, what today still owes. Everything lives on the phone.",
-    tags: &["rust", "dioxus", "ios", "sqlite"],
+    tags: &["dioxus", "hexagonal"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/cairn/00-demo.mp4"),
@@ -267,7 +267,7 @@ const ZWIPE: Project = Project {
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Six workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-client (the typed API client both clients call), zwipe-components (shared UI), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
-    tags: &["rust", "full-stack", "ios", "dioxus", "postgresql"],
+    tags: &["ios", "android", "hexagonal"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/zwipe/1_create_deck.mp4"),
@@ -445,7 +445,7 @@ const HALO_ACTION_IMPORTER: Project = Project {
     ],
     impact_metric: "Weeks of manual work, automated.",
     objective: "Bulk-import millions of records into Halo Software from CSV and Excel against a production API. Must survive every real failure mode: network errors, token expiry, missing tickets, partial batch failures, inconsistent data formats across client exports.",
-    tags: &["rust", "csv", "etl", "api-resilience"],
+    tags: &["cli", "csv", "excel"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/halo-action-importer/full_run.mp4"),
@@ -559,7 +559,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     ],
     impact_metric: "Hours to minutes. Deployed across Fortune 500 client implementations.",
     objective: "Read custom field definitions from CSV and create them across Halo Software products via the API. Must support all 8 field types, handle auth, respect rate limits, ship as cross-platform binaries.",
-    tags: &["rust", "cli", "api", "cross-platform"],
+    tags: &["oauth2", "csv"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/halo-custom-field-builder/full_process.mp4"),
@@ -653,7 +653,7 @@ const MARVIN: Project = Project {
     ],
     impact_metric: "One upstream bug found and fixed",
     objective: "Learn the [Rig](https://github.com/0xPlaygrounds/rig) AI framework by building a real CLI chatbot on [Anthropic's Claude](https://www.anthropic.com/claude). Each feature should teach something new about Rig or Rust, prioritizing learning over shipping.",
-    tags: &["rust", "ai", "cli", "llm"],
+    tags: &["rig", "claude"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/marvin/help_cmd_std_chat.mp4"),
@@ -782,7 +782,7 @@ const CHICKADEE: Project = Project {
     ],
     impact_metric: "6 phases, from paper to a server clients connect to",
     objective: "Build a key-value database incrementally from the Bitcask paper (https://riak.com/assets/bitcask-intro.pdf) toward the LSM-tree architecture that powers LevelDB, RocksDB, and Cassandra. Each phase adds a real layer: durability, sorted storage, probabilistic search, compaction, crash recovery, networking, concurrency.",
-    tags: &["rust", "kv-store", "lsm-tree", "networking"],
+    tags: &["bitcask", "crc32"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/chickadee/01-cli-basics.mp4"),
@@ -931,7 +931,7 @@ const HERON: Project = Project {
     ],
     impact_metric: "Found a bug in steller on its first day live",
     objective: "Give steller a real job. Twelve small JSON values would fit in a HashMap, and heron runs on one if asked. It runs on steller because steller's best bugs were found by running it, never by its tests.",
-    tags: &["rust", "axum", "resp", "systemd"],
+    tags: &["axum", "resp", "systemd"],
     media: &[],
     approach: &[
         "A snapshot carries its own freshness and the cache keeps it longer than that. When GitHub is down there is still something to serve, marked stale",
@@ -1000,7 +1000,7 @@ const STELLER: Project = Project {
     ],
     impact_metric: "Benchmarked against Redis 8",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out. All written without reaching for a protocol crate.",
-    tags: &["rust", "redis", "tcp", "protocol"],
+    tags: &["no-async", "aof", "pub-sub"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/steller/01-basics.mp4"),
@@ -1150,7 +1150,7 @@ const UPSEE: Project = Project {
     ],
     impact_metric: "On-device ML, no cloud",
     objective: "Build an end-to-end ML inference pipeline in Rust that counts pullups in real time from a webcam, using the MoveNet pose estimation model (https://huggingface.co/qualcomm/Movenet). No cloud inference: everything runs on-device via the tract ONNX runtime (https://github.com/sonos/tract).",
-    tags: &["rust", "ml", "computer-vision", "real-time"],
+    tags: &["on-device", "nokhwa"],
     media: &[MediaItem {
         src: asset!("/assets/projects/upsee/upsee-demo.mp4"),
         alt: "Upsee counting pullups in real time from webcam input",
@@ -1239,7 +1239,7 @@ const GOTCHA: Project = Project {
     ],
     impact_metric: "2 platforms, one binary",
     objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
-    tags: &["rust", "cross-platform", "security", "camera"],
+    tags: &["evdev", "rdev"],
     media: &[MediaItem {
         src: asset!("/assets/projects/gotcha/demo.mp4"),
         alt: "Keyboard and mouse input triggering intruder captures",
@@ -1332,7 +1332,7 @@ const RUSTMAS: Project = Project {
     ],
     impact_metric: "Both service contracts verified live",
     objective: "Build the tooling around Advent of Code rather than just the puzzles: fetch an input, run a day, and know whether the answer is right before spending a submission. Wrong answers to adventofcode.com cost an escalating cooldown, so the tool checks every answer against an independent solver (https://github.com/fornwall/advent-of-code) first and only sends what that solver agrees with.",
-    tags: &["rust", "cli", "http", "tooling"],
+    tags: &["cli", "http"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/rustmas/01-run-a-day.mp4"),
@@ -1438,7 +1438,7 @@ const SHARPMAS: Project = Project {
     ],
     impact_metric: "One design across two languages",
     objective: "Learn C# by rebuilding a finished Rust tool rather than by reading about it. Rustmas (https://github.com/scadoshi/rustmas) already settled what the tool should do and recorded why, so nothing here is a design question. Every open question is a language question: what is the C# idiom for this, and where is there honestly no analogue.",
-    tags: &["csharp", "dotnet", "cli", "port"],
+    tags: &["dotnet", "cli"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/sharpmas/01-run-a-day.mp4"),
