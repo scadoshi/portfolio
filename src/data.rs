@@ -187,14 +187,14 @@ pub fn featured_projects() -> &'static [Project] {
 pub fn side_quests() -> &'static [Project] {
     &[
         CHICKADEE,
+        CAIRN,
         HALO_ACTION_IMPORTER,
+        RUSTMAS,
+        SHARPMAS,
         HALO_CUSTOM_FIELD_BUILDER,
         MARVIN,
         GOTCHA,
         UPSEE,
-        CAIRN,
-        RUSTMAS,
-        SHARPMAS,
     ]
 }
 
