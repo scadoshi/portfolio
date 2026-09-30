@@ -36,6 +36,8 @@ Its CSS is inlined as a string constant because a git dep cannot be reached by a
 asset pipeline. That also means a fix to shared CSS has to land in zwipe first, and
 pushing zwipe's `main` deploys zwipe's production.
 
+Iterating on shared CSS through that loop costs a zwipe deploy and a pin commit per attempt; one afternoon produced five pins for one radius. The cheaper loop is a local override while iterating: put `[patch."https://github.com/scadoshi/zwipe"] zwipe-components = { path = "../zwipe/zwipe-components" }` in `.cargo/config.toml` (not `Cargo.toml`, so it never gets committed), build and screenshot until it looks right, delete the file, restore `Cargo.lock`, push zwipe once, and pin once.
+
 `projects/` holds per-project background notes, one per entry in `data.rs`. They go
 deeper than the site does and are where the numbers came from. `data.rs` is still the
 source of truth for what the site shows; these are the working notes behind it.
