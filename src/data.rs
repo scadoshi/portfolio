@@ -1285,8 +1285,7 @@ impl Identify for Device {
             axes.contains(REL_X) && axes.contains(REL_Y)
         })
     }
-}
-",
+}",
             description: "Linux doesn't label devices as 'keyboard' or 'mouse', so you detect them by what they can do. A trait on the third-party type keeps that heuristic in one place.",
         },
         Snippet {
