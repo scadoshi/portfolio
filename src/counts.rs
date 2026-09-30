@@ -313,8 +313,8 @@ mod tests {
     }
 
     /// The counts come from `counts.json`, so a number typed into the copy would
-    /// drift from it. The narrative fields (`approach`, `obstacles`, snippets) are
-    /// free to tell a story with a number in it.
+    /// drift from it. `obstacles` and the snippets are free to tell a story with
+    /// a number in it, since those are about a moment rather than the repo now.
     #[test]
     fn no_summary_field_types_a_count_by_hand() {
         let is_count = |text: &str| {
@@ -350,6 +350,11 @@ mod tests {
             for bullet in project.card_bullets {
                 if is_count(bullet) {
                     typed.push(format!("{}.card_bullets: {bullet}", project.slug));
+                }
+            }
+            for bullet in project.approach {
+                if is_count(bullet) {
+                    typed.push(format!("{}.approach: {bullet}", project.slug));
                 }
             }
         }

@@ -347,7 +347,7 @@ const ZWIPE: Project = Project {
         "A shared domain crate backs both the Axum API and the app, so the filter UI and the server's SQL search are built from the same query builder and cannot drift apart",
         "Argon2id, single-use rotating refresh tokens, and a Password type that is consumed on hash so plaintext has nowhere to leak to",
         "Every API call is described once, method and path and response type together, and one generic function sends them all. The app and the site cannot disagree about what an endpoint looks like",
-        "CI promotes 22 clippy rules to errors, unwrap among them. 749 tests, nightly Postgres backups to R2",
+        "CI promotes every configured clippy rule to an error, unwrap among them. Nightly Postgres backups to R2",
     ],
     snippets: &[
         Snippet {
@@ -688,7 +688,7 @@ const MARVIN: Project = Project {
     ],
     approach: &[
         "Found a live bug in [Rig](https://github.com/0xPlaygrounds/rig): hardcoded model constants had gone stale and were 404ing the API. Filed [issue #1370](https://github.com/0xPlaygrounds/rig/issues/1370) with a stopgap PR, and argued in the thread that constants pinned to someone else's source of truth are the wrong primitive. Marvin fetches the model list at runtime instead",
-        "Each slash command is a trait impl routed through an enum. It started as a 220-line monolith and grew module boundaries as it earned them",
+        "Each slash command is a trait impl routed through an enum. It started as one file and grew module boundaries as it earned them",
         "schemars derives the JSON schema for each tool from the Rust types, so the definitions cannot drift from the code",
     ],
     snippets: &[
