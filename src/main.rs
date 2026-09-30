@@ -152,15 +152,16 @@ fn App() -> Element {
         document::Style { {THEMES_CSS} }
         document::Style { {COMPONENTS_CSS} }
         document::Stylesheet { href: MAIN_CSS }
-        // Deferred so the CDN fetch doesn't block first paint; CodeBlock only
-        // calls hljs from a post-hydration effect (with a typeof guard), long
-        // after deferred scripts have executed.
-        document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" }
-        document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js" }
+        // highlight.js 11.9.0, vendored under public/ so the site makes no
+        // third-party request. Deferred so it doesn't block first paint;
+        // CodeBlock only calls hljs from a post-hydration effect (with a
+        // typeof guard), long after deferred scripts have executed.
+        document::Script { defer: true, src: "/vendor/highlight.min.js" }
+        document::Script { defer: true, src: "/vendor/rust.min.js" }
         // Sharpmas's snippets are C#. Without this grammar they fell back to
         // Rust's, which colors five keywords the two languages share and
         // leaves public, sealed, record, interface, var and switch plain.
-        document::Script { defer: true, src: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js" }
+        document::Script { defer: true, src: "/vendor/csharp.min.js" }
         // Scroll reveal for panels below the fold; deferred for the same
         // first-paint reason, and everything it does is progressive.
         document::Script { defer: true, src: REVEAL_JS }

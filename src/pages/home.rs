@@ -112,7 +112,7 @@ pub fn Home() -> Element {
                     title: "Software Engineer | Systems | Rust",
                     p { class: "about-text",
                         "I write production C# into Halo Software's core product, a large, mature enterprise codebase, shipping through the same pipeline their staff engineers use. "
-                        "Four years there before that designing enterprise request-management systems for universities, government entities, and financial institutions, and building the CLI tools that turned multi-week migrations into one-command jobs. "
+                        "Before that, four years at Halo designing enterprise request-management systems for universities, government entities, and financial institutions, and building the CLI tools that turned multi-week migrations into one-command jobs. "
                         "My own work is Rust and systems: a hand-written LSM-tree storage engine and a Redis-compatible server. Zwipe, a full-stack mobile app live on both stores, is the proof I can ship the whole thing alone."
                     }
                 }
