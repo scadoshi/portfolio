@@ -45,19 +45,10 @@ pub fn Home() -> Element {
                 category: "Announcement",
                 status: BannerStatus::Done,
                 status_label: "Live",
-                "Zwipe, the deck builder MTG deserved. "
-                a {
-                    href: "https://zwipe.net",
-                    "Try it now" span { class: "ext", "\u{2197}" }
-                }
-            }
-            Banner {
-                category: "Featured",
-                status: BannerStatus::Done,
-                "Steller, a hand-written Redis-compatible KV server. "
+                "The numbers on this page come from heron, my server, cached in steller, my Redis. "
                 Link {
-                    to: Route::ProjectDetail { slug: "steller".to_string() },
-                    "Check it out"
+                    to: Route::ProjectDetail { slug: "heron".to_string() },
+                    "How it works"
                 }
             }
         }
