@@ -1104,11 +1104,6 @@ a.panel-action:visited {
     opacity: 0.75;
 }
 
-.footer-built-strong {
-    color: var(--text-primary);
-    font-weight: 700;
-}
-
 .footer-built-repo,
 .footer-built-repo:visited {
     color: var(--accent-primary);

@@ -27,15 +27,7 @@ pub fn Footer() -> Element {
                     href: "https://github.com/scadoshi/portfolio",
                     "This site"
                 }
-                " is unofficial "
-                span { class: "footer-built-strong", "JavaScript-Free Content" }
-                // The line count is real (assets/reveal.js). If that file
-                // grows, this number is a lie; the last one stood false for
-                // fifteen days.
-                ", hand-written in Rust and compiled to WebAssembly via Dioxus. Not approved or endorsed by the ECMAScript committee. Fifty-four lines of JavaScript fade the panels in, and one library visits on a day pass to color the code snippets. Both are escorted at all times."
-            }
-            p { class: "footer-built-text",
-                "Every number on this site is measured. Commits come from "
+                " is Rust, compiled to WebAssembly via Dioxus. Every number on it is measured. Commits come from "
                 a { href: "https://github.com/scadoshi/heron", "heron" }
                 " while you read; lines, tests and lints are counted from the repositories before each commit, and a test fails if one is typed by hand."
             }
