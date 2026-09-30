@@ -5,9 +5,9 @@ use crate::{
     Route,
     components::{
         code_block::CodeBlock, gallery::ProjectGallery, linked_text::LinkedText,
-        page_meta::PageMeta,
+        measured::Measured, page_meta::PageMeta,
     },
-    counts, data, stats,
+    data,
 };
 
 /// Kept as a function rather than inlined so the panel's shape stays readable
@@ -31,9 +31,7 @@ fn approach_panel(project: &'static data::Project) -> Element {
 /// Shared body for both detail pages. Projects and side quests render
 /// identically off the same `Project` shape; only the lookup, canonical path,
 /// and not-found wording differ (see the two components below).
-fn detail_view(project: &'static data::Project, path: String, live: &stats::Live) -> Element {
-    let commit_line = stats::line_for(live.read().as_ref(), project.repo_url);
-    let counts_line = counts::line_for(project.repo_url);
+fn detail_view(project: &'static data::Project, path: String) -> Element {
     rsx! {
         PageMeta {
             title: project.name.to_string(),
@@ -67,12 +65,7 @@ fn detail_view(project: &'static data::Project, path: String, live: &stats::Live
                     }
                 },
                 p { class: "project-headline", "{project.headline}" }
-                if let Some(commit_line) = commit_line {
-                    p { class: "card-stats", "{commit_line}" }
-                }
-                if let Some(counts_line) = counts_line {
-                    p { class: "card-stats", "{counts_line}" }
-                }
+                Measured { repo_url: project.repo_url.to_string() }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",
                         // Cycle the accent palette so the row reads like
@@ -189,25 +182,23 @@ fn not_found(kind: &str, slug: &str) -> Element {
 /// Featured project page at `/projects/:slug`.
 #[component]
 pub fn ProjectDetail(slug: String) -> Element {
-    let live = use_context::<stats::Live>();
     if let Some(to) = data::moved_to(&format!("/projects/{slug}")) {
         return rsx! { Moved { to } };
     }
     let Some(project) = data::find_project(&slug) else {
         return not_found("Project", &slug);
     };
-    detail_view(project, format!("/projects/{}", project.slug), &live)
+    detail_view(project, format!("/projects/{}", project.slug))
 }
 
 /// Side quest page at `/side-quests/:slug`.
 #[component]
 pub fn SideQuestDetail(slug: String) -> Element {
-    let live = use_context::<stats::Live>();
     if let Some(to) = data::moved_to(&format!("/side-quests/{slug}")) {
         return rsx! { Moved { to } };
     }
     let Some(project) = data::find_side_quest(&slug) else {
         return not_found("Side quest", &slug);
     };
-    detail_view(project, format!("/side-quests/{}", project.slug), &live)
+    detail_view(project, format!("/side-quests/{}", project.slug))
 }

@@ -84,10 +84,10 @@ fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
         .map(|baked| (baked, Source::AsOf(baked.day().to_string())))
 }
 
-/// One line for a card: `2,968 commits, last push 2026-09-29`.
-pub fn line_for(live: Option<&Snapshot>, repo_url: &str) -> Option<String> {
+/// Chips for a card, when the repository is in the current snapshot.
+pub fn chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>> {
     let (snapshot, _) = current(live)?;
-    snapshot.repo(repo_url).map(RepoStats::line)
+    snapshot.repo(repo_url).map(RepoStats::chips)
 }
 
 /// The totals and where they came from.
@@ -115,9 +115,9 @@ pub fn fetch_live() -> impl std::future::Future<Output = Option<Snapshot>> {
 }
 
 impl RepoStats {
-    /// One line for a card: `2,968 commits, last push 2026-09-29`.
-    pub fn line(&self) -> String {
-        let commits = format!(
+    /// Chips for a card: `2,968 commits` and `pushed 2026-09-29`.
+    pub fn chips(&self) -> Vec<String> {
+        let mut chips = vec![format!(
             "{} {}",
             with_separators(self.commits),
             if self.commits == 1 {
@@ -125,12 +125,12 @@ impl RepoStats {
             } else {
                 "commits"
             }
-        );
+        )];
         // The date is the first ten characters of an RFC 3339 timestamp.
-        match self.pushed_at.as_deref().and_then(|at| at.get(..10)) {
-            Some(date) => format!("{commits}, last push {date}"),
-            None => commits,
+        if let Some(date) = self.pushed_at.as_deref().and_then(|at| at.get(..10)) {
+            chips.push(format!("pushed {date}"));
         }
+        chips
     }
 }
 
@@ -213,10 +213,10 @@ mod tests {
         assert_eq!(source, Source::AsOf(baked().day().to_string()));
         assert_eq!(baked().day().len(), 10, "{:?}", baked().generated_at);
         assert_eq!(
-            line_for(None, "https://github.com/scadoshi/steller"),
+            chips_for(None, "https://github.com/scadoshi/steller"),
             baked()
                 .repo("https://github.com/scadoshi/steller")
-                .map(RepoStats::line)
+                .map(RepoStats::chips)
         );
     }
 
@@ -239,12 +239,15 @@ mod tests {
         assert_eq!(totals.commits, 4242);
         assert_eq!(source, Source::Live);
         assert_eq!(
-            line_for(Some(&live), "https://github.com/scadoshi/steller").as_deref(),
-            Some("4,242 commits, last push 2026-10-01")
+            chips_for(Some(&live), "https://github.com/scadoshi/steller"),
+            Some(vec![
+                "4,242 commits".to_string(),
+                "pushed 2026-10-01".to_string()
+            ])
         );
         // A repository the live answer lacks is absent, not filled from the build.
         assert_eq!(
-            line_for(Some(&live), "https://github.com/scadoshi/zwipe"),
+            chips_for(Some(&live), "https://github.com/scadoshi/zwipe"),
             None
         );
     }
@@ -265,17 +268,17 @@ mod tests {
     }
 
     #[test]
-    fn the_line_names_commits_and_the_day_of_the_last_push() {
+    fn the_chips_name_commits_and_the_day_of_the_last_push() {
         let stats = |commits, pushed_at: Option<&str>| RepoStats {
             repo: "a/b".to_string(),
             commits,
             pushed_at: pushed_at.map(ToString::to_string),
         };
         assert_eq!(
-            stats(2968, Some("2026-09-29T12:13:17Z")).line(),
-            "2,968 commits, last push 2026-09-29"
+            stats(2968, Some("2026-09-29T12:13:17Z")).chips(),
+            ["2,968 commits", "pushed 2026-09-29"]
         );
-        assert_eq!(stats(1, None).line(), "1 commit");
-        assert_eq!(stats(12, Some("short")).line(), "12 commits");
+        assert_eq!(stats(1, None).chips(), ["1 commit"]);
+        assert_eq!(stats(12, Some("short")).chips(), ["12 commits"]);
     }
 }

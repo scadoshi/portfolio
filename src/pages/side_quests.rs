@@ -1,12 +1,15 @@
 use dioxus::prelude::*;
 use zwipe_components::Panel;
 
-use crate::{Route, components::page_meta::PageMeta, counts, data, stats};
+use crate::{
+    Route,
+    components::{measured::Measured, page_meta::PageMeta},
+    data,
+};
 
 #[component]
 pub fn SideQuests() -> Element {
     let quests = data::side_quests();
-    let live = use_context::<stats::Live>();
     rsx! {
         PageMeta {
             title: "Side Quests",
@@ -48,12 +51,7 @@ pub fn SideQuests() -> Element {
                                 li { "{bullet}" }
                             }
                         }
-                        if let Some(commit_line) = stats::line_for(live.read().as_ref(), quest.repo_url) {
-                            p { class: "card-stats", "{commit_line}" }
-                        }
-                        if let Some(counts_line) = counts::line_for(quest.repo_url) {
-                            p { class: "card-stats", "{counts_line}" }
-                        }
+                        Measured { repo_url: quest.repo_url.to_string() }
                     }
                 }
             }

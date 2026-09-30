@@ -996,7 +996,7 @@ const STELLER: Project = Project {
         "Hand-written RESP parser. No protocol crate, no async runtime",
         "The append-only log is the wire format, so replay reuses the inbound parse path",
         "Pub/sub fan-out over per-session writer threads",
-        "Benchmarked against Redis 8, and it wins under 32 clients",
+        "Faster than Redis 8 under 32 clients, slower past it, both measured",
     ],
     impact_metric: "Benchmarked against Redis 8",
     objective: "Build a Redis-compatible KV server by hand, layer by layer, so the muscle survives the project. TCP, RESP framing, command dispatch, in-memory KV with TTL, durable persistence (snapshot + AOF) behind a hexagonal port, graceful shutdown, pub/sub fan-out. All written without reaching for a protocol crate.",

@@ -8,7 +8,7 @@
 
 use crate::stats::with_separators;
 use serde::{Deserialize, Serialize};
-use std::{collections::BTreeMap, fmt::Write, sync::LazyLock};
+use std::{collections::BTreeMap, sync::LazyLock};
 
 const FILE: &str = include_str!("counts.json");
 
@@ -41,28 +41,28 @@ pub struct Counts {
 }
 
 impl Counts {
-    /// One line for a card: `6,102 lines of Rust, 245 tests, 13 clippy lints`.
+    /// Chips for a card: `6,102 lines of Rust`, `245 tests`, `13 clippy lints`.
     /// A count of zero is left out.
-    pub fn line(&self) -> String {
-        let mut line = format!(
+    pub fn chips(&self) -> Vec<String> {
+        let mut chips = vec![format!(
             "{} lines of {}",
             with_separators(self.lines),
             self.language.name()
-        );
+        )];
         if self.tests > 0 {
             let unit = if self.tests == 1 { "test" } else { "tests" };
-            write!(line, ", {} {unit}", with_separators(self.tests)).ok();
+            chips.push(format!("{} {unit}", with_separators(self.tests)));
         }
         if let Some(lints) = self.clippy_lints.filter(|lints| *lints > 0) {
             let unit = if lints == 1 { "lint" } else { "lints" };
-            write!(line, ", {} clippy {unit}", with_separators(lints)).ok();
+            chips.push(format!("{} clippy {unit}", with_separators(lints)));
         }
-        line
+        chips
     }
 }
 
 /// Keyed by `owner/name`. Empty when the file does not parse, and the site then
-/// renders without these lines.
+/// renders without these chips.
 static COUNTS: LazyLock<BTreeMap<String, Counts>> =
     LazyLock::new(|| serde_json::from_str(FILE).unwrap_or_default());
 
@@ -78,9 +78,9 @@ pub fn for_repo(repo_url: &str) -> Option<&'static Counts> {
     COUNTS.get(&key(repo_url))
 }
 
-/// One line for a card, when the repository has been measured.
-pub fn line_for(repo_url: &str) -> Option<String> {
-    for_repo(repo_url).map(Counts::line)
+/// Chips for a card, when the repository has been measured.
+pub fn chips_for(repo_url: &str) -> Option<Vec<String>> {
+    for_repo(repo_url).map(Counts::chips)
 }
 
 /// Only a test reads a checkout, so the site's build carries none of this.
@@ -269,21 +269,21 @@ mod tests {
     }
 
     #[test]
-    fn a_line_reads_as_a_sentence() {
+    fn chips_leave_out_a_zero() {
         assert_eq!(
-            counts(6102, 245, Some(13)).line(),
-            "6,102 lines of Rust, 245 tests, 13 clippy lints"
+            counts(6102, 245, Some(13)).chips(),
+            ["6,102 lines of Rust", "245 tests", "13 clippy lints"]
         );
         assert_eq!(
-            counts(1, 1, Some(1)).line(),
-            "1 lines of Rust, 1 test, 1 clippy lint"
+            counts(1, 1, Some(1)).chips(),
+            ["1 lines of Rust", "1 test", "1 clippy lint"]
         );
-        assert_eq!(counts(155, 0, Some(0)).line(), "155 lines of Rust");
+        assert_eq!(counts(155, 0, Some(0)).chips(), ["155 lines of Rust"]);
         let csharp = Counts {
             language: Language::CSharp,
             ..counts(2600, 62, None)
         };
-        assert_eq!(csharp.line(), "2,600 lines of C#, 62 tests");
+        assert_eq!(csharp.chips(), ["2,600 lines of C#", "62 tests"]);
     }
 
     #[test]

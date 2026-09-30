@@ -721,11 +721,11 @@ a.panel-action:visited {
     border-radius: 0.4rem;
 }
 
-/* GitHub numbers from heron: quieter than the impact line above them. */
-.card-stats {
-    font-size: 0.78rem;
-    color: var(--text-subtle);
-    letter-spacing: 0.02em;
+/* Measured numbers under a card's impact line, and under a detail page's
+   headline. Tighter than a tag row so they read as one strip. */
+.measured {
+    gap: 0.4rem;
+    margin-top: 0.75rem;
     margin-bottom: 1rem;
 }
 
