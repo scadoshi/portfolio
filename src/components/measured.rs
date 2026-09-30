@@ -18,11 +18,8 @@ pub fn Measured(repo_url: String) -> Element {
     }
     rsx! {
         div { class: "tag-row measured",
-            // Cycles the primary, warning and muted accents. The secondary
-            // accent is red on the default theme, and a red number reads as
-            // a warning.
             for (i, chip) in chips.iter().enumerate() {
-                span { class: "tag tag-c{[0, 1, 3][i % 3]}", "{chip}" }
+                span { class: "tag tag-c{i % 4}", "{chip}" }
             }
         }
     }
