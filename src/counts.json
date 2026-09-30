@@ -31,7 +31,7 @@
   },
   "scadoshi/heron": {
     "language": "Rust",
-    "lines": 5609,
+    "lines": 5635,
     "tests": 148,
     "clippy_lints": 26
   },
@@ -67,8 +67,8 @@
   },
   "scadoshi/zwipe": {
     "language": "Rust",
-    "lines": 142743,
-    "tests": 771,
+    "lines": 142789,
+    "tests": 774,
     "clippy_lints": 22
   }
 }

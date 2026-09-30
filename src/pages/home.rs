@@ -78,7 +78,7 @@ pub fn Home() -> Element {
                             }
                             div { class: "stat",
                                 span { class: "stat-num", "{totals.repos}" }
-                                span { class: "stat-label", "Public repos" }
+                                span { class: "stat-label", "Repos" }
                             }
                             div { class: "stat",
                                 span { class: "stat-num", {stats::with_separators(totals.stars)} }
