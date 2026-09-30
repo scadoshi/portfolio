@@ -564,7 +564,7 @@ a.panel-action:visited {
 }
 
 /* The measured chips cycle these three as well, so seven in a row before a
-   colour repeats. */
+   color repeats. */
 .tag-c4 {
     color: var(--color-success);
     background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
@@ -828,7 +828,7 @@ a.panel-action:visited {
 }
 
 /* Grey whatever accent the cycle gave them, so only the measured chips carry
-   colour. Same formula as .tag-c3. */
+   color. Same formula as .tag-c3. */
 .title-tag.tag {
     color: var(--text-muted);
     background-color: color-mix(in srgb, var(--text-muted) 12%, transparent);

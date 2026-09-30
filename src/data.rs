@@ -1144,7 +1144,7 @@ const UPSEE: Project = Project {
     summary: "Real-time pullup counter using webcam + MoveNet pose estimation. Runs entirely on-device.",
     card_bullets: &[
         "tract ONNX runtime for inference; no cloud dependency",
-        "Custom Square trait for center-cropping frames",
+        "Counter, milestones and crop bounds are pure functions with tests",
         "Confidence filtering + hysteresis state machine for accurate counts",
         "Webcam frame to rep count, no Python",
     ],
@@ -1159,7 +1159,7 @@ const UPSEE: Project = Project {
     }],
     approach: &[
         "tract is the Rust-native inference path. Three calls take an ONNX file to runnable: model_for_path, into_optimized, into_runnable. No Python, no cloud",
-        "A Square trait center-crops webcam frames before the resize. Skipping the distortion measurably improved keypoint confidence",
+        "square_bounds picks the centered square and the frame is cropped to it before the resize. Skipping the distortion measurably improved keypoint confidence",
         "Scores are averaged across four keypoints and frames below 0.4 are skipped, so the counter never acts on a bad read",
         "A hysteresis state machine separates up from down by a dead zone, which is what stops jitter from false-counting",
     ],
@@ -1190,16 +1190,27 @@ let result = model.run(tvec!(tensor.into()))?;",
         Snippet {
             title: "Hysteresis State Machine",
             lang: "rust",
-            code: r"// Two separate thresholds prevent oscillation:
-const UP_THRESHOLD: f32 = 0.05;   // shoulders near wrist level
-const DOWN_THRESHOLD: f32 = 0.15;  // shoulders dropped away
-// Gap (0.05 to 0.15) = dead zone that absorbs noise
-
-match state {
-    Down => if diff < UP_THRESHOLD { state = Up; reps += 1; }
-    Up   => if diff > DOWN_THRESHOLD { state = Down; }
+            code: r"/// Feeds one frame's pose. Returns the new total when this frame
+/// completes a rep. A frame under the confidence floor changes nothing.
+pub fn observe(&mut self, pose: &Pose) -> Option<u32> {
+    if pose.confidence() < self.thresholds.min_confidence {
+        return None;
+    }
+    let hang = pose.hang();
+    match self.phase {
+        Phase::Down if hang < self.thresholds.up => {
+            self.phase = Phase::Up;
+            self.reps += 1;
+            Some(self.reps)
+        }
+        Phase::Up if hang > self.thresholds.down => {
+            self.phase = Phase::Down;
+            None
+        }
+        _ => None,
+    }
 }",
-            description: "Without hysteresis, noise near the threshold causes rapid state flipping and false counts. The dead zone between thresholds means the signal must move decisively before a transition registers.",
+            description: "Two thresholds with a gap between them (0.05 and 0.15 by default), so a wobble at either end never counts twice. The test for that feeds five hangs inside the gap and asserts nothing flips.",
         },
     ],
     obstacles: &[
@@ -1207,7 +1218,7 @@ match state {
         "Quantized MoveNet model (w8a16) is incompatible with tract: the QuantizeLinear op is unsupported. Used the full-precision float model instead",
         "tract documentation is sparse compared to Python ML libraries. Required reading source, ONNX model metadata, and tract examples to get the pipeline working",
     ],
-    progress: "Working prototype. Counts pullups in real time from webcam. Roadmap: threshold tuning, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
+    progress: "Working prototype. Counts pullups in real time from webcam; the counter is a pure function with tests, the camera and model are adapters. Roadmap: threshold tuning, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
     impact: "ML inference in Rust without Python or cloud dependencies, from webcam frame to rep count.",
     site_url: None,
     status: ProjectStatus::Done,
@@ -1223,7 +1234,7 @@ const GOTCHA: Project = Project {
     card_bullets: &[
         "Linux: raw evdev with nix::poll for selective device grabbing",
         "macOS: rdev with Accessibility API callbacks",
-        "Custom traits on third-party types for device ID + secret key detection",
+        "The secret matcher and the shutter are pure and tested; the platforms feed them",
         "One binary, two platforms",
     ],
     impact_metric: "2 platforms, one binary",
@@ -1238,7 +1249,7 @@ const GOTCHA: Project = Project {
     approach: &[
         "cfg(target_os) switches between platform modules, with the platform-only dependencies scoped in Cargo.toml so neither target pulls the other's crates",
         "Linux enumerates /dev/input/event*, filters by capability, grabs each device and polls with nix::poll. macOS goes through rdev and Accessibility callbacks, returning None to swallow the event",
-        "Custom traits on third-party types rather than wrappers: Identify on evdev::Device, IsSecret on InputEvent. Extension keeps each platform's quirks behind one interface",
+        "The decisions live in domain.rs: Unlock matches key presses against a secret sequence, Shutter allows one shot per second, file_name stamps the photo. Each takes the key or the time as an argument, so the tests never touch a device or a camera",
     ],
     snippets: &[
         Snippet {
@@ -1275,22 +1286,32 @@ impl Identify for Device {
         })
     }
 }
-
-// IsSecret trait on evdev::InputEvent: secret key detection
-impl IsSecret for InputEvent {
-    fn is_secret(&self) -> bool {
-        matches!(self.destructure(),
-            EventSummary::Key(_, KeyCode::KEY_ESC, 1))
+",
+            description: "Linux doesn't label devices as 'keyboard' or 'mouse', so you detect them by what they can do. A trait on the third-party type keeps that heuristic in one place.",
+        },
+        Snippet {
+            title: "The secret, matched blind",
+            lang: "rust",
+            code: r"/// Feeds one key press. True when the last presses spell the secret.
+pub fn press(&mut self, key: K) -> bool {
+    if self.recent.len() == self.secret.len() {
+        self.recent.pop_front();
     }
+    self.recent.push_back(key);
+    let unlocked = self.recent.iter().eq(self.secret.iter());
+    if unlocked {
+        self.recent.clear();
+    }
+    unlocked
 }",
-            description: "Custom traits on third-party types. Linux doesn't label devices as 'keyboard' or 'mouse', so you detect them by what they can do. Same pattern for secret key detection: extend the event type rather than match inline.",
+            description: "A rolling window of the last N presses compared to the secret, so A A A B still unlocks A A B. Generic over the key type: each platform passes its own, and nothing maps into a shared enum.",
         },
     ],
     obstacles: &[
         "rdev grabs every evdev device on Linux, including Bluetooth controllers and network adapters, which disconnects them. Only visible at runtime. Dropped to raw evdev and grab by capability instead",
         "rdev::grab on macOS has no clean stop. The loop blocks forever with nothing to break it, so the secret key calls process::exit(0) and macOS gets no graceful shutdown",
     ],
-    progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with secret key. Clean ungrab on Linux, forced exit on macOS.",
+    progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with a secret key sequence. Clean ungrab on Linux, forced exit on macOS. The decisions are in a domain module with tests; the platforms only own the devices.",
     impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types, so each platform's quirks stay behind one interface.",
     site_url: None,
     status: ProjectStatus::Done,

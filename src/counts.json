@@ -13,8 +13,8 @@
   },
   "scadoshi/gotcha": {
     "language": "Rust",
-    "lines": 222,
-    "tests": 0,
+    "lines": 439,
+    "tests": 11,
     "clippy_lints": 5
   },
   "scadoshi/halo_action_importer": {
@@ -61,13 +61,13 @@
   },
   "scadoshi/upsee": {
     "language": "Rust",
-    "lines": 154,
-    "tests": 0,
+    "lines": 394,
+    "tests": 10,
     "clippy_lints": 5
   },
   "scadoshi/zwipe": {
     "language": "Rust",
-    "lines": 142739,
+    "lines": 142743,
     "tests": 771,
     "clippy_lints": 22
   }
