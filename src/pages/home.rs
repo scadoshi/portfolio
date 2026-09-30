@@ -58,15 +58,14 @@ pub fn Home() -> Element {
             div { class: "hero-panel",
                 Panel {
                     p { class: "hero-tagline",
-                        "Production "
                         span { class: "hl-warning", "Rust" }
-                        " for the work that has to actually run: "
-                        span { class: "hl-success", "storage engines" }
-                        ", "
-                        span { class: "hl-error", "wire protocols" }
-                        ", and the "
-                        span { class: "hl-tertiary", "systems" }
-                        " underneath."
+                        " that runs: an "
+                        span { class: "hl-success", "app" }
+                        " on both stores, a "
+                        span { class: "hl-error", "server" }
+                        " counting the numbers above, and two "
+                        span { class: "hl-tertiary", "storage engines" }
+                        " written from the wire up."
                     }
                     // Same strip as zwipe.net's hero: a rule, then the numbers.
                     // A second rule sets off where they come from.
