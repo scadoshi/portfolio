@@ -17,6 +17,8 @@ src/
   data.rs            every Project and Snippet; the two ordering functions
   stats.rs           GitHub numbers from heron: baked stats.json, live fetch after load
   stats.json         heron's answer, replaced before each build
+  counts.rs          lines, tests and clippy lints per repo, read from counts.json
+  counts.json        measured from the local clones by a test, refreshed before a commit
   theme_store.rs     localStorage theme persistence, no-ops on the server build
   components/        navbar, footer, project_card, gallery, code_block,
                      linked_text, page_meta
@@ -52,7 +54,11 @@ After a page loads, the browser asks heron once more (`stats::fetch_live`, wasm 
 
 A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as well. Until it is, `every_project_on_the_site_is_in_the_snapshot` fails and names it.
 
-Test counts and line counts are still typed by hand in `data.rs`. GitHub's API has neither.
+## Source counts
+
+Lines, test functions and configured clippy lints per repository are in `src/counts.json`, rendered under the commit line on every card by `src/counts.rs`. GitHub's API has none of them, so they are measured from the clones on this machine: `PORTFOLIO_REPOS=~/Developer cargo test` fails when the file is behind a clone, and `PORTFOLIO_WRITE_COUNTS=1` rewrites it. The measure is what the source says, not what `cargo test` prints: every `#[test]`-style attribute counts as one test, every line of every `.rs` (or `.cs`) file outside build directories counts, and every clippy entry set to warn or deny counts as a lint.
+
+Because the numbers come from that file, the copy in `data.rs` never types one. `no_summary_field_types_a_count_by_hand` fails the build if a headline, summary, metric, progress or card bullet says "N tests" or "N lines". The narrative fields are free to.
 
 ## Build and deploy
 

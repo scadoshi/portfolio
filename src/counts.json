@@ -1,0 +1,74 @@
+{
+  "scadoshi/cairn": {
+    "language": "Rust",
+    "lines": 8630,
+    "tests": 110,
+    "clippy_lints": 12
+  },
+  "scadoshi/chickadee": {
+    "language": "Rust",
+    "lines": 2198,
+    "tests": 99,
+    "clippy_lints": 14
+  },
+  "scadoshi/gotcha": {
+    "language": "Rust",
+    "lines": 222,
+    "tests": 0,
+    "clippy_lints": 5
+  },
+  "scadoshi/halo_action_importer": {
+    "language": "Rust",
+    "lines": 3380,
+    "tests": 3,
+    "clippy_lints": 0
+  },
+  "scadoshi/halo_custom_field_builder": {
+    "language": "Rust",
+    "lines": 1296,
+    "tests": 0,
+    "clippy_lints": 0
+  },
+  "scadoshi/heron": {
+    "language": "Rust",
+    "lines": 5609,
+    "tests": 148,
+    "clippy_lints": 26
+  },
+  "scadoshi/marvin": {
+    "language": "Rust",
+    "lines": 1723,
+    "tests": 1,
+    "clippy_lints": 5
+  },
+  "scadoshi/rustmas": {
+    "language": "Rust",
+    "lines": 9096,
+    "tests": 186,
+    "clippy_lints": 1
+  },
+  "scadoshi/sharpmas": {
+    "language": "CSharp",
+    "lines": 3592,
+    "tests": 99,
+    "clippy_lints": null
+  },
+  "scadoshi/steller": {
+    "language": "Rust",
+    "lines": 6102,
+    "tests": 242,
+    "clippy_lints": 14
+  },
+  "scadoshi/upsee": {
+    "language": "Rust",
+    "lines": 154,
+    "tests": 0,
+    "clippy_lints": 5
+  },
+  "scadoshi/zwipe": {
+    "language": "Rust",
+    "lines": 142739,
+    "tests": 771,
+    "clippy_lints": 22
+  }
+}

@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use zwipe_components::{BannerStatus, Panel};
 
-use crate::{Route, stats};
+use crate::{Route, counts, stats};
 
 #[component]
 pub fn ProjectCard(
@@ -18,6 +18,7 @@ pub fn ProjectCard(
 ) -> Element {
     let live = use_context::<stats::Live>();
     let commit_line = stats::line_for(live.read().as_ref(), &repo_url);
+    let counts_line = counts::line_for(&repo_url);
     rsx! {
         Panel {
             eyebrow: category,
@@ -53,6 +54,9 @@ pub fn ProjectCard(
             div { class: "card-impact", "{impact_metric}" }
             if let Some(commit_line) = commit_line {
                 p { class: "card-stats", "{commit_line}" }
+            }
+            if let Some(counts_line) = counts_line {
+                p { class: "card-stats", "{counts_line}" }
             }
         }
     }

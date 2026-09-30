@@ -36,8 +36,13 @@ cargo clippy --target wasm32-unknown-unknown -- -D warnings
 
 ### 3. Tests
 ```bash
-cargo test
+PORTFOLIO_REPOS=~/Developer cargo test
 ```
+`PORTFOLIO_REPOS` makes `counts_match_the_local_clones` compare `src/counts.json`
+with the clones in that directory; CI leaves it unset and skips the comparison.
+When it fails, `PORTFOLIO_WRITE_COUNTS=1` with the same command rewrites the file,
+and the rewrite goes in the commit.
+
 Mostly markup, so the bar for a new test is high: real logic (parsing, non-trivial
 data transforms) or a guardrail on something hand-maintained that has already
 drifted. `sitemap_lists_every_prerendered_route` is the second kind. Don't stand up

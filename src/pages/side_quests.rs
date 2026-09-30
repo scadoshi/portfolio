@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use zwipe_components::Panel;
 
-use crate::{Route, components::page_meta::PageMeta, data, stats};
+use crate::{Route, components::page_meta::PageMeta, counts, data, stats};
 
 #[component]
 pub fn SideQuests() -> Element {
@@ -50,6 +50,9 @@ pub fn SideQuests() -> Element {
                         }
                         if let Some(commit_line) = stats::line_for(live.read().as_ref(), quest.repo_url) {
                             p { class: "card-stats", "{commit_line}" }
+                        }
+                        if let Some(counts_line) = counts::line_for(quest.repo_url) {
+                            p { class: "card-stats", "{counts_line}" }
                         }
                     }
                 }

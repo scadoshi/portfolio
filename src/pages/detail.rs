@@ -7,7 +7,7 @@ use crate::{
         code_block::CodeBlock, gallery::ProjectGallery, linked_text::LinkedText,
         page_meta::PageMeta,
     },
-    data, stats,
+    counts, data, stats,
 };
 
 /// Kept as a function rather than inlined so the panel's shape stays readable
@@ -33,6 +33,7 @@ fn approach_panel(project: &'static data::Project) -> Element {
 /// and not-found wording differ (see the two components below).
 fn detail_view(project: &'static data::Project, path: String, live: &stats::Live) -> Element {
     let commit_line = stats::line_for(live.read().as_ref(), project.repo_url);
+    let counts_line = counts::line_for(project.repo_url);
     rsx! {
         PageMeta {
             title: project.name.to_string(),
@@ -68,6 +69,9 @@ fn detail_view(project: &'static data::Project, path: String, live: &stats::Live
                 p { class: "project-headline", "{project.headline}" }
                 if let Some(commit_line) = commit_line {
                     p { class: "card-stats", "{commit_line}" }
+                }
+                if let Some(counts_line) = counts_line {
+                    p { class: "card-stats", "{counts_line}" }
                 }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",
