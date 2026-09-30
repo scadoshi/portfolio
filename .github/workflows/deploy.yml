@@ -15,8 +15,8 @@ on:
       # entry changes where the build lands and deploys nothing.
       - 'Dioxus.toml'
       - '.github/workflows/deploy.yml'
-  # The commit counts on the site come from heron and are baked in at build time,
-  # so a build each morning is what keeps them current. 06:00 UTC.
+  # The commit counts baked into the site come from heron. A build each morning
+  # keeps the fallback current for browsers that cannot reach heron. 06:00 UTC.
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:

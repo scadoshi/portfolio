@@ -118,6 +118,18 @@ fn App() -> Element {
         }
     });
 
+    // Live numbers from heron, asked for once after mount. Empty on the first
+    // render so the client matches the prerendered page, then filled in place.
+    let mut live: stats::Live = use_signal(|| None);
+    use_context_provider(|| live);
+    use_effect(move || {
+        spawn(async move {
+            if let Some(snapshot) = stats::fetch_live().await {
+                live.set(Some(snapshot));
+            }
+        });
+    });
+
     rsx! {
         document::Meta { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" }
         // Tells Dark Reader to leave the site alone (same lock zite carries):

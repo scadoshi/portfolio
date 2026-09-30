@@ -31,7 +31,8 @@ fn approach_panel(project: &'static data::Project) -> Element {
 /// Shared body for both detail pages. Projects and side quests render
 /// identically off the same `Project` shape; only the lookup, canonical path,
 /// and not-found wording differ (see the two components below).
-fn detail_view(project: &'static data::Project, path: String) -> Element {
+fn detail_view(project: &'static data::Project, path: String, live: &stats::Live) -> Element {
+    let commit_line = stats::line_for(live.read().as_ref(), project.repo_url);
     rsx! {
         PageMeta {
             title: project.name.to_string(),
@@ -65,8 +66,8 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                     }
                 },
                 p { class: "project-headline", "{project.headline}" }
-                if let Some(repo) = stats::for_repo(project.repo_url) {
-                    p { class: "card-stats", {repo.line()} }
+                if let Some(commit_line) = commit_line {
+                    p { class: "card-stats", "{commit_line}" }
                 }
                 if !project.tags.is_empty() {
                     div { class: "tag-row",
@@ -184,23 +185,25 @@ fn not_found(kind: &str, slug: &str) -> Element {
 /// Featured project page at `/projects/:slug`.
 #[component]
 pub fn ProjectDetail(slug: String) -> Element {
+    let live = use_context::<stats::Live>();
     if let Some(to) = data::moved_to(&format!("/projects/{slug}")) {
         return rsx! { Moved { to } };
     }
     let Some(project) = data::find_project(&slug) else {
         return not_found("Project", &slug);
     };
-    detail_view(project, format!("/projects/{}", project.slug))
+    detail_view(project, format!("/projects/{}", project.slug), &live)
 }
 
 /// Side quest page at `/side-quests/:slug`.
 #[component]
 pub fn SideQuestDetail(slug: String) -> Element {
+    let live = use_context::<stats::Live>();
     if let Some(to) = data::moved_to(&format!("/side-quests/{slug}")) {
         return rsx! { Moved { to } };
     }
     let Some(project) = data::find_side_quest(&slug) else {
         return not_found("Side quest", &slug);
     };
-    detail_view(project, format!("/side-quests/{}", project.slug))
+    detail_view(project, format!("/side-quests/{}", project.slug), &live)
 }

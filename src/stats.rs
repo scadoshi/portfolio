@@ -1,17 +1,21 @@
 //! GitHub numbers for each project, served by heron
-//! (<https://github.com/scadoshi/heron>) and read when the site builds.
+//! (<https://github.com/scadoshi/heron>).
 //!
-//! `stats.json` is the body of `GET https://api.scadoshi.dev/stats`. The deploy
-//! workflow replaces it with a new answer before each build and keeps the committed
-//! copy when heron cannot give a complete one, so a build never waits on heron.
+//! Two sources, in order of preference. The page asks heron after it loads, and
+//! shows that answer as live. Until it arrives, or if it never does, the page shows
+//! `stats.json`, the answer heron gave when the site was built. The deploy workflow
+//! replaces that file before each build and keeps the committed copy when heron
+//! cannot give a complete one, so a build never waits on heron and a visitor never
+//! sees an empty number.
 
+use dioxus::prelude::*;
 use serde::Deserialize;
 use std::sync::LazyLock;
 
 const SNAPSHOT: &str = include_str!("stats.json");
 
 /// Sums across every repository in the snapshot.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct Totals {
     pub repos: u32,
     pub commits: u64,
@@ -19,7 +23,7 @@ pub struct Totals {
 }
 
 /// What heron reports for one repository. Only the fields the site shows.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct RepoStats {
     /// `owner/name`.
     pub repo: String,
@@ -29,30 +33,85 @@ pub struct RepoStats {
     pub pushed_at: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
-struct Snapshot {
-    totals: Totals,
-    repos: Vec<RepoStats>,
+/// The body of heron's `GET /stats`.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+pub struct Snapshot {
+    /// RFC 3339 in UTC.
+    pub generated_at: String,
+    pub totals: Totals,
+    pub repos: Vec<RepoStats>,
+}
+
+impl Snapshot {
+    fn repo(&self, repo_url: &str) -> Option<&RepoStats> {
+        let repo = repo_url
+            .trim_start_matches("https://github.com/")
+            .trim_end_matches('/');
+        self.repos
+            .iter()
+            .find(|stats| stats.repo.eq_ignore_ascii_case(repo))
+    }
+
+    /// The day the numbers were assembled: the first ten characters of the timestamp.
+    fn day(&self) -> &str {
+        self.generated_at.get(..10).unwrap_or_default()
+    }
 }
 
 /// `None` when the snapshot does not parse. The site then renders without numbers.
-static STATS: LazyLock<Option<Snapshot>> = LazyLock::new(|| serde_json::from_str(SNAPSHOT).ok());
+static BAKED: LazyLock<Option<Snapshot>> = LazyLock::new(|| serde_json::from_str(SNAPSHOT).ok());
 
-/// Stats for the repository at `repo_url`, a `https://github.com/owner/name` link.
-pub fn for_repo(repo_url: &str) -> Option<&'static RepoStats> {
-    let repo = repo_url
-        .trim_start_matches("https://github.com/")
-        .trim_end_matches('/');
-    STATS
-        .as_ref()?
-        .repos
-        .iter()
-        .find(|stats| stats.repo.eq_ignore_ascii_case(repo))
+/// Heron's answer after the page loaded, shared through context. `None` until it
+/// arrives, and forever if it never does.
+pub type Live = Signal<Option<Snapshot>>;
+
+/// Which source a number came from.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Source {
+    /// From heron, just now.
+    Live,
+    /// From the build, on this day.
+    AsOf(String),
 }
 
-/// Sums across every repository in the snapshot.
-pub fn totals() -> Option<&'static Totals> {
-    STATS.as_ref().map(|snapshot| &snapshot.totals)
+/// The live snapshot when there is one, else the baked one.
+fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
+    if let Some(snapshot) = live {
+        return Some((snapshot, Source::Live));
+    }
+    BAKED
+        .as_ref()
+        .map(|baked| (baked, Source::AsOf(baked.day().to_string())))
+}
+
+/// One line for a card: `2,968 commits, last push 2026-09-29`.
+pub fn line_for(live: Option<&Snapshot>, repo_url: &str) -> Option<String> {
+    let (snapshot, _) = current(live)?;
+    snapshot.repo(repo_url).map(RepoStats::line)
+}
+
+/// The totals and where they came from.
+pub fn totals(live: Option<&Snapshot>) -> Option<(Totals, Source)> {
+    current(live).map(|(snapshot, source)| (snapshot.totals.clone(), source))
+}
+
+/// Asks heron for the live numbers. `None` on any failure.
+#[cfg(target_arch = "wasm32")]
+pub async fn fetch_live() -> Option<Snapshot> {
+    let response = gloo_net::http::Request::get("https://api.scadoshi.dev/stats")
+        .send()
+        .await
+        .ok()?;
+    if !response.ok() {
+        return None;
+    }
+    response.json::<Snapshot>().await.ok()
+}
+
+/// Prerendering has no page to update, so there is nothing to ask for.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn fetch_live() -> impl std::future::Future<Output = Option<Snapshot>> {
+    std::future::ready(None)
 }
 
 impl RepoStats {
@@ -93,6 +152,10 @@ mod tests {
     use super::*;
     use crate::data::{featured_projects, side_quests};
 
+    fn baked() -> &'static Snapshot {
+        BAKED.as_ref().expect("snapshot parses")
+    }
+
     #[test]
     fn the_snapshot_parses() {
         let snapshot = serde_json::from_str::<Snapshot>(SNAPSHOT);
@@ -106,7 +169,7 @@ mod tests {
         let missing: Vec<&str> = featured_projects()
             .iter()
             .chain(side_quests())
-            .filter(|project| for_repo(project.repo_url).is_none())
+            .filter(|project| baked().repo(project.repo_url).is_none())
             .map(|project| project.repo_url)
             .collect();
         assert!(missing.is_empty(), "not served by heron: {missing:?}");
@@ -114,7 +177,7 @@ mod tests {
 
     #[test]
     fn totals_agree_with_the_repositories() {
-        let snapshot: Snapshot = serde_json::from_str(SNAPSHOT).expect("snapshot parses");
+        let snapshot = baked();
         let commits: u64 = snapshot.repos.iter().map(|repo| repo.commits).sum();
         assert_eq!(snapshot.totals.commits, commits);
         assert_eq!(
@@ -125,16 +188,65 @@ mod tests {
 
     #[test]
     fn a_repository_is_found_whatever_the_link_looks_like() {
-        let expected = for_repo("https://github.com/scadoshi/steller").map(|s| &s.repo);
+        let expected = baked()
+            .repo("https://github.com/scadoshi/steller")
+            .map(|s| &s.repo);
         assert!(expected.is_some());
         for url in [
             "https://github.com/scadoshi/steller/",
             "https://github.com/Scadoshi/Steller",
             "scadoshi/steller",
         ] {
-            assert_eq!(for_repo(url).map(|s| &s.repo), expected, "{url}");
+            assert_eq!(baked().repo(url).map(|s| &s.repo), expected, "{url}");
         }
-        assert!(for_repo("https://github.com/scadoshi/not-a-repo").is_none());
+        assert!(
+            baked()
+                .repo("https://github.com/scadoshi/not-a-repo")
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn without_a_live_answer_the_baked_numbers_and_their_day_are_used() {
+        let (totals, source) = totals(None).expect("baked totals");
+        assert_eq!(totals, baked().totals);
+        assert_eq!(source, Source::AsOf(baked().day().to_string()));
+        assert_eq!(baked().day().len(), 10, "{:?}", baked().generated_at);
+        assert_eq!(
+            line_for(None, "https://github.com/scadoshi/steller"),
+            baked()
+                .repo("https://github.com/scadoshi/steller")
+                .map(RepoStats::line)
+        );
+    }
+
+    #[test]
+    fn a_live_answer_replaces_the_baked_numbers() {
+        let live = Snapshot {
+            generated_at: "2026-10-01T09:00:00Z".to_string(),
+            totals: Totals {
+                repos: 1,
+                commits: 4242,
+                stars: 7,
+            },
+            repos: vec![RepoStats {
+                repo: "scadoshi/steller".to_string(),
+                commits: 4242,
+                pushed_at: Some("2026-10-01T08:59:00Z".to_string()),
+            }],
+        };
+        let (totals, source) = totals(Some(&live)).expect("live totals");
+        assert_eq!(totals.commits, 4242);
+        assert_eq!(source, Source::Live);
+        assert_eq!(
+            line_for(Some(&live), "https://github.com/scadoshi/steller").as_deref(),
+            Some("4,242 commits, last push 2026-10-01")
+        );
+        // A repository the live answer lacks is absent, not filled from the build.
+        assert_eq!(
+            line_for(Some(&live), "https://github.com/scadoshi/zwipe"),
+            None
+        );
     }
 
     #[test]

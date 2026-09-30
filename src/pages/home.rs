@@ -29,6 +29,8 @@ const JSON_LD: &str = r#"{
 #[component]
 pub fn Home() -> Element {
     let projects = data::featured_projects();
+    let live = use_context::<stats::Live>();
+    let totals = stats::totals(live.read().as_ref());
     rsx! {
         // Title lands at 60 chars with PageMeta's " | Scotty Fermo" suffix;
         // description stays under the ~125-char social-preview cutoff.
@@ -77,7 +79,7 @@ pub fn Home() -> Element {
                     }
                     // Same strip as zwipe.net's hero: a rule, then the numbers.
                     // A second rule sets off where they come from.
-                    if let Some(totals) = stats::totals() {
+                    if let Some((totals, source)) = totals {
                         hr { class: "hero-rule" }
                         section { class: "stats-strip",
                             div { class: "stat",
@@ -99,6 +101,10 @@ pub fn Home() -> Element {
                             a { href: "https://github.com/scadoshi/heron", "heron" }
                             ", cached in "
                             a { href: "https://github.com/scadoshi/steller", "steller" }
+                            match source {
+                                stats::Source::Live => rsx! { ", live" },
+                                stats::Source::AsOf(day) => rsx! { ", as of {day}" },
+                            }
                         }
                     }
                 }

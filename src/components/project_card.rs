@@ -16,6 +16,8 @@ pub fn ProjectCard(
     status: BannerStatus,
     status_label: String,
 ) -> Element {
+    let live = use_context::<stats::Live>();
+    let commit_line = stats::line_for(live.read().as_ref(), &repo_url);
     rsx! {
         Panel {
             eyebrow: category,
@@ -49,8 +51,8 @@ pub fn ProjectCard(
                 }
             }
             div { class: "card-impact", "{impact_metric}" }
-            if let Some(repo) = stats::for_repo(&repo_url) {
-                p { class: "card-stats", {repo.line()} }
+            if let Some(commit_line) = commit_line {
+                p { class: "card-stats", "{commit_line}" }
             }
         }
     }

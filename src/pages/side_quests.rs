@@ -6,6 +6,7 @@ use crate::{Route, components::page_meta::PageMeta, data, stats};
 #[component]
 pub fn SideQuests() -> Element {
     let quests = data::side_quests();
+    let live = use_context::<stats::Live>();
     rsx! {
         PageMeta {
             title: "Side Quests",
@@ -47,8 +48,8 @@ pub fn SideQuests() -> Element {
                                 li { "{bullet}" }
                             }
                         }
-                        if let Some(repo) = stats::for_repo(quest.repo_url) {
-                            p { class: "card-stats", {repo.line()} }
+                        if let Some(commit_line) = stats::line_for(live.read().as_ref(), quest.repo_url) {
+                            p { class: "card-stats", "{commit_line}" }
                         }
                     }
                 }

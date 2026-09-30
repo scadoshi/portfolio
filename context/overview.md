@@ -15,7 +15,7 @@ build themselves from the same data.
 src/
   main.rs            Route enum, App, the head tags, static_routes() for SSG
   data.rs            every Project and Snippet; the two ordering functions
-  stats.rs           GitHub numbers from heron, read from stats.json
+  stats.rs           GitHub numbers from heron: baked stats.json, live fetch after load
   stats.json         heron's answer, replaced before each build
   theme_store.rs     localStorage theme persistence, no-ops on the server build
   components/        navbar, footer, project_card, gallery, code_block,
@@ -46,7 +46,9 @@ GitHub Pages cannot answer with a redirect. When a project is renamed or changes
 
 The commit counts and last-push dates on the cards come from heron (`~/Developer/heron`, live at `https://api.scadoshi.dev`), not from `data.rs`. `src/stats.json` is the body of heron's `GET /stats` and `src/stats.rs` reads it.
 
-The numbers are baked in when the site builds. The deploy workflow asks heron for a new answer before each build and keeps the committed `src/stats.json` when heron is down or could not resolve every repository, so a build never waits on heron and the site never calls it from a browser. The workflow also runs every morning, which is what keeps the numbers current.
+The numbers are baked in when the site builds. The deploy workflow asks heron for a new answer before each build and keeps the committed `src/stats.json` when heron is down or could not resolve every repository, so a build never waits on heron. The workflow also runs every morning.
+
+After a page loads, the browser asks heron once more (`stats::fetch_live`, wasm only) and swaps the live answer in. The hero's source line says ", live" when that worked and ", as of <day>" when it did not, where the day is the baked snapshot's `generated_at`. The prerendered HTML always carries the baked numbers, so hydration matches. Cloudflare caches `GET /stats` for five minutes, so a traffic spike on the site does not reach heron.
 
 A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as well. Until it is, `every_project_on_the_site_is_in_the_snapshot` fails and names it.
 
