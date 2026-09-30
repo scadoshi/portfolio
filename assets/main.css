@@ -522,10 +522,11 @@ a.panel-action:visited {
 }
 
 /* Zwipe's chip formula: colored text on a faint same-hue tint with a soft
-   same-hue outline. The row cycles four accents via .tag-c0..3. */
+   same-hue outline. The row cycles four accents via .tag-c0..3. Squared to
+   the shared status pill's radius: labels square, buttons round. */
 .tag {
     border: 1px solid;
-    border-radius: 0.6rem;
+    border-radius: 0.25rem;
     padding: 0.2rem 0.7rem;
     font-size: 0.78rem;
     letter-spacing: 0.02em;
