@@ -34,6 +34,11 @@ pub fn Footer() -> Element {
                 // fifteen days.
                 ", hand-written in Rust and compiled to WebAssembly via Dioxus. Not approved or endorsed by the ECMAScript committee. Fifty-four lines of JavaScript fade the panels in, and one library visits on a day pass to color the code snippets. Both are escorted at all times."
             }
+            p { class: "footer-built-text",
+                "Every number on this site is measured. Commits come from "
+                a { href: "https://github.com/scadoshi/heron", "heron" }
+                " while you read; lines, tests and lints are counted from the repositories before each commit, and a test fails if one is typed by hand."
+            }
         }
     }
 }
