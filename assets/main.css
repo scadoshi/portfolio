@@ -791,11 +791,14 @@ a.panel-action:visited {
     opacity: 0.7;
 }
 
+/* The source chips sit under the strip, centered with it. */
 .stats-source {
-    font-size: 0.78rem;
-    color: var(--text-subtle);
-    letter-spacing: 0.04em;
-    margin: 0;
+    justify-content: center;
+    margin-top: 1.25rem;
+}
+
+.stats-source a.tag {
+    text-decoration: none;
 }
 
 /* === Project Detail === */

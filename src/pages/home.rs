@@ -85,15 +85,13 @@ pub fn Home() -> Element {
                                 span { class: "stat-label", "Stars" }
                             }
                         }
-                        hr { class: "hero-rule" }
-                        p { class: "stats-source",
-                            "Counted by "
-                            a { href: "https://github.com/scadoshi/heron", "heron" }
-                            ", cached in "
-                            a { href: "https://github.com/scadoshi/steller", "steller" }
+                        // Where the numbers come from, as chips under the strip.
+                        div { class: "tag-row stats-source",
+                            a { class: "tag tag-c0", href: "https://github.com/scadoshi/heron", "counted by heron" }
+                            a { class: "tag tag-c1", href: "https://github.com/scadoshi/steller", "cached in steller" }
                             match source {
-                                stats::Source::Live => rsx! { ", live" },
-                                stats::Source::AsOf(day) => rsx! { ", as of {day}" },
+                                stats::Source::Live => rsx! { span { class: "tag tag-c2", "live" } },
+                                stats::Source::AsOf(day) => rsx! { span { class: "tag tag-c3", "as of {day}" } },
                             }
                         }
                     }
