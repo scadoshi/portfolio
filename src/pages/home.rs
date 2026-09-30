@@ -36,7 +36,7 @@ pub fn Home() -> Element {
         // description stays under the ~125-char social-preview cutoff.
         PageMeta {
             title: "Software Engineer: Rust, Full-Stack & Systems",
-            description: "Personal portfolio of Scotty Fermo: production Rust systems, full-stack engineering, storage engines, and ML side quests.",
+            description: "Scotty Fermo, software engineer. Rust that runs: a mobile app on both stores, a live server, two storage engines.",
             path: "/",
         }
         document::Script { r#type: "application/ld+json", "{JSON_LD}" }
