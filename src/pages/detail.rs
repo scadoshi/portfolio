@@ -49,6 +49,13 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 // Page hero: the shared Panel renders its title as an h3 by
                 // default (right for cards, wrong for a page's main heading).
                 title_h1: true,
+                // The content tags sit in the heading and wrap with it, which
+                // keeps them apart from the measured chips below.
+                title_trailing: rsx! {
+                    for (i, tag) in project.tags.iter().enumerate() {
+                        span { class: "tag title-tag tag-c{i % 4}", "{tag}" }
+                    }
+                },
                 actions: rsx! {
                     a {
                         href: "{project.repo_url}",
@@ -66,15 +73,6 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 },
                 p { class: "project-headline", "{project.headline}" }
                 Measured { repo_url: project.repo_url.to_string() }
-                if !project.tags.is_empty() {
-                    div { class: "tag-row",
-                        // Cycle the accent palette so the row reads like
-                        // zwipe's colored role chips.
-                        for (i, tag) in project.tags.iter().enumerate() {
-                            span { class: "tag tag-c{i % 4}", "{tag}" }
-                        }
-                    }
-                }
             }
 
             Panel {

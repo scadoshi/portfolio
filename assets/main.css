@@ -815,6 +815,18 @@ a.panel-action:visited {
     margin-bottom: 1rem;
 }
 
+/* Content tags inside the hero's heading, wrapping with the title text. Sized
+   down from the tag row so the title still leads. */
+.title-tag {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+}
+
 /* Sections now live inside panels; the page/band gap does the spacing. */
 .project-section {
     margin-bottom: 0;
