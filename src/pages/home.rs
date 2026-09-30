@@ -87,11 +87,19 @@ pub fn Home() -> Element {
                         }
                         // Where the numbers come from, as chips under the strip.
                         div { class: "tag-row stats-source",
-                            a { class: "tag tag-c0", href: "https://github.com/scadoshi/heron", "counted by heron" }
-                            a { class: "tag tag-c1", href: "https://github.com/scadoshi/steller", "cached in steller" }
+                            Link {
+                                class: "tag tag-c0",
+                                to: Route::SideQuestDetail { slug: "heron".to_string() },
+                                "counted by heron"
+                            }
+                            Link {
+                                class: "tag tag-c0",
+                                to: Route::ProjectDetail { slug: "steller".to_string() },
+                                "cached in steller"
+                            }
                             match source {
-                                stats::Source::Live => rsx! { span { class: "tag tag-c2", "live" } },
-                                stats::Source::AsOf(day) => rsx! { span { class: "tag tag-c3", "as of {day}" } },
+                                stats::Source::Live => rsx! { span { class: "tag tag-c0", "live" } },
+                                stats::Source::AsOf(day) => rsx! { span { class: "tag tag-c0", "as of {day}" } },
                             }
                         }
                     }

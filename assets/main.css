@@ -791,7 +791,9 @@ a.panel-action:visited {
     opacity: 0.7;
 }
 
-/* The source chips sit under the strip, centered with it. */
+/* The source chips sit under the strip, centered with it, in the primary
+   accent. The linked ones lift on hover like zite's chips; hover only on
+   devices that have one, since a WebView hover can stick after a tap. */
 .stats-source {
     justify-content: center;
     margin-top: 1.25rem;
@@ -799,6 +801,16 @@ a.panel-action:visited {
 
 .stats-source a.tag {
     text-decoration: none;
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease;
+}
+
+@media (hover: hover) {
+    .stats-source a.tag:hover {
+        transform: translateY(-2px) scale(1.04);
+        border-color: var(--accent-primary);
+    }
 }
 
 /* === Project Detail === */
