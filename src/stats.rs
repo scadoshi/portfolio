@@ -75,6 +75,26 @@ pub struct RepoStats {
     pub counts: Option<Counts>,
 }
 
+/// One day of the contribution calendar.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+pub struct Day {
+    /// `YYYY-MM-DD`.
+    pub date: String,
+    pub count: u32,
+    /// 0 for none through 4 for the top quartile, GitHub's own shading.
+    pub level: u8,
+}
+
+/// A year of contributions on GitHub across every repository, as the profile
+/// page draws it.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+pub struct Calendar {
+    pub login: String,
+    pub total: u32,
+    /// Oldest first, without gaps.
+    pub days: Vec<Day>,
+}
+
 /// The body of heron's `GET /stats`.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct Snapshot {
@@ -82,6 +102,10 @@ pub struct Snapshot {
     pub generated_at: String,
     pub totals: Totals,
     pub repos: Vec<RepoStats>,
+    /// `None` in an answer from before heron served it, or when heron could
+    /// not read it.
+    #[serde(default)]
+    pub calendar: Option<Calendar>,
 }
 
 impl Snapshot {
@@ -135,6 +159,16 @@ pub fn chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>>
 /// The totals and where they came from.
 pub fn totals(live: Option<&Snapshot>) -> Option<(Totals, Source)> {
     current(live).map(|(snapshot, source)| (snapshot.totals.clone(), source))
+}
+
+/// The contribution calendar and where it came from, when the current snapshot
+/// has one.
+pub fn calendar(live: Option<&Snapshot>) -> Option<(&Calendar, Source)> {
+    let (snapshot, source) = current(live)?;
+    snapshot
+        .calendar
+        .as_ref()
+        .map(|calendar| (calendar, source))
 }
 
 /// Line, test and lint chips for a card, when the current snapshot has measured
@@ -292,6 +326,7 @@ mod tests {
                     measured_at: "2026-10-01T08:58:00Z".to_string(),
                 }),
             }],
+            calendar: None,
         };
         let (totals, source) = totals(Some(&live)).expect("live totals");
         assert_eq!(totals.commits, 4242);

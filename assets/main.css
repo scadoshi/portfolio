@@ -1340,3 +1340,49 @@ rect.fleet-bar {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
+
+/* === Home: the contribution heatmap === */
+
+.heatmap {
+    margin-top: 1.25rem;
+}
+
+.heatmap-grid {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+}
+
+.heatmap-label {
+    fill: var(--text-muted);
+    font-size: 9px;
+}
+
+/* GitHub's five shades, in the primary accent: the empty cell is a faint
+   outline, the rest rise to the full color. */
+.heatmap-cell {
+    fill: var(--border-secondary);
+}
+
+.heat-1 {
+    fill: color-mix(in srgb, var(--accent-primary) 30%, var(--bg-primary));
+}
+
+.heat-2 {
+    fill: color-mix(in srgb, var(--accent-primary) 55%, var(--bg-primary));
+}
+
+.heat-3 {
+    fill: color-mix(in srgb, var(--accent-primary) 80%, var(--bg-primary));
+}
+
+.heat-4 {
+    fill: var(--accent-primary);
+}
+
+.heatmap-caption {
+    margin: 0.75rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}

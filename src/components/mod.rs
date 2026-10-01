@@ -4,6 +4,7 @@ pub mod fleet;
 pub mod flow;
 pub mod footer;
 pub mod gallery;
+pub mod heatmap;
 pub mod linked_text;
 pub mod measured;
 pub mod navbar;

@@ -3,7 +3,7 @@ use zwipe_components::{Banner, Panel};
 
 use crate::{
     Route,
-    components::{page_meta::PageMeta, project_card::ProjectCard},
+    components::{heatmap::Heatmap, page_meta::PageMeta, project_card::ProjectCard},
     data, stats,
 };
 
@@ -99,6 +99,9 @@ pub fn Home() -> Element {
                                 stats::Source::AsOf(day) => rsx! { span { class: "tag tag-c0", "as of {day}" } },
                             }
                         }
+                        // The year of contributions, from the same answer.
+                        hr { class: "hero-rule" }
+                        Heatmap {}
                     }
                 }
             }

@@ -1,0 +1,261 @@
+use dioxus::prelude::*;
+
+use crate::stats::{self, Day, with_separators};
+
+/// Cell size and the gap between cells, in SVG units.
+const CELL: f64 = 11.0;
+const GAP: f64 = 2.0;
+const STEP: f64 = CELL + GAP;
+/// Room on the left for the weekday labels and on top for the months.
+const LEFT: f64 = 28.0;
+const TOP: f64 = 16.0;
+
+/// Days since 1970-01-01 for a `YYYY-MM-DD` date, or `None` when it does not
+/// parse. Howard Hinnant's days-from-civil, which needs no calendar crate.
+fn days_from_civil(date: &str) -> Option<i64> {
+    let mut parts = date.split('-').map(|part| part.parse::<i64>().ok());
+    let (y, m, d) = (parts.next()??, parts.next()??, parts.next()??);
+    if !(1..=12).contains(&m) || !(1..=31).contains(&d) {
+        return None;
+    }
+    let y = if m <= 2 { y - 1 } else { y };
+    let era = if y >= 0 { y } else { y - 399 } / 400;
+    let yoe = y - era * 400;
+    let mp = (m + 9) % 12;
+    let doy = (153 * mp + 2) / 5 + d - 1;
+    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+    Some(era * 146_097 + doe - 719_468)
+}
+
+/// 0 for Sunday through 6 for Saturday. 1970-01-01 was a Thursday.
+fn weekday(days: i64) -> i64 {
+    (days + 4).rem_euclid(7)
+}
+
+/// One cell of the grid.
+struct Cell {
+    column: usize,
+    row: usize,
+    level: u8,
+    date: String,
+    count: u32,
+}
+
+/// Columns a month label needs before the next one, so two never touch.
+const LABEL_SPAN: usize = 3;
+
+/// Where each day sits: columns are weeks starting on Sunday, rows are
+/// weekdays, like GitHub's own grid. A month label marks the first column
+/// whose first day falls in a new month, unless the next month starts within
+/// `LABEL_SPAN` columns, which is how a year's partial first month goes unlabeled.
+fn layout(days: &[Day]) -> (Vec<Cell>, Vec<(usize, &'static str)>) {
+    let Some(first) = days.first().and_then(|day| days_from_civil(&day.date)) else {
+        return (Vec::new(), Vec::new());
+    };
+    let first_sunday = first - weekday(first);
+    let mut cells = Vec::with_capacity(days.len());
+    let mut months = Vec::new();
+    let mut last_month = None;
+    for day in days {
+        let Some(serial) = days_from_civil(&day.date) else {
+            continue;
+        };
+        let column = usize::try_from((serial - first_sunday) / 7).unwrap_or(0);
+        let row = usize::try_from(weekday(serial)).unwrap_or(0);
+        let month = day.date.get(5..7).unwrap_or("");
+        if row == 0 && Some(month) != last_month {
+            if let Some(name) = month_name(month) {
+                if months
+                    .last()
+                    .is_some_and(|(previous, _)| column < previous + LABEL_SPAN)
+                {
+                    months.pop();
+                }
+                months.push((column, name));
+            }
+            last_month = Some(month);
+        }
+        cells.push(Cell {
+            column,
+            row,
+            level: day.level.min(4),
+            date: day.date.clone(),
+            count: day.count,
+        });
+    }
+    (cells, months)
+}
+
+fn month_name(month: &str) -> Option<&'static str> {
+    Some(match month {
+        "01" => "Jan",
+        "02" => "Feb",
+        "03" => "Mar",
+        "04" => "Apr",
+        "05" => "May",
+        "06" => "Jun",
+        "07" => "Jul",
+        "08" => "Aug",
+        "09" => "Sep",
+        "10" => "Oct",
+        "11" => "Nov",
+        "12" => "Dec",
+        _ => return None,
+    })
+}
+
+/// A count as a coordinate. Weeks and weekdays are tiny, nothing is lost.
+#[allow(clippy::cast_precision_loss)]
+fn px(n: usize) -> f64 {
+    n as f64
+}
+
+/// The last year of contributions on GitHub as the profile's grid, drawn from
+/// the same snapshot the numbers above it use. Renders nothing without one.
+#[component]
+pub fn Heatmap() -> Element {
+    let live = use_context::<stats::Live>();
+    let live = live.read();
+    let Some((calendar, source)) = stats::calendar(live.as_ref()) else {
+        return rsx! {};
+    };
+    let (cells, months) = layout(&calendar.days);
+    let Some(columns) = cells.iter().map(|cell| cell.column + 1).max() else {
+        return rsx! {};
+    };
+    let width = LEFT + px(columns) * STEP;
+    let height = TOP + 7.0 * STEP;
+    let caption = match source {
+        stats::Source::Live => format!(
+            "{} contributions on GitHub in the last year, every repository counted",
+            with_separators(u64::from(calendar.total))
+        ),
+        stats::Source::AsOf(day) => format!(
+            "{} contributions on GitHub in the year to {day}, every repository counted",
+            with_separators(u64::from(calendar.total))
+        ),
+    };
+
+    rsx! {
+        div { class: "heatmap",
+            svg {
+                class: "heatmap-grid",
+                view_box: "0 0 {width} {height}",
+                role: "img",
+                "aria-label": "{caption}",
+                for (column, name) in months.iter() {
+                    text {
+                        key: "m{column}",
+                        class: "heatmap-label",
+                        x: "{LEFT + px(*column) * STEP}",
+                        y: "{TOP - 5.0}",
+                        "{name}"
+                    }
+                }
+                for (row, name) in [(1usize, "Mon"), (3, "Wed"), (5, "Fri")] {
+                    text {
+                        key: "d{row}",
+                        class: "heatmap-label",
+                        x: "0",
+                        y: "{TOP + px(row) * STEP + CELL - 2.0}",
+                        "{name}"
+                    }
+                }
+                for cell in cells.iter() {
+                    rect {
+                        key: "{cell.date}",
+                        class: "heatmap-cell heat-{cell.level}",
+                        x: "{LEFT + px(cell.column) * STEP}",
+                        y: "{TOP + px(cell.row) * STEP}",
+                        width: "{CELL}",
+                        height: "{CELL}",
+                        rx: "2",
+                        title { "{cell.count} on {cell.date}" }
+                    }
+                }
+            }
+            p { class: "heatmap-caption", "{caption}" }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn dates_turn_into_days_and_weekdays() {
+        assert_eq!(days_from_civil("1970-01-01"), Some(0));
+        assert_eq!(weekday(0), 4, "a Thursday");
+        assert_eq!(
+            days_from_civil("2026-10-01").map(weekday),
+            Some(4),
+            "a Thursday"
+        );
+        assert_eq!(
+            days_from_civil("2026-09-27").map(weekday),
+            Some(0),
+            "a Sunday"
+        );
+        assert_eq!(days_from_civil("2024-02-29"), Some(19_782));
+        assert_eq!(days_from_civil("2026-13-01"), None);
+        assert_eq!(days_from_civil("soon"), None);
+    }
+
+    #[test]
+    fn the_grid_starts_on_the_first_days_sunday_and_marks_months() {
+        let day = |date: &str, level| Day {
+            date: date.to_string(),
+            count: u32::from(level),
+            level,
+        };
+        // 2026-09-30 is a Wednesday, so the first column starts on Sunday the
+        // 27th and the Thursday after lands in the same column; Sunday the 4th
+        // opens the next one, and October's label goes on it.
+        let days = [
+            day("2026-09-30", 1),
+            day("2026-10-01", 2),
+            day("2026-10-04", 3),
+            day("2026-10-11", 0),
+        ];
+        let (cells, months) = layout(&days);
+        let placed: Vec<(usize, usize, u8)> = cells
+            .iter()
+            .map(|cell| (cell.column, cell.row, cell.level))
+            .collect();
+        assert_eq!(placed, [(0, 3, 1), (0, 4, 2), (1, 0, 3), (2, 0, 0)]);
+        assert_eq!(months, [(1, "Oct")]);
+    }
+
+    #[test]
+    fn a_partial_first_month_gives_its_label_up_to_the_next() {
+        let day = |date: &str| Day {
+            date: date.to_string(),
+            count: 0,
+            level: 0,
+        };
+        // Sunday 2026-09-27 opens September's only column; October starts the
+        // very next column, so "Sep" would sit on top of "Oct".
+        let days = [
+            day("2026-09-27"),
+            day("2026-10-04"),
+            day("2026-10-11"),
+            day("2026-10-18"),
+            day("2026-10-25"),
+            day("2026-11-01"),
+        ];
+        let (_, months) = layout(&days);
+        assert_eq!(months, [(1, "Oct"), (5, "Nov")]);
+    }
+
+    #[test]
+    fn a_level_past_four_is_drawn_as_four() {
+        let days = [Day {
+            date: "2026-10-04".to_string(),
+            count: 99,
+            level: 9,
+        }];
+        let (cells, _) = layout(&days);
+        assert_eq!(cells[0].level, 4);
+    }
+}
