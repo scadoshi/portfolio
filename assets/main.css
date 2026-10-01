@@ -1344,7 +1344,20 @@ rect.fleet-bar {
 /* === Home: the contribution heatmap === */
 
 .heatmap {
+    position: relative;
     margin-top: 1.25rem;
+}
+
+/* The hover chip: anchored just above the point it describes, in the same
+   tag style as the chips over the grid. Not interactive itself, so it never
+   steals the hover from the cell under it. */
+.heatmap-tip {
+    position: absolute;
+    transform: translate(-50%, calc(-100% - 0.4rem));
+    background-color: var(--bg-primary);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1;
 }
 
 .heatmap-grid {
@@ -1359,8 +1372,8 @@ rect.fleet-bar {
     font-size: 9px;
 }
 
-/* A month label carries the month's total as its hover title. */
-.heatmap-month {
+.heatmap-month,
+.heatmap-cell {
     cursor: default;
 }
 

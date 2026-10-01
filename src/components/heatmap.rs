@@ -134,11 +134,26 @@ fn px(n: usize) -> f64 {
     n as f64
 }
 
+/// What the hover chip says and where it sits, as a fraction of the grid's
+/// width and height so it follows the grid at any size.
+#[derive(Clone, PartialEq)]
+struct Tip {
+    text: String,
+    left: f64,
+    top: f64,
+}
+
+fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
+    tip.set(Some(Tip { text, left, top }));
+}
+
 /// The last year of contributions on GitHub as the profile's grid, drawn from
 /// the same snapshot the numbers above it use. Renders nothing without one.
+/// Hovering (or tapping) a cell or a month label shows its count in a chip.
 #[component]
 pub fn Heatmap() -> Element {
     let live = use_context::<stats::Live>();
+    let mut tip: Signal<Option<Tip>> = use_signal(|| None);
     let live = live.read();
     let Some((calendar, source)) = stats::calendar(live.as_ref()) else {
         return rsx! {};
@@ -149,6 +164,10 @@ pub fn Heatmap() -> Element {
     };
     let width = LEFT + px(columns) * STEP;
     let height = TOP + 7.0 * STEP;
+    // A chip anchored at an SVG point, as percentages of the grid.
+    let tip_at = move |text: String, x: f64, y: f64| {
+        show(tip, text, x / width * 100.0, y / height * 100.0);
+    };
     let caption = match source {
         stats::Source::Live => format!(
             "{} contributions on GitHub in the last year, every repository counted",
@@ -162,19 +181,29 @@ pub fn Heatmap() -> Element {
 
     rsx! {
         div { class: "heatmap",
+            onmouseleave: move |_| tip.set(None),
             svg {
                 class: "heatmap-grid",
                 view_box: "0 0 {width} {height}",
                 role: "img",
                 "aria-label": "{caption}",
                 for month in months.iter() {
-                    text {
-                        key: "m{month.column}",
-                        class: "heatmap-label heatmap-month",
-                        x: "{LEFT + px(month.column) * STEP}",
-                        y: "{TOP - 5.0}",
-                        title { "{with_separators(u64::from(month.total))} in {month.name}" }
-                        "{month.name}"
+                    {
+                        let x = LEFT + px(month.column) * STEP;
+                        let text = format!("{} in {}", with_separators(u64::from(month.total)), month.name);
+                        let enter = text.clone();
+                        let tap = text;
+                        rsx! {
+                            text {
+                                key: "m{month.column}",
+                                class: "heatmap-label heatmap-month",
+                                x: "{x}",
+                                y: "{TOP - 5.0}",
+                                onmouseenter: move |_| tip_at(enter.clone(), x, TOP - 5.0),
+                                onclick: move |_| tip_at(tap.clone(), x, TOP - 5.0),
+                                "{month.name}"
+                            }
+                        }
                     }
                 }
                 for (row, name) in [(1usize, "Mon"), (3, "Wed"), (5, "Fri")] {
@@ -187,16 +216,33 @@ pub fn Heatmap() -> Element {
                     }
                 }
                 for cell in cells.iter() {
-                    rect {
-                        key: "{cell.date}",
-                        class: "heatmap-cell heat-{cell.level}",
-                        x: "{LEFT + px(cell.column) * STEP}",
-                        y: "{TOP + px(cell.row) * STEP}",
-                        width: "{CELL}",
-                        height: "{CELL}",
-                        rx: "2",
-                        title { "{cell.count} on {cell.date}" }
+                    {
+                        let x = LEFT + px(cell.column) * STEP;
+                        let y = TOP + px(cell.row) * STEP;
+                        let text = format!("{} on {}", cell.count, cell.date);
+                        let enter = text.clone();
+                        let tap = text;
+                        rsx! {
+                            rect {
+                                key: "{cell.date}",
+                                class: "heatmap-cell heat-{cell.level}",
+                                x: "{x}",
+                                y: "{y}",
+                                width: "{CELL}",
+                                height: "{CELL}",
+                                rx: "2",
+                                onmouseenter: move |_| tip_at(enter.clone(), x + CELL / 2.0, y),
+                                onclick: move |_| tip_at(tap.clone(), x + CELL / 2.0, y),
+                            }
+                        }
                     }
+                }
+            }
+            if let Some(tip) = tip() {
+                span {
+                    class: "tag tag-c0 heatmap-tip",
+                    style: "left: {tip.left}%; top: {tip.top}%;",
+                    "{tip.text}"
                 }
             }
             p { class: "heatmap-caption", "{caption}" }
