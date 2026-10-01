@@ -1505,21 +1505,3 @@ rect.fleet-bar {
     font-size: 0.85rem;
 }
 
-.commits-rows {
-    position: relative;
-    margin-top: 1.25rem;
-}
-
-.commits-name {
-    fill: var(--text-primary);
-    font-size: 12px;
-}
-
-.commits-row-line {
-    stroke-width: 1.5;
-}
-
-.commits-peak {
-    fill: var(--text-muted);
-    font-size: 9px;
-}
