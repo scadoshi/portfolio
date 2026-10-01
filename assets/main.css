@@ -131,7 +131,7 @@
     white-space: pre;
     text-align: left;
     display: inline-block;
-    color: var(--text-primary);
+    color: var(--logo);
     margin: 0 0 1.5rem;
     font-weight: normal;
     animation: logo-enter 0.6s ease-out backwards;
@@ -1361,10 +1361,16 @@ rect.fleet-bar {
     margin-inline: auto;
 }
 
-/* .theme-wrapper outranks the shared sheet's own .diagram width. */
-.fleet-chart,
-.theme-wrapper .diagram {
+.fleet-chart {
     width: 90%;
+    margin-inline: auto;
+}
+
+/* The flow diagram is boxes and arrows, not a figure to read values off,
+   so it sits smaller still. .theme-wrapper outranks the shared sheet's own
+   .diagram width. */
+.theme-wrapper .diagram {
+    width: 80%;
     margin-inline: auto;
 }
 
