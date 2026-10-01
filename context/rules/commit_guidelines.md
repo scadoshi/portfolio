@@ -36,12 +36,12 @@ cargo clippy --target wasm32-unknown-unknown -- -D warnings
 
 ### 3. Tests
 ```bash
-PORTFOLIO_REPOS=~/Developer cargo test
+cargo test
 ```
-`PORTFOLIO_REPOS` makes `counts_match_the_local_clones` compare `src/counts.json`
-with the clones in that directory; CI leaves it unset and skips the comparison.
-When it fails, `PORTFOLIO_WRITE_COUNTS=1` with the same command rewrites the file,
-and the rewrite goes in the commit.
+`every_project_on_the_site_is_measured_in_the_snapshot` fails when a project is in
+`data.rs` but not in `src/stats.json` with counts. Add the repository to heron's
+`GITHUB_REPOS`, then refresh the snapshot the way the deploy does:
+`curl -fsS https://api.scadoshi.dev/stats | jq . > src/stats.json`.
 
 Mostly markup, so the bar for a new test is high: real logic (parsing, non-trivial
 data transforms) or a guardrail on something hand-maintained that has already

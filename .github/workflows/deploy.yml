@@ -84,7 +84,7 @@ jobs:
         # repository. One it could not resolve would drop a project's numbers.
         run: |
           if curl -fsS --max-time 20 https://api.scadoshi.dev/stats -o stats.new \
-            && jq -e '(.repos | length > 0) and (.unavailable | length == 0)' stats.new > /dev/null; then
+            && jq -e '(.repos | length > 0) and (.unavailable | length == 0) and all(.repos[]; .counts != null)' stats.new > /dev/null; then
             mv stats.new src/stats.json
             echo "refreshed: $(jq -c .totals src/stats.json)"
           else

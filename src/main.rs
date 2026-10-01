@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
 
 mod components;
-mod counts;
 mod data;
 mod pages;
 mod stats;

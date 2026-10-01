@@ -15,10 +15,8 @@ build themselves from the same data.
 src/
   main.rs            Route enum, App, the head tags, static_routes() for SSG
   data.rs            every Project and Snippet; the two ordering functions
-  stats.rs           GitHub numbers from heron: baked stats.json, live fetch after load
+  stats.rs           every number from heron: baked stats.json, live fetch after load
   stats.json         heron's answer, replaced before each build
-  counts.rs          lines, tests and clippy lints per repo, read from counts.json
-  counts.json        measured from the local clones by a test, refreshed before a commit
   theme_store.rs     localStorage theme persistence, no-ops on the server build
   components/        navbar, footer, project_card, gallery, code_block,
                      linked_text, page_meta
@@ -58,9 +56,9 @@ A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as
 
 ## Source counts
 
-Lines, test functions and configured clippy lints per repository are in `src/counts.json`, rendered under the commit line on every card by `src/counts.rs`. GitHub's API has none of them, so they are measured from the clones on this machine: `PORTFOLIO_REPOS=~/Developer cargo test` fails when the file is behind a clone, and `PORTFOLIO_WRITE_COUNTS=1` rewrites it. The measure is what the source says, not what `cargo test` prints: every `#[test]`-style attribute counts as one test, every line of every `.rs` (or `.cs`) file outside build directories counts, and every clippy entry set to warn or deny counts as a lint.
+Lines, test functions and configured clippy lints per repository come in heron's `counts` field in the same `GET /stats` answer as the commits, measured by heron from a tarball of each repository's default branch after every push, and rendered under the commit line on every card. The same two sources apply as for commits: the live answer after the page loads, else the `stats.json` baked at build, which the deploy workflow refreshes from heron and only replaces when every repository in the answer is measured. For rustmas and sharpmas that is `main`, the template branch, not the solution branches.
 
-Because the numbers come from that file, the copy in `data.rs` never types one. `no_summary_field_types_a_count_by_hand` fails the build if a headline, summary, metric, progress or card bullet says "N tests" or "N lines". The narrative fields are free to.
+Because the numbers come from heron, the copy in `data.rs` never types one. `no_summary_field_types_a_count_by_hand` fails the build if a headline, summary, metric, progress or card bullet says "N tests" or "N lines". The narrative fields are free to.
 
 ## Build and deploy
 

@@ -1,5 +1,7 @@
-//! GitHub numbers for each project, served by heron
-//! (<https://github.com/scadoshi/heron>).
+//! The numbers for each project, served by heron
+//! (<https://github.com/scadoshi/heron>): commits and the last push from GitHub,
+//! lines, tests and clippy lints measured by heron from each repository's default
+//! branch.
 //!
 //! Two sources, in order of preference. The page asks heron after it loads, and
 //! shows that answer as live. Until it arrives, or if it never does, the page shows
@@ -22,6 +24,40 @@ pub struct Totals {
     pub stars: u64,
 }
 
+/// What heron counted in a repository's source. `language` is the name as heron
+/// prints it, `Rust` or `C#`.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+pub struct Counts {
+    pub language: String,
+    /// Lines in every source file, blanks and comments included.
+    pub lines: u64,
+    /// Test attributes, one per test function.
+    pub tests: u64,
+    /// Clippy lints set to warn or deny. `None` for C#.
+    pub clippy_lints: Option<u64>,
+}
+
+impl Counts {
+    /// Chips for a card: `6,102 lines of Rust`, `245 tests`, `13 clippy lints`. A
+    /// count of zero is left out.
+    pub fn chips(&self) -> Vec<String> {
+        let mut chips = vec![format!(
+            "{} lines of {}",
+            with_separators(self.lines),
+            self.language
+        )];
+        if self.tests > 0 {
+            let unit = if self.tests == 1 { "test" } else { "tests" };
+            chips.push(format!("{} {unit}", with_separators(self.tests)));
+        }
+        if let Some(lints) = self.clippy_lints.filter(|lints| *lints > 0) {
+            let unit = if lints == 1 { "lint" } else { "lints" };
+            chips.push(format!("{} clippy {unit}", with_separators(lints)));
+        }
+        chips
+    }
+}
+
 /// What heron reports for one repository. Only the fields the site shows.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct RepoStats {
@@ -31,6 +67,10 @@ pub struct RepoStats {
     pub commits: u64,
     /// RFC 3339 in UTC. `None` for a repository never pushed to.
     pub pushed_at: Option<String>,
+    /// `None` until heron's sweep has measured the repository, and in a snapshot
+    /// from before heron measured anything.
+    #[serde(default)]
+    pub counts: Option<Counts>,
 }
 
 /// The body of heron's `GET /stats`.
@@ -93,6 +133,15 @@ pub fn chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>>
 /// The totals and where they came from.
 pub fn totals(live: Option<&Snapshot>) -> Option<(Totals, Source)> {
     current(live).map(|(snapshot, source)| (snapshot.totals.clone(), source))
+}
+
+/// Line, test and lint chips for a card, when the current snapshot has measured
+/// the repository.
+pub fn count_chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>> {
+    current(live)
+        .and_then(|(snapshot, _)| snapshot.repo(repo_url))
+        .and_then(|stats| stats.counts.as_ref())
+        .map(Counts::chips)
 }
 
 /// Asks heron for the live numbers. `None` on any failure.
@@ -233,6 +282,12 @@ mod tests {
                 repo: "scadoshi/steller".to_string(),
                 commits: 4242,
                 pushed_at: Some("2026-10-01T08:59:00Z".to_string()),
+                counts: Some(Counts {
+                    language: "Rust".to_string(),
+                    lines: 6200,
+                    tests: 250,
+                    clippy_lints: Some(14),
+                }),
             }],
         };
         let (totals, source) = totals(Some(&live)).expect("live totals");
@@ -250,6 +305,123 @@ mod tests {
             chips_for(Some(&live), "https://github.com/scadoshi/zwipe"),
             None
         );
+        // Measured live, the counts come from heron.
+        assert_eq!(
+            count_chips_for(Some(&live), "https://github.com/scadoshi/steller"),
+            Some(vec![
+                "6,200 lines of Rust".to_string(),
+                "250 tests".to_string(),
+                "14 clippy lints".to_string()
+            ])
+        );
+    }
+
+    #[test]
+    fn counts_come_from_the_baked_snapshot_without_a_live_answer() {
+        let steller = "https://github.com/scadoshi/steller";
+        let baked_chips = baked()
+            .repo(steller)
+            .and_then(|stats| stats.counts.as_ref())
+            .map(Counts::chips);
+        assert!(baked_chips.is_some());
+        assert_eq!(count_chips_for(None, steller), baked_chips);
+        // A live answer that has not measured the repository yet shows no counts
+        // rather than mixing in the build's.
+        let mut live = baked().clone();
+        for repo in &mut live.repos {
+            repo.counts = None;
+        }
+        assert_eq!(count_chips_for(Some(&live), steller), None);
+    }
+
+    /// heron measures every repository within seconds of starting, and the deploy
+    /// workflow only bakes an answer in which every repository is measured.
+    #[test]
+    fn every_project_on_the_site_is_measured_in_the_snapshot() {
+        let unmeasured: Vec<&str> = featured_projects()
+            .iter()
+            .chain(side_quests())
+            .filter(|project| {
+                baked()
+                    .repo(project.repo_url)
+                    .is_none_or(|stats| stats.counts.is_none())
+            })
+            .map(|project| project.repo_url)
+            .collect();
+        assert!(
+            unmeasured.is_empty(),
+            "not measured by heron: {unmeasured:?}"
+        );
+    }
+
+    #[test]
+    fn count_chips_leave_out_a_zero() {
+        let counts = |language: &str, lines, tests, clippy_lints| Counts {
+            language: language.to_string(),
+            lines,
+            tests,
+            clippy_lints,
+        };
+        assert_eq!(
+            counts("Rust", 6102, 245, Some(13)).chips(),
+            ["6,102 lines of Rust", "245 tests", "13 clippy lints"]
+        );
+        assert_eq!(
+            counts("Rust", 1, 1, Some(1)).chips(),
+            ["1 lines of Rust", "1 test", "1 clippy lint"]
+        );
+        assert_eq!(
+            counts("Rust", 155, 0, Some(0)).chips(),
+            ["155 lines of Rust"]
+        );
+        assert_eq!(
+            counts("C#", 2600, 62, None).chips(),
+            ["2,600 lines of C#", "62 tests"]
+        );
+    }
+
+    /// The counts come from heron, so a number typed into the copy would drift
+    /// from them. `obstacles` and the snippets are free to tell a story with a
+    /// number in it, since those are about a moment rather than the repo now.
+    #[test]
+    fn no_summary_field_types_a_count_by_hand() {
+        let is_count = |text: &str| {
+            text.split(|c: char| !c.is_alphanumeric() && c != ',' && c != '~' && c != '+')
+                .collect::<Vec<_>>()
+                .windows(2)
+                .any(|pair| {
+                    let number = pair[0].trim_start_matches('~').trim_end_matches('+');
+                    let unit = pair[1].trim_end_matches(',');
+                    !number.is_empty()
+                        && number.chars().all(|c| c.is_ascii_digit() || c == ',')
+                        && matches!(
+                            unit,
+                            "test" | "tests" | "line" | "lines" | "LOC" | "lint" | "lints"
+                        )
+                })
+        };
+        let mut typed = Vec::new();
+        for project in featured_projects().iter().chain(side_quests()) {
+            let fields = [
+                ("headline", project.headline),
+                ("summary", project.summary),
+                ("impact_metric", project.impact_metric),
+                ("objective", project.objective),
+                ("progress", project.progress),
+                ("impact", project.impact),
+            ];
+            for (field, text) in fields {
+                if is_count(text) {
+                    typed.push(format!("{}.{field}", project.slug));
+                }
+            }
+            for bullet in project.card_bullets.iter().chain(project.approach) {
+                if is_count(bullet) {
+                    typed.push(format!("{}: {bullet}", project.slug));
+                }
+            }
+        }
+        assert!(typed.is_empty(), "counts typed by hand: {typed:#?}");
     }
 
     #[test]
@@ -273,6 +445,7 @@ mod tests {
             repo: "a/b".to_string(),
             commits,
             pushed_at: pushed_at.map(ToString::to_string),
+            counts: None,
         };
         assert_eq!(
             stats(2968, Some("2026-09-29T12:13:17Z")).chips(),

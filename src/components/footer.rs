@@ -27,9 +27,9 @@ pub fn Footer() -> Element {
                     href: "https://github.com/scadoshi/portfolio",
                     "This site"
                 }
-                " is Rust, compiled to WebAssembly via Dioxus. Every number on it is measured. Commits come from "
+                " is Rust, compiled to WebAssembly via Dioxus. Every number on it is measured. Commits, lines, tests and lints come from "
                 a { href: "https://github.com/scadoshi/heron", "heron" }
-                " while you read; lines, tests and lints are counted from the repositories before each commit, and a test fails if one is typed by hand."
+                " while you read, counted from each repository's main branch after every push; the build bakes in heron's last answer as the fallback, and a test fails if a number is typed by hand."
             }
         }
     }

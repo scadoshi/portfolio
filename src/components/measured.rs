@@ -1,17 +1,22 @@
 use dioxus::prelude::*;
 
-use crate::{counts, stats};
+use crate::stats;
 
 /// The measured numbers for one repository as a row of chips: commits and last
-/// push from heron, then lines, tests and clippy lints from `counts.json`.
-/// Renders nothing when neither source knows the repository.
+/// push, then lines, tests and clippy lints, all from heron. Renders nothing when
+/// the current snapshot does not know the repository.
 #[component]
 pub fn Measured(repo_url: String) -> Element {
     let live = use_context::<stats::Live>();
-    let chips: Vec<String> = stats::chips_for(live.read().as_ref(), &repo_url)
+    let live = live.read();
+    let chips: Vec<String> = stats::chips_for(live.as_ref(), &repo_url)
         .into_iter()
         .flatten()
-        .chain(counts::chips_for(&repo_url).into_iter().flatten())
+        .chain(
+            stats::count_chips_for(live.as_ref(), &repo_url)
+                .into_iter()
+                .flatten(),
+        )
         .collect();
     if chips.is_empty() {
         return rsx! {};
