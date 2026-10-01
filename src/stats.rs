@@ -16,12 +16,24 @@ use std::sync::LazyLock;
 
 const SNAPSHOT: &str = include_str!("stats.json");
 
+/// Commits in one week.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+pub struct WeekCommits {
+    /// The Sunday the week starts on, `YYYY-MM-DD`.
+    pub week: String,
+    pub commits: u32,
+}
+
 /// Sums across every repository in the snapshot.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct Totals {
     pub repos: u32,
     pub commits: u64,
     pub stars: u64,
+    /// Commits per week across the repositories, oldest first. Empty in an
+    /// answer from before heron served it.
+    #[serde(default)]
+    pub weekly_commits: Vec<WeekCommits>,
 }
 
 /// What heron counted in a repository's source. `language` is the name as heron
@@ -159,6 +171,16 @@ pub fn chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>>
 /// The totals and where they came from.
 pub fn totals(live: Option<&Snapshot>) -> Option<(Totals, Source)> {
     current(live).map(|(snapshot, source)| (snapshot.totals.clone(), source))
+}
+
+/// Commits per week across every repository, oldest first, and where they came
+/// from. `None` when the current snapshot has none.
+pub fn weekly_commits(live: Option<&Snapshot>) -> Option<(&[WeekCommits], Source)> {
+    let (snapshot, source) = current(live)?;
+    if snapshot.totals.weekly_commits.is_empty() {
+        return None;
+    }
+    Some((&snapshot.totals.weekly_commits, source))
 }
 
 /// The contribution calendar and where it came from, when the current snapshot
@@ -313,6 +335,7 @@ mod tests {
                 repos: 1,
                 commits: 4242,
                 stars: 7,
+                weekly_commits: Vec::new(),
             },
             repos: vec![RepoStats {
                 repo: "scadoshi/steller".to_string(),

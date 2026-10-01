@@ -1,5 +1,6 @@
 pub mod benchmark;
 pub mod code_block;
+pub mod commits;
 pub mod fleet;
 pub mod flow;
 pub mod footer;

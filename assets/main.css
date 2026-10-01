@@ -1351,13 +1351,25 @@ rect.fleet-bar {
 /* The hover chip: anchored just above the point it describes, in the same
    tag style as the chips over the grid. Not interactive itself, so it never
    steals the hover from the cell under it. */
-.heatmap-tip {
+.heatmap-tip,
+.commits-tip {
     position: absolute;
     transform: translate(-50%, calc(-100% - 0.4rem));
     background-color: var(--bg-primary);
     pointer-events: none;
     white-space: nowrap;
     z-index: 1;
+}
+
+/* Near an edge the chip hangs from its start or end instead of its middle. */
+.heatmap-tip.tip-start,
+.commits-tip.tip-start {
+    transform: translate(-0.5rem, calc(-100% - 0.4rem));
+}
+
+.heatmap-tip.tip-end,
+.commits-tip.tip-end {
+    transform: translate(calc(-100% + 0.5rem), calc(-100% - 0.4rem));
 }
 
 .heatmap-grid {
@@ -1414,4 +1426,59 @@ rect.fleet-bar {
     margin: 0.75rem 0 0;
     color: var(--text-muted);
     font-size: 0.8rem;
+}
+
+/* === Heron: commits week by week === */
+
+.commits {
+    position: relative;
+}
+
+.commits-chart {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+}
+
+.commits-grid {
+    stroke: var(--border-secondary);
+    stroke-width: 1;
+}
+
+.commits-tick {
+    fill: var(--text-muted);
+    font-size: 11px;
+}
+
+.commits-area {
+    fill: color-mix(in srgb, var(--accent-primary) 18%, transparent);
+}
+
+.commits-line {
+    fill: none;
+    stroke: var(--accent-primary);
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+.commits-dot {
+    fill: var(--accent-primary);
+}
+
+.commits-hit {
+    fill: transparent;
+    cursor: default;
+}
+
+@media (hover: hover) {
+    .commits-hit:hover + .commits-dot {
+        r: 4;
+    }
+}
+
+.commits-caption {
+    margin: 0.75rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
 }

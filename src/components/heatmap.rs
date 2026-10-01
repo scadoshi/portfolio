@@ -147,6 +147,18 @@ fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
     tip.set(Some(Tip { text, left, top }));
 }
 
+/// Which way the chip hangs off its point: centered in the middle of the
+/// chart, and from its edge near either side so it never leaves the panel.
+fn anchor(left: f64) -> &'static str {
+    if left < 15.0 {
+        "tip-start"
+    } else if left > 85.0 {
+        "tip-end"
+    } else {
+        ""
+    }
+}
+
 /// The last year of contributions on GitHub as the profile's grid, drawn from
 /// the same snapshot the numbers above it use. Renders nothing without one.
 /// Hovering (or tapping) a cell or a month label shows its count in a chip.
@@ -240,7 +252,7 @@ pub fn Heatmap() -> Element {
             }
             if let Some(tip) = tip() {
                 span {
-                    class: "tag tag-c0 heatmap-tip",
+                    class: "tag tag-c0 heatmap-tip {anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }

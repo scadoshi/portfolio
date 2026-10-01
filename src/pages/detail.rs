@@ -4,7 +4,7 @@ use zwipe_components::Panel;
 use crate::{
     Route,
     components::{
-        benchmark::Benchmark, code_block::CodeBlock, fleet::Fleet, flow::Flow,
+        benchmark::Benchmark, code_block::CodeBlock, commits::Commits, fleet::Fleet, flow::Flow,
         gallery::ProjectGallery, linked_text::LinkedText, measured::Measured, page_meta::PageMeta,
     },
     data,
@@ -46,6 +46,13 @@ fn project_panels(project: &'static data::Project) -> Element {
                 title: "What it is counting right now",
                 section { class: "project-section",
                     Fleet {}
+                }
+            }
+            Panel {
+                eyebrow: "Over time",
+                title: "Commits, week by week",
+                section { class: "project-section",
+                    Commits {}
                 }
             }
         },
