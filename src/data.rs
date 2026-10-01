@@ -1057,14 +1057,6 @@ const STELLER: Project = Project {
             caption: Some("Bad input gets an error and the session keeps going"),
             kind: MediaKind::Video,
         },
-        MediaItem {
-            src: asset!("/assets/projects/steller/06-benchmark-vs-redis.svg"),
-            alt: "SET throughput by client count, steller against Redis 8, from one to 256 clients",
-            caption: Some(
-                "Against Redis 8, median of three runs. Ahead under 32 clients, flat above it, and the process dies near 3,000",
-            ),
-            kind: MediaKind::Image,
-        },
     ],
     approach: &[
         "The parser is the framer. parse_one returns the frame plus whatever bytes are left over, and Incomplete is a real error variant rather than an Option, because the read loop leans on the difference between \"need more\" and \"malformed\"",

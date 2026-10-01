@@ -4,8 +4,8 @@ use zwipe_components::Panel;
 use crate::{
     Route,
     components::{
-        code_block::CodeBlock, fleet::Fleet, flow::Flow, gallery::ProjectGallery,
-        linked_text::LinkedText, measured::Measured, page_meta::PageMeta,
+        benchmark::Benchmark, code_block::CodeBlock, fleet::Fleet, flow::Flow,
+        gallery::ProjectGallery, linked_text::LinkedText, measured::Measured, page_meta::PageMeta,
     },
     data,
 };
@@ -28,28 +28,37 @@ fn approach_panel(project: &'static data::Project) -> Element {
     }
 }
 
-/// heron is the one project this site is a client of, so its page shows the path
-/// a number takes and what heron is measuring right now. Empty for every other
-/// project.
-fn heron_panels(project: &'static data::Project) -> Element {
-    if project.slug != "heron" {
-        return rsx! {};
-    }
-    rsx! {
-        Panel {
-            eyebrow: "Live",
-            title: "How a number gets here",
-            section { class: "project-section",
-                Flow {}
+/// Panels only one project has. heron is the project this site is a client of,
+/// so its page shows the path a number takes and what heron is measuring right
+/// now; steller's page shows its benchmark against Redis. Empty for the rest.
+fn project_panels(project: &'static data::Project) -> Element {
+    match project.slug {
+        "heron" => rsx! {
+            Panel {
+                eyebrow: "Live",
+                title: "How a number gets here",
+                section { class: "project-section",
+                    Flow {}
+                }
             }
-        }
-        Panel {
-            eyebrow: "Measured",
-            title: "What it is counting right now",
-            section { class: "project-section",
-                Fleet {}
+            Panel {
+                eyebrow: "Measured",
+                title: "What it is counting right now",
+                section { class: "project-section",
+                    Fleet {}
+                }
             }
-        }
+        },
+        "steller" => rsx! {
+            Panel {
+                eyebrow: "Measured",
+                title: "Against Redis 8",
+                section { class: "project-section",
+                    Benchmark {}
+                }
+            }
+        },
+        _ => rsx! {},
     }
 }
 
@@ -108,7 +117,7 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 }
             }
 
-            {heron_panels(project)}
+            {project_panels(project)}
 
             // Full width on its own: pairing it with the approach panel leaves
             // the gallery above dead space, and the media is 16:9 anyway.

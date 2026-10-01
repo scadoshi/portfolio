@@ -1307,3 +1307,88 @@ rect.fleet-bar {
 .fleet-caption {
     margin-top: 0.75rem;
 }
+
+/* === Steller: the benchmark against Redis === */
+
+.bench-commands {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.theme-wrapper .bench-commands .chip {
+    font: inherit;
+    font-size: 0.75rem;
+}
+
+@media (hover: hover) {
+    .theme-wrapper .bench-commands .chip:not(.selected):hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+    .theme-wrapper .bench-commands .chip:hover {
+        transform: translateY(-2px);
+    }
+}
+
+.bench-chart {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+}
+
+.bench-grid {
+    stroke: var(--border-secondary);
+    stroke-width: 1;
+}
+
+.bench-tick,
+.bench-axis {
+    fill: var(--text-muted);
+    font-size: 11px;
+}
+
+.bench-line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+.bench-dot {
+    fill: currentColor;
+}
+
+.bench-steller {
+    color: var(--accent-primary);
+}
+
+.bench-redis {
+    color: var(--accent-secondary);
+}
+
+.bench-legend {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.bench-key::before {
+    content: "";
+    display: inline-block;
+    width: 1.25rem;
+    height: 2px;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    background-color: currentColor;
+}
+
+.bench-caption {
+    margin: 0.75rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}

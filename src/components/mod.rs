@@ -1,3 +1,4 @@
+pub mod benchmark;
 pub mod code_block;
 pub mod fleet;
 pub mod flow;
