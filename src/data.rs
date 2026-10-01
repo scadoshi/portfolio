@@ -920,12 +920,13 @@ loop {
 const HERON: Project = Project {
     name: "Heron",
     slug: "heron",
-    headline: "My personal server. It serves the commit counts on this site, cached in steller.",
+    headline: "My personal server. Every number on this site is its answer: commits from GitHub, lines, tests and lints it measures itself, cached in steller.",
     category: "Production Service",
     repo_url: "https://github.com/scadoshi/heron",
-    summary: "Serves the commit counts on this site and caches them in steller.",
+    summary: "Serves every number on this site, measuring the ones GitHub does not have, cached in steller.",
     card_bullets: &[
-        "Axum, one crate. The domain never sees HTTP, GitHub or the clock",
+        "Axum, one crate. The domain never sees HTTP, GitHub, the filesystem or the clock",
+        "Lines, tests and lints counted from a tarball of each repository, downloaded only after a push and thrown away after",
         "The cache is a port: a map, steller, or steller with the map behind it",
         "RESP client written here, not a crate",
     ],
@@ -937,6 +938,7 @@ const HERON: Project = Project {
         "A snapshot carries its own freshness and the cache keeps it longer than that. When GitHub is down there is still something to serve, marked stale",
         "The cache cannot fail a request. A failed read is a miss, a failed write is logged, and the error type has no variant for either",
         "Repo names are a validated type. A path traversal or a smuggled header cannot be built, so no adapter has to check for one",
+        "Nothing is measured on request. A sweep on a timer compares GitHub's pushed_at with the last measurement and downloads only what moved, so a repository nobody touches is never fetched twice",
     ],
     snippets: &[
         Snippet {
@@ -963,23 +965,44 @@ const HERON: Project = Project {
         Snippet {
             title: "Three caches, one type",
             lang: "rust",
-            code: r"let (stats_service, health_service) = match config.cache_backend {
-    CacheBackend::Memory => services(github, MemoryCache::new(), settings),
-    CacheBackend::Steller(address) => services(github, StellerCache::new(address)?, settings),
+            code: r"let (stats_service, health_service, counts_service) = match config.cache_backend {
+    CacheBackend::Memory => {
+        services(github, tarball, MemoryCache::new(), settings, counts_settings)
+    }
+    CacheBackend::Steller(address) => services(
+        github,
+        tarball,
+        StellerCache::new(address)?,
+        settings,
+        counts_settings,
+    ),
     CacheBackend::Layered(address) => services(
         github,
+        tarball,
         LayeredCache::new(StellerCache::new(address)?, MemoryCache::new(), retain),
         settings,
+        counts_settings,
     ),
 };",
-            description: "Each arm builds a service of a different type and hands back the same Arc<dyn ErasedStatsService>. The backend is an environment variable.",
+            description: "Each arm builds services of a different type and hands back the same three Arc<dyn Erased…Service>. The backend is an environment variable.",
+        },
+        Snippet {
+            title: "When to measure again",
+            lang: "rust",
+            code: r"fn needs_measuring(cached: Option<&Snapshot<Counts>>, pushed_at: Option<DateTime<Utc>>) -> bool {
+    match cached {
+        None => true,
+        Some(snapshot) => pushed_at.is_some_and(|pushed_at| pushed_at > snapshot.fetched_at),
+    }
+}",
+            description: "The whole policy. GitHub already says when a repository was last pushed to, and the stats cache already holds that, so the sweep needs no clock of its own. A measurement with no known push behind it stands.",
         },
     ],
     obstacles: &[
         "steller rejected any command that reached it in more than one read. A 14-byte PING showed it on the production box, and it is fixed. It answered the leftovers too, so heron still hangs up after any rejection",
         "Every unit test passed with the fallback empty. After a restart the snapshots came from steller and nothing copied them into memory. Stopping steller for real is what showed it",
     ],
-    progress: "Live at api.scadoshi.dev on its own Hetzner box, behind a Cloudflare Tunnel, with steller beside it. This page asks it after loading; the numbers in the hero are its answer.",
+    progress: "Live at api.scadoshi.dev on its own Hetzner box, behind a Cloudflare Tunnel, with steller beside it. This page asks it after loading; the hero and every card are its answer. The first sweep measured all twelve repositories in seven seconds.",
     impact: "steller has a production workload, and a bug report it would not have had otherwise.",
     site_url: Some("https://api.scadoshi.dev/stats"),
     status: ProjectStatus::Doing,
