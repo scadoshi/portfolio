@@ -1344,8 +1344,13 @@ rect.fleet-bar {
 /* === Home: the contribution heatmap === */
 
 .heatmap {
-    position: relative;
     margin-top: 1.25rem;
+}
+
+/* Holds a chart and its hover chip, and nothing else, so the chip's
+   percentages measure the chart. */
+.chart-plot {
+    position: relative;
 }
 
 /* The hover chip: anchored just above the point it describes, in the same
@@ -1451,10 +1456,6 @@ rect.fleet-bar {
 }
 
 /* === Heron: commits week by week === */
-
-.commits {
-    position: relative;
-}
 
 .commits-chart {
     display: block;

@@ -193,7 +193,9 @@ pub fn Heatmap() -> Element {
 
     rsx! {
         div { class: "heatmap",
-            onmouseleave: move |_| tip.set(None),
+            // The chip is placed by percentages of the grid, so it lives in a
+            // wrapper that holds only the grid.
+            div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
             svg {
                 class: "heatmap-grid",
                 view_box: "0 0 {width} {height}",
@@ -256,6 +258,7 @@ pub fn Heatmap() -> Element {
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }
+            }
             }
             p { class: "heatmap-caption", "{caption}" }
         }
