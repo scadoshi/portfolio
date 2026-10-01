@@ -1,7 +1,31 @@
 use dioxus::prelude::*;
 use zwipe_components::Chip;
 
-use crate::components::curve::curve;
+use crate::{components::curve::curve, stats::with_separators};
+
+/// What the hover chip says and where it sits, as fractions of the chart.
+#[derive(Clone, PartialEq)]
+struct Tip {
+    text: String,
+    left: f64,
+    top: f64,
+}
+
+fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
+    tip.set(Some(Tip { text, left, top }));
+}
+
+/// Which way the chip hangs off its point: centered in the middle of the
+/// chart, and from its edge near either side so it never leaves the panel.
+fn anchor(left: f64) -> &'static str {
+    if left < 15.0 {
+        "tip-start"
+    } else if left > 85.0 {
+        "tip-end"
+    } else {
+        ""
+    }
+}
 
 /// One row of steller's `BENCHMARKS.md`: `redis-benchmark` at a client count,
 /// requests per second for steller and for Redis 8.10, median of three runs on
@@ -130,6 +154,7 @@ fn y_at(requests: u32) -> f64 {
 #[component]
 pub fn Benchmark() -> Element {
     let mut command = use_signal(|| Command::Set);
+    let mut tip: Signal<Option<Tip>> = use_signal(|| None);
     let chosen = command();
     let steller: Vec<(f64, f64)> = ROWS
         .iter()
@@ -155,6 +180,9 @@ pub fn Benchmark() -> Element {
                     }
                 }
             }
+            // The chip is placed by percentages of the chart, so it lives in a
+            // wrapper that holds only the chart.
+            div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
             svg {
                 class: "bench-chart",
                 view_box: "0 0 {WIDTH} {HEIGHT}",
@@ -207,6 +235,45 @@ pub fn Benchmark() -> Element {
                 for (i, (x, y)) in redis.iter().enumerate() {
                     circle { key: "r{i}", class: "bench-dot bench-redis", cx: "{x}", cy: "{y}", r: "3" }
                 }
+                // A hit column per client count: the chip names both servers'
+                // numbers and sits above the higher of the two points.
+                for (i, row) in ROWS.iter().enumerate() {
+                    {
+                        let (ours, theirs) = chosen.of(row);
+                        let text = format!(
+                            "{} clients: steller {}, Redis {}",
+                            row.clients,
+                            with_separators(u64::from(ours)),
+                            with_separators(u64::from(theirs))
+                        );
+                        let enter = text.clone();
+                        let tap = text;
+                        let x = x_at(i);
+                        let y = y_at(ours.max(theirs));
+                        let (left, top) = (x / WIDTH * 100.0, y / HEIGHT * 100.0);
+                        let slot = (WIDTH - LEFT - RIGHT) / 8.0;
+                        rsx! {
+                            rect {
+                                key: "h{row.clients}",
+                                class: "bench-hit",
+                                x: "{x - slot / 2.0}",
+                                y: "{TOP}",
+                                width: "{slot}",
+                                height: "{HEIGHT - TOP - BOTTOM}",
+                                onmouseenter: move |_| show(tip, enter.clone(), left, top),
+                                onclick: move |_| show(tip, tap.clone(), left, top),
+                            }
+                        }
+                    }
+                }
+            }
+            if let Some(tip) = tip() {
+                span {
+                    class: "tag tag-c0 bench-tip {anchor(tip.left)}",
+                    style: "left: {tip.left}%; top: {tip.top}%;",
+                    "{tip.text}"
+                }
+            }
             }
             div { class: "bench-legend",
                 span { class: "bench-key bench-steller", "steller" }

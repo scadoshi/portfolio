@@ -1310,6 +1310,11 @@ rect.fleet-bar {
     fill: currentColor;
 }
 
+.bench-hit {
+    fill: transparent;
+    cursor: default;
+}
+
 .bench-steller {
     color: var(--accent-primary);
 }
@@ -1348,16 +1353,27 @@ rect.fleet-bar {
 }
 
 /* Holds a chart and its hover chip, and nothing else, so the chip's
-   percentages measure the chart. */
+   percentages measure the chart. A chart sits a tenth narrower than its
+   panel, centered, so it reads as a figure rather than filling the screen. */
 .chart-plot {
     position: relative;
+    width: 90%;
+    margin-inline: auto;
+}
+
+/* .theme-wrapper outranks the shared sheet's own .diagram width. */
+.fleet-chart,
+.theme-wrapper .diagram {
+    width: 90%;
+    margin-inline: auto;
 }
 
 /* The hover chip: anchored just above the point it describes, in the same
    tag style as the chips over the grid. Not interactive itself, so it never
    steals the hover from the cell under it. */
 .heatmap-tip,
-.commits-tip {
+.commits-tip,
+.bench-tip {
     position: absolute;
     transform: translate(-50%, calc(-100% - 0.4rem));
     background-color: var(--bg-primary);
@@ -1382,7 +1398,8 @@ rect.fleet-bar {
 
 @media (prefers-reduced-motion: reduce) {
     .heatmap-tip,
-    .commits-tip {
+    .commits-tip,
+    .bench-tip {
         animation: none;
         transition: none;
     }
@@ -1390,12 +1407,14 @@ rect.fleet-bar {
 
 /* Near an edge the chip hangs from its start or end instead of its middle. */
 .heatmap-tip.tip-start,
-.commits-tip.tip-start {
+.commits-tip.tip-start,
+.bench-tip.tip-start {
     transform: translate(-0.5rem, calc(-100% - 0.4rem));
 }
 
 .heatmap-tip.tip-end,
-.commits-tip.tip-end {
+.commits-tip.tip-end,
+.bench-tip.tip-end {
     transform: translate(calc(-100% + 0.5rem), calc(-100% - 0.4rem));
 }
 
