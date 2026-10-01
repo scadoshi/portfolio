@@ -1,4 +1,6 @@
 pub mod code_block;
+pub mod fleet;
+pub mod flow;
 pub mod footer;
 pub mod gallery;
 pub mod linked_text;

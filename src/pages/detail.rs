@@ -4,8 +4,8 @@ use zwipe_components::Panel;
 use crate::{
     Route,
     components::{
-        code_block::CodeBlock, gallery::ProjectGallery, linked_text::LinkedText,
-        measured::Measured, page_meta::PageMeta,
+        code_block::CodeBlock, fleet::Fleet, flow::Flow, gallery::ProjectGallery,
+        linked_text::LinkedText, measured::Measured, page_meta::PageMeta,
     },
     data,
 };
@@ -23,6 +23,31 @@ fn approach_panel(project: &'static data::Project) -> Element {
                         li { LinkedText { text: point.to_string() } }
                     }
                 }
+            }
+        }
+    }
+}
+
+/// heron is the one project this site is a client of, so its page shows the path
+/// a number takes and what heron is measuring right now. Empty for every other
+/// project.
+fn heron_panels(project: &'static data::Project) -> Element {
+    if project.slug != "heron" {
+        return rsx! {};
+    }
+    rsx! {
+        Panel {
+            eyebrow: "Live",
+            title: "How a number gets here",
+            section { class: "project-section",
+                Flow {}
+            }
+        }
+        Panel {
+            eyebrow: "Measured",
+            title: "What it is counting right now",
+            section { class: "project-section",
+                Fleet {}
             }
         }
     }
@@ -82,6 +107,8 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                     p { LinkedText { text: project.objective.to_string() } }
                 }
             }
+
+            {heron_panels(project)}
 
             // Full width on its own: pairing it with the approach panel leaves
             // the gallery above dead space, and the media is 16:9 anyway.

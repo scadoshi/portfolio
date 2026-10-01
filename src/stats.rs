@@ -35,6 +35,8 @@ pub struct Counts {
     pub tests: u64,
     /// Clippy lints set to warn or deny. `None` for C#.
     pub clippy_lints: Option<u64>,
+    /// RFC 3339 in UTC, when heron measured the source.
+    pub measured_at: String,
 }
 
 impl Counts {
@@ -115,7 +117,7 @@ pub enum Source {
 }
 
 /// The live snapshot when there is one, else the baked one.
-fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
+pub fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
     if let Some(snapshot) = live {
         return Some((snapshot, Source::Live));
     }
@@ -287,6 +289,7 @@ mod tests {
                     lines: 6200,
                     tests: 250,
                     clippy_lints: Some(14),
+                    measured_at: "2026-10-01T08:58:00Z".to_string(),
                 }),
             }],
         };
@@ -361,6 +364,7 @@ mod tests {
             lines,
             tests,
             clippy_lints,
+            measured_at: "2026-10-01T14:14:01Z".to_string(),
         };
         assert_eq!(
             counts("Rust", 6102, 245, Some(13)).chips(),

@@ -1182,3 +1182,128 @@ a.panel-action:visited {
     /* Hamburger, collapsing panel, in-panel sizing, and the banner-stack
        slide-out-of-the-open-menu behavior all come from zwipe-components. */
 }
+
+/* === Heron: the flow diagram and the fleet chart === */
+
+.flow,
+.fleet-chart {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: inherit;
+}
+
+.flow-node rect {
+    fill: color-mix(in srgb, var(--bg-primary), #000 10%);
+    stroke-width: 1.5;
+}
+
+.flow-source rect {
+    stroke: var(--text-muted);
+}
+
+.flow-heron rect {
+    stroke: var(--accent-primary);
+}
+
+.flow-cache rect {
+    stroke: var(--accent-tertiary);
+}
+
+.flow-site rect {
+    stroke: var(--accent-secondary);
+}
+
+.flow-title {
+    fill: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.flow-sub,
+.flow-arrow text {
+    fill: var(--text-muted);
+    font-size: 11px;
+}
+
+/* A halo in the panel's color so a timing stays readable where it crosses
+   its own arrow. */
+.flow-arrow text {
+    paint-order: stroke;
+    stroke: var(--bg-primary);
+    stroke-width: 5px;
+    stroke-linejoin: round;
+}
+
+.flow-arrow line {
+    stroke: var(--text-muted);
+    stroke-width: 1.5;
+}
+
+#flow-head path {
+    fill: var(--text-muted);
+}
+
+/* .theme-wrapper outranks the shared components.css, which is inlined after
+   this sheet, so the row's gap and the hover below always win. */
+.theme-wrapper .fleet-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* The shared Chip is a button here; it needs the font restated, as zite's
+   filter rows do. Hover lives here rather than in the shared sheet, which the
+   app's WebView also loads, where a hover can stick after a tap. */
+.theme-wrapper .fleet-metrics .chip {
+    font: inherit;
+    font-size: 0.75rem;
+}
+
+@media (hover: hover) {
+    .theme-wrapper .fleet-metrics .chip:not(.selected):hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+    .theme-wrapper .fleet-metrics .chip:hover {
+        transform: translateY(-2px);
+    }
+}
+
+rect.fleet-bar {
+    fill: var(--accent-primary);
+    transition: width 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.fleet-row,
+.fleet-value {
+    transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    rect.fleet-bar,
+    .fleet-row,
+    .fleet-value,
+    .theme-wrapper .fleet-metrics .chip:hover {
+        transition: none;
+        transform: none;
+    }
+}
+
+.fleet-name {
+    fill: var(--text-primary);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.fleet-value {
+    fill: var(--text-muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.fleet-caption {
+    margin-top: 0.75rem;
+}
