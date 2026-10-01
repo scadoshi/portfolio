@@ -67,7 +67,7 @@
   },
   "scadoshi/zwipe": {
     "language": "Rust",
-    "lines": 142789,
+    "lines": 142795,
     "tests": 774,
     "clippy_lints": 22
   }
