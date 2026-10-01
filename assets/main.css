@@ -1359,6 +1359,22 @@ rect.fleet-bar {
     font-size: 9px;
 }
 
+/* A month label carries the month's total as its hover title. */
+.heatmap-month {
+    cursor: default;
+}
+
+@media (hover: hover) {
+    .heatmap-month:hover {
+        fill: var(--text-primary);
+    }
+
+    .heatmap-cell:hover {
+        stroke: var(--text-primary);
+        stroke-width: 1;
+    }
+}
+
 /* GitHub's five shades, in the primary accent: the empty cell is a faint
    outline, the rest rise to the full color. */
 .heatmap-cell {

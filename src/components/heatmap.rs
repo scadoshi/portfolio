@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use std::collections::BTreeMap;
 
 use crate::stats::{self, Day, with_separators};
 
@@ -44,17 +45,29 @@ struct Cell {
 /// Columns a month label needs before the next one, so two never touch.
 const LABEL_SPAN: usize = 3;
 
+/// A month label: its column, its name, and the month's contributions.
+struct Month {
+    column: usize,
+    /// `YYYY-MM`, which tells the two Septembers of a year apart.
+    key: String,
+    name: &'static str,
+    total: u32,
+}
+
 /// Where each day sits: columns are weeks starting on Sunday, rows are
 /// weekdays, like GitHub's own grid. A month label marks the first column
 /// whose first day falls in a new month, unless the next month starts within
 /// `LABEL_SPAN` columns, which is how a year's partial first month goes unlabeled.
-fn layout(days: &[Day]) -> (Vec<Cell>, Vec<(usize, &'static str)>) {
+/// Every day's count goes to its month's total, labeled or not, so a label's
+/// total is the whole month as far as the year reaches.
+fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>) {
     let Some(first) = days.first().and_then(|day| days_from_civil(&day.date)) else {
         return (Vec::new(), Vec::new());
     };
     let first_sunday = first - weekday(first);
     let mut cells = Vec::with_capacity(days.len());
-    let mut months = Vec::new();
+    let mut months: Vec<Month> = Vec::new();
+    let mut by_month: BTreeMap<&str, u32> = BTreeMap::new();
     let mut last_month = None;
     for day in days {
         let Some(serial) = days_from_civil(&day.date) else {
@@ -62,16 +75,24 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<(usize, &'static str)>) {
         };
         let column = usize::try_from((serial - first_sunday) / 7).unwrap_or(0);
         let row = usize::try_from(weekday(serial)).unwrap_or(0);
+        let key = day.date.get(..7).unwrap_or("");
+        let total = by_month.entry(key).or_default();
+        *total = total.saturating_add(day.count);
         let month = day.date.get(5..7).unwrap_or("");
         if row == 0 && Some(month) != last_month {
             if let Some(name) = month_name(month) {
                 if months
                     .last()
-                    .is_some_and(|(previous, _)| column < previous + LABEL_SPAN)
+                    .is_some_and(|previous| column < previous.column + LABEL_SPAN)
                 {
                     months.pop();
                 }
-                months.push((column, name));
+                months.push(Month {
+                    column,
+                    key: key.to_string(),
+                    name,
+                    total: 0,
+                });
             }
             last_month = Some(month);
         }
@@ -82,6 +103,9 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<(usize, &'static str)>) {
             date: day.date.clone(),
             count: day.count,
         });
+    }
+    for month in &mut months {
+        month.total = by_month.get(month.key.as_str()).copied().unwrap_or(0);
     }
     (cells, months)
 }
@@ -143,13 +167,14 @@ pub fn Heatmap() -> Element {
                 view_box: "0 0 {width} {height}",
                 role: "img",
                 "aria-label": "{caption}",
-                for (column, name) in months.iter() {
+                for month in months.iter() {
                     text {
-                        key: "m{column}",
-                        class: "heatmap-label",
-                        x: "{LEFT + px(*column) * STEP}",
+                        key: "m{month.column}",
+                        class: "heatmap-label heatmap-month",
+                        x: "{LEFT + px(month.column) * STEP}",
                         y: "{TOP - 5.0}",
-                        "{name}"
+                        title { "{with_separators(u64::from(month.total))} in {month.name}" }
+                        "{month.name}"
                     }
                 }
                 for (row, name) in [(1usize, "Mon"), (3, "Wed"), (5, "Fri")] {
@@ -224,7 +249,15 @@ mod tests {
             .map(|cell| (cell.column, cell.row, cell.level))
             .collect();
         assert_eq!(placed, [(0, 3, 1), (0, 4, 2), (1, 0, 3), (2, 0, 0)]);
-        assert_eq!(months, [(1, "Oct")]);
+        let labels: Vec<(usize, &str, u32)> = months
+            .iter()
+            .map(|month| (month.column, month.name, month.total))
+            .collect();
+        assert_eq!(
+            labels,
+            [(1, "Oct", 5)],
+            "October's two days sum to 3 + 2; September's go unlabeled"
+        );
     }
 
     #[test]
@@ -245,7 +278,11 @@ mod tests {
             day("2026-11-01"),
         ];
         let (_, months) = layout(&days);
-        assert_eq!(months, [(1, "Oct"), (5, "Nov")]);
+        let labels: Vec<(usize, &str)> = months
+            .iter()
+            .map(|month| (month.column, month.name))
+            .collect();
+        assert_eq!(labels, [(1, "Oct"), (5, "Nov")]);
     }
 
     #[test]
