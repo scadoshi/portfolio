@@ -31,6 +31,42 @@ fn ceiling(max: u32) -> u32 {
     max.div_ceil(step).max(1) * step
 }
 
+/// One month of commits, the weeks that start in it summed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct Month {
+    /// `YYYY-MM`.
+    key: String,
+    /// `Oct 2025`.
+    label: String,
+    commits: u32,
+}
+
+/// Weeks grouped by the month their Sunday falls in, oldest first. The first
+/// and last months are partial, which the hover says for the last one.
+fn by_month(weeks: &[WeekCommits]) -> Vec<Month> {
+    let mut months: Vec<Month> = Vec::new();
+    for week in weeks {
+        let Some(key) = week.week.get(..7) else {
+            continue;
+        };
+        match months.last_mut() {
+            Some(month) if month.key == key => {
+                month.commits = month.commits.saturating_add(week.commits);
+            }
+            _ => months.push(Month {
+                key: key.to_string(),
+                label: format!(
+                    "{} {}",
+                    month_of(&week.week),
+                    week.week.get(..4).unwrap_or("")
+                ),
+                commits: week.commits,
+            }),
+        }
+    }
+    months
+}
+
 /// `Jan` for `2026-01-04`.
 fn month_of(week: &str) -> &'static str {
     match week.get(5..7) {
@@ -83,18 +119,18 @@ struct Frame {
     bottom: f64,
 }
 
-/// Where the weeks land: x evenly across the frame, y against `top`, with
+/// Where the months land: x evenly across the frame, y against `top`, with
 /// `bottom` as the baseline.
-fn points(weeks: &[WeekCommits], top: u32, frame: Frame) -> Vec<(f64, f64)> {
-    let last = px(u64::try_from(weeks.len().saturating_sub(1)).unwrap_or(0)).max(1.0);
+fn points(months: &[Month], top: u32, frame: Frame) -> Vec<(f64, f64)> {
+    let last = px(u64::try_from(months.len().saturating_sub(1)).unwrap_or(0)).max(1.0);
     let span = frame.bottom - frame.top;
-    weeks
+    months
         .iter()
         .enumerate()
-        .map(|(i, week)| {
+        .map(|(i, month)| {
             let x =
                 frame.left + (frame.right - frame.left) * px(u64::try_from(i).unwrap_or(0)) / last;
-            let y = frame.bottom - span * px(u64::from(week.commits)) / px(u64::from(top.max(1)));
+            let y = frame.bottom - span * px(u64::from(month.commits)) / px(u64::from(top.max(1)));
             (x, y)
         })
         .collect()
@@ -112,8 +148,9 @@ const TOTAL_FRAME: Frame = Frame {
     bottom: HEIGHT - BOTTOM,
 };
 
-/// Commits per week across every repository on the site over the last year,
-/// from the same snapshot as the numbers. Renders nothing without the weeks.
+/// Commits per month across every repository on the site over the last year,
+/// summed from heron's weeks, from the same snapshot as the numbers. Renders
+/// nothing without the weeks.
 #[component]
 pub fn Commits() -> Element {
     let live = use_context::<stats::Live>();
@@ -122,26 +159,14 @@ pub fn Commits() -> Element {
     let Some((weeks, source)) = stats::weekly_commits(live.as_ref()) else {
         return rsx! {};
     };
-    let max = weeks.iter().map(|week| week.commits).max().unwrap_or(0);
+    let months = by_month(weeks);
+    let max = months.iter().map(|month| month.commits).max().unwrap_or(0);
     let top = ceiling(max);
-    let total_points = points(weeks, top, TOTAL_FRAME);
+    let total_points = points(&months, top, TOTAL_FRAME);
     let (line, area) = paths(&total_points, HEIGHT - BOTTOM);
     let total: u64 = weeks.iter().map(|week| u64::from(week.commits)).sum();
     let ticks = [0, top / 2, top];
-    // A month label on the first week of each month, skipping the first week
-    // of the year so the axis starts clean.
-    let labels: Vec<(f64, &str)> = total_points
-        .iter()
-        .zip(weeks)
-        .enumerate()
-        .filter(|(i, (_, week))| {
-            *i > 0
-                && weeks
-                    .get(i - 1)
-                    .is_some_and(|prev| month_of(&prev.week) != month_of(&week.week))
-        })
-        .map(|(_, ((x, _), week))| (*x, month_of(&week.week)))
-        .collect();
+    let last = months.len().saturating_sub(1);
     let caption = match source {
         stats::Source::Live => format!(
             "{} commits across the repositories on this page in the last 52 weeks",
@@ -174,39 +199,44 @@ pub fn Commits() -> Element {
                         }
                     }
                 }
-                for (x, name) in labels.iter() {
+                for ((x, _), month) in total_points.iter().zip(&months) {
                     text {
-                        key: "l{x}",
+                        key: "l{month.key}",
                         class: "commits-tick",
                         x: "{x}",
                         y: "{HEIGHT - BOTTOM + 16.0}",
                         text_anchor: "middle",
-                        "{name}"
+                        {month.label.get(..3).unwrap_or("")}
                     }
                 }
                 path { class: "commits-area", d: "{area}" }
                 path { class: "commits-line", d: "{line}" }
-                for (i, ((x, y), week)) in total_points.iter().zip(weeks).enumerate() {
+                for (i, ((x, y), month)) in total_points.iter().zip(&months).enumerate() {
                     {
-                        let text = format!("{} in the week of {}", week.commits, week.week);
+                        let text = if i == last {
+                            format!("{} in {} so far", month.commits, month.label)
+                        } else {
+                            format!("{} in {}", month.commits, month.label)
+                        };
                         let enter = text.clone();
                         let tap = text;
                         let (cx, cy) = (*x, *y);
                         let (left, top_pct) = (cx / WIDTH * 100.0, cy / HEIGHT * 100.0);
+                        let slot = (WIDTH - LEFT - RIGHT) / px(u64::try_from(last.max(1)).unwrap_or(1));
                         rsx! {
-                            g { key: "w{i}",
-                                // A wide, invisible hit target per week, so the
+                            g { key: "m{month.key}",
+                                // A wide, invisible hit target per month, so the
                                 // hover does not need to land on the dot.
                                 rect {
                                     class: "commits-hit",
-                                    x: "{cx - (WIDTH - LEFT - RIGHT) / 104.0}",
+                                    x: "{cx - slot / 2.0}",
                                     y: "{TOP}",
-                                    width: "{(WIDTH - LEFT - RIGHT) / 52.0}",
+                                    width: "{slot}",
                                     height: "{HEIGHT - TOP - BOTTOM}",
                                     onmouseenter: move |_| show(tip, enter.clone(), left, top_pct),
                                     onclick: move |_| show(tip, tap.clone(), left, top_pct),
                                 }
-                                circle { class: "commits-dot", cx: "{cx}", cy: "{cy}", r: "2.5" }
+                                circle { class: "commits-dot", cx: "{cx}", cy: "{cy}", r: "3" }
                             }
                         }
                     }
@@ -246,17 +276,44 @@ mod tests {
     }
 
     #[test]
-    fn weeks_land_across_the_width_with_the_largest_at_the_top() {
+    fn weeks_are_summed_into_the_month_their_sunday_starts() {
         let week = |date: &str, commits| WeekCommits {
             week: date.to_string(),
             commits,
         };
-        let weeks = [
-            week("2026-09-13", 0),
-            week("2026-09-20", 10),
-            week("2026-09-27", 20),
+        let months = by_month(&[
+            week("2025-09-28", 1),
+            week("2025-10-05", 2),
+            week("2025-10-12", 3),
+            week("2025-11-02", 4),
+        ]);
+        let summed: Vec<(&str, &str, u32)> = months
+            .iter()
+            .map(|month| (month.key.as_str(), month.label.as_str(), month.commits))
+            .collect();
+        assert_eq!(
+            summed,
+            [
+                ("2025-09", "Sep 2025", 1),
+                ("2025-10", "Oct 2025", 5),
+                ("2025-11", "Nov 2025", 4)
+            ]
+        );
+    }
+
+    #[test]
+    fn months_land_across_the_width_with_the_largest_at_the_top() {
+        let month = |key: &str, commits| Month {
+            key: key.to_string(),
+            label: key.to_string(),
+            commits,
+        };
+        let months = [
+            month("2026-07", 0),
+            month("2026-08", 10),
+            month("2026-09", 20),
         ];
-        let points = points(&weeks, 20, TOTAL_FRAME);
+        let points = points(&months, 20, TOTAL_FRAME);
         let close = |a: f64, b: f64| (a - b).abs() < 1e-9;
         assert!(close(points[0].0, LEFT));
         assert!(close(points[2].0, WIDTH - RIGHT));
