@@ -1359,6 +1359,28 @@ rect.fleet-bar {
     pointer-events: none;
     white-space: nowrap;
     z-index: 1;
+    /* Fades in on arrival and glides between points while the pointer moves. */
+    animation: tip-in 0.18s ease-out;
+    transition:
+        left 0.12s ease-out,
+        top 0.12s ease-out;
+}
+
+@keyframes tip-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .heatmap-tip,
+    .commits-tip {
+        animation: none;
+        transition: none;
+    }
 }
 
 /* Near an edge the chip hangs from its start or end instead of its middle. */

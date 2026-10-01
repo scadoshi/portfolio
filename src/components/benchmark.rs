@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
-use std::fmt::Write as _;
 use zwipe_components::Chip;
+
+use crate::components::curve::curve;
 
 /// One row of steller's `BENCHMARKS.md`: `redis-benchmark` at a client count,
 /// requests per second for steller and for Redis 8.10, median of three runs on
@@ -121,29 +122,6 @@ fn x_at(index: usize) -> f64 {
 fn y_at(requests: u32) -> f64 {
     let span = HEIGHT - TOP - BOTTOM;
     HEIGHT - BOTTOM - span * f64::from(requests) / Y_MAX
-}
-
-/// A smooth path through `points`: Catmull-Rom turned into cubic curves, which
-/// passes through every measured point rather than near it.
-fn curve(points: &[(f64, f64)]) -> String {
-    let Some(first) = points.first() else {
-        return String::new();
-    };
-    let mut d = format!("M {:.1} {:.1}", first.0, first.1);
-    for i in 0..points.len().saturating_sub(1) {
-        let p0 = points[i.saturating_sub(1)];
-        let p1 = points[i];
-        let p2 = points[i + 1];
-        let p3 = points[(i + 2).min(points.len() - 1)];
-        let c1 = (p1.0 + (p2.0 - p0.0) / 6.0, p1.1 + (p2.1 - p0.1) / 6.0);
-        let c2 = (p2.0 - (p3.0 - p1.0) / 6.0, p2.1 - (p3.1 - p1.1) / 6.0);
-        let _ = write!(
-            d,
-            " C {:.1} {:.1}, {:.1} {:.1}, {:.1} {:.1}",
-            c1.0, c1.1, c2.0, c2.1, p2.0, p2.1
-        );
-    }
-    d
 }
 
 /// steller against Redis 8 on `redis-benchmark`, throughput by client count,

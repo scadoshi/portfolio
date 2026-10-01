@@ -1,7 +1,9 @@
 use dioxus::prelude::*;
-use std::fmt::Write as _;
 
-use crate::stats::{self, WeekCommits, with_separators};
+use crate::{
+    components::curve::{area, curve},
+    stats::{self, WeekCommits, with_separators},
+};
 
 const WIDTH: f64 = 640.0;
 const HEIGHT: f64 = 220.0;
@@ -121,22 +123,9 @@ fn points(weeks: &[WeekCommits], top: u32, frame: Frame) -> Vec<(f64, f64)> {
         .collect()
 }
 
-/// A polyline through `points` as a path, and the same closed down to
-/// `baseline` for the area under it.
+/// The line through `points` and the area under it down to `baseline`.
 fn paths(points: &[(f64, f64)], baseline: f64) -> (String, String) {
-    let mut line = String::new();
-    for (i, (x, y)) in points.iter().enumerate() {
-        let command = if i == 0 { "M" } else { "L" };
-        let _ = write!(line, "{command} {x:.1} {y:.1} ");
-    }
-    let area = match (points.first(), points.last()) {
-        (Some(first), Some(last)) => format!(
-            "{line}L {:.1} {baseline:.1} L {:.1} {baseline:.1} Z",
-            last.0, first.0
-        ),
-        _ => String::new(),
-    };
-    (line, area)
+    (curve(points), area(points, baseline))
 }
 
 const TOTAL_FRAME: Frame = Frame {
@@ -379,7 +368,7 @@ mod tests {
         );
         assert!(close(points[2].1, TOP), "the ceiling sits at the top");
         let (line, area) = paths(&points, HEIGHT - BOTTOM);
-        assert!(line.starts_with("M 40.0 192.0 L"), "{line}");
+        assert!(line.starts_with("M 40.0 192.0 C"), "{line}");
         assert!(area.ends_with('Z'), "{area}");
     }
 
