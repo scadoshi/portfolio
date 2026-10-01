@@ -50,7 +50,7 @@ fn project_panels(project: &'static data::Project) -> Element {
             }
             Panel {
                 eyebrow: "Over time",
-                title: "Commits, week by week",
+                title: "Commits, month by month",
                 section { class: "project-section",
                     Commits {}
                 }

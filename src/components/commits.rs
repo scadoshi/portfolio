@@ -169,11 +169,11 @@ pub fn Commits() -> Element {
     let last = months.len().saturating_sub(1);
     let caption = match source {
         stats::Source::Live => format!(
-            "{} commits across the repositories on this page in the last 52 weeks",
+            "{} commits across the repositories on this page in the last year",
             with_separators(total)
         ),
         stats::Source::AsOf(day) => format!(
-            "{} commits across the repositories on this page in the 52 weeks to {day}",
+            "{} commits across the repositories on this page in the year to {day}",
             with_separators(total)
         ),
     };
