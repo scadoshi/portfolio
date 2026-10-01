@@ -19,15 +19,15 @@
   },
   "scadoshi/halo_action_importer": {
     "language": "Rust",
-    "lines": 3380,
-    "tests": 3,
-    "clippy_lints": 0
+    "lines": 3762,
+    "tests": 24,
+    "clippy_lints": 3
   },
   "scadoshi/halo_custom_field_builder": {
     "language": "Rust",
-    "lines": 1296,
-    "tests": 0,
-    "clippy_lints": 0
+    "lines": 1707,
+    "tests": 19,
+    "clippy_lints": 3
   },
   "scadoshi/heron": {
     "language": "Rust",
@@ -67,7 +67,7 @@
   },
   "scadoshi/zwipe": {
     "language": "Rust",
-    "lines": 142900,
+    "lines": 142906,
     "tests": 774,
     "clippy_lints": 22
   }
