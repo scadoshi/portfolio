@@ -10,6 +10,13 @@ const RIGHT: f64 = 12.0;
 const TOP: f64 = 14.0;
 const BOTTOM: f64 = 28.0;
 
+/// The small multiples: one row per repository, name on the left, year total
+/// on the right, the row's own peak as its full height.
+const ROW_HEIGHT: f64 = 34.0;
+const ROW_PAD: f64 = 6.0;
+const ROW_LEFT: f64 = 150.0;
+const ROW_RIGHT: f64 = 56.0;
+
 /// A count as a coordinate. Weeks and commit counts are small, nothing is lost.
 #[allow(clippy::cast_precision_loss)]
 fn px(n: u64) -> f64 {
@@ -54,10 +61,26 @@ struct Tip {
     text: String,
     left: f64,
     top: f64,
+    /// Whether the point is in the per-repository rows rather than the total.
+    rows: bool,
 }
 
 fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
-    tip.set(Some(Tip { text, left, top }));
+    tip.set(Some(Tip {
+        text,
+        left,
+        top,
+        rows: false,
+    }));
+}
+
+fn show_row(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
+    tip.set(Some(Tip {
+        text,
+        left,
+        top,
+        rows: true,
+    }));
 }
 
 /// Which way the chip hangs off its point: centered in the middle of the
@@ -72,24 +95,35 @@ fn anchor(left: f64) -> &'static str {
     }
 }
 
-/// Where the weeks land: x evenly across the chart, y against the ceiling.
-fn points(weeks: &[WeekCommits], top: u32) -> Vec<(f64, f64)> {
+/// The drawing area a series is placed in.
+#[derive(Clone, Copy)]
+struct Frame {
+    left: f64,
+    right: f64,
+    top: f64,
+    bottom: f64,
+}
+
+/// Where the weeks land: x evenly across the frame, y against `top`, with
+/// `bottom` as the baseline.
+fn points(weeks: &[WeekCommits], top: u32, frame: Frame) -> Vec<(f64, f64)> {
     let last = px(u64::try_from(weeks.len().saturating_sub(1)).unwrap_or(0)).max(1.0);
-    let span = HEIGHT - TOP - BOTTOM;
+    let span = frame.bottom - frame.top;
     weeks
         .iter()
         .enumerate()
         .map(|(i, week)| {
-            let x = LEFT + (WIDTH - LEFT - RIGHT) * px(u64::try_from(i).unwrap_or(0)) / last;
-            let y = HEIGHT - BOTTOM - span * px(u64::from(week.commits)) / px(u64::from(top));
+            let x =
+                frame.left + (frame.right - frame.left) * px(u64::try_from(i).unwrap_or(0)) / last;
+            let y = frame.bottom - span * px(u64::from(week.commits)) / px(u64::from(top.max(1)));
             (x, y)
         })
         .collect()
 }
 
-/// A polyline through `points` as a path, and the same closed down to the
-/// baseline for the area under it.
-fn paths(points: &[(f64, f64)]) -> (String, String) {
+/// A polyline through `points` as a path, and the same closed down to
+/// `baseline` for the area under it.
+fn paths(points: &[(f64, f64)], baseline: f64) -> (String, String) {
     let mut line = String::new();
     for (i, (x, y)) in points.iter().enumerate() {
         let command = if i == 0 { "M" } else { "L" };
@@ -97,16 +131,20 @@ fn paths(points: &[(f64, f64)]) -> (String, String) {
     }
     let area = match (points.first(), points.last()) {
         (Some(first), Some(last)) => format!(
-            "{line}L {:.1} {:.1} L {:.1} {:.1} Z",
-            last.0,
-            HEIGHT - BOTTOM,
-            first.0,
-            HEIGHT - BOTTOM
+            "{line}L {:.1} {baseline:.1} L {:.1} {baseline:.1} Z",
+            last.0, first.0
         ),
         _ => String::new(),
     };
     (line, area)
 }
+
+const TOTAL_FRAME: Frame = Frame {
+    left: LEFT,
+    right: WIDTH - RIGHT,
+    top: TOP,
+    bottom: HEIGHT - BOTTOM,
+};
 
 /// Commits per week across every repository on the site over the last year,
 /// from the same snapshot as the numbers. Renders nothing without the weeks.
@@ -120,13 +158,15 @@ pub fn Commits() -> Element {
     };
     let max = weeks.iter().map(|week| week.commits).max().unwrap_or(0);
     let top = ceiling(max);
-    let points = points(weeks, top);
-    let (line, area) = paths(&points);
+    let total_points = points(weeks, top, TOTAL_FRAME);
+    let (line, area) = paths(&total_points, HEIGHT - BOTTOM);
+    let repos = stats::weekly_commits_by_repo(live.as_ref());
+    let rows_height = px(u64::try_from(repos.len()).unwrap_or(0)) * ROW_HEIGHT + 4.0;
     let total: u64 = weeks.iter().map(|week| u64::from(week.commits)).sum();
     let ticks = [0, top / 2, top];
     // A month label on the first week of each month, skipping the first week
     // of the year so the axis starts clean.
-    let labels: Vec<(f64, &str)> = points
+    let labels: Vec<(f64, &str)> = total_points
         .iter()
         .zip(weeks)
         .enumerate()
@@ -180,7 +220,7 @@ pub fn Commits() -> Element {
                 }
                 path { class: "commits-area", d: "{area}" }
                 path { class: "commits-line", d: "{line}" }
-                for (i, ((x, y), week)) in points.iter().zip(weeks).enumerate() {
+                for (i, ((x, y), week)) in total_points.iter().zip(weeks).enumerate() {
                     {
                         let text = format!("{} in the week of {}", week.commits, week.week);
                         let enter = text.clone();
@@ -206,7 +246,7 @@ pub fn Commits() -> Element {
                     }
                 }
             }
-            if let Some(tip) = tip() {
+            if let Some(tip) = tip().filter(|tip| !tip.rows) {
                 span {
                     class: "tag tag-c0 commits-tip {anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
@@ -214,6 +254,86 @@ pub fn Commits() -> Element {
                 }
             }
             p { class: "commits-caption", "{caption}" }
+            // One row per repository on the same weeks: what was being worked
+            // on when. Each row's own peak is its full height, with the peak
+            // labeled so a quiet row is not mistaken for a busy one.
+            if !repos.is_empty() {
+                div { class: "commits-rows",
+                    onmouseleave: move |_| tip.set(None),
+                    if let Some(tip) = tip().filter(|tip| tip.rows) {
+                        span {
+                            class: "tag tag-c0 commits-tip {anchor(tip.left)}",
+                            style: "left: {tip.left}%; top: {tip.top}%;",
+                            "{tip.text}"
+                        }
+                    }
+                    svg {
+                        class: "commits-chart",
+                        view_box: "0 0 {WIDTH} {rows_height}",
+                        role: "img",
+                        "aria-label": "commits per week for each repository, busiest year first",
+                        for (r, (name, weeks)) in repos.iter().enumerate() {
+                            {
+                                let row_top = px(u64::try_from(r).unwrap_or(0)) * ROW_HEIGHT + 2.0;
+                                let frame = Frame {
+                                    left: ROW_LEFT,
+                                    right: WIDTH - ROW_RIGHT,
+                                    top: row_top + ROW_PAD,
+                                    bottom: row_top + ROW_HEIGHT - ROW_PAD,
+                                };
+                                let peak = weeks.iter().map(|week| week.commits).max().unwrap_or(0);
+                                let year: u64 = weeks.iter().map(|week| u64::from(week.commits)).sum();
+                                let row_points = points(weeks, peak, frame);
+                                let (row_line, row_area) = paths(&row_points, frame.bottom);
+                                let name = (*name).to_string();
+                                rsx! {
+                                    g { key: "{name}",
+                                        line { class: "commits-grid", x1: "{frame.left}", y1: "{frame.bottom}", x2: "{frame.right}", y2: "{frame.bottom}" }
+                                        text { class: "commits-name", x: "{ROW_LEFT - 10.0}", y: "{frame.bottom - 2.0}", text_anchor: "end", "{name}" }
+                                        text { class: "commits-tick", x: "{WIDTH - ROW_RIGHT + 8.0}", y: "{frame.bottom - 2.0}", "{with_separators(year)}" }
+                                        path { class: "commits-area", d: "{row_area}" }
+                                        path { class: "commits-line commits-row-line", d: "{row_line}" }
+                                        for (i, ((x, y), week)) in row_points.iter().zip(weeks.iter()).enumerate() {
+                                            {
+                                                let text = format!("{name}: {} in the week of {}", week.commits, week.week);
+                                                let enter = text.clone();
+                                                let tap = text;
+                                                let (cx, cy) = (*x, *y);
+                                                let (left, top_pct) = (cx / WIDTH * 100.0, cy / rows_height * 100.0);
+                                                rsx! {
+                                                    rect {
+                                                        key: "h{i}",
+                                                        class: "commits-hit",
+                                                        x: "{cx - (frame.right - frame.left) / 104.0}",
+                                                        y: "{frame.top}",
+                                                        width: "{(frame.right - frame.left) / 52.0}",
+                                                        height: "{frame.bottom - frame.top}",
+                                                        onmouseenter: move |_| show_row(tip, enter.clone(), left, top_pct),
+                                                        onclick: move |_| show_row(tip, tap.clone(), left, top_pct),
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if peak > 0 {
+                                            {
+                                                let (px_x, px_y) = row_points
+                                                    .iter()
+                                                    .zip(weeks.iter())
+                                                    .find(|(_, week)| week.commits == peak)
+                                                    .map_or((frame.left, frame.top), |((x, y), _)| (*x, *y));
+                                                rsx! {
+                                                    circle { class: "commits-dot", cx: "{px_x}", cy: "{px_y}", r: "2.5" }
+                                                    text { class: "commits-peak", x: "{px_x}", y: "{px_y - 4.0}", text_anchor: "middle", "{peak}" }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -249,7 +369,7 @@ mod tests {
             week("2026-09-20", 10),
             week("2026-09-27", 20),
         ];
-        let points = points(&weeks, 20);
+        let points = points(&weeks, 20, TOTAL_FRAME);
         let close = |a: f64, b: f64| (a - b).abs() < 1e-9;
         assert!(close(points[0].0, LEFT));
         assert!(close(points[2].0, WIDTH - RIGHT));
@@ -258,7 +378,7 @@ mod tests {
             "zero sits on the baseline"
         );
         assert!(close(points[2].1, TOP), "the ceiling sits at the top");
-        let (line, area) = paths(&points);
+        let (line, area) = paths(&points, HEIGHT - BOTTOM);
         assert!(line.starts_with("M 40.0 192.0 L"), "{line}");
         assert!(area.ends_with('Z'), "{area}");
     }

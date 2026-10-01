@@ -85,6 +85,10 @@ pub struct RepoStats {
     /// from before heron measured anything.
     #[serde(default)]
     pub counts: Option<Counts>,
+    /// The last 52 weeks of commits, oldest first. `None` while GitHub is still
+    /// computing them, and in a snapshot from before heron served them.
+    #[serde(default)]
+    pub weekly_commits: Option<Vec<WeekCommits>>,
 }
 
 /// One day of the contribution calendar.
@@ -181,6 +185,34 @@ pub fn weekly_commits(live: Option<&Snapshot>) -> Option<(&[WeekCommits], Source
         return None;
     }
     Some((&snapshot.totals.weekly_commits, source))
+}
+
+/// Every repository that has its weeks, as `(name, weeks)`, busiest year first.
+pub fn weekly_commits_by_repo(live: Option<&Snapshot>) -> Vec<(&str, &[WeekCommits])> {
+    let Some((snapshot, _)) = current(live) else {
+        return Vec::new();
+    };
+    let mut repos: Vec<(&str, &[WeekCommits])> = snapshot
+        .repos
+        .iter()
+        .filter_map(|repo| {
+            let weeks = repo.weekly_commits.as_deref()?;
+            let name = repo.repo.rsplit('/').next().unwrap_or(&repo.repo);
+            Some((name, weeks))
+        })
+        .collect();
+    repos.sort_by_key(|(name, weeks)| {
+        (
+            std::cmp::Reverse(
+                weeks
+                    .iter()
+                    .map(|week| u64::from(week.commits))
+                    .sum::<u64>(),
+            ),
+            *name,
+        )
+    });
+    repos
 }
 
 /// The contribution calendar and where it came from, when the current snapshot
@@ -348,6 +380,7 @@ mod tests {
                     clippy_lints: Some(14),
                     measured_at: "2026-10-01T08:58:00Z".to_string(),
                 }),
+                weekly_commits: None,
             }],
             calendar: None,
         };
@@ -508,6 +541,7 @@ mod tests {
             commits,
             pushed_at: pushed_at.map(ToString::to_string),
             counts: None,
+            weekly_commits: None,
         };
         assert_eq!(
             stats(2968, Some("2026-09-29T12:13:17Z")).chips(),
