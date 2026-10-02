@@ -1509,6 +1509,15 @@ rect.fleet-bar {
     fill: var(--accent-primary);
 }
 
+/* The year's outlier days: a lit edge in a lighter shade of the accent and a
+   soft cast of the same, so a spike reads at a glance without a halo smearing
+   into the cells around it. */
+.heat-peak {
+    stroke: color-mix(in srgb, var(--accent-primary) 60%, #fff);
+    stroke-width: 1;
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--accent-primary) 80%, #fff));
+}
+
 .heatmap-caption {
     margin: 0.75rem 0 0;
     color: var(--text-muted);

@@ -22,6 +22,11 @@ const LINE_HEIGHT: f64 = 90.0;
 const LINE_BOTTOM: f64 = LINE_TOP + LINE_HEIGHT;
 /// Where the grid starts, under the line and the month labels.
 const TOP: f64 = LINE_BOTTOM + 30.0;
+/// A day at or past this many times the median busy day is a peak and gets
+/// the lit edge; at most `MAX_PEAKS` of them, the biggest.
+const PEAK_RATIO: u32 = 4;
+const MAX_PEAKS: usize = 12;
+
 /// A first month with fewer days than this in the year is left off the line,
 /// so a year that starts mid-month does not open on a dip. The last month
 /// stays, partial as it is, and its hover says so.
@@ -156,6 +161,27 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
     (cells, months, series)
 }
 
+/// The dates of the year's outlier days: at or past `PEAK_RATIO` times the
+/// median of the days with any contributions, the largest `MAX_PEAKS` of them.
+/// A steady busy stretch never qualifies; a spike does.
+fn peaks(days: &[Day]) -> Vec<&str> {
+    let mut busy: Vec<u32> = days
+        .iter()
+        .map(|day| day.count)
+        .filter(|&n| n > 0)
+        .collect();
+    if busy.is_empty() {
+        return Vec::new();
+    }
+    busy.sort_unstable();
+    let median = busy[busy.len() / 2];
+    let floor = median.saturating_mul(PEAK_RATIO);
+    let mut peaks: Vec<&Day> = days.iter().filter(|day| day.count >= floor).collect();
+    peaks.sort_by_key(|day| std::cmp::Reverse(day.count));
+    peaks.truncate(MAX_PEAKS);
+    peaks.into_iter().map(|day| day.date.as_str()).collect()
+}
+
 /// Where each month lands on the line: x in the middle of its columns, y
 /// against `top`, with the line's bottom as the baseline.
 fn line_points(series: &[Series], top: u32) -> Vec<(f64, f64)> {
@@ -189,6 +215,7 @@ pub fn Heatmap() -> Element {
         return rsx! {};
     };
     let (cells, months, series) = layout(&calendar.days);
+    let peaks = peaks(&calendar.days);
     let Some(columns) = cells.iter().map(|cell| cell.column + 1).max() else {
         return rsx! {};
     };
@@ -301,12 +328,13 @@ pub fn Heatmap() -> Element {
                         let x = LEFT + px(cell.column) * STEP;
                         let y = TOP + px(cell.row) * STEP;
                         let text = format!("{} on {}", cell.count, cell.date);
+                        let peak = if peaks.contains(&cell.date.as_str()) { " heat-peak" } else { "" };
                         let enter = text.clone();
                         let tap = text;
                         rsx! {
                             rect {
                                 key: "{cell.date}",
-                                class: "heatmap-cell heat-{cell.level}",
+                                class: "heatmap-cell heat-{cell.level}{peak}",
                                 x: "{x}",
                                 y: "{y}",
                                 width: "{CELL}",
@@ -412,6 +440,28 @@ mod tests {
             .map(|month| (month.column, month.name))
             .collect();
         assert_eq!(labels, [(1, "Oct"), (5, "Nov")]);
+    }
+
+    #[test]
+    fn peaks_are_the_spikes_past_four_times_the_median_busy_day() {
+        let day = |date: &str, count| Day {
+            date: date.to_string(),
+            count,
+            level: 0,
+        };
+        // Busy days 2, 3, 4, 20, 40: the median is 4, the floor 16, so only
+        // the 20 and the 40 qualify, biggest first, and the zero day never
+        // drags the median down.
+        let days = [
+            day("2026-09-01", 0),
+            day("2026-09-02", 2),
+            day("2026-09-03", 3),
+            day("2026-09-04", 4),
+            day("2026-09-05", 20),
+            day("2026-09-06", 40),
+        ];
+        assert_eq!(peaks(&days), ["2026-09-06", "2026-09-05"]);
+        assert_eq!(peaks(&[day("2026-09-01", 0)]), [""; 0]);
     }
 
     #[test]
