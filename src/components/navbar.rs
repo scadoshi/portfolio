@@ -1,5 +1,7 @@
 use dioxus::{document::eval, prelude::*};
-use zwipe_components::{BRAND_RESET_JS, NavBar, NavDropdown, Replay, ThemeConfig, ThemePicker};
+use zwipe_components::{
+    BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemePicker,
+};
 
 use crate::Route;
 
@@ -11,6 +13,7 @@ pub fn Navbar() -> Element {
     let mut open = use_signal(|| false);
     let mut projects_open = use_signal(|| false);
     let mut replay = use_context::<Replay>().0;
+    let mut hovering = use_signal(|| false);
 
     rsx! {
         NavBar {
@@ -28,7 +31,12 @@ pub fn Navbar() -> Element {
                             let _ = eval(BRAND_RESET_JS).await;
                         });
                     },
-                    pre { class: "nav-logo", "{LOGO_S}" }
+                    pre {
+                        class: "nav-logo",
+                        onmouseenter: move |_| hovering.set(true),
+                        onmouseleave: move |_| hovering.set(false),
+                        Decode { text: LOGO_S, hover: hovering }
+                    }
                 }
             },
             links: rsx! {

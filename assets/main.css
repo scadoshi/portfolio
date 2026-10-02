@@ -121,6 +121,18 @@ html.js:not(.hydrated) .logo {
     visibility: hidden;
 }
 
+/* The shell's own toast, shown when the app never loads. It borrows the
+   banner look from the shared sheet and sits bottom left, clear of the stack
+   the app puts its own banners in. */
+.boot-toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+    max-width: min(420px, calc(100vw - 3rem));
+}
+
+
 html.js:not(.hydrated) .heatmap-grid .commits-line,
 html.js:not(.hydrated) .heatmap-grid .commits-area,
 html.js:not(.hydrated) .heatmap-grid .commits-dot,
@@ -436,12 +448,10 @@ a.panel-action:visited {
     letter-spacing: 0;
     /* The shared token: text on dark themes, the primary accent on light. */
     color: var(--logo);
-    transition: letter-spacing 0.15s;
 }
 
 @media (hover: hover) {
     .nav-brand:hover .nav-logo {
-        letter-spacing: 1px;
         color: var(--accent-primary);
     }
 }
