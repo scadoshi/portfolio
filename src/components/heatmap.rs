@@ -1,9 +1,10 @@
 use dioxus::prelude::*;
 use std::collections::BTreeMap;
+use zwipe_components::Replay;
 
 use crate::{
     components::{
-        chart::{Replay, Tip, anchor, month_name, show},
+        chart::{Tip, anchor, month_name, show},
         commits::{ceiling, ticks},
         curve::{area, curve},
     },

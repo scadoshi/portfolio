@@ -9,12 +9,6 @@ pub struct Tip {
     pub top: f64,
 }
 
-/// How many times the home chart has been asked to animate again. The chart
-/// keys its drawing on it, so a bump remounts the SVG and every CSS animation
-/// runs from the start.
-#[derive(Clone, Copy)]
-pub struct Replay(pub Signal<u32>);
-
 pub fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
     tip.set(Some(Tip { text, left, top }));
 }

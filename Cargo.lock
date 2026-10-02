@@ -3135,6 +3135,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
+name = "signal-hook-registry"
+version = "1.4.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c4db69cba1110affc0e9f7bcd48bbf87b3f4fc7c61fc9155afd4c469eb3d6c1b"
+dependencies = [
+ "errno",
+ "libc",
+]
+
+[[package]]
 name = "slab"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3413,7 +3423,9 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
+ "parking_lot",
  "pin-project-lite",
+ "signal-hook-registry",
  "socket2",
  "tokio-macros",
  "windows-sys 0.61.2",
@@ -4359,9 +4371,11 @@ checksum = "b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa"
 [[package]]
 name = "zwipe-components"
 version = "1.10.3"
-source = "git+https://github.com/scadoshi/zwipe#c6ca445a6b920a95c268ace42fa0912ad2d79e29"
+source = "git+https://github.com/scadoshi/zwipe#badab6def91a49c3b0906dd43e5e913acd357848"
 dependencies = [
  "dioxus",
+ "gloo-timers 0.4.0",
+ "tokio",
  "uuid",
  "zwipe-core",
 ]
@@ -4369,7 +4383,7 @@ dependencies = [
 [[package]]
 name = "zwipe-core"
 version = "1.10.3"
-source = "git+https://github.com/scadoshi/zwipe#c6ca445a6b920a95c268ace42fa0912ad2d79e29"
+source = "git+https://github.com/scadoshi/zwipe#badab6def91a49c3b0906dd43e5e913acd357848"
 dependencies = [
  "chrono",
  "email_address",

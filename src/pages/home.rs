@@ -1,11 +1,9 @@
 use dioxus::prelude::*;
-use zwipe_components::{Banner, Panel};
+use zwipe_components::{Banner, CountUp, Decode, Panel, Replay};
 
 use crate::{
     Route,
-    components::{
-        count_up::CountUp, heatmap::Heatmap, page_meta::PageMeta, project_card::ProjectCard,
-    },
+    components::{heatmap::Heatmap, page_meta::PageMeta, project_card::ProjectCard},
     data, stats,
 };
 
@@ -33,6 +31,7 @@ pub fn Home() -> Element {
     let projects = data::featured_projects();
     let live = use_context::<stats::Live>();
     let totals = stats::totals(live.read().as_ref());
+    let replay = use_context::<Replay>().0();
     rsx! {
         // Title lands at 60 chars with PageMeta's " | Scotty Fermo" suffix;
         // description stays under the ~125-char social-preview cutoff.
@@ -52,7 +51,11 @@ pub fn Home() -> Element {
             }
         }
         section { class: "hero content-enter",
-            h1 { class: "logo", "aria-label": "Scotty Fermo", "{LOGO_ASCII}" }
+            // Keyed on the replay count so the spacing animation runs again
+            // with the decode.
+            for run in [replay] {
+                h1 { key: "logo{run}", class: "logo", "aria-label": "Scotty Fermo", Decode { text: LOGO_ASCII } }
+            }
             // Sizing wrapper only; the card itself is the shared Panel.
             div { class: "hero-panel",
                 Panel {

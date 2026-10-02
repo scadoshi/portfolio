@@ -122,7 +122,8 @@ fn App() -> Element {
     // render so the client matches the prerendered page, then filled in place.
     let mut live: stats::Live = use_signal(|| None);
     use_context_provider(|| live);
-    let replay = components::chart::Replay(use_signal(|| 0u32));
+    // The hero's entrance runs again whenever this moves; the nav S bumps it.
+    let replay = zwipe_components::Replay(use_signal(|| 0u32));
     use_context_provider(|| replay);
     use_effect(move || {
         spawn(async move {
