@@ -13,5 +13,25 @@
     </head>
     <body>
         <div id="main"></div>
+        <!-- Runs before first paint, after the prerendered page is parsed.
+             Swaps the wrapper onto the stored theme so the page never flashes
+             the default, and marks the document `js` so the stylesheet can
+             hold the hero's entrance until the app has hydrated and runs it
+             (the app adds `hydrated`). Without script neither class lands and
+             the page shows its settled, prerendered self. -->
+        <script>
+            (function () {
+                var root = document.documentElement;
+                root.classList.add("js");
+                try {
+                    var stored = JSON.parse(localStorage.getItem("zwipe.theme"));
+                    var wrapper = document.querySelector(".theme-wrapper");
+                    if (stored && stored.name && wrapper) {
+                        var theme = "theme-" + stored.name + "-" + (stored.is_dark ? "dark" : "light");
+                        wrapper.className = "theme-wrapper " + theme;
+                    }
+                } catch (e) {}
+            })();
+        </script>
     </body>
 </html>

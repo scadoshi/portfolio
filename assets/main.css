@@ -111,6 +111,23 @@
     animation: content-enter 0.3s ease-out both;
 }
 
+/* The hero's entrance waits for the app. The shell's script marks the
+   document `js` before first paint and the app marks it `hydrated` once it
+   can count and decode, so the logo and the numbers stay out of sight and
+   the chart's animations stay on their first frame in between, and the
+   whole entrance runs as one once the app is up. Without script neither
+   class lands and the prerendered page shows settled. */
+html.js:not(.hydrated) .logo,
+html.js:not(.hydrated) .stat-num {
+    visibility: hidden;
+}
+
+html.js:not(.hydrated) .logo,
+html.js:not(.hydrated) .heatmap-grid *,
+html.js:not(.hydrated) .heatmap-cell {
+    animation-play-state: paused;
+}
+
 @keyframes logo-enter {
     from {
         letter-spacing: 0.625rem;

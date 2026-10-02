@@ -102,11 +102,17 @@ fn App() -> Element {
     let mut loaded = use_signal(|| false);
 
     // Post-mount state change, so the picker label and theme wrapper re-render.
+    // The shell's script already put the wrapper on the stored theme, so this
+    // render changes nothing visible. `hydrated` on the document releases the
+    // hero's entrance, which the stylesheet holds until the app can run it.
     use_effect(move || {
         if let Some(stored) = theme_store::load() {
             theme.set(stored);
         }
         loaded.set(true);
+        spawn(async {
+            let _ = document::eval("document.documentElement.classList.add('hydrated');").await;
+        });
     });
 
     // Persist every theme change so the next visit opens in it. The `loaded`
