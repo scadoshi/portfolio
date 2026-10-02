@@ -131,13 +131,15 @@ html.js:not(.hydrated) .heatmap-cell {
 
 .logo {
     font-family: "JetBrains Mono", monospace;
-    font-size: clamp(0.5rem, 2.5vw, 1.4rem);
+    /* The viewport-height term keeps the mark from eating a short screen,
+       where everything under it is what the page is actually about. */
+    font-size: clamp(0.45rem, min(2.1vw, 2.2vh), 1.1rem);
     line-height: 0.9;
     white-space: pre;
     text-align: left;
     display: inline-block;
     color: var(--logo);
-    margin: 0 0 1.5rem;
+    margin: 0 0 1rem;
     font-weight: normal;
 }
 
@@ -474,9 +476,10 @@ a.panel-action:visited {
 
 .hero {
     text-align: center;
-    /* zite's hero spacing: the wordmark sits close under the nav. Bottom gap
-       is the panel margin below, matching the band's 1.5rem rhythm. */
-    padding: 3rem 1.5rem 0;
+    /* The wordmark sits close under the nav so the chart below it reaches a
+       laptop's first screen. Bottom gap is the panel margin below, matching
+       the band's 1.5rem rhythm. */
+    padding: 1.25rem 1.5rem 0;
 }
 
 /* Sizing wrapper only. The card chrome comes from the shared Panel inside.
@@ -745,7 +748,7 @@ a.panel-action:visited {
 .hero-rule {
     border: none;
     border-top: 1px solid var(--border-secondary);
-    margin: 1.25rem -1.5rem;
+    margin: 1rem -1.5rem;
 }
 
 .stats-strip {
@@ -783,7 +786,7 @@ a.panel-action:visited {
    devices that have one, since a WebView hover can stick after a tap. */
 .stats-source {
     justify-content: center;
-    margin-top: 1.25rem;
+    margin-top: 1rem;
 }
 
 .stats-source a.tag {
@@ -1665,16 +1668,20 @@ rect.fleet-bar {
     animation: chart-pop 0.3s cubic-bezier(0.33, 1, 0.68, 1) backwards;
 }
 
-/* A chart in a panel the scroll reveal has not reached yet holds its first
-   frame, and runs when the panel comes into view. The reveal script strips
-   the class afterward and the animation carries on. */
-.panel-card.reveal-pending rect.fleet-bar,
-.panel-card.reveal-pending .fleet-value,
-.panel-card.reveal-pending .commits-line,
-.panel-card.reveal-pending .commits-area,
-.panel-card.reveal-pending .commits-dot,
-.panel-card.reveal-pending .bench-line,
-.panel-card.reveal-pending .bench-dot {
+/* A chart the scroll reveal has not reached yet holds its first frame and
+   runs when it arrives on screen, so the motion is never spent below the
+   fold. `reveal.js` observes the panels and the home chart; anything already
+   on screen at load is left alone and animates at once. The pause lifts the
+   moment the reveal starts, so the chart draws as its panel rises rather
+   than after it. */
+.reveal-pending:not(.reveal-in) rect.fleet-bar,
+.reveal-pending:not(.reveal-in) .fleet-value,
+.reveal-pending:not(.reveal-in) .commits-line,
+.reveal-pending:not(.reveal-in) .commits-area,
+.reveal-pending:not(.reveal-in) .commits-dot,
+.reveal-pending:not(.reveal-in) .bench-line,
+.reveal-pending:not(.reveal-in) .bench-dot,
+.reveal-pending:not(.reveal-in) .heatmap-cell {
     animation-play-state: paused;
 }
 

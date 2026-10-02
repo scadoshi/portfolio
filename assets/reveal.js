@@ -1,4 +1,5 @@
-// Scroll reveal: panels below the fold fade up as they enter the viewport,
+// Scroll reveal: panels and the home chart below the fold fade up as they
+// enter the viewport,
 // staggered when several arrive in the same frame. Panels already on screen
 // at setup are left alone, so this never fights the load-time entrance
 // animations. Classes are removed once the transition finishes, returning
@@ -36,7 +37,7 @@
 
     const seen = new WeakSet();
     const scan = () => {
-        for (const el of document.querySelectorAll(".panel-card")) {
+        for (const el of document.querySelectorAll(".panel-card, .heatmap")) {
             if (seen.has(el)) continue;
             seen.add(el);
             if (el.getBoundingClientRect().top > innerHeight) {
