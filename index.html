@@ -23,12 +23,20 @@
             (function () {
                 var root = document.documentElement;
                 root.classList.add("js");
+                // The app marks hydrated itself; if the wasm is slow, blocked
+                // or broken, this does it instead, so the hero is never held
+                // for longer than three seconds.
+                setTimeout(function () { root.classList.add("hydrated"); }, 3000);
                 try {
                     var stored = JSON.parse(localStorage.getItem("zwipe.theme"));
                     var wrapper = document.querySelector(".theme-wrapper");
                     if (stored && stored.name && wrapper) {
                         var theme = "theme-" + stored.name + "-" + (stored.is_dark ? "dark" : "light");
-                        wrapper.className = "theme-wrapper " + theme;
+                        // Swap only the theme class; anything else on the wrapper stays.
+                        wrapper.classList.forEach(function (c) {
+                            if (c.indexOf("theme-") === 0 && c !== "theme-wrapper") wrapper.classList.remove(c);
+                        });
+                        wrapper.classList.add(theme);
                     }
                 } catch (e) {}
             })();

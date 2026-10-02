@@ -123,7 +123,9 @@ html.js:not(.hydrated) .stat-num {
 }
 
 html.js:not(.hydrated) .logo,
-html.js:not(.hydrated) .heatmap-grid *,
+html.js:not(.hydrated) .heatmap-grid .commits-line,
+html.js:not(.hydrated) .heatmap-grid .commits-area,
+html.js:not(.hydrated) .heatmap-grid .commits-dot,
 html.js:not(.hydrated) .heatmap-cell {
     animation-play-state: paused;
 }
