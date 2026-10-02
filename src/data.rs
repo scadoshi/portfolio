@@ -1001,6 +1001,7 @@ const HERON: Project = Project {
     obstacles: &[
         "steller rejected any command that reached it in more than one read. A 14-byte PING showed it on the production box, and it is fixed. It answered the leftovers too, so heron still hangs up after any rejection",
         "Every unit test passed with the fallback empty. After a restart the snapshots came from steller and nothing copied them into memory. Stopping steller for real is what showed it",
+        "GitHub computes commit activity on demand and answers 202 until it is done, then lets it go cold again inside the fifteen minutes between refreshes. Nine of twelve repositories never got past the 202. The first ask starts the job, so heron now asks twice, three seconds apart",
     ],
     progress: "Live at api.scadoshi.dev on its own Hetzner box, behind a Cloudflare Tunnel, with steller beside it. This page asks it after loading; the hero and every card are its answer. The first sweep measured all twelve repositories in seven seconds.",
     impact: "steller has a production workload, and a bug report it would not have had otherwise.",
