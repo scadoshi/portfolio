@@ -53,21 +53,23 @@ pub fn Home() -> Element {
         section { class: "hero content-enter",
             // Keyed on the replay count so the spacing animation runs again
             // with the decode.
-            for run in [replay] {
-                h1 { key: "logo{run}", class: "logo", "aria-label": "Scotty Fermo", Decode { text: LOGO_ASCII } }
-            }
             // Sizing wrapper only; the card itself is the shared Panel.
             div { class: "hero-panel",
                 Panel {
-                    p { class: "hero-tagline",
-                        span { class: "hl-warning", "Rust" }
-                        " that runs: an "
-                        span { class: "hl-success", "app" }
-                        " on both stores, a "
-                        span { class: "hl-error", "server" }
-                        " counting the numbers above, and two "
-                        span { class: "hl-tertiary", "storage engines" }
-                        " written from the wire up."
+                    div { class: "hero-head",
+                        for run in [replay] {
+                            h1 { key: "logo{run}", class: "logo", "aria-label": "Scotty Fermo", Decode { text: LOGO_ASCII } }
+                        }
+                        p { class: "hero-tagline",
+                            span { class: "hl-warning", "Rust" }
+                            " that runs: an "
+                            span { class: "hl-success", "app" }
+                            " on both stores, a "
+                            span { class: "hl-error", "server" }
+                            " counting the numbers above, and two "
+                            span { class: "hl-tertiary", "storage engines" }
+                            " written from the wire up."
+                        }
                     }
                     // Same strip as zwipe.net's hero: a rule, then the numbers.
                     // A second rule sets off where they come from.

@@ -492,6 +492,28 @@ a.panel-action:visited {
     animation: content-enter 0.5s ease-out 0.15s backwards;
 }
 
+/* The mark and the opening sentence share the panel's first row: the name,
+   then what it makes. They stack on a narrow screen. */
+.hero-head {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: left;
+}
+
+.hero-head .logo {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+@media (max-width: 62rem) {
+    .hero-head {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
+
 .hero-tagline {
     font-size: 1rem;
     color: var(--text-primary);
