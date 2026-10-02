@@ -54,6 +54,16 @@ After a page loads, the browser asks heron once more (`stats::fetch_live`, wasm 
 
 A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as well. Until it is, `every_project_on_the_site_is_in_the_snapshot` fails and names it.
 
+## Charts
+
+Every chart is an inline SVG the site draws itself from the `GET /stats` answer, so it takes the theme's colors and needs no chart library. The home page has the year of contributions (heron's `calendar`, from GitHub's GraphQL) as a heatmap with a contributions-by-month line drawn on the same columns; `heatmap.rs` lays both out, and the year's outlier days get a lit edge (`PEAK_RATIO` times the median busy day, `MAX_PEAKS` at most). The heron page has the flow diagram (shared `Diagram*` pieces from zwipe-components), the fleet bar chart of lines, tests and lints, and commits by month summed from `weekly_commits`, which only covers the repositories heron measures and says so in its caption. The steller page has the benchmark against Redis, the one hand-typed number set, with its link pinned to the commit of `BENCHMARKS.md` the rows came from. Hover chips are shared in `chart.rs`; the monotone curve in `curve.rs`. On a phone a chart keeps a readable width inside a `.chart-scroll` box and the time charts open on the newest months (`scroll.rs`).
+
+## The entrance
+
+The hero animates in: the S resolves from noise, the numbers count up, the line draws, the grid sweeps, all left to right. `CountUp`, `Decode` and the `Replay` counter come from zwipe-components (`entrance.rs` there); the chart's part is CSS keyframes with per-cell delays. Clicking the nav S bumps `Replay`, which remounts the keyed pieces and runs everything again.
+
+The prerendered page carries the settled values, so without script it reads right. With script, the end-of-body block in `index.html` (this repo's dx shell) runs before first paint: it puts the wrapper on the theme stored in localStorage and marks the document `js`, and the stylesheet then hides the logo and numbers and pauses the chart until the app marks `hydrated` on mount. That is what keeps the page from showing the default theme and the final numbers for the few hundred milliseconds the wasm takes to load.
+
 ## Source counts
 
 Lines, test functions and configured clippy lints per repository come in heron's `counts` field in the same `GET /stats` answer as the commits, measured by heron from a tarball of each repository's default branch after every push, and rendered under the commit line on every card. The same two sources apply as for commits: the live answer after the page loads, else the `stats.json` baked at build, which the deploy workflow refreshes from heron and only replaces when every repository in the answer is measured. For rustmas and sharpmas that is `main`, the template branch, not the solution branches.
@@ -67,7 +77,10 @@ dx build --release --ssg --force-sequential
 ```
 
 `--force-sequential` is what makes `index.html` a real prerendered page rather than a
-bare shell. Pushing to `main` runs the same build in Actions and publishes it. Tests
+bare shell. After a build, check `target/dx/portfolio/release/web/public/index.html`
+is tens of kilobytes: a stale server holding port 9999, or macOS killing the fresh
+server binary on a cached signature, both leave a shell with a green log. Deleting
+`target/dx/portfolio/release/web/server` before the build clears the second. Pushing to `main` runs the same build in Actions and publishes it. Tests
 and clippy gate that deploy: red means the site does not update. See
 `rules/commit_guidelines.md` for the exact commands, which are worth running before
 you push rather than after.
