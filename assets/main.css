@@ -430,7 +430,8 @@ a.panel-action:visited {
     display: block;
     margin: 0;
     letter-spacing: 0;
-    color: var(--text-primary);
+    /* The shared token: text on dark themes, the primary accent on light. */
+    color: var(--logo);
     transition: letter-spacing 0.15s;
 }
 
