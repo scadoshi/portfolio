@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     components::{
-        commits::ceiling,
+        commits::{ceiling, ticks},
         curve::{area, curve},
     },
     stats::{self, Day, with_separators},
@@ -21,8 +21,9 @@ const LINE_HEIGHT: f64 = 90.0;
 const LINE_BOTTOM: f64 = LINE_TOP + LINE_HEIGHT;
 /// Where the grid starts, under the line and the month labels.
 const TOP: f64 = LINE_BOTTOM + 30.0;
-/// A month with fewer days than this in the year is left off the line, so a
-/// year that starts mid-month does not open on a dip.
+/// A first month with fewer days than this in the year is left off the line,
+/// so a year that starts mid-month does not open on a dip. The last month
+/// stays, partial as it is, and its hover says so.
 const FULL_MONTH: usize = 28;
 
 /// Days since 1970-01-01 for a `YYYY-MM-DD` date, or `None` when it does not
@@ -84,8 +85,8 @@ struct Month {
 /// whose first day falls in a new month, unless the next month starts within
 /// `LABEL_SPAN` columns, which is how a year's partial first month goes unlabeled.
 /// Every day's count goes to its month's total, labeled or not, so a label's
-/// total is the whole month as far as the year reaches. The series is every
-/// month with enough days to count as whole, oldest first, for the line.
+/// total is the whole month as far as the year reaches. The series is each
+/// month for the line, oldest first, without a partial first month.
 fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
     let Some(first) = days.first().and_then(|day| days_from_civil(&day.date)) else {
         return (Vec::new(), Vec::new(), Vec::new());
@@ -147,10 +148,10 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
             .get(month.key.as_str())
             .map_or(0, |series| series.total);
     }
-    let series = by_month
-        .into_values()
-        .filter(|series| series.days >= FULL_MONTH)
-        .collect();
+    let mut series: Vec<Series> = by_month.into_values().collect();
+    if series.first().is_some_and(|month| month.days < FULL_MONTH) {
+        series.remove(0);
+    }
     (cells, months, series)
 }
 
@@ -236,7 +237,7 @@ pub fn Heatmap() -> Element {
     let width = LEFT + px(columns) * STEP;
     let height = TOP + 7.0 * STEP;
     let top = ceiling(series.iter().map(|month| month.total).max().unwrap_or(0));
-    let ticks = [0, top / 2, top];
+    let ticks = ticks(top);
     let line_points = line_points(&series, top);
     let (line, area) = (curve(&line_points), area(&line_points, LINE_BOTTOM));
     let last = series.len().saturating_sub(1);

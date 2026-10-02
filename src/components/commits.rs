@@ -27,9 +27,20 @@ pub fn ceiling(max: u32) -> u32 {
         51..=100 => 25,
         101..=250 => 50,
         251..=600 => 100,
-        _ => 500,
+        _ => 250,
     };
     max.div_ceil(step).max(1) * step
+}
+
+/// The y ticks for a ceiling: the baseline, the top, and the midpoint when it
+/// is a round number too. 1,250 gets no 625.
+pub fn ticks(top: u32) -> Vec<u32> {
+    let mid = top / 2;
+    if top <= 100 || mid.is_multiple_of(50) {
+        vec![0, mid, top]
+    } else {
+        vec![0, top]
+    }
 }
 
 /// One month of commits, the weeks that start in it summed.
@@ -167,7 +178,7 @@ pub fn Commits() -> Element {
     let total_points = points(&months, top, TOTAL_FRAME);
     let (line, area) = paths(&total_points, HEIGHT - BOTTOM);
     let total: u64 = weeks.iter().map(|week| u64::from(week.commits)).sum();
-    let ticks = [0, top / 2, top];
+    let ticks = ticks(top);
     let last = months.len().saturating_sub(1);
     let caption = match source {
         stats::Source::Live => format!(
@@ -274,9 +285,18 @@ mod tests {
             (77, 100),
             (101, 150),
             (260, 300),
+            (1106, 1250),
         ] {
             assert_eq!(ceiling(max), top, "max {max}");
         }
+    }
+
+    #[test]
+    fn the_midpoint_tick_only_shows_when_it_is_round() {
+        assert_eq!(ticks(20), [0, 10, 20]);
+        assert_eq!(ticks(300), [0, 150, 300]);
+        assert_eq!(ticks(1250), [0, 1250]);
+        assert_eq!(ticks(1500), [0, 750, 1500]);
     }
 
     #[test]
