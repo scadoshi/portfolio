@@ -506,6 +506,12 @@ a.panel-action:visited {
     margin: 0;
 }
 
+/* The numbers take the rest of the row, centered in what the mark leaves. */
+.hero-figures {
+    flex: 1;
+    min-width: 0;
+}
+
 @media (max-width: 62rem) {
     .hero-head {
         flex-direction: column;
@@ -517,7 +523,7 @@ a.panel-action:visited {
 .hero-tagline {
     font-size: 1rem;
     color: var(--text-primary);
-    margin-bottom: 0;
+    margin: 1.25rem 0 0;
 }
 
 /* Keyword highlights cycle the palette, zite-tagline-style. */

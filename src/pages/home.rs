@@ -56,25 +56,14 @@ pub fn Home() -> Element {
             // Sizing wrapper only; the card itself is the shared Panel.
             div { class: "hero-panel",
                 Panel {
+                    // The name, then the numbers it stands for, then the
+                    // sentence under both.
                     div { class: "hero-head",
                         for run in [replay] {
                             h1 { key: "logo{run}", class: "logo", "aria-label": "Scotty Fermo", Decode { text: LOGO_ASCII } }
                         }
-                        p { class: "hero-tagline",
-                            span { class: "hl-warning", "Rust" }
-                            " that runs: an "
-                            span { class: "hl-success", "app" }
-                            " on both stores, a "
-                            span { class: "hl-error", "server" }
-                            " counting the numbers above, and two "
-                            span { class: "hl-tertiary", "storage engines" }
-                            " written from the wire up."
-                        }
-                    }
-                    // Same strip as zwipe.net's hero: a rule, then the numbers.
-                    // A second rule sets off where they come from.
-                    if let Some((totals, source)) = totals {
-                        hr { class: "hero-rule" }
+                        if let Some((totals, source)) = totals.as_ref() {
+                        div { class: "hero-figures",
                         section { class: "stats-strip",
                             div { class: "stat",
                                 span { class: "stat-num", CountUp { value: totals.commits } }
@@ -106,7 +95,21 @@ pub fn Home() -> Element {
                                 stats::Source::AsOf(day) => rsx! { span { class: "tag tag-c0", "as of {day}" } },
                             }
                         }
-                        // The year of contributions, from the same answer.
+                        }
+                        }
+                    }
+                    p { class: "hero-tagline",
+                        span { class: "hl-warning", "Rust" }
+                        " that runs: an "
+                        span { class: "hl-success", "app" }
+                        " on both stores, a "
+                        span { class: "hl-error", "server" }
+                        " counting the numbers above, and two "
+                        span { class: "hl-tertiary", "storage engines" }
+                        " written from the wire up."
+                    }
+                    // The year of contributions, from the same answer.
+                    if totals.is_some() {
                         hr { class: "hero-rule" }
                         Heatmap {}
                     }
