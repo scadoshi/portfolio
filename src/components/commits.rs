@@ -18,15 +18,16 @@ fn px(n: u64) -> f64 {
     n as f64
 }
 
-/// The top of the y axis: the largest week, rounded up to a round number so
+/// The top of a y axis: the largest month, rounded up to a round number so
 /// the ticks read cleanly.
-fn ceiling(max: u32) -> u32 {
+pub fn ceiling(max: u32) -> u32 {
     let step = match max {
         0..=20 => 5,
         21..=50 => 10,
         51..=100 => 25,
         101..=250 => 50,
-        _ => 100,
+        251..=600 => 100,
+        _ => 500,
     };
     max.div_ceil(step).max(1) * step
 }
@@ -170,11 +171,11 @@ pub fn Commits() -> Element {
     let last = months.len().saturating_sub(1);
     let caption = match source {
         stats::Source::Live => format!(
-            "{} commits across the repositories on this page in the last year",
+            "{} commits in the last year, only the repositories heron measures",
             with_separators(total)
         ),
         stats::Source::AsOf(day) => format!(
-            "{} commits across the repositories on this page in the year to {day}",
+            "{} commits in the year to {day}, only the repositories heron measures",
             with_separators(total)
         ),
     };

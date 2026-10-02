@@ -1,15 +1,29 @@
 use dioxus::prelude::*;
 use std::collections::BTreeMap;
 
-use crate::stats::{self, Day, with_separators};
+use crate::{
+    components::{
+        commits::ceiling,
+        curve::{area, curve},
+    },
+    stats::{self, Day, with_separators},
+};
 
 /// Cell size and the gap between cells, in SVG units.
 const CELL: f64 = 11.0;
 const GAP: f64 = 2.0;
 const STEP: f64 = CELL + GAP;
-/// Room on the left for the weekday labels and on top for the months.
-const LEFT: f64 = 28.0;
-const TOP: f64 = 16.0;
+/// Room on the left for the weekday labels and the line's ticks.
+const LEFT: f64 = 34.0;
+/// The month line sits above the grid, on the same columns.
+const LINE_TOP: f64 = 10.0;
+const LINE_HEIGHT: f64 = 90.0;
+const LINE_BOTTOM: f64 = LINE_TOP + LINE_HEIGHT;
+/// Where the grid starts, under the line and the month labels.
+const TOP: f64 = LINE_BOTTOM + 30.0;
+/// A month with fewer days than this in the year is left off the line, so a
+/// year that starts mid-month does not open on a dip.
+const FULL_MONTH: usize = 28;
 
 /// Days since 1970-01-01 for a `YYYY-MM-DD` date, or `None` when it does not
 /// parse. Howard Hinnant's days-from-civil, which needs no calendar crate.
@@ -45,6 +59,17 @@ struct Cell {
 /// Columns a month label needs before the next one, so two never touch.
 const LABEL_SPAN: usize = 3;
 
+/// A month on the line: the columns it spans in the grid and its total.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct Series {
+    /// `Oct 2025`.
+    label: String,
+    first_column: usize,
+    last_column: usize,
+    total: u32,
+    days: usize,
+}
+
 /// A month label: its column, its name, and the month's contributions.
 struct Month {
     column: usize,
@@ -59,15 +84,16 @@ struct Month {
 /// whose first day falls in a new month, unless the next month starts within
 /// `LABEL_SPAN` columns, which is how a year's partial first month goes unlabeled.
 /// Every day's count goes to its month's total, labeled or not, so a label's
-/// total is the whole month as far as the year reaches.
-fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>) {
+/// total is the whole month as far as the year reaches. The series is every
+/// month with enough days to count as whole, oldest first, for the line.
+fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
     let Some(first) = days.first().and_then(|day| days_from_civil(&day.date)) else {
-        return (Vec::new(), Vec::new());
+        return (Vec::new(), Vec::new(), Vec::new());
     };
     let first_sunday = first - weekday(first);
     let mut cells = Vec::with_capacity(days.len());
     let mut months: Vec<Month> = Vec::new();
-    let mut by_month: BTreeMap<&str, u32> = BTreeMap::new();
+    let mut by_month: BTreeMap<&str, Series> = BTreeMap::new();
     let mut last_month = None;
     for day in days {
         let Some(serial) = days_from_civil(&day.date) else {
@@ -76,9 +102,21 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>) {
         let column = usize::try_from((serial - first_sunday) / 7).unwrap_or(0);
         let row = usize::try_from(weekday(serial)).unwrap_or(0);
         let key = day.date.get(..7).unwrap_or("");
-        let total = by_month.entry(key).or_default();
-        *total = total.saturating_add(day.count);
         let month = day.date.get(5..7).unwrap_or("");
+        let series = by_month.entry(key).or_insert_with(|| Series {
+            label: format!(
+                "{} {}",
+                month_name(month).unwrap_or(""),
+                day.date.get(..4).unwrap_or("")
+            ),
+            first_column: column,
+            last_column: column,
+            total: 0,
+            days: 0,
+        });
+        series.last_column = column;
+        series.total = series.total.saturating_add(day.count);
+        series.days += 1;
         if row == 0 && Some(month) != last_month {
             if let Some(name) = month_name(month) {
                 if months
@@ -105,9 +143,29 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>) {
         });
     }
     for month in &mut months {
-        month.total = by_month.get(month.key.as_str()).copied().unwrap_or(0);
+        month.total = by_month
+            .get(month.key.as_str())
+            .map_or(0, |series| series.total);
     }
-    (cells, months)
+    let series = by_month
+        .into_values()
+        .filter(|series| series.days >= FULL_MONTH)
+        .collect();
+    (cells, months, series)
+}
+
+/// Where each month lands on the line: x in the middle of its columns, y
+/// against `top`, with the line's bottom as the baseline.
+fn line_points(series: &[Series], top: u32) -> Vec<(f64, f64)> {
+    series
+        .iter()
+        .map(|month| {
+            let middle = px(month.first_column + month.last_column) / 2.0;
+            let x = LEFT + middle * STEP + CELL / 2.0;
+            let y = LINE_BOTTOM - LINE_HEIGHT * f64::from(month.total) / f64::from(top.max(1));
+            (x, y)
+        })
+        .collect()
 }
 
 fn month_name(month: &str) -> Option<&'static str> {
@@ -171,23 +229,28 @@ pub fn Heatmap() -> Element {
     let Some((calendar, source)) = stats::calendar(live.as_ref()) else {
         return rsx! {};
     };
-    let (cells, months) = layout(&calendar.days);
+    let (cells, months, series) = layout(&calendar.days);
     let Some(columns) = cells.iter().map(|cell| cell.column + 1).max() else {
         return rsx! {};
     };
     let width = LEFT + px(columns) * STEP;
     let height = TOP + 7.0 * STEP;
+    let top = ceiling(series.iter().map(|month| month.total).max().unwrap_or(0));
+    let ticks = [0, top / 2, top];
+    let line_points = line_points(&series, top);
+    let (line, area) = (curve(&line_points), area(&line_points, LINE_BOTTOM));
+    let last = series.len().saturating_sub(1);
     // A chip anchored at an SVG point, as percentages of the grid.
     let tip_at = move |text: String, x: f64, y: f64| {
         show(tip, text, x / width * 100.0, y / height * 100.0);
     };
     let caption = match source {
         stats::Source::Live => format!(
-            "{} contributions on GitHub in the last year, every repository counted",
+            "{} contributions on GitHub in the last year, every repository counted: by month above, by day below",
             with_separators(u64::from(calendar.total))
         ),
         stats::Source::AsOf(day) => format!(
-            "{} contributions on GitHub in the year to {day}, every repository counted",
+            "{} contributions on GitHub in the year to {day}, every repository counted: by month above, by day below",
             with_separators(u64::from(calendar.total))
         ),
     };
@@ -203,6 +266,49 @@ pub fn Heatmap() -> Element {
                 view_box: "0 0 {width} {height}",
                 role: "img",
                 "aria-label": "{caption}",
+                // The month line, on the grid's own columns so a peak sits
+                // over the weeks that made it.
+                for tick in ticks {
+                    {
+                        let y = LINE_BOTTOM - LINE_HEIGHT * f64::from(tick) / f64::from(top.max(1));
+                        rsx! {
+                            g { key: "t{tick}",
+                                line { class: "commits-grid", x1: "{LEFT}", y1: "{y}", x2: "{width}", y2: "{y}" }
+                                text { class: "heatmap-label", x: "{LEFT - 5.0}", y: "{y + 3.0}", text_anchor: "end", "{with_separators(u64::from(tick))}" }
+                            }
+                        }
+                    }
+                }
+                path { class: "commits-area", d: "{area}" }
+                path { class: "commits-line", d: "{line}" }
+                for (i, ((x, y), month)) in line_points.iter().zip(&series).enumerate() {
+                    {
+                        let text = if i == last {
+                            format!("{} in {} so far", with_separators(u64::from(month.total)), month.label)
+                        } else {
+                            format!("{} in {}", with_separators(u64::from(month.total)), month.label)
+                        };
+                        let enter = text.clone();
+                        let tap = text;
+                        let (cx, cy) = (*x, *y);
+                        let hit_x = LEFT + px(month.first_column) * STEP;
+                        let hit_width = px(month.last_column - month.first_column + 1) * STEP;
+                        rsx! {
+                            g { key: "s{month.label}",
+                                rect {
+                                    class: "commits-hit",
+                                    x: "{hit_x}",
+                                    y: "{LINE_TOP}",
+                                    width: "{hit_width}",
+                                    height: "{LINE_HEIGHT}",
+                                    onmouseenter: move |_| tip_at(enter.clone(), cx, cy),
+                                    onclick: move |_| tip_at(tap.clone(), cx, cy),
+                                }
+                                circle { class: "commits-dot", cx: "{cx}", cy: "{cy}", r: "3" }
+                            }
+                        }
+                    }
+                }
                 for month in months.iter() {
                     {
                         let x = LEFT + px(month.column) * STEP;
@@ -307,7 +413,7 @@ mod tests {
             day("2026-10-04", 3),
             day("2026-10-11", 0),
         ];
-        let (cells, months) = layout(&days);
+        let (cells, months, _) = layout(&days);
         let placed: Vec<(usize, usize, u8)> = cells
             .iter()
             .map(|cell| (cell.column, cell.row, cell.level))
@@ -341,7 +447,7 @@ mod tests {
             day("2026-10-25"),
             day("2026-11-01"),
         ];
-        let (_, months) = layout(&days);
+        let (_, months, _) = layout(&days);
         let labels: Vec<(usize, &str)> = months
             .iter()
             .map(|month| (month.column, month.name))
@@ -356,7 +462,7 @@ mod tests {
             count: 99,
             level: 9,
         }];
-        let (cells, _) = layout(&days);
+        let (cells, _, _) = layout(&days);
         assert_eq!(cells[0].level, 4);
     }
 }
