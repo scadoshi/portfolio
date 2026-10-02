@@ -10,6 +10,7 @@ pub fn Navbar() -> Element {
     let theme = use_context::<Signal<ThemeConfig>>();
     let mut open = use_signal(|| false);
     let mut projects_open = use_signal(|| false);
+    let mut replay = use_context::<crate::components::chart::Replay>().0;
 
     rsx! {
         NavBar {
@@ -21,6 +22,8 @@ pub fn Navbar() -> Element {
                     onclick: move |_| {
                         open.set(false);
                         projects_open.set(false);
+                        // On the home page this redraws the chart.
+                        replay += 1;
                         spawn(async {
                             let _ = eval(BRAND_RESET_JS).await;
                         });

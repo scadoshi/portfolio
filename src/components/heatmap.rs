@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     components::{
-        chart::{Tip, anchor, month_name, show},
+        chart::{Replay, Tip, anchor, month_name, show},
         commits::{ceiling, ticks},
         curve::{area, curve},
     },
@@ -26,6 +26,13 @@ const TOP: f64 = LINE_BOTTOM + 30.0;
 /// the lit edge; at most `MAX_PEAKS` of them, the biggest.
 const PEAK_RATIO: u32 = 4;
 const MAX_PEAKS: usize = 12;
+
+/// The entrance: the line draws first, the dots pop in behind it from
+/// `DOTS_AFTER_MS` with `DOT_STAGGER_MS` between them, and the grid sweeps in
+/// a column every `SWEEP_STEP_MS`. The durations are in the stylesheet.
+const DOTS_AFTER_MS: usize = 250;
+const DOT_STAGGER_MS: usize = 70;
+const SWEEP_STEP_MS: usize = 12;
 
 /// A first month with fewer days than this in the year is left off the line,
 /// so a year that starts mid-month does not open on a dip. The last month
@@ -216,6 +223,8 @@ pub fn Heatmap() -> Element {
     };
     let (cells, months, series) = layout(&calendar.days);
     let peaks = peaks(&calendar.days);
+    let replay = use_context::<Replay>().0;
+    let run = replay();
     let Some(columns) = cells.iter().map(|cell| cell.column + 1).max() else {
         return rsx! {};
     };
@@ -247,14 +256,18 @@ pub fn Heatmap() -> Element {
             // wrapper that holds only the grid.
             div { class: "chart-scroll scroll-end",
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
+            // Keyed on the replay count: a new key is a new SVG, and every
+            // animation below starts over.
+            for run in [run] {
             svg {
+                key: "run{run}",
                 class: "heatmap-grid",
                 view_box: "0 0 {width} {height}",
                 role: "img",
                 "aria-label": "{caption}",
                 // The month line, on the grid's own columns so a peak sits
                 // over the weeks that made it.
-                for tick in ticks {
+                for tick in ticks.iter().copied() {
                     {
                         let y = LINE_BOTTOM - LINE_HEIGHT * f64::from(tick) / f64::from(top.max(1));
                         rsx! {
@@ -266,7 +279,8 @@ pub fn Heatmap() -> Element {
                     }
                 }
                 path { class: "commits-area", d: "{area}" }
-                path { class: "commits-line", d: "{line}" }
+                // pathLength 1 so one dash animation draws any curve.
+                path { class: "commits-line", d: "{line}", path_length: "1" }
                 for (i, ((x, y), month)) in line_points.iter().zip(&series).enumerate() {
                     {
                         let text = if i == last {
@@ -290,7 +304,13 @@ pub fn Heatmap() -> Element {
                                     onmouseenter: move |_| tip_at(enter.clone(), cx, cy),
                                     onclick: move |_| tip_at(tap.clone(), cx, cy),
                                 }
-                                circle { class: "commits-dot", cx: "{cx}", cy: "{cy}", r: "3" }
+                                circle {
+                                    class: "commits-dot",
+                                    cx: "{cx}",
+                                    cy: "{cy}",
+                                    r: "3",
+                                    style: "animation-delay: {DOTS_AFTER_MS + i * DOT_STAGGER_MS}ms",
+                                }
                             }
                         }
                     }
@@ -335,6 +355,7 @@ pub fn Heatmap() -> Element {
                             rect {
                                 key: "{cell.date}",
                                 class: "heatmap-cell heat-{cell.level}{peak}",
+                                style: "animation-delay: {cell.column * SWEEP_STEP_MS}ms",
                                 x: "{x}",
                                 y: "{y}",
                                 width: "{CELL}",
@@ -346,6 +367,7 @@ pub fn Heatmap() -> Element {
                         }
                     }
                 }
+            }
             }
             if let Some(tip) = tip() {
                 span {

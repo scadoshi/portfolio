@@ -3,7 +3,9 @@ use zwipe_components::{Banner, Panel};
 
 use crate::{
     Route,
-    components::{heatmap::Heatmap, page_meta::PageMeta, project_card::ProjectCard},
+    components::{
+        count_up::CountUp, heatmap::Heatmap, page_meta::PageMeta, project_card::ProjectCard,
+    },
     data, stats,
 };
 
@@ -70,15 +72,15 @@ pub fn Home() -> Element {
                         hr { class: "hero-rule" }
                         section { class: "stats-strip",
                             div { class: "stat",
-                                span { class: "stat-num", {stats::with_separators(totals.commits)} }
+                                span { class: "stat-num", CountUp { value: totals.commits } }
                                 span { class: "stat-label", "Commits" }
                             }
                             div { class: "stat",
-                                span { class: "stat-num", "{totals.repos}" }
+                                span { class: "stat-num", CountUp { value: u64::from(totals.repos) } }
                                 span { class: "stat-label", "Repos" }
                             }
                             div { class: "stat",
-                                span { class: "stat-num", {stats::with_separators(totals.stars)} }
+                                span { class: "stat-num", CountUp { value: totals.stars } }
                                 span { class: "stat-label", "Stars" }
                             }
                         }
