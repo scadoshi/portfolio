@@ -931,7 +931,7 @@ const HERON: Project = Project {
         "RESP client written here, not a crate",
     ],
     impact_metric: "Found a bug in steller on its first day live",
-    objective: "Give steller a real job. Twelve small JSON values would fit in a HashMap, and heron runs on one if asked. It runs on steller because steller's best bugs were found by running it, never by its tests.",
+    objective: "Give steller a real job. Thirteen small JSON values would fit in a HashMap, and heron runs on one if asked. It runs on steller because steller's best bugs were found by running it, never by its tests.",
     tags: &["axum", "resp", "systemd"],
     media: &[],
     approach: &[

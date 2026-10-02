@@ -779,11 +779,12 @@ a.panel-action:visited {
     margin: 1rem -1.5rem;
 }
 
+/* Three boxed figures, the same tile cairn's home screen uses: a sunk panel
+   with the number in the accent over its label. */
 .stats-strip {
-    display: flex;
-    justify-content: center;
-    gap: 2.5rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
     margin: 0;
 }
 
@@ -792,10 +793,16 @@ a.panel-action:visited {
     flex-direction: column;
     align-items: center;
     gap: 0.15rem;
+    min-width: 0;
+    padding: 0.7rem 0.35rem 0.6rem;
+    border: 1px solid var(--border-secondary);
+    border-radius: 0.8rem;
+    background-color: var(--bg-sink);
+    box-shadow: var(--shadow-sm);
 }
 
 .stats-strip .stat-num {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--accent-primary);
     line-height: 1.1;
