@@ -1,31 +1,13 @@
 use dioxus::prelude::*;
 use zwipe_components::Chip;
 
-use crate::{components::curve::curve, stats::with_separators};
-
-/// What the hover chip says and where it sits, as fractions of the chart.
-#[derive(Clone, PartialEq)]
-struct Tip {
-    text: String,
-    left: f64,
-    top: f64,
-}
-
-fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
-    tip.set(Some(Tip { text, left, top }));
-}
-
-/// Which way the chip hangs off its point: centered in the middle of the
-/// chart, and from its edge near either side so it never leaves the panel.
-fn anchor(left: f64) -> &'static str {
-    if left < 15.0 {
-        "tip-start"
-    } else if left > 85.0 {
-        "tip-end"
-    } else {
-        ""
-    }
-}
+use crate::{
+    components::{
+        chart::{Tip, anchor, show},
+        curve::curve,
+    },
+    stats::with_separators,
+};
 
 /// One row of steller's `BENCHMARKS.md`: `redis-benchmark` at a client count,
 /// requests per second for steller and for Redis 8.10, median of three runs on
@@ -283,8 +265,8 @@ pub fn Benchmark() -> Element {
             }
             p { class: "bench-caption",
                 "redis-benchmark, median of three runs, same laptop, Redis with persistence off, single-threaded client. The low end is wake-up latency, not processing: pipelined, steller does 509k SET per second on one connection. Above 32 clients every session queues on one mutex. "
-                a { href: "https://github.com/scadoshi/steller/blob/main/BENCHMARKS.md", "BENCHMARKS.md" }
-                " has the latencies and the caveats."
+                a { href: "https://github.com/scadoshi/steller/blob/2d3afda/BENCHMARKS.md", "BENCHMARKS.md" }
+                " has the latencies and the caveats; these are its numbers from 2026-09-19."
             }
         }
     }

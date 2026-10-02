@@ -82,8 +82,10 @@ pub fn Fleet() -> Element {
         .map(|counts| counts.measured_at.as_str())
         .max()
         .unwrap_or_default();
+    // The day, as the other chips print dates.
+    let measured_on = measured_at.get(..10).unwrap_or(measured_at);
     let when = match source {
-        stats::Source::Live => format!("measured by heron, last at {measured_at}"),
+        stats::Source::Live => format!("measured by heron on {measured_on}"),
         stats::Source::AsOf(day) => format!("as heron answered on {day}"),
     };
 

@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     components::{
+        chart::{Tip, anchor, month_name, show},
         commits::{ceiling, ticks},
         curve::{area, curve},
     },
@@ -169,53 +170,10 @@ fn line_points(series: &[Series], top: u32) -> Vec<(f64, f64)> {
         .collect()
 }
 
-fn month_name(month: &str) -> Option<&'static str> {
-    Some(match month {
-        "01" => "Jan",
-        "02" => "Feb",
-        "03" => "Mar",
-        "04" => "Apr",
-        "05" => "May",
-        "06" => "Jun",
-        "07" => "Jul",
-        "08" => "Aug",
-        "09" => "Sep",
-        "10" => "Oct",
-        "11" => "Nov",
-        "12" => "Dec",
-        _ => return None,
-    })
-}
-
 /// A count as a coordinate. Weeks and weekdays are tiny, nothing is lost.
 #[allow(clippy::cast_precision_loss)]
 fn px(n: usize) -> f64 {
     n as f64
-}
-
-/// What the hover chip says and where it sits, as a fraction of the grid's
-/// width and height so it follows the grid at any size.
-#[derive(Clone, PartialEq)]
-struct Tip {
-    text: String,
-    left: f64,
-    top: f64,
-}
-
-fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
-    tip.set(Some(Tip { text, left, top }));
-}
-
-/// Which way the chip hangs off its point: centered in the middle of the
-/// chart, and from its edge near either side so it never leaves the panel.
-fn anchor(left: f64) -> &'static str {
-    if left < 15.0 {
-        "tip-start"
-    } else if left > 85.0 {
-        "tip-end"
-    } else {
-        ""
-    }
 }
 
 /// The last year of contributions on GitHub as the profile's grid, drawn from

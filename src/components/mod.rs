@@ -1,4 +1,5 @@
 pub mod benchmark;
+pub mod chart;
 pub mod code_block;
 pub mod commits;
 pub mod curve;

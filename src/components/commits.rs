@@ -1,7 +1,10 @@
 use dioxus::prelude::*;
 
 use crate::{
-    components::curve::{area, curve},
+    components::{
+        chart::{Tip, anchor, month_name, show},
+        curve::{area, curve},
+    },
     stats::{self, WeekCommits, with_separators},
 };
 
@@ -69,7 +72,7 @@ fn by_month(weeks: &[WeekCommits]) -> Vec<Month> {
                 key: key.to_string(),
                 label: format!(
                     "{} {}",
-                    month_of(&week.week),
+                    month_name(week.week.get(5..7).unwrap_or("")).unwrap_or(""),
                     week.week.get(..4).unwrap_or("")
                 ),
                 commits: week.commits,
@@ -77,49 +80,6 @@ fn by_month(weeks: &[WeekCommits]) -> Vec<Month> {
         }
     }
     months
-}
-
-/// `Jan` for `2026-01-04`.
-fn month_of(week: &str) -> &'static str {
-    match week.get(5..7) {
-        Some("01") => "Jan",
-        Some("02") => "Feb",
-        Some("03") => "Mar",
-        Some("04") => "Apr",
-        Some("05") => "May",
-        Some("06") => "Jun",
-        Some("07") => "Jul",
-        Some("08") => "Aug",
-        Some("09") => "Sep",
-        Some("10") => "Oct",
-        Some("11") => "Nov",
-        Some("12") => "Dec",
-        _ => "",
-    }
-}
-
-/// What the hover chip says and where it sits, as fractions of the chart.
-#[derive(Clone, PartialEq)]
-struct Tip {
-    text: String,
-    left: f64,
-    top: f64,
-}
-
-fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
-    tip.set(Some(Tip { text, left, top }));
-}
-
-/// Which way the chip hangs off its point: centered in the middle of the
-/// chart, and from its edge near either side so it never leaves the panel.
-fn anchor(left: f64) -> &'static str {
-    if left < 15.0 {
-        "tip-start"
-    } else if left > 85.0 {
-        "tip-end"
-    } else {
-        ""
-    }
 }
 
 /// The drawing area a series is placed in.
@@ -349,12 +309,5 @@ mod tests {
         let (line, area) = paths(&points, HEIGHT - BOTTOM);
         assert!(line.starts_with("M 40.0 192.0 C"), "{line}");
         assert!(area.ends_with('Z'), "{area}");
-    }
-
-    #[test]
-    fn months_come_from_the_week_date() {
-        assert_eq!(month_of("2026-01-04"), "Jan");
-        assert_eq!(month_of("2026-12-27"), "Dec");
-        assert_eq!(month_of("soon"), "");
     }
 }
