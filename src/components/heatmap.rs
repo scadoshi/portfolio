@@ -190,17 +190,35 @@ fn peaks(days: &[Day]) -> Vec<&str> {
     peaks.into_iter().map(|day| day.date.as_str()).collect()
 }
 
-/// The points with a flat run out to either edge of the grid, so the line and
-/// its fill span the same width as the cells while the dots stay on the month
-/// centers. Empty stays empty.
-fn to_the_edges(points: &[(f64, f64)], left: f64, right: f64) -> Vec<(f64, f64)> {
+/// The points carried on to either edge of the grid along the slope they
+/// arrive with, held between `top` and `bottom`, so the line and its fill
+/// span the same width as the cells and leave as if the months beyond the
+/// year were there. The dots stay on the month centers. A single point runs
+/// flat; empty stays empty.
+fn to_the_edges(
+    points: &[(f64, f64)],
+    left: f64,
+    right: f64,
+    top: f64,
+    bottom: f64,
+) -> Vec<(f64, f64)> {
     let (Some(first), Some(last)) = (points.first(), points.last()) else {
         return Vec::new();
     };
+    let carry = |from: &(f64, f64), toward: Option<&(f64, f64)>, x: f64| {
+        let slope = toward
+            .filter(|next| (next.0 - from.0).abs() > f64::EPSILON)
+            .map_or(0.0, |next| (next.1 - from.1) / (next.0 - from.0));
+        (x, (from.1 + slope * (x - from.0)).clamp(top, bottom))
+    };
     let mut drawn = Vec::with_capacity(points.len() + 2);
-    drawn.push((left, first.1));
+    drawn.push(carry(first, points.get(1), left));
     drawn.extend_from_slice(points);
-    drawn.push((right, last.1));
+    drawn.push(carry(
+        last,
+        points.len().checked_sub(2).and_then(|i| points.get(i)),
+        right,
+    ));
     drawn
 }
 
@@ -248,7 +266,7 @@ pub fn Heatmap() -> Element {
     let top = ceiling(series.iter().map(|month| month.total).max().unwrap_or(0));
     let ticks = ticks(top);
     let line_points = line_points(&series, top);
-    let drawn = to_the_edges(&line_points, LEFT, width);
+    let drawn = to_the_edges(&line_points, LEFT, width, LINE_TOP, LINE_BOTTOM);
     let (line, area) = (curve(&drawn), area(&drawn, LINE_BOTTOM));
     let last = series.len().saturating_sub(1);
     // A chip anchored at an SVG point, as percentages of the grid.
@@ -481,13 +499,20 @@ mod tests {
     }
 
     #[test]
-    fn the_line_runs_flat_to_both_edges() {
+    fn the_line_carries_its_slope_to_both_edges_and_stops_at_the_floor() {
+        // Rising 20 over 40 either way: 20 back to the left edge lands at 0,
+        // 20 on to the right edge would reach 40 but the floor is 35.
         let points = [(40.0, 10.0), (80.0, 30.0)];
         assert_eq!(
-            to_the_edges(&points, 0.0, 100.0),
-            [(0.0, 10.0), (40.0, 10.0), (80.0, 30.0), (100.0, 30.0)]
+            to_the_edges(&points, 0.0, 100.0, 0.0, 35.0),
+            [(0.0, 0.0), (40.0, 10.0), (80.0, 30.0), (100.0, 35.0)]
         );
-        assert_eq!(to_the_edges(&[], 0.0, 100.0), [(0.0, 0.0); 0]);
+        assert_eq!(
+            to_the_edges(&[(50.0, 12.0)], 0.0, 100.0, 0.0, 35.0),
+            [(0.0, 12.0), (50.0, 12.0), (100.0, 12.0)],
+            "one point runs flat"
+        );
+        assert_eq!(to_the_edges(&[], 0.0, 100.0, 0.0, 35.0), [(0.0, 0.0); 0]);
     }
 
     #[test]
