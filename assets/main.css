@@ -122,25 +122,11 @@ html.js:not(.hydrated) .stat-num {
     visibility: hidden;
 }
 
-html.js:not(.hydrated) .logo,
 html.js:not(.hydrated) .heatmap-grid .commits-line,
 html.js:not(.hydrated) .heatmap-grid .commits-area,
 html.js:not(.hydrated) .heatmap-grid .commits-dot,
 html.js:not(.hydrated) .heatmap-cell {
     animation-play-state: paused;
-}
-
-@keyframes logo-enter {
-    from {
-        letter-spacing: 0.625rem;
-        opacity: 0;
-        transform: translateY(-0.75rem);
-    }
-    to {
-        letter-spacing: 0;
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .logo {
@@ -153,7 +139,6 @@ html.js:not(.hydrated) .heatmap-cell {
     color: var(--logo);
     margin: 0 0 1.5rem;
     font-weight: normal;
-    animation: logo-enter 0.6s ease-out backwards;
 }
 
 /* === Announcement Banner === */
@@ -334,8 +319,7 @@ a:visited {
 
     .content-enter,
     .hero-panel,
-    .home-band,
-    .logo {
+    .home-band {
         animation: none;
     }
 }
