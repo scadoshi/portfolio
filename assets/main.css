@@ -117,8 +117,7 @@
    the chart's animations stay on their first frame in between, and the
    whole entrance runs as one once the app is up. Without script neither
    class lands and the prerendered page shows settled. */
-html.js:not(.hydrated) .logo,
-html.js:not(.hydrated) .stat-num {
+html.js:not(.hydrated) .logo {
     visibility: hidden;
 }
 
