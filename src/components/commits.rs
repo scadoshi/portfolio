@@ -14,6 +14,10 @@ const LEFT: f64 = 40.0;
 const RIGHT: f64 = 12.0;
 const TOP: f64 = 14.0;
 const BOTTOM: f64 = 28.0;
+/// The entrance: the line draws first, the dots pop in behind it from
+/// `DOTS_AFTER_MS` with `DOT_STAGGER_MS` between them.
+const DOTS_AFTER_MS: usize = 250;
+const DOT_STAGGER_MS: usize = 70;
 
 /// A count as a coordinate. Weeks and commit counts are small, nothing is lost.
 #[allow(clippy::cast_precision_loss)]
@@ -184,7 +188,8 @@ pub fn Commits() -> Element {
                     }
                 }
                 path { class: "commits-area", d: "{area}" }
-                path { class: "commits-line", d: "{line}" }
+                // pathLength 1 so one dash animation draws any curve.
+                path { class: "commits-line", d: "{line}", path_length: "1" }
                 for (i, ((x, y), month)) in total_points.iter().zip(&months).enumerate() {
                     {
                         let text = if i == last {
@@ -210,7 +215,13 @@ pub fn Commits() -> Element {
                                     onmouseenter: move |_| show(tip, enter.clone(), left, top_pct),
                                     onclick: move |_| show(tip, tap.clone(), left, top_pct),
                                 }
-                                circle { class: "commits-dot", cx: "{cx}", cy: "{cy}", r: "3" }
+                                circle {
+                                    class: "commits-dot",
+                                    cx: "{cx}",
+                                    cy: "{cy}",
+                                    r: "3",
+                                    style: "animation-delay: {DOTS_AFTER_MS + i * DOT_STAGGER_MS}ms",
+                                }
                             }
                         }
                     }

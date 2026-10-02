@@ -41,6 +41,10 @@ const LABEL_WIDTH: f64 = 204.0;
 const CHART_WIDTH: f64 = 640.0;
 const ROW_HEIGHT: f64 = 22.0;
 const BAR_HEIGHT: f64 = 14.0;
+/// The entrance: rows start this far apart, and a value follows its bar by
+/// this much. The durations are in the stylesheet.
+const ROW_STAGGER_MS: usize = 45;
+const VALUE_AFTER_MS: usize = 350;
 
 /// Every repository heron measures, as bars of one metric, drawn from the same
 /// snapshot the cards use. Renders nothing when nothing has been measured.
@@ -130,19 +134,21 @@ pub fn Fleet() -> Element {
                                     text_anchor: "end",
                                     "{name}"
                                 }
+                                // The entrance grows each bar from the left, a
+                                // row at a time, and the value fades in after it.
                                 rect {
                                     class: "fleet-bar",
                                     x: "{LABEL_WIDTH}",
                                     y: "0",
                                     height: "{BAR_HEIGHT}",
                                     rx: "3",
-                                    style: "width: {width}px",
+                                    style: "width: {width}px; animation-delay: {i * ROW_STAGGER_MS}ms",
                                 }
                                 text {
                                     class: "fleet-value",
                                     x: "0",
                                     y: "{BAR_HEIGHT - 3.0}",
-                                    style: "transform: translateX({LABEL_WIDTH + width + 6.0}px)",
+                                    style: "transform: translateX({LABEL_WIDTH + width + 6.0}px); animation-delay: {i * ROW_STAGGER_MS + VALUE_AFTER_MS}ms",
                                     "{with_separators(*value)}"
                                 }
                             }

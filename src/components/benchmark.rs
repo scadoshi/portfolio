@@ -116,6 +116,10 @@ const TOP: f64 = 16.0;
 const BOTTOM: f64 = 44.0;
 /// The top of the y axis, above the largest number in the table.
 const Y_MAX: f64 = 200_000.0;
+/// The entrance: the lines draw first, the dots pop in behind them from
+/// `DOTS_AFTER_MS` with `DOT_STAGGER_MS` between them.
+const DOTS_AFTER_MS: usize = 250;
+const DOT_STAGGER_MS: usize = 90;
 
 /// Client counts are powers of two, so they sit evenly on a log axis: one slot
 /// per row.
@@ -209,14 +213,30 @@ pub fn Benchmark() -> Element {
                     x: "{-(TOP + (HEIGHT - TOP - BOTTOM) / 2.0)}", y: "12", text_anchor: "middle",
                     "requests per second"
                 }
-                // The two series, with a dot on every measured point.
-                path { class: "bench-line bench-steller", d: "{curve(&steller)}" }
-                path { class: "bench-line bench-redis", d: "{curve(&redis)}" }
+                // The two series, with a dot on every measured point. pathLength
+                // 1 so one dash animation draws either curve; the dots pop in
+                // behind the pen on their own delays.
+                path { class: "bench-line bench-steller", d: "{curve(&steller)}", path_length: "1" }
+                path { class: "bench-line bench-redis", d: "{curve(&redis)}", path_length: "1" }
                 for (i, (x, y)) in steller.iter().enumerate() {
-                    circle { key: "s{i}", class: "bench-dot bench-steller", cx: "{x}", cy: "{y}", r: "3" }
+                    circle {
+                        key: "s{i}",
+                        class: "bench-dot bench-steller",
+                        cx: "{x}",
+                        cy: "{y}",
+                        r: "3",
+                        style: "animation-delay: {DOTS_AFTER_MS + i * DOT_STAGGER_MS}ms",
+                    }
                 }
                 for (i, (x, y)) in redis.iter().enumerate() {
-                    circle { key: "r{i}", class: "bench-dot bench-redis", cx: "{x}", cy: "{y}", r: "3" }
+                    circle {
+                        key: "r{i}",
+                        class: "bench-dot bench-redis",
+                        cx: "{x}",
+                        cy: "{y}",
+                        r: "3",
+                        style: "animation-delay: {DOTS_AFTER_MS + i * DOT_STAGGER_MS}ms",
+                    }
                 }
                 // A hit column per client count: the chip names both servers'
                 // numbers and sits above the higher of the two points.
