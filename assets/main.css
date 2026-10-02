@@ -1377,18 +1377,20 @@ rect.fleet-bar {
 /* Wraps a chart so one wider than the screen scrolls sideways. A scrolling
    box clips whatever hangs out of it, so the top padding leaves room for a
    hover chip over the top row and the negative margin gives that space back
-   to the page. The box ignores the pointer so the strip it overlaps above the
-   chart still belongs to whatever sits there; the chart itself takes it. */
+   to the page. The box overlaps the strip above the chart, so the chip rows
+   that sit there are raised over it; a box that ignored the pointer instead
+   would not scroll under a finger on iOS. */
 .chart-scroll {
     overflow-x: auto;
     scrollbar-width: thin;
     padding-top: 2.25rem;
     margin-top: -2.25rem;
-    pointer-events: none;
 }
 
-.chart-scroll > * {
-    pointer-events: auto;
+.theme-wrapper .fleet-metrics,
+.theme-wrapper .bench-commands {
+    position: relative;
+    z-index: 1;
 }
 
 @media (max-width: 40rem) {
