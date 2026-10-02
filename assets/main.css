@@ -482,10 +482,12 @@ a.panel-action:visited {
 
 .hero {
     text-align: center;
-    /* The wordmark sits close under the nav so the chart below it reaches a
-       laptop's first screen. Bottom gap is the panel margin below, matching
-       the band's 1.5rem rhythm. */
-    padding: 1.25rem 1.5rem 0;
+    /* Pulls up under the nav's 3rem bottom margin so the panel, chart and all,
+       reaches a laptop's first screen; only this page, since only this page has
+       something that tall at the top. Bottom gap is the panel margin below,
+       matching the band's 1.5rem rhythm. */
+    margin-top: -2rem;
+    padding: 0 1.5rem 0;
 }
 
 /* Sizing wrapper only. The card chrome comes from the shared Panel inside.
