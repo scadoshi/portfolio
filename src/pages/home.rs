@@ -66,15 +66,15 @@ pub fn Home() -> Element {
                         div { class: "hero-figures",
                         section { class: "stats-strip",
                             div { class: "stat",
-                                span { class: "stat-num", CountUp { value: totals.commits } }
+                                span { class: "stat-num", CountUp { value: Some(totals.commits) } }
                                 span { class: "stat-label", "Commits" }
                             }
                             div { class: "stat",
-                                span { class: "stat-num", CountUp { value: u64::from(totals.repos) } }
+                                span { class: "stat-num", CountUp { value: Some(u64::from(totals.repos)) } }
                                 span { class: "stat-label", "Repos" }
                             }
                             div { class: "stat",
-                                span { class: "stat-num", CountUp { value: totals.stars } }
+                                span { class: "stat-num", CountUp { value: Some(totals.stars) } }
                                 span { class: "stat-label", "Stars" }
                             }
                         }

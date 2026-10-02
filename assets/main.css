@@ -117,9 +117,6 @@
    the chart's animations stay on their first frame in between, and the
    whole entrance runs as one once the app is up. Without script neither
    class lands and the prerendered page shows settled. */
-html.js:not(.hydrated) .logo {
-    visibility: hidden;
-}
 
 /* The shell's own toast, shown when the app never loads. It borrows the
    banner look from the shared sheet and sits bottom left, clear of the stack
