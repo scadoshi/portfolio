@@ -101,6 +101,7 @@ pub fn Fleet() -> Element {
                     }
                 }
             }
+            div { class: "chart-scroll",
             svg {
                 class: "fleet-chart",
                 view_box: "0 0 {CHART_WIDTH} {height}",
@@ -146,6 +147,7 @@ pub fn Fleet() -> Element {
                         }
                     }
                 }
+            }
             }
             div { class: "tag-row fleet-caption",
                 span { class: "tag tag-c0", "{when}" }

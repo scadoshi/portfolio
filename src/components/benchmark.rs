@@ -182,6 +182,7 @@ pub fn Benchmark() -> Element {
             }
             // The chip is placed by percentages of the chart, so it lives in a
             // wrapper that holds only the chart.
+            div { class: "chart-scroll",
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
             svg {
                 class: "bench-chart",
@@ -273,6 +274,7 @@ pub fn Benchmark() -> Element {
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }
+            }
             }
             }
             div { class: "bench-legend",

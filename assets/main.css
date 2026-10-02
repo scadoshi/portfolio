@@ -1358,12 +1358,45 @@ rect.fleet-bar {
 .chart-plot {
     position: relative;
     width: 90%;
+    /* Never narrower than a readable figure: on a phone .chart-scroll scrolls
+       sideways instead of the chart shrinking. */
+    min-width: 36rem;
     margin-inline: auto;
+}
+
+.heatmap .chart-plot {
+    min-width: 44rem;
 }
 
 .fleet-chart {
     width: 90%;
+    min-width: 32rem;
     margin-inline: auto;
+}
+
+/* Wraps a chart so one wider than the screen scrolls sideways. A scrolling
+   box clips whatever hangs out of it, so the top padding leaves room for a
+   hover chip over the top row and the negative margin gives that space back
+   to the page. The box ignores the pointer so the strip it overlaps above the
+   chart still belongs to whatever sits there; the chart itself takes it. */
+.chart-scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-top: 2.25rem;
+    margin-top: -2.25rem;
+    pointer-events: none;
+}
+
+.chart-scroll > * {
+    pointer-events: auto;
+}
+
+@media (max-width: 40rem) {
+    .chart-plot,
+    .fleet-chart,
+    .theme-wrapper .diagram {
+        width: 100%;
+    }
 }
 
 /* The flow diagram is boxes and arrows, not a figure to read values off,

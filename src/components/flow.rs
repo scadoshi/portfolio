@@ -7,6 +7,7 @@ use zwipe_components::{DiagramArrow, DiagramDefs, DiagramNode, DiagramTone};
 #[component]
 pub fn Flow() -> Element {
     rsx! {
+        div { class: "diagram-scroll",
         svg {
             class: "diagram",
             view_box: "0 0 720 236",
@@ -24,6 +25,7 @@ pub fn Flow() -> Element {
             DiagramArrow { x1: 435.0, y1: 40.0, x2: 550.0, y2: 40.0, label: "each build" }
             DiagramArrow { x1: 435.0, y1: 62.0, x2: 550.0, y2: 176.0, label: "5 min at the edge" }
             DiagramArrow { x1: 360.0, y1: 76.0, x2: 360.0, y2: 160.0, both: true }
+        }
         }
     }
 }

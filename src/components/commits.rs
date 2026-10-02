@@ -155,6 +155,7 @@ const TOTAL_FRAME: Frame = Frame {
 pub fn Commits() -> Element {
     let live = use_context::<stats::Live>();
     let mut tip: Signal<Option<Tip>> = use_signal(|| None);
+    crate::components::scroll::use_scroll_to_end();
     let live = live.read();
     let Some((weeks, source)) = stats::weekly_commits(live.as_ref()) else {
         return rsx! {};
@@ -182,6 +183,7 @@ pub fn Commits() -> Element {
         div { class: "commits",
             // The chip is placed by percentages of the chart, so it lives in a
             // wrapper that holds only the chart.
+            div { class: "chart-scroll scroll-end",
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
             svg {
                 class: "commits-chart",
@@ -248,6 +250,7 @@ pub fn Commits() -> Element {
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }
+            }
             }
             }
             p { class: "commits-caption", "{caption}" }
