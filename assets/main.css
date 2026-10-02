@@ -839,6 +839,28 @@ a.panel-action:visited {
         border-color 0.15s ease;
 }
 
+/* The chip that says which numbers are showing fades up when it changes. */
+.stats-source .tag-swap {
+    animation: chip-in 0.4s ease-out both;
+}
+
+@keyframes chip-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.35rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-source .tag-swap {
+        animation: none;
+    }
+}
+
 @media (hover: hover) {
     .stats-source a.tag:hover {
         transform: translateY(-2px) scale(1.04);

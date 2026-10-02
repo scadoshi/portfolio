@@ -90,9 +90,14 @@ pub fn Home() -> Element {
                                 to: Route::ProjectDetail { slug: "steller".to_string() },
                                 "cached in steller"
                             }
-                            match source {
-                                stats::Source::Live => rsx! { span { class: "tag tag-c0", "live" } },
-                                stats::Source::AsOf(day) => rsx! { span { class: "tag tag-c0", "as of {day}" } },
+                            // Keyed on its text, so the live chip arrives with the
+                            // ease rather than the as-of chip changing its words.
+                            {
+                                let label = match source {
+                                    stats::Source::Live => "live".to_string(),
+                                    stats::Source::AsOf(day) => format!("as of {day}"),
+                                };
+                                rsx! { span { key: "{label}", class: "tag tag-c0 tag-swap", "{label}" } }
                             }
                         }
                         }
