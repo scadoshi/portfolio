@@ -33,14 +33,8 @@ fn approach_panel(project: &'static data::Project) -> Element {
 /// now; steller's page shows its benchmark against Redis. Empty for the rest.
 fn project_panels(project: &'static data::Project) -> Element {
     match project.slug {
+        // The numbers first, then the path they took to get here.
         "heron" => rsx! {
-            Panel {
-                eyebrow: "Live",
-                title: "How a number gets here",
-                section { class: "project-section",
-                    Flow {}
-                }
-            }
             Panel {
                 eyebrow: "Measured",
                 title: "What it is counting right now",
@@ -53,6 +47,13 @@ fn project_panels(project: &'static data::Project) -> Element {
                 title: "Commits, month by month",
                 section { class: "project-section",
                     Commits {}
+                }
+            }
+            Panel {
+                eyebrow: "Pipeline",
+                title: "How a number gets here",
+                section { class: "project-section",
+                    Flow {}
                 }
             }
         },
