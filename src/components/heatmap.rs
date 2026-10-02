@@ -190,6 +190,20 @@ fn peaks(days: &[Day]) -> Vec<&str> {
     peaks.into_iter().map(|day| day.date.as_str()).collect()
 }
 
+/// The points with a flat run out to either edge of the grid, so the line and
+/// its fill span the same width as the cells while the dots stay on the month
+/// centers. Empty stays empty.
+fn to_the_edges(points: &[(f64, f64)], left: f64, right: f64) -> Vec<(f64, f64)> {
+    let (Some(first), Some(last)) = (points.first(), points.last()) else {
+        return Vec::new();
+    };
+    let mut drawn = Vec::with_capacity(points.len() + 2);
+    drawn.push((left, first.1));
+    drawn.extend_from_slice(points);
+    drawn.push((right, last.1));
+    drawn
+}
+
 /// Where each month lands on the line: x in the middle of its columns, y
 /// against `top`, with the line's bottom as the baseline.
 fn line_points(series: &[Series], top: u32) -> Vec<(f64, f64)> {
@@ -234,7 +248,8 @@ pub fn Heatmap() -> Element {
     let top = ceiling(series.iter().map(|month| month.total).max().unwrap_or(0));
     let ticks = ticks(top);
     let line_points = line_points(&series, top);
-    let (line, area) = (curve(&line_points), area(&line_points, LINE_BOTTOM));
+    let drawn = to_the_edges(&line_points, LEFT, width);
+    let (line, area) = (curve(&drawn), area(&drawn, LINE_BOTTOM));
     let last = series.len().saturating_sub(1);
     // A chip anchored at an SVG point, as percentages of the grid.
     let tip_at = move |text: String, x: f64, y: f64| {
@@ -463,6 +478,16 @@ mod tests {
             .map(|month| (month.column, month.name))
             .collect();
         assert_eq!(labels, [(1, "Oct"), (5, "Nov")]);
+    }
+
+    #[test]
+    fn the_line_runs_flat_to_both_edges() {
+        let points = [(40.0, 10.0), (80.0, 30.0)];
+        assert_eq!(
+            to_the_edges(&points, 0.0, 100.0),
+            [(0.0, 10.0), (40.0, 10.0), (80.0, 30.0), (100.0, 30.0)]
+        );
+        assert_eq!(to_the_edges(&[], 0.0, 100.0), [(0.0, 0.0); 0]);
     }
 
     #[test]
