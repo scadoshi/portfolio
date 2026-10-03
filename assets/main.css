@@ -1247,10 +1247,6 @@ a.panel-action:visited {
 /* 60rem matches zite's nav breakpoint; also wide enough to catch
    landscape phones (≤932px CSS width even on the largest models) */
 @media (max-width: 60rem) {
-    .hero {
-        padding: 3rem 1.5rem 0;
-    }
-
     .projects-grid {
         grid-template-columns: 1fr;
     }
