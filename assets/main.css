@@ -167,6 +167,10 @@ html.js:not(.hydrated) .heatmap-cell {
 }
 
 html {
+    /* iOS Safari inflates text it takes for body copy on a phone; text keeps
+       the size the sheet gives it. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     /* No elastic overscroll past the header or footer; the page stops
        dead at its vertical boundaries. */
     overscroll-behavior-y: none;
