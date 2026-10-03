@@ -1705,7 +1705,15 @@ rect.fleet-bar {
 .heat-peak {
     stroke: color-mix(in srgb, var(--accent-primary) 60%, #fff);
     stroke-width: 1;
-    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--accent-primary) 80%, #fff));
+}
+
+/* The glow behind a peak: a soft square of the accent, drawn as a shape so
+   every browser shows it. Sweeps in with its cell. */
+.heat-halo {
+    fill: color-mix(in srgb, var(--accent-primary) 45%, transparent);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: chart-sweep 0.4s ease-out backwards;
 }
 
 .heatmap-caption {

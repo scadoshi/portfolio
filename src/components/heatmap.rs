@@ -386,6 +386,20 @@ pub fn Heatmap() -> Element {
                         let enter = text.clone();
                         let tap = text;
                         rsx! {
+                            // The halo is a shape of its own rather than a filter:
+                            // iOS Safari applies no CSS filter to an SVG child.
+                            if !peak.is_empty() {
+                                rect {
+                                    key: "halo{cell.date}",
+                                    class: "heat-halo",
+                                    style: "animation-delay: {cell.column * SWEEP_STEP_MS}ms",
+                                    x: "{x - 2.5}",
+                                    y: "{y - 2.5}",
+                                    width: "{CELL + 5.0}",
+                                    height: "{CELL + 5.0}",
+                                    rx: "4",
+                                }
+                            }
                             rect {
                                 key: "{cell.date}",
                                 class: "heatmap-cell heat-{cell.level}{peak}",
