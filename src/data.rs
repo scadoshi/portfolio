@@ -773,7 +773,7 @@ const CHICKADEE: Project = Project {
     headline: "LSM-tree key-value database from scratch. TCP server, concurrent connections, WAL, SSTables, bloom filters, k-way compaction.",
     category: "Database Internals",
     repo_url: "https://github.com/scadoshi/chickadee",
-    summary: "LSM-tree key-value database built phase by phase from the Bitcask paper. The architecture behind LevelDB, RocksDB, and Cassandra.",
+    summary: "Key-value database that started from the Bitcask paper and grew, phase by phase, into an LSM tree. The architecture behind LevelDB, RocksDB, and Cassandra.",
     card_bullets: &[
         "TCP server with thread-per-connection concurrency, per-command locking",
         "WAL durability, BTreeMap memtable, bloom-filtered SSTables",
