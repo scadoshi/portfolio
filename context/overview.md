@@ -93,7 +93,7 @@ content-hashes filenames, so anything referenced by a literal path has to live i
 
 ## Writing content
 
-The bar is in `rules/commit_guidelines.md`, `rules/comment_guidelines.md` and the humanizer skill: short enough
+The bar is in `rules/commit_guidelines.md`, `rules/comment_guidelines.md` and the `/human` skill: short enough
 that a person reads it, specific enough to be checkable, and the code is the real
 evidence. Long comprehensive prose reads as machine-written and gets skipped, which
 is worse than saying less.
