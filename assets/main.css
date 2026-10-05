@@ -660,12 +660,19 @@ a.panel-action:visited {
         max-height: 55vh;
     }
 
-    /* Single-stack order is about -> projects -> side quests -> contribute,
-       which no DOM order can give both columns at once. display:contents
-       dissolves the two column wrappers so all six panels become flex items
-       of the band itself, then order interleaves them. The .sr-only headings
-       are position:absolute, so they never become flex items and can't take
-       an order slot. Indices count those headings: child 1 in each column. */
+    /* Single-stack order is about -> projects -> how I use AI -> side quests
+       -> contribute, which no DOM order can give both columns at once.
+       display:contents dissolves the two column wrappers so every panel
+       becomes a flex item of the band itself, then order interleaves them.
+       The .sr-only headings are position:absolute, so they never become flex
+       items and can't take an order slot. Indices count those headings:
+       child 1 in each column. An aside panel without an index here would
+       default to order 0 and jump to the top, which is how contribute ended
+       up first on phones; the catch-all sends any new one to the bottom. */
+    .band-aside > * {
+        order: 9;
+    }
+
     .home-band {
         display: flex;
         flex-direction: column;
@@ -689,6 +696,10 @@ a.panel-action:visited {
 
     .band-aside > :nth-child(4) {
         order: 4;
+    }
+
+    .band-aside > :nth-child(5) {
+        order: 5;
     }
 }
 
