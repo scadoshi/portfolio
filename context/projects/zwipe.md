@@ -2,7 +2,7 @@
 
 ## Headline
 
-Full-stack MTG deck builder in Rust — Axum backend, Dioxus frontend, PostgreSQL, 35k+ cards.
+Full-stack MTG deck builder in Rust — Axum backend, Dioxus frontend, PostgreSQL, 118k+ printings.
 
 ## Category
 
@@ -62,7 +62,7 @@ outbound/      External systems
 
 ## Status
 
-Active development. Auth, card database, deck management, and card search are complete. Working on deck card browser with full-screen swipeable card viewer.
+Live on both app stores since 2026-06-09 and still in active development. `src/data.rs` is the source of truth for what the site says.
 
 ## Repo
 
