@@ -1,6 +1,6 @@
 use dioxus::{document::eval, prelude::*};
 use zwipe_components::{
-    BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemePicker,
+    BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemePicker, use_theme_wipe,
 };
 
 use crate::Route;
@@ -9,7 +9,7 @@ const LOGO_S: &str = include_str!("../../assets/s.txt");
 
 #[component]
 pub fn Navbar() -> Element {
-    let theme = crate::theme_wipe::use_theme_wipe(use_context::<Signal<ThemeConfig>>());
+    let (theme, shown) = use_theme_wipe(use_context::<Signal<ThemeConfig>>(), ".theme-wrapper");
     let mut open = use_signal(|| false);
     let mut projects_open = use_signal(|| false);
     let mut replay = use_context::<Replay>().0;
@@ -128,7 +128,7 @@ pub fn Navbar() -> Element {
                 }
             },
             trailing: rsx! {
-                ThemePicker { theme }
+                ThemePicker { theme, shown }
             },
         }
     }

@@ -326,29 +326,6 @@ a:visited {
     }
 }
 
-/* === Theme wipe ===
-   A picked theme sweeps in from the left (theme_wipe.rs): the new page's
-   snapshot is unclipped left to right over the old one. These are the site's
-   only view transitions, so they style the root snapshot directly. */
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-}
-
-::view-transition-new(root) {
-    animation: theme-wipe 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-@keyframes theme-wipe {
-    from {
-        clip-path: inset(0 100% 0 0);
-    }
-    to {
-        clip-path: inset(0 0 0 0);
-    }
-}
-
 /* === Navbar === */
 
 /* The nav shell (sticky wrapper, hamburger, collapsing panel, link pills)
@@ -479,6 +456,17 @@ a.panel-action:visited {
 .nav-dropdown-content {
     left: 0;
     right: auto;
+}
+
+/* The theme menu is the exception: its rows carry color dots, which make it
+   wide enough to run off the right edge from the last pill but one. It hangs
+   from its pill's right edge instead. Above the hamburger breakpoint only, so
+   the crate's in-panel placement still applies below it. */
+@media (width > 60rem) {
+    .theme-switcher .nav-dropdown-content {
+        left: auto;
+        right: 0;
+    }
 }
 
 /* === Theme Switcher === */

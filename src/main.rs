@@ -5,7 +5,6 @@ mod data;
 mod pages;
 mod stats;
 mod theme_store;
-mod theme_wipe;
 
 use pages::{
     contribute::Contribute,
@@ -18,6 +17,7 @@ use zwipe_components::{COMPONENTS_CSS, THEMES_CSS, ThemeConfig};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 const REVEAL_JS: Asset = asset!("/assets/reveal.js");
+const NAV_GLIDE_JS: Asset = asset!("/assets/nav-glide.js");
 const FAVICON_ICO: Asset = asset!("/assets/favicon/favicon.ico");
 const FAVICON_16: Asset = asset!("/assets/favicon/favicon-16x16.png");
 const FAVICON_32: Asset = asset!("/assets/favicon/favicon-32x32.png");
@@ -174,6 +174,8 @@ fn App() -> Element {
         // Scroll reveal for panels below the fold; deferred for the same
         // first-paint reason, and everything it does is progressive.
         document::Script { defer: true, src: REVEAL_JS }
+        // Nav items pushed by a wider theme label slide over instead of jumping.
+        document::Script { defer: true, src: NAV_GLIDE_JS }
         Router::<Route> {}
     }
 }
