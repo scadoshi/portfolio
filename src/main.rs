@@ -5,6 +5,7 @@ mod data;
 mod pages;
 mod stats;
 mod theme_store;
+mod theme_wipe;
 
 use pages::{
     contribute::Contribute,

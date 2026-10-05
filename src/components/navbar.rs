@@ -9,7 +9,7 @@ const LOGO_S: &str = include_str!("../../assets/s.txt");
 
 #[component]
 pub fn Navbar() -> Element {
-    let theme = use_context::<Signal<ThemeConfig>>();
+    let theme = crate::theme_wipe::use_theme_wipe(use_context::<Signal<ThemeConfig>>());
     let mut open = use_signal(|| false);
     let mut projects_open = use_signal(|| false);
     let mut replay = use_context::<Replay>().0;
