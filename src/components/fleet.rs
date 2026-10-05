@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::Chip;
+use zwipe_components::{Chip, Replay};
 
 use crate::stats::{self, with_separators};
 
@@ -50,6 +50,7 @@ const VALUE_AFTER_MS: usize = 350;
 /// snapshot the cards use. Renders nothing when nothing has been measured.
 #[component]
 pub fn Fleet() -> Element {
+    let run = use_context::<Replay>().0();
     let live = use_context::<stats::Live>();
     let mut metric = use_signal(|| Metric::Tests);
     let live = live.read();
@@ -108,7 +109,11 @@ pub fn Fleet() -> Element {
                 }
             }
             div { class: "chart-scroll",
+            // Keyed on the replay count, as the heatmap is: a theme wipe makes a
+            // new key, a new SVG, and every animation below starts over.
+            for run in [run] {
             svg {
+                key: "run{run}",
                 class: "fleet-chart",
                 view_box: "0 0 {CHART_WIDTH} {height}",
                 role: "img",
@@ -155,6 +160,7 @@ pub fn Fleet() -> Element {
                         }
                     }
                 }
+            }
             }
             }
             div { class: "tag-row fleet-caption",

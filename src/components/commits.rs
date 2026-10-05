@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use zwipe_components::Replay;
 
 use crate::{
     components::{
@@ -129,6 +130,7 @@ const TOTAL_FRAME: Frame = Frame {
 /// nothing without the weeks.
 #[component]
 pub fn Commits() -> Element {
+    let run = use_context::<Replay>().0();
     let live = use_context::<stats::Live>();
     let mut tip: Signal<Option<Tip>> = use_signal(|| None);
     crate::components::scroll::use_scroll_to_end();
@@ -161,12 +163,16 @@ pub fn Commits() -> Element {
             // wrapper that holds only the chart.
             div { class: "chart-scroll scroll-end",
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
+            // Keyed on the replay count, as the heatmap is: a theme wipe makes a
+            // new key, a new SVG, and every animation below starts over.
+            for run in [run] {
             svg {
+                key: "run{run}",
                 class: "commits-chart",
                 view_box: "0 0 {WIDTH} {HEIGHT}",
                 role: "img",
                 "aria-label": "{caption}",
-                for tick in ticks {
+                for tick in ticks.iter().copied() {
                     {
                         let y = HEIGHT - BOTTOM - (HEIGHT - TOP - BOTTOM) * px(u64::from(tick)) / px(u64::from(top));
                         rsx! {
@@ -226,6 +232,7 @@ pub fn Commits() -> Element {
                         }
                     }
                 }
+            }
             }
             if let Some(tip) = tip() {
                 span {

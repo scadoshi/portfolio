@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::Chip;
+use zwipe_components::{Chip, Replay};
 
 use crate::{
     components::{
@@ -139,6 +139,7 @@ fn y_at(requests: u32) -> f64 {
 /// theme's colors: steller in the primary accent, Redis in the secondary.
 #[component]
 pub fn Benchmark() -> Element {
+    let run = use_context::<Replay>().0();
     let mut command = use_signal(|| Command::Set);
     let mut tip: Signal<Option<Tip>> = use_signal(|| None);
     let chosen = command();
@@ -170,7 +171,11 @@ pub fn Benchmark() -> Element {
             // wrapper that holds only the chart.
             div { class: "chart-scroll",
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
+            // Keyed on the replay count, as the heatmap is: a theme wipe makes a
+            // new key, a new SVG, and every animation below starts over.
+            for run in [run] {
             svg {
+                key: "run{run}",
                 class: "bench-chart",
                 view_box: "0 0 {WIDTH} {HEIGHT}",
                 role: "img",
@@ -269,6 +274,7 @@ pub fn Benchmark() -> Element {
                         }
                     }
                 }
+            }
             }
             if let Some(tip) = tip() {
                 span {
