@@ -2,7 +2,7 @@
 
 ## Headline
 
-CLI chatbot built on Rig — streaming responses, tool use, web search, context management.
+CLI chatbot built on Rig: streaming responses, tool use, web search, context management.
 
 ## Category
 
@@ -68,7 +68,7 @@ ChatInput::ExitProcess           → save and quit
 - How Rig wires up tool use with JSON Schema (schemars generates schemas from Rust types at compile time)
 - Streaming vs non-streaming agent responses and how token usage is extracted from stream chunks
 - The Arc pattern for sharing a single HTTP client across multiple tool instances
-- Context window management as a practical problem — not just a number, but something you actively manage
+- Context window management as a practical problem: not just a number, but something you actively manage
 - How to contribute to an open-source Rust project (found deprecated constants in Rig, opened PR)
 
 ## Status

@@ -69,12 +69,12 @@ to drift. We would like the crate to become the single home for them.
    of `8473761a`, 2026-07-08):**
    - Neither `zwipe-core` nor `zwipe-components` exists on crates.io yet;
      both names appear free.
-   - `zwipe-core` publishes first — crates.io rejects path-only deps, so
+   - `zwipe-core` publishes first: crates.io rejects path-only deps, so
      `zwipe-components` must depend on it as
      `zwipe-core = { version = "..." }` (a `path` can stay alongside for
      workspace dev, cargo strips it on publish).
    - Both crates need their own semver (suggest `0.1.0`), decoupled from
-     `version.workspace = true` (currently 1.4.0, the app release number —
+     `version.workspace = true` (currently 1.4.0, the app release number;
      published versions are permanent and shouldn't bump with app ships).
    - Both `[package]` sections need `description` and `license` (PolyForm
      Noncommercial's SPDX id is accepted); `repository` recommended.
@@ -120,7 +120,7 @@ to drift. We would like the crate to become the single home for them.
 
 **Status: GRANTED IN FULL, shipped upstream as `a76ccc62` the same day.**
 All three fixes landed as asked (2.2 used `> li > *` instead of a new
-`.nav-item` class — better call, no new API). The portfolio updated its pin
+`.nav-item` class: better call, no new API). The portfolio updated its pin
 to `04dd9276`, deleted all four counter-rule blocks (the three below plus
 the `a:visited` restatement, which the child combinator's higher
 specificity made redundant), and re-verified as second consumer. End state
@@ -128,7 +128,7 @@ achieved: the portfolio's nav footprint is `--nav-max-width: 760px` plus
 brand/logo rules.
 
 **Consumption mechanism, final ruling (owner, 2026-07-08):** the crates.io
-amendment above is REVERSED — the git dependency is the settled mechanism.
+amendment above is REVERSED: the git dependency is the settled mechanism.
 Registry publication is off the table until a consumer outside the owner's
 repos appears; the publish checklist above is archived for that day. The
 portfolio keeps `git = "https://github.com/scadoshi/zwipe"` with
@@ -140,7 +140,7 @@ The original asks, kept for the record:
 Status update first: the portfolio has fully migrated (git dep pinned at
 `7848dbd7`). Themes, ThemePicker, PageMeta, NavBar, and NavDropdown are all
 consumed from the crate; ~760 lines of duplication deleted. Round 1 is
-closed. These three asks are what migration surfaced — each one exists
+closed. These three asks are what migration surfaced. Each one exists
 because the shell's selectors assume zite's flat markup, and each currently
 costs the portfolio a counter-rule block in `assets/main.css` that must be
 deleted when the fix lands.
@@ -151,9 +151,9 @@ deleted when the fix lands.
   active) and the in-panel `.nav-panel .nav-links a, .nav-panel .nav-links
   button.nav-link` sizing match *all descendants* of the links slot. Anchors
   nested inside a composed widget inherit pill borders, padding, background,
-  and shadow — the portfolio's `NavDropdown` menu items rendered as a stack
+  and shadow; the portfolio's `NavDropdown` menu items rendered as a stack
   of pills inside the menu box.
-- **Ask:** child combinators — `.nav-links > li > a`, `.nav-links > li >
+- **Ask:** child combinators: `.nav-links > li > a`, `.nav-links > li >
   button.nav-link`, and the same for the in-panel variants.
 - **zite impact:** none; its links are all direct `li > a`.
 - **Portfolio deletes:** the `.nav-links .nav-dropdown-content a` reset
@@ -164,14 +164,14 @@ deleted when the fix lands.
 - **Today:** the in-panel full-width/centering rules enumerate `a` /
   `button.nav-link`. A `NavDropdown` placed in the links slot (a wrapper
   `div` + `button.nav-dropdown-trigger`) falls through both selectors and
-  renders content-width — the crate's own component doesn't fit the crate's
+  renders content-width; the crate's own component doesn't fit the crate's
   own shell. The portfolio's first patch attempt (`.nav-panel .nav-dropdown
   { width: 100% }`) then leaked into the theme picker's dropdown in the
   trailing slot and broke *that* row, which shows how fragile the
   enumeration is for consumers.
-- **Ask:** stretch every direct panel link item — `.nav-panel .nav-links >
+- **Ask:** stretch every direct panel link item, `.nav-panel .nav-links >
   li > * { width: 100% }` (or introduce a documented `.nav-item` class the
-  shell owns) — and move `.nav-panel .nav-links .nav-dropdown-trigger {
+  shell owns), and move `.nav-panel .nav-links .nav-dropdown-trigger {
   width: 100%; justify-content: center; }` into the crate next to its
   existing in-panel trigger font/padding rules. Keeping it scoped under
   `.nav-links` preserves the trailing-slot picker's compact centered row.
@@ -183,7 +183,7 @@ deleted when the fix lands.
 
 - **Today:** `.nav-dropdown-item` styling assumes a `<button>`: it sets no
   `display`, no `text-decoration`, and has no `:visited` handling. Menu
-  items that are real links (router `Link`s — needed for hrefs, SEO, and
+  items that are real links (router `Link`s, needed for hrefs, SEO, and
   middle-click) render inline, ignore the `width: 100%`, keep underlines,
   and take the host's global `a:visited` color (which outranks the bare
   class selector).

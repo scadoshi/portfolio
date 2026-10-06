@@ -2,11 +2,11 @@
 
 ## Headline
 
-Cross-platform security camera — grabs all input devices, snaps intruder photos on any interaction.
+Cross-platform security camera: grabs all input devices, snaps intruder photos on any interaction.
 
 ## Category
 
-Learning Project — Systems Programming
+Learning Project: Systems Programming
 
 ## What It Is
 
@@ -18,7 +18,7 @@ A physical security tool that grabs all keyboard and mouse input (making the des
 - Platform-specific dependencies in Cargo.toml via [target.'cfg(...)'.dependencies]
 - Linux: raw evdev device enumeration, capability-based filtering (keyboard vs mouse heuristics), nix::poll for multiplexed I/O across multiple grabbed devices, proper ungrab lifecycle
 - macOS: rdev callback-based grab via Accessibility API
-- Real bug discovery and workaround: rdev on Linux grabs ALL evdev devices (including Bluetooth/network controllers, causing disconnects) — dropped down to raw evdev with selective grabbing
+- Real bug discovery and workaround: rdev on Linux grabs ALL evdev devices (including Bluetooth/network controllers, causing disconnects), so dropped down to raw evdev with selective grabbing
 - Interior mutability pattern: Rc<Mutex<Gotcha>> for sharing state across event callbacks
 - Debounce logic: max 1 capture per second, a tested `Shutter` timed with `std::time::Instant`
 
@@ -31,7 +31,7 @@ trait Identify for Device {
     is_probably_mouse()    → REL_X + REL_Y relative axes
 }
 ```
-Capability-based heuristics instead of name matching — works with any hardware.
+Capability-based heuristics instead of name matching. Works with any hardware.
 
 ### Platform Divergence
 | Concern | macOS | Linux |
@@ -44,9 +44,9 @@ Capability-based heuristics instead of name matching — works with any hardware
 ## What I Learned
 
 - How input devices work at the OS level (evdev on Linux, CGEventTap on macOS)
-- poll() for multiplexed I/O — waiting on multiple file descriptors simultaneously
-- Why you can't just grab "all devices" — Bluetooth controllers, network adapters, and power buttons are also evdev devices
-- The difference between rdev's abstraction and raw evdev — sometimes you need to drop down a level
+- poll() for multiplexed I/O: waiting on multiple file descriptors simultaneously
+- Why you can't just grab "all devices": Bluetooth controllers, network adapters, and power buttons are also evdev devices
+- The difference between rdev's abstraction and raw evdev: sometimes you need to drop down a level
 - Conditional compilation as a strategy for cross-platform Rust
 
 ## Status

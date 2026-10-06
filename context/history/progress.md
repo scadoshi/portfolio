@@ -1,6 +1,6 @@
 # Progress
 
-## Phase 0 — Planning and Content (COMPLETE)
+## Phase 0: Planning and Content (COMPLETE)
 
 - [x] Create project directory and context structure
 - [x] Write project descriptions for all 7 repos
@@ -9,7 +9,7 @@
 - [x] Curate key code snippets per project
 - [x] Plan page layouts and component structure
 
-## Phase 1 — Static Site (COMPLETE)
+## Phase 1: Static Site (COMPLETE)
 
 - [x] Initialize Dioxus project (dx 0.7.3, dioxus 0.7.1)
 - [x] Dioxus project scaffold with routing (/, /projects/:slug, /side-quests, /side-quests/:slug)
@@ -36,15 +36,15 @@
 
 All 7 project descriptions reviewed against actual source code and updated:
 
-- [x] Marvin — open source contribution, architecture evolution, LOC
-- [x] Chickadee — Bitcask paper link, compaction details, LOC
-- [x] Upsee — MoveNet/Hugging Face links, fall detection algorithm
-- [x] Capture — raw pointer FFI, V4L2 ioctls, memory-mapped buffers
-- [x] Halo Custom Field Builder — corrected LOC, layered architecture, CI/CD
-- [x] Halo Action Importer — cache evolution story, data normalization, two-tier caching
-- [x] Zwipe — 100k+ cards, 3 binaries, error chain, strict linting, shared types
-- [x] Zwipe deep refresh — replaced Option<Option<T>> and JSONB snippets with FilterCards/GroupCards traits, CardFilter builder pipeline, swipe gesture engine, 88-column upsert automation. Added frontend approach bullets (swipe engine, Dioxus signals). Rewrote obstacles. Updated LOC to ~25,800
-- [x] Chickadee — updated to reflect all 6 phases complete: TCP server, concurrency, corruption recovery snippet, bloom filter, k-way compaction. ~2,100 LOC, 99 tests
+- [x] Marvin: open source contribution, architecture evolution, LOC
+- [x] Chickadee: Bitcask paper link, compaction details, LOC
+- [x] Upsee: MoveNet/Hugging Face links, fall detection algorithm
+- [x] Capture: raw pointer FFI, V4L2 ioctls, memory-mapped buffers
+- [x] Halo Custom Field Builder: corrected LOC, layered architecture, CI/CD
+- [x] Halo Action Importer: cache evolution story, data normalization, two-tier caching
+- [x] Zwipe: 100k+ cards, 3 binaries, error chain, strict linting, shared types
+- [x] Zwipe deep refresh: replaced Option<Option<T>> and JSONB snippets with FilterCards/GroupCards traits, CardFilter builder pipeline, swipe gesture engine, 88-column upsert automation. Added frontend approach bullets (swipe engine, Dioxus signals). Rewrote obstacles. Updated LOC to ~25,800
+- [x] Chickadee: updated to reflect all 6 phases complete: TCP server, concurrency, corruption recovery snippet, bloom filter, k-way compaction. ~2,100 LOC, 99 tests
 
 ## Hosting (COMPLETE)
 
@@ -55,12 +55,12 @@ All 7 project descriptions reviewed against actual source code and updated:
 - [x] Enforce HTTPS
 - [x] Site live at https://scottyfermo.com
 
-## Phase 2 — Interactive Elements (FUTURE)
+## Phase 2: Interactive Elements (FUTURE)
 
 - [ ] Architecture diagrams (SVG or canvas)
 - [ ] Chickadee WASM REPL (embed terminal, run storage engine in-browser)
 
-## Phase 3 — Polish (FUTURE)
+## Phase 3: Polish (FUTURE)
 
 - [ ] GIF/screenshot assets for project cards
 - [ ] Transitions and scroll animations

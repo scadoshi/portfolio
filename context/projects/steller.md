@@ -6,7 +6,7 @@ Redis-compatible key-value server, hand-written from the wire protocol up. RESP 
 
 ## Category
 
-Learning Project — Network Protocols and Durability
+Learning Project: Network Protocols and Durability
 
 ## What It Is
 

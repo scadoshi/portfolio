@@ -2,11 +2,11 @@
 
 ## Headline
 
-Real-time pullup counter using on-device pose estimation — webcam + MoveNet + tract in Rust.
+Real-time pullup counter using on-device pose estimation: webcam + MoveNet + tract in Rust.
 
 ## Category
 
-Learning Project — ML Inference / Computer Vision
+Learning Project: ML Inference / Computer Vision
 
 ## What It Is
 
@@ -52,7 +52,7 @@ Two separate thresholds prevent oscillation at the boundary:
 - Tensor shapes and NCHW format for image models
 - tract as a Rust-native alternative to Python inference runtimes
 - Hysteresis as a signal processing concept for noisy real-time data
-- Camera warmup frames — first ~30 frames have unstable exposure/white balance
+- Camera warmup frames: first ~30 frames have unstable exposure/white balance
 
 ## Status
 

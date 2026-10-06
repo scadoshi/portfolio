@@ -16,16 +16,16 @@ gate the deploy: a red check means the site does not update. Formatting is still
 local discipline, kept identical to zwipe's so this crate and the shared
 `zwipe-components` (consumed via git dep) hold the same bar.
 
-### 1. Format with **nightly** — the one that bites
+### 1. Format with **nightly**: the one that bites
 `rustfmt.toml` enables `imports_granularity = "Crate"`, an *unstable* option, so
-**stable `cargo fmt` silently skips it** — code looks formatted locally but drifts
+**stable `cargo fmt` silently skips it**; code looks formatted locally but drifts
 from zwipe's style. Always:
 
 ```bash
 cargo +nightly fmt        # NOT `cargo fmt` — stable can't apply the Crate imports rule
 ```
 
-### 2. Clippy — warnings are errors
+### 2. Clippy: warnings are errors
 ```bash
 cargo clippy --all-targets -- -D warnings
 ```

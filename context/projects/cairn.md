@@ -6,7 +6,7 @@ Lifetime rep counter for iOS. Local SQLite, no server, no account.
 
 ## Category
 
-Personal App — Mobile
+Personal App: Mobile
 
 ## What It Is
 

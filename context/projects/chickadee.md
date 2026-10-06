@@ -6,7 +6,7 @@ LSM-tree storage engine from scratch. WAL, memtable, SSTables, k-way compaction.
 
 ## Category
 
-Learning Project — Database Internals
+Learning Project: Database Internals
 
 ## What It Is
 
@@ -39,7 +39,7 @@ Scan all entries, deduplicate (keep latest per key), write to temp file with syn
 - How databases actually store data on disk (offsets, seeking, binary encoding)
 - Little-endian byte encoding and why it's the convention for on-disk formats (x86/ARM native)
 - The Bitcask paper and why append-only + in-memory index is a valid architecture for write-heavy workloads
-- CRC32 for data integrity — what it catches and what it doesn't
+- CRC32 for data integrity: what it catches and what it doesn't
 - POSIX rename semantics for crash-safe file replacement
 
 ## Status

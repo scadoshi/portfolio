@@ -4,15 +4,15 @@
 
 Lead with strongest signal, end with breadth.
 
-### Tier 1 — "I build real things"
+### Tier 1: "I build real things"
 1. **Zwipe** - largest project, shows full-stack architecture at scale
 2. **Halo Action Importer** - production tool, shows resilience engineering
 3. **Halo Custom Field Builder** - shipped tool, shows end-to-end delivery
 
-### Tier 2 — "I understand the ecosystem"
+### Tier 2: "I understand the ecosystem"
 4. **Marvin** - AI agent tooling in Rust (tool use, streaming, context management)
 
-### Tier 3 — "I go deep on things I don't know"
+### Tier 3: "I go deep on things I don't know"
 5. **Chickadee** - database internals from scratch
 6. **Upsee** - ML inference pipeline on-device
 7. **Capture** - cross-platform systems programming

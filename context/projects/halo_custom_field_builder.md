@@ -2,7 +2,7 @@
 
 ## Headline
 
-Shipped CLI tool for bulk-creating custom fields in Halo ITSM — cross-platform binaries via GitHub Actions.
+Shipped CLI tool for bulk-creating custom fields in Halo ITSM, with cross-platform binaries via GitHub Actions.
 
 ## Category
 
@@ -14,7 +14,7 @@ A CLI tool that reads custom field definitions from CSV files and creates them i
 
 ## What It Proves
 
-- Domain modeling with validation: Name (alphanumeric + underscore, max 64), Label (visible chars, max 256), FieldType enum with 8 variants and input type sub-enums — all validated at construction via TryFrom
+- Domain modeling with validation: Name (alphanumeric + underscore, max 64), Label (visible chars, max 256), FieldType enum with 8 variants and input type sub-enums, all validated at construction via TryFrom
 - Two-layer serialization: CustomField (domain) maps to HttpCustomField (API representation)
 - OAuth 2.0 client credentials flow with automatic token refresh and 30-second expiry buffer
 - Rate limiting (500ms between requests) to stay under Halo's 700/5min API limit

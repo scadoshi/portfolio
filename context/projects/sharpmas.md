@@ -6,7 +6,7 @@ Rustmas ported to C#, feature for feature. A fixed design carried into another l
 
 ## Category
 
-Learning Project — Language Port
+Learning Project: Language Port
 
 ## What It Is
 

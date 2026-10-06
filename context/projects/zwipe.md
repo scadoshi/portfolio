@@ -2,7 +2,7 @@
 
 ## Headline
 
-Full-stack MTG deck builder in Rust — Axum backend, Dioxus frontend, PostgreSQL, 118k+ printings.
+Full-stack MTG deck builder in Rust: Axum backend, Dioxus frontend, PostgreSQL, 118k+ printings.
 
 ## Category
 
@@ -15,13 +15,13 @@ A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Si
 ## What It Proves
 
 - Hexagonal architecture applied consistently across ~143,000 lines of Rust
-- Domain-driven design with newtypes for type safety (UserId, DeckId, JwtSecret, Username — all validated at construction)
+- Domain-driven design with newtypes for type safety (UserId, DeckId, JwtSecret, Username; all validated at construction)
 - JWT + rotating refresh tokens (max 5 per user, SHA-256 hashed, 14-day expiry)
 - Argon2id password hashing with common password blocklist (170+ patterns, NIST guidelines)
 - PostgreSQL with SQLx: 53 migrations, JSONB operators, window functions, composite constraints
 - Advanced card search: CMC ranges, dual color identity modes, type/rarity/set filtering
 - Background job binary (zervice) for Scryfall delta sync handling 35k+ cards in batches
-- Option<Option<T>> for partial updates — distinguishing "not provided" from "set to null"
+- Option<Option<T>> for partial updates, distinguishing "not provided" from "set to null"
 - Full-stack documentation pass with #![warn(missing_docs)] enabled (243 warnings resolved)
 - Clippy configured with 22 enforced lints
 
@@ -55,7 +55,7 @@ outbound/      External systems
 ## What I Learned
 
 - How to structure a large Rust project across multiple crates with shared domain types
-- Hexagonal architecture in practice — port traits make testing and swapping implementations possible
+- Hexagonal architecture in practice: port traits make testing and swapping implementations possible
 - The difference between access and refresh token strategies and why you hash refresh tokens
 - PostgreSQL JSONB for semi-structured data (card legalities, prices, image URIs)
 - Dioxus signals for reactive state management in a Rust UI framework

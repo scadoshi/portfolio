@@ -6,7 +6,7 @@ Advent of Code tooling in Rust. Fetches inputs, runs solutions, checks them agai
 
 ## Category
 
-Learning Project — CLI Tooling
+Learning Project: CLI Tooling
 
 ## What It Is
 
