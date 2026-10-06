@@ -50,17 +50,17 @@ When conversation history grows too long, /compact asks the agent to summarize t
 
 ### Command Routing
 ```
-ChatInput::Message(text)     → stream to agent, accumulate tokens
-ChatInput::Help              → show commands
-ChatInput::History           → last 10 messages (truncated at 300 chars)
-ChatInput::Tokens            → cumulative usage with comma formatting
-ChatInput::Model             → switch Claude model (rebuilds agent)
-ChatInput::Compact           → condense history via AI summary
-ChatInput::Save              → persist to chats/<id>.json
-ChatInput::Import(id)        → load previous session
-ChatInput::Summarize         → ask agent for conversation summary
-ChatInput::Clear             → reset history
-ChatInput::Exit              → save and quit
+ChatInput::SendMessage(text)     → stream to agent, accumulate tokens
+ChatInput::ShowHelpMessage       → show commands
+ChatInput::ShowChatHistory       → last 10 messages (truncated at 300 chars)
+ChatInput::ShowTokenUsage        → cumulative usage with comma formatting
+ChatInput::SwitchModel           → switch Claude model (rebuilds agent)
+ChatInput::CompactContext        → condense history via AI summary
+ChatInput::SaveChatHistory       → persist to chats/<id>.json
+ChatInput::ImportChatHistory(id) → load previous session
+ChatInput::ShowContextSummary    → ask agent for conversation summary
+ChatInput::ClearContext          → reset history
+ChatInput::ExitProcess           → save and quit
 ```
 
 ## What I Learned

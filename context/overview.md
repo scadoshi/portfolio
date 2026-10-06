@@ -19,11 +19,12 @@ src/
   stats.json         heron's answer, replaced before each build
   theme_store.rs     localStorage theme persistence, no-ops on the server build
   components/        navbar, footer, project_card, gallery, code_block,
-                     linked_text, page_meta
+                     linked_text, page_meta, heatmap, commits, fleet,
+                     flow, benchmark, measured, chart, curve, scroll
   pages/             home, detail (shared by projects and side quests),
                      side_quests, contribute, not_found
-assets/              CSS, fonts, per-project media, the two ascii logos
-public/              copied to the site root verbatim: sitemap, robots, og image
+assets/              CSS, scripts, favicons, per-project media, the two ascii logos
+public/              copied to the site root verbatim: sitemap, robots, og image, fonts, highlight.js
 context/             this, the commit rules, per-project notes, marketing
 ```
 
@@ -62,7 +63,7 @@ Every chart is an inline SVG the site draws itself from the `GET /stats` answer,
 
 The hero animates in: the S resolves from noise, the numbers count up, the line draws, the grid sweeps, all left to right. `CountUp`, `Decode` and the `Replay` counter come from zwipe-components (`entrance.rs` there); the chart's part is CSS keyframes with per-cell delays. Clicking the nav S bumps `Replay`, which remounts the keyed pieces and runs everything again.
 
-The prerendered page carries the settled values, so without script it reads right. With script, the end-of-body block in `index.html` (this repo's dx shell) runs before first paint: it puts the wrapper on the theme stored in localStorage and marks the document `js`, and the stylesheet then hides the logo and numbers and pauses the chart until the app marks `hydrated` on mount. That is what keeps the page from showing the default theme and the final numbers for the few hundred milliseconds the wasm takes to load.
+The prerendered page carries the settled values, so without script it reads right. With script, the end-of-body block in `index.html` (this repo's dx shell) runs before first paint: it puts the wrapper on the theme stored in localStorage and marks the document `js`, rolls the figures and shimmers the logo in the prerendered text until the app takes over, and the stylesheet pauses the chart until the app marks `hydrated` on mount, or the script marks it after three seconds. That is what keeps the page from showing the default theme and the final numbers for the few hundred milliseconds the wasm takes to load.
 
 ## Source counts
 

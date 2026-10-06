@@ -11,7 +11,7 @@
 ## CI: how your commits get checked (run these BEFORE you push)
 
 Pushing to `main` triggers the GitHub Pages deploy
-(`.github/workflows/deploy.yml`, `dx build --release --ssg`). Tests and clippy now
+(`.github/workflows/deploy.yml`, `dx build --release --ssg --force-sequential`). Tests and clippy now
 gate the deploy: a red check means the site does not update. Formatting is still
 local discipline, kept identical to zwipe's so this crate and the shared
 `zwipe-components` (consumed via git dep) hold the same bar.
@@ -29,9 +29,10 @@ cargo +nightly fmt        # NOT `cargo fmt` — stable can't apply the Crate imp
 ```bash
 cargo clippy --all-targets -- -D warnings
 ```
-Some code is wasm-only (e.g. `theme_store`), so also lint the browser target:
+Some code is wasm-only (e.g. `theme_store`) and the prerender runs under the `server` feature, so also lint both:
 ```bash
 cargo clippy --target wasm32-unknown-unknown -- -D warnings
+cargo clippy --no-default-features --features server --all-targets -- -D warnings
 ```
 
 ### 3. Tests

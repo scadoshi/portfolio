@@ -19,8 +19,8 @@ A physical security tool that grabs all keyboard and mouse input (making the des
 - Linux: raw evdev device enumeration, capability-based filtering (keyboard vs mouse heuristics), nix::poll for multiplexed I/O across multiple grabbed devices, proper ungrab lifecycle
 - macOS: rdev callback-based grab via Accessibility API
 - Real bug discovery and workaround: rdev on Linux grabs ALL evdev devices (including Bluetooth/network controllers, causing disconnects) — dropped down to raw evdev with selective grabbing
-- Interior mutability pattern: Rc<Mutex<CaptureState>> for sharing state across event callbacks
-- Debounce logic: max 1 capture per second using jiff timestamps
+- Interior mutability pattern: Rc<Mutex<Gotcha>> for sharing state across event callbacks
+- Debounce logic: max 1 capture per second, a tested `Shutter` timed with `std::time::Instant`
 
 ## Key Technical Highlights
 

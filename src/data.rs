@@ -78,7 +78,7 @@ const CAIRN: Project = Project {
     summary: "A counter for things you do every day. It keeps the lifetime total plus the rates that make a total mean something.",
     card_bullets: &[
         "Rust + Dioxus 0.7, single crate, hexagonal: the domain has no UI, no SQLite, no clock",
-        "Local SQLite with a five-step migration ladder; no server and nothing to sign into",
+        "Local SQLite with a seven-step migration ladder; no server and nothing to sign into",
         "Goals per day, week or year, with pace and a tag counting down the day's share",
         "Events are the source of truth; daily totals are derived and rebuilt",
     ],

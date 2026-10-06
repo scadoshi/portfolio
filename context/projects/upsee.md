@@ -19,7 +19,7 @@ A real-time rep counter that uses a webcam and MoveNet pose estimation model (vi
 - Keypoint extraction from model output: [1, 1, 17, 3] tensor → shoulder/wrist y-coordinates
 - Hysteresis-based state machine: separate UP and DOWN thresholds prevent noise-induced false counts
 - Confidence filtering: skip frames where average keypoint confidence < 0.4
-- Trait-based image preprocessing: Square trait for center-cropping arbitrary aspect ratios
+- Pure-function image preprocessing: `square_bounds` for center-cropping arbitrary aspect ratios
 
 ## Key Technical Highlights
 
@@ -27,7 +27,7 @@ A real-time rep counter that uses a webcam and MoveNet pose estimation model (vi
 ```
 [Webcam] → nokhwa (highest framerate)
     ↓
-[Square crop] → center-crop to square via Square trait
+[Square crop] → center-crop to square via square_bounds
     ↓
 [Resize + normalize] → 192x192, pixel values / 255.0
     ↓

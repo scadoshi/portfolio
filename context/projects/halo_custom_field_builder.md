@@ -20,7 +20,7 @@ A CLI tool that reads custom field definitions from CSV files and creates them i
 - Rate limiting (500ms between requests) to stay under Halo's 700/5min API limit
 - Interactive debug mode: field-by-field review with skip/process/quit
 - GitHub Actions CI/CD: cross-platform builds, distribution packaging, tagged v1.0.0 release
-- Same layered architecture (domain/inbound/outbound) applied at smaller scale (~727 LOC)
+- Same layered architecture (domain/inbound/outbound) applied at smaller scale (~1,700 LOC)
 
 ## Key Technical Highlights
 

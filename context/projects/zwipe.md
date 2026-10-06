@@ -10,20 +10,20 @@ Full-Stack Application
 
 ## What It Is
 
-A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Two Rust crates in a workspace: an Axum REST API (zerver) and a Dioxus cross-platform app (zwiper) targeting web, iOS, Android, and desktop from a single codebase.
+A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Six Rust crates in a workspace, centered on an Axum REST API (zerver) and a Dioxus cross-platform app (zwiper) targeting web, iOS, Android, and desktop from a single codebase.
 
 ## What It Proves
 
-- Hexagonal architecture applied consistently across ~24,500 lines of Rust
+- Hexagonal architecture applied consistently across ~143,000 lines of Rust
 - Domain-driven design with newtypes for type safety (UserId, DeckId, JwtSecret, Username — all validated at construction)
 - JWT + rotating refresh tokens (max 5 per user, SHA-256 hashed, 14-day expiry)
 - Argon2id password hashing with common password blocklist (170+ patterns, NIST guidelines)
-- PostgreSQL with SQLx: 7 migrations, JSONB operators, window functions, composite constraints
+- PostgreSQL with SQLx: 53 migrations, JSONB operators, window functions, composite constraints
 - Advanced card search: CMC ranges, dual color identity modes, type/rarity/set filtering
 - Background job binary (zervice) for Scryfall delta sync handling 35k+ cards in batches
 - Option<Option<T>> for partial updates — distinguishing "not provided" from "set to null"
 - Full-stack documentation pass with #![warn(missing_docs)] enabled (243 warnings resolved)
-- Clippy configured with 26 enforced lints
+- Clippy configured with 22 enforced lints
 
 ## Key Technical Highlights
 
@@ -45,7 +45,7 @@ outbound/      External systems
 - Normalized schema with composite keys and JSONB columns
 - Window functions for token limit enforcement
 - QueryBuilder with JSONB operators (@>, <@, ?|) for card search
-- Batch upserts respecting PostgreSQL parameter limits (~327 cards/batch)
+- Batch upserts respecting PostgreSQL parameter limits (~376 cards/batch)
 
 ### Auth Flow
 - Access tokens: 24-hour JWT (self-contained, no DB lookup)

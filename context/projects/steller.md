@@ -13,8 +13,8 @@ Learning Project — Network Protocols and Durability
 An in-memory key-value server that real `redis-cli` clients connect to without knowing
 the difference. It speaks RESP over TCP and handles ping, get, set, delete, exists,
 relative and absolute TTLs, TTL queries, persist, and channel subscription. Data
-survives a restart on a snapshot baseline plus an append-only command log. About 5,950
-lines with 241 tests.
+survives a restart on a snapshot baseline plus an append-only command log. About 6,100
+lines with 242 tests.
 
 Named for the Steller's jay. It was diprotodon until 2026-09-13; anything still saying
 diprotodon is stale.

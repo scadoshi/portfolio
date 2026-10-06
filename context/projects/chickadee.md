@@ -29,7 +29,7 @@ A log-structured storage engine built phase by phase. Started from the Bitcask p
 ```
 
 ### Corruption Recovery
-When reading, if magic bytes don't match or CRC fails, scan forward byte-by-byte until the next valid header. Distinguishes HeaderNotFound, MagicBytesNotFound, ChecksumMismatch, and EntryParseError via CorruptionType enum.
+When reading, if magic bytes don't match or CRC fails, scan forward byte-by-byte until the next valid header. Distinguishes NotEnoughBytes, MagicBytesMismatch, ChecksumMismatch, and ParseError via CorruptionType enum.
 
 ### Compaction
 Scan all entries, deduplicate (keep latest per key), write to temp file with sync_all(), atomic rename to overwrite original. File handle reopened after merge.

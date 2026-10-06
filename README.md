@@ -5,7 +5,7 @@ this file stays out of that business (and out of the business of going stale).
 
 ## Stack
 
-- [Dioxus](https://dioxuslabs.com/) 0.7.9, Rust compiled to WASM, prerendered to
+- [Dioxus](https://dioxuslabs.com/) 0.7.10, Rust compiled to WASM, prerendered to
   static HTML so crawlers and link unfurlers get real markup
 - Shared UI (panels, nav, themes, banners) from
   [zwipe-components](https://github.com/scadoshi/zwipe), a git dependency pinned
