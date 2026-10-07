@@ -7,6 +7,12 @@ use crate::{Route, data::Section};
 
 const LOGO_S: &str = include_str!("../../assets/s.txt");
 
+/// Closes the theme menu if it is open. `ThemePicker` keeps its open state to
+/// itself, so this clicks its click-away backdrop, which runs the picker's
+/// own close handler.
+const CLOSE_THEME_MENU_JS: &str =
+    "document.querySelector('.theme-switcher .nav-dropdown-backdrop')?.click();";
+
 #[component]
 pub fn Navbar() -> Element {
     let (theme, shown) = use_theme_wipe(use_context::<Signal<ThemeConfig>>(), ".theme-wrapper");
@@ -35,6 +41,9 @@ pub fn Navbar() -> Element {
                 }
             }
             last_opened.set(Some(newest));
+            spawn(async {
+                let _ = eval(CLOSE_THEME_MENU_JS).await;
+            });
         } else if opened.is_empty() && previous.is_some() {
             last_opened.set(None);
         }
@@ -160,7 +169,19 @@ pub fn Navbar() -> Element {
                 }
             },
             trailing: rsx! {
-                ThemePicker { theme, shown }
+                // The other direction: touching the theme picker closes the
+                // section menus. Pointer-down, because its trigger stops the
+                // click from reaching here. display: contents (main.css), so
+                // the wrapper changes no layout.
+                div {
+                    class: "theme-slot",
+                    onpointerdown: move |_| {
+                        for menu in &mut section_open {
+                            menu.set(false);
+                        }
+                    },
+                    ThemePicker { theme, shown }
+                }
             },
         }
     }

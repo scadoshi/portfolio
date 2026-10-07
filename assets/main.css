@@ -476,6 +476,12 @@ a.panel-action:visited {
     right: auto;
 }
 
+/* Wraps the theme picker only to hear its pointer-downs (navbar.rs); it must
+   not become a box between the nav and the picker. */
+.theme-slot {
+    display: contents;
+}
+
 /* The last row of a section menu leads to the whole section on /projects;
    a rule above sets it apart from the projects. */
 .nav-dropdown-content .nav-dropdown-all {
