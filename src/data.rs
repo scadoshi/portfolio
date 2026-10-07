@@ -749,9 +749,9 @@ const MARVIN: Project = Project {
         "Streaming responses; 4 Tavily web tools with Arc-shared client; math tools",
         "Chat persistence with session IDs; token tracking; context compaction",
         "Dynamic model discovery from Anthropic's API",
-        "Found + fixed deprecated model constants in Rig (PR across 17 files)",
+        "Found deprecated model constants in Rig and sent a PR across 17 files",
     ],
-    impact_metric: "One upstream bug found and fixed",
+    impact_metric: "Found and reported an upstream bug, with a proposed fix",
     objective: "Learn the [Rig](https://github.com/0xPlaygrounds/rig) AI framework by building a real CLI chatbot on [Anthropic's Claude](https://www.anthropic.com/claude). Each feature should teach something new about Rig or Rust, prioritizing learning over shipping.",
     tags: &["rig", "claude"],
     media: &[
