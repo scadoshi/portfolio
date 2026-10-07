@@ -23,7 +23,7 @@ const JSON_LD: &str = r#"{
     "https://github.com/scadoshi",
     "https://www.linkedin.com/in/scotty-fermo-41a35b141/"
   ],
-  "knowsAbout": ["Rust", "Full-stack development", "Mobile apps", "Servers", "Storage engines"]
+  "knowsAbout": ["Rust", "Full-stack development", "Mobile apps", "Servers", "Key-value stores"]
 }"#;
 
 #[component]
@@ -37,7 +37,7 @@ pub fn Home() -> Element {
         // description stays under the ~125-char social-preview cutoff.
         PageMeta {
             title: "Software Engineer: Rust, Full-Stack & Systems",
-            description: "Scotty Fermo, software engineer. Rust that runs: a mobile app on both stores, a live server, two storage engines.",
+            description: "Scotty Fermo, software engineer. Rust that runs: a mobile app on both stores, a live server, two key-value stores.",
             path: "/",
         }
         document::Script { r#type: "application/ld+json", "{JSON_LD}" }
@@ -101,8 +101,8 @@ pub fn Home() -> Element {
                         " on both stores, a "
                         span { class: "hl-error", "server" }
                         " counting the numbers above, and two "
-                        span { class: "hl-tertiary", "storage engines" }
-                        " written from the wire up."
+                        span { class: "hl-tertiary", "key-value stores" }
+                        " built from scratch to learn how the real ones work."
                     }
                     // The year of contributions, from the same answer.
                     if totals.is_some() {
@@ -124,7 +124,7 @@ pub fn Home() -> Element {
                     p { class: "about-text",
                         "I write production C# into Halo Software's core product, a large, mature enterprise codebase, shipping through the same pipeline their staff engineers use. "
                         "Before that, four years at Halo designing enterprise request-management systems for universities, government entities, and financial institutions, and building the CLI tools that turned multi-week migrations into one-command jobs. "
-                        "My own work is Rust and systems: a hand-written LSM-tree storage engine and a Redis-compatible server. Zwipe, a full-stack mobile app live on both stores, is the proof I can ship the whole thing alone. "
+                        "My own work is Rust and systems: an LSM-tree key-value store and a Redis-compatible server, both learning builds I took past the tutorial: benchmarked, put in front of real clients, and debugged where they broke. Zwipe, a full-stack mobile app live on both stores, is the proof I can ship the whole thing alone. "
                         "The work I want more of is what's on this page: storage, wire protocols, the parts of a system that have to be right."
                     }
                 }

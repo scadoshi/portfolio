@@ -122,6 +122,12 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 title: "The goal",
                 section { class: "project-section",
                     p { LinkedText { text: project.objective.to_string() } }
+                    if let Some(scope) = project.scope {
+                        p { class: "project-scope",
+                            strong { "What it isn't. " }
+                            LinkedText { text: scope.to_string() }
+                        }
+                    }
                 }
             }
 

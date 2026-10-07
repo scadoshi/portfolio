@@ -933,6 +933,13 @@ a.panel-action:visited {
     color: var(--text-subtle);
 }
 
+/* The scope note under a learning build's objective: set apart from the goal
+   above it without reading as a warning. */
+.project-scope {
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+
 .impact-statement {
     color: var(--accent-primary);
     font-style: italic;

@@ -18,6 +18,9 @@ pub struct Project {
     pub status: ProjectStatus,
     /// Live-site URL, when the project has one (rendered as an action pill).
     pub site_url: Option<&'static str>,
+    /// What a learning build deliberately leaves out, shown under the
+    /// objective so the scope is stated before anyone has to infer it.
+    pub scope: Option<&'static str>,
 }
 
 use dioxus::prelude::*;
@@ -177,6 +180,7 @@ fn opens_a_database_left_at_every_older_version() {
     progress: "On my phone since 22 September 2026, with nine months of imported history: 225 days, 9,914 taps, 98,300 reps. Counters, goals with pace, trend charts, streaks, CSV export and the hourly quote are in. TestFlight is next.",
     impact: "The thing I open every day, which is the only real test of a personal tool. It also taught me to distrust a green suite: mutation testing found three assertions that could not fail.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Doing,
 };
 
@@ -427,6 +431,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 31 themes. Security audit complete; nightly backups.",
     impact: "Full-stack mobile delivery in pure Rust: shared domain types across the Axum API, the Dioxus app, and a background sync service. Six crates, unwrap banned by CI.",
     site_url: Some("https://zwipe.net"),
+    scope: None,
     status: ProjectStatus::Doing,
 };
 
@@ -541,6 +546,7 @@ fn read_cached_ids() -> CacheData {
     progress: "Production. Actively used for real data migrations.",
     impact: "Reduced migration timelines from weeks to days. Runs unattended for hours against millions of records with automatic recovery from any transient failure.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Done,
 };
 
@@ -634,6 +640,7 @@ impl From<&CustomField> for HttpCustomField {
     progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Actively used in production for client implementations.",
     impact: "Reduced enterprise configuration time from hours to minutes. Ships as tagged cross-platform binaries, so an implementer runs it without a Rust toolchain.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Done,
 };
 
@@ -763,16 +770,17 @@ async fn list_models(api_key: &str) -> Result<Vec<Model>> {
     progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
     impact: "A learning project that ended up sending a fix back to the framework it was built on. Flagged a production bug in Rig, proposed the architectural fix in-thread, and shipped the better pattern locally rather than waiting on the upstream refactor.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Done,
 };
 
 const CHICKADEE: Project = Project {
     name: "Chickadee",
     slug: "chickadee",
-    headline: "LSM-tree key-value database from scratch. TCP server, concurrent connections, WAL, SSTables, bloom filters, k-way compaction.",
+    headline: "A learning LSM-tree key-value store, built from the Bitcask paper up. WAL, SSTables, bloom filters, compaction, and a TCP server on top.",
     category: "Database Internals",
     repo_url: "https://github.com/scadoshi/chickadee",
-    summary: "Key-value database that started from the Bitcask paper and grew, phase by phase, into an LSM tree. The architecture behind LevelDB, RocksDB, and Cassandra.",
+    summary: "Key-value store that started from the Bitcask paper and grew, phase by phase, into a small LSM tree. Built to learn the ideas LevelDB and RocksDB are made of, not to compete with them.",
     card_bullets: &[
         "TCP server with thread-per-connection concurrency, per-command locking",
         "WAL durability, BTreeMap memtable, bloom-filtered SSTables",
@@ -911,8 +919,11 @@ loop {
         "flush_count has to be read from the existing SSTable count at startup rather than starting at zero, or a restart compacts on the wrong schedule",
     ],
     progress: "Complete. All 6 phases done, with TCP integration tests alongside the unit tests.",
-    impact: "Started from a paper and ended with a database you can connect to. The same storage architecture behind LevelDB, RocksDB and Cassandra, built a layer at a time.",
+    impact: "Started from a paper and ended with a store you can connect to. Each layer was built to understand why the production engines have it.",
     site_url: None,
+    scope: Some(
+        "A learning build, not an engine. One lock guards the whole store, every write is fsynced on its own, and compaction rewrites every SSTable at once rather than by level. There are no levels and no compression. Each of those is a later phase in the real engines, and leaving them out kept every layer small enough to get right.",
+    ),
     status: ProjectStatus::Done,
 };
 
@@ -920,7 +931,7 @@ const HERON: Project = Project {
     name: "Heron",
     slug: "heron",
     headline: "My personal server. Every number on this site is its answer: commits from GitHub, lines, tests and lints it measures itself, cached in steller.",
-    category: "Production Service",
+    category: "Live Service",
     repo_url: "https://github.com/scadoshi/heron",
     summary: "Serves every number on this site, measuring the ones GitHub does not have, cached in steller.",
     card_bullets: &[
@@ -1006,16 +1017,17 @@ const HERON: Project = Project {
     progress: "Live at api.scadoshi.dev on its own Hetzner box, behind a Cloudflare Tunnel, with steller beside it. This page asks it after loading; the hero and every card are its answer. The first sweep measured all twelve repositories in seven seconds.",
     impact: "steller has a production workload, and a bug report it would not have had otherwise.",
     site_url: Some("https://api.scadoshi.dev/stats"),
+    scope: None,
     status: ProjectStatus::Doing,
 };
 
 const STELLER: Project = Project {
     name: "Steller",
     slug: "steller",
-    headline: "Redis-compatible in-memory KV server in Rust. Hand-written RESP wire protocol, real redis-cli clients connect.",
+    headline: "A learning Redis in Rust. Hand-written RESP wire protocol, real redis-cli clients connect.",
     category: "Network Protocols & Systems",
     repo_url: "https://github.com/scadoshi/steller",
-    summary: "Redis-compatible in-memory KV server in Rust. Real redis-cli clients connect.",
+    summary: "An in-memory key-value server that speaks Redis's wire protocol, so a real redis-cli connects to it.",
     card_bullets: &[
         "Hand-written RESP parser. No protocol crate, no async runtime",
         "The append-only log is the wire format, so replay reuses the inbound parse path",
@@ -1146,8 +1158,11 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
         "The server could not restart after the first benchmark run. Compaction truncated the log through a second, non-append handle before draining the old BufWriter, so up to 8 KiB of pending bytes landed at a stale offset in an empty file and the OS filled the gap with zeros: 8,992,628 NULs, then 7,372 bytes of real frames. Replay read byte 0 and refused, correctly. It only fires past 8 KiB of writes between snapshots, so no manual session could have hit it. Fixed, with a regression test that fails on the old body",
     ],
     progress: "Done through M6: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. Benchmarked against Redis 8 in September 2026; the first run found a compaction bug and a 49ms accept stall, both fixed. In production behind heron since 2026-09-29, which found a framing bug on its first day, fixed the next.",
-    impact: "The in-memory half of a pair with chickadee, which is the on-disk LSM engine. Between them they cover both sides of how a KV system gets built. Real clients drive both.",
+    impact: "The in-memory counterpart to chickadee's on-disk store. Small on purpose, but measured against Redis and run behind heron, which is where its best bugs came from.",
     site_url: None,
+    scope: Some(
+        "A Redis subset, not a Redis. Strings only, so no lists, hashes or sets, and no transactions or replication. One mutex guards the map and each connection gets its own thread, which is why it wins at low client counts and falls behind Redis past 32. The benchmark shows exactly where.",
+    ),
     status: ProjectStatus::Done,
 };
 
@@ -1237,6 +1252,7 @@ pub fn observe(&mut self, pose: &Pose) -> Option<u32> {
     progress: "Working prototype. Counts pullups in real time from webcam; the counter is a pure function with tests, the camera and model are adapters. Roadmap: threshold tuning, temporal smoothing, Raspberry Pi deployment, multi-threaded capture + inference.",
     impact: "ML inference in Rust without Python or cloud dependencies, from webcam frame to rep count.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Done,
 };
 
@@ -1329,6 +1345,7 @@ pub fn press(&mut self, key: K) -> bool {
     progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with a secret key sequence. Clean ungrab on Linux, forced exit on macOS. The decisions are in a domain module with tests; the platforms only own the devices.",
     impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types, so each platform's quirks stay behind one interface.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Done,
 };
 
@@ -1435,6 +1452,7 @@ let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
     progress: "Feature complete. fetch, solve, --validate and --submit all work against both services, and both service contracts are recorded in context/references.md from live probing rather than guesswork. Day one of every year except 2019 is solved. Next are the day twos.",
     impact: "A finished tool with its reasoning written down, including the options that were rejected and why. The design notes are what made the C# rebuild (Sharpmas) a language exercise rather than a redesign.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Done,
 };
 
@@ -1552,6 +1570,7 @@ public static async Task<Solved> Solve<T>(
     progress: "The tool is finished and matches rustmas feature for feature with no build warnings. The last catch-up landed on 2026-08-23: the eager Filter type, Answer.Unwritten, the day 25 gate, and all four hierarchies closed. Two days are solved so far, 2015 day 1 and 2016 day 1, with every answer confirmed by the solver and matching rustmas. What is left is solutions and the shared helpers they will want.",
     impact: "A cross-language port carried end to end, with both sides public and comparable file by file. The design was fixed going in, so what the repo records is where the two languages actually diverge, and where C# has no good answer at all.",
     site_url: None,
+    scope: None,
     status: ProjectStatus::Done,
 };
 
