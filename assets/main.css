@@ -480,11 +480,8 @@ a.panel-action:visited {
 
 .hero {
     text-align: center;
-    /* Pulls up under the nav's 3rem bottom margin so the panel, chart and all,
-       reaches a laptop's first screen; only this page, since only this page has
-       something that tall at the top. Bottom gap is the panel margin below,
-       matching the band's 1.5rem rhythm. */
-    margin-top: -2rem;
+    /* Bottom gap is the panel margin below, matching the band's 1.5rem
+       rhythm. */
     padding: 0 1.5rem 0;
 }
 
@@ -882,9 +879,7 @@ a.panel-action:visited {
 
 .project-detail {
     max-width: 74rem;
-    /* Same 1rem under the nav as the home hero: the nav's 3rem bottom margin,
-       pulled up 2rem. */
-    margin: -2rem auto 0;
+    margin: 0 auto;
     padding: 0 1.5rem 2.5rem;
     display: flex;
     flex-direction: column;
@@ -1117,7 +1112,7 @@ a.panel-action:visited {
     max-width: 25rem;
     /* bottom margin auto absorbs the free space in the flex column, pinning a
        following footer to the bottom without stretching this card. */
-    margin: -2rem auto auto;
+    margin: 0 auto auto;
 }
 
 .not-found-page .panel-title {
@@ -1147,8 +1142,7 @@ a.panel-action:visited {
 
 .index-page {
     max-width: 74rem;
-    /* 1rem under the nav, as on the home page and the project pages. */
-    margin: -2rem auto 0;
+    margin: 0 auto;
     padding: 0 1.5rem 2.5rem;
     display: flex;
     flex-direction: column;
