@@ -1123,9 +1123,9 @@ const STELLER: Project = Project {
     repo_url: "https://github.com/scadoshi/steller",
     summary: "An in-memory key-value server that speaks Redis's wire protocol, so a real redis-cli connects to it.",
     card_bullets: &[
-        "Hand-written RESP parser. No protocol crate, no async runtime",
-        "The append-only log is the wire format, so replay reuses the inbound parse path",
-        "Pub/sub fan-out over per-session writer threads",
+        "Speaks Redis's wire protocol through a parser written by hand: no protocol library, no async runtime",
+        "Survives restarts by replaying a log of the exact commands clients sent",
+        "Publish/subscribe messaging, delivered on each client's own thread",
         "Faster than Redis 8 under 32 clients, slower past it, both measured",
     ],
     impact_metric: "Benchmarked against Redis 8",
