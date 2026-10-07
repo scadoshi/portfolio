@@ -482,13 +482,6 @@ a.panel-action:visited {
     display: contents;
 }
 
-/* The last row of a section menu leads to the whole section on /projects;
-   a rule above sets it apart from the projects. */
-.nav-dropdown-content .nav-dropdown-all {
-    border-top: 1px solid var(--border-muted);
-    color: var(--text-muted);
-}
-
 /* The theme menu is the exception: its rows carry color dots, which make it
    wide enough to run off the right edge from the last pill but one. It hangs
    from its pill's right edge instead. Above the hamburger breakpoint only, so

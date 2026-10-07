@@ -101,7 +101,7 @@ pub fn Navbar() -> Element {
                             }
                             Link {
                                 to: Route::SectionPage { section },
-                                class: "nav-dropdown-item nav-dropdown-all",
+                                class: "nav-dropdown-item",
                                 onclick: move |_| {
                                     menu.set(false);
                                     open.set(false);
