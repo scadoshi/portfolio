@@ -29,7 +29,12 @@ const JSON_LD: &str = r#"{
 
 #[component]
 pub fn Home() -> Element {
-    let projects = data::featured();
+    // Featured products go in the left column under About; the rest, the
+    // systems work, fill the right.
+    let (products, others): (Vec<&'static data::Project>, Vec<&'static data::Project>) =
+        data::featured()
+            .iter()
+            .partition(|p| data::section_of(p.slug) == Some(Section::Products));
     let live = use_context::<stats::Live>();
     let totals = stats::totals(live.read().as_ref());
     let replay = use_context::<Replay>().0();
@@ -121,6 +126,14 @@ pub fn Home() -> Element {
                         "What I enjoy most is what's on this page: storage, wire protocols, the parts of a system that have to be right."
                     }
                 }
+                // Featured products sit under About, apart from the systems
+                // cards on the right; display: contents, so each card is a
+                // panel of the column (main.css).
+                div { class: "band-featured",
+                    for project in products {
+                        {project_card(project)}
+                    }
+                }
                 Panel {
                     eyebrow: "Process",
                     title: "How I Use AI",
@@ -165,7 +178,7 @@ pub fn Home() -> Element {
             }
             div { class: "band-col band-main",
                 h2 { class: "sr-only", "Featured Projects" }
-                for project in projects {
+                for project in others {
                     {project_card(project)}
                 }
             }

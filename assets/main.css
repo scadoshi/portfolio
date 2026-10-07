@@ -650,8 +650,15 @@ a.panel-action:visited {
 /* Except the home page's left column: three short panels against four tall
    project cards stretched until About was mostly empty space. They keep
    their own height, and the column ends early. */
-.band-aside > .panel-card {
+.band-aside > .panel-card,
+.band-featured > .panel-card {
     flex: 0 0 auto;
+}
+
+/* Featured products in the left column: the wrapper adds no box, so each
+   card is a panel of the column like the rest. */
+.band-featured {
+    display: contents;
 }
 
 @media (max-width: 56rem) {
@@ -675,13 +682,17 @@ a.panel-action:visited {
 
     /* Single-stack order is about -> projects -> how I use AI -> all projects,
        which no DOM order can give both columns at once.
-       display:contents dissolves the two column wrappers so every panel
-       becomes a flex item of the band itself, then order interleaves them.
-       The .sr-only headings are position:absolute, so they never become flex
-       items and can't take an order slot. Indices count those headings:
-       child 1 in each column. An aside panel without an index here would
-       default to order 0 and jump to the top, which is how contribute ended
-       up first on phones; the catch-all sends any new one to the bottom. */
+       display:contents dissolves the two column wrappers (and the featured
+       products' wrapper) so every panel becomes a flex item of the band
+       itself, then order interleaves them. The featured products share the
+       right column's order and come first in the DOM, so they lead the
+       projects. The .sr-only headings are position:absolute, so they never
+       become flex items. About is counted from the top (child 1 is the
+       heading), the last two panels from the bottom, so any number of
+       featured products fits between. An aside panel without a place here
+       would default to order 0 and jump to the top, which is how contribute
+       ended up first on phones; the catch-all sends any new one to the
+       bottom. */
     .band-aside > * {
         order: 9;
     }
@@ -699,15 +710,16 @@ a.panel-action:visited {
         order: 1;
     }
 
-    .band-main > * {
+    .band-main > *,
+    .band-featured > * {
         order: 2;
     }
 
-    .band-aside > :nth-child(3) {
+    .band-aside > :nth-last-child(2) {
         order: 3;
     }
 
-    .band-aside > :nth-child(4) {
+    .band-aside > :last-child {
         order: 4;
     }
 }
