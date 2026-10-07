@@ -1449,12 +1449,12 @@ const RUSTMAS: Project = Project {
     repo_url: "https://github.com/scadoshi/rustmas",
     summary: "Advent of Code tooling in Rust. One binary that downloads puzzle inputs, runs your solutions, validates the answers against an independent solver, and submits them.",
     card_bullets: &[
-        "Ports and adapters: the domain imports no HTTP, no filesystem, no CLI",
+        "The core logic has no network, file or command-line code in it, so it tests on its own",
         "Two HTTP clients, since only one of them needs your session cookie",
-        "Validated addresses make an out-of-range year or day unrepresentable",
-        "Both service contracts verified live",
+        "An invalid year or day can't be constructed, so it can't reach the website",
+        "Checks each answer against an independent solver before submitting, since a wrong answer costs a cooldown",
     ],
-    impact_metric: "Both service contracts verified live",
+    impact_metric: "Never spends a submission on an unchecked answer",
     objective: "Build the tooling around Advent of Code rather than just the puzzles: fetch an input, run a day, and know whether the answer is right before spending a submission. Wrong answers to adventofcode.com cost an escalating cooldown, so the tool checks every answer against an independent solver (https://github.com/fornwall/advent-of-code) first and only sends what that solver agrees with.",
     tags: &["cli", "http"],
     media: &[
