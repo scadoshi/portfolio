@@ -537,7 +537,7 @@ const HALO_ACTION_IMPORTER: Project = Project {
     repo_url: "https://github.com/scadoshi/halo_action_importer",
     summary: "CLI for bulk importing actions into the Halo Software suite from CSV and Excel.",
     card_bullets: &[
-        "Runs unattended for hours against unreliable APIs, recovers from every transient failure",
+        "Runs unattended for hours against an unreliable API, handling various failures",
         "Per-failure-mode retry: 401 refresh, 504/network retry, missing-ticket permanent skip",
         "Two-tier cache survives restarts and concurrent writes via fs2 file locks",
     ],
@@ -656,7 +656,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
         "OAuth 2.0 with cached tokens; 30-second expiry buffer prevents edge-case 401s",
         "Cross-platform binaries via GitHub Actions matrix (Windows, macOS Intel + ARM, Linux)",
     ],
-    impact_metric: "Hours to minutes. Deployed across Fortune 500 client implementations.",
+    impact_metric: "Hours to minutes, used in real client implementations.",
     objective: "Read custom field definitions from CSV and create them across Halo Software products via the API. Must support all 8 field types, handle auth, respect rate limits, ship as cross-platform binaries.",
     tags: &["oauth2", "csv"],
     media: &[
@@ -731,7 +731,7 @@ impl From<&CustomField> for HttpCustomField {
         "Selection options contain commas, and Halo's API separates options by comma. Options get stripped before joining",
         "Real client CSVs do not keep columns in the expected order, so parsing goes by header position rather than index, and errors name the row and the field",
     ],
-    progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Actively used in production for client implementations.",
+    progress: "Shipped. Tagged v1.0.0 with cross-platform releases via GitHub Actions. Used in production for client implementations.",
     impact: "Reduced enterprise configuration time from hours to minutes. Ships as tagged cross-platform binaries, so an implementer runs it without a Rust toolchain.",
     site_url: None,
     scope: None,
