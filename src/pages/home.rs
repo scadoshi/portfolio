@@ -4,8 +4,7 @@ use zwipe_components::{Decode, Panel, Replay, StatsStrip};
 use crate::{
     Route,
     components::{heatmap::Heatmap, page_meta::PageMeta, project_card::project_card},
-    data::{self, Section},
-    stats,
+    data, stats,
 };
 
 const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
@@ -29,12 +28,6 @@ const JSON_LD: &str = r#"{
 
 #[component]
 pub fn Home() -> Element {
-    // Featured products go in the left column under About; the rest, the
-    // systems work, fill the right.
-    let (products, others): (Vec<&'static data::Project>, Vec<&'static data::Project>) =
-        data::featured()
-            .iter()
-            .partition(|p| data::section_of(p.slug) == Some(Section::Products));
     let live = use_context::<stats::Live>();
     let totals = stats::totals(live.read().as_ref());
     let replay = use_context::<Replay>().0();
@@ -110,9 +103,9 @@ pub fn Home() -> Element {
                 }
             }
         }
-        // One lateral band below the hero, zite-style: the about/sections
-        // stack sits beside the project cards so nothing renders as bare text
-        // on the grid and the page stays compact.
+        // One lateral band below the hero, zite-style: About and two featured
+        // cards on the left, two more and How I Use AI on the right, so
+        // nothing renders as bare text on the grid and the page stays compact.
         section { class: "home-band",
             div { class: "band-col band-aside",
                 h2 { class: "sr-only", "About" }
@@ -126,13 +119,19 @@ pub fn Home() -> Element {
                         "What I enjoy most is what's on this page: storage, wire protocols, the parts of a system that have to be right."
                     }
                 }
-                // Featured products sit under About, apart from the systems
-                // cards on the right; display: contents, so each card is a
-                // panel of the column (main.css).
+                // The left column's featured cards, under About;
+                // display: contents, so each card is a panel of the column
+                // (main.css).
                 div { class: "band-featured",
-                    for project in products {
+                    for project in data::featured_left() {
                         {project_card(project)}
                     }
+                }
+            }
+            div { class: "band-col band-main",
+                h2 { class: "sr-only", "Featured Projects" }
+                for project in data::featured_right() {
+                    {project_card(project)}
                 }
                 Panel {
                     eyebrow: "Process",
@@ -145,41 +144,6 @@ pub fn Home() -> Element {
                         li { "Once I can explain every line, AI speeds up the iteration and refactoring" }
                         li { "I read and test all of it, and all of it is open source" }
                     }
-                }
-                Panel {
-                    eyebrow: "Explore",
-                    title: "All Projects",
-                    actions: rsx! {
-                        Link {
-                            to: Route::Projects {},
-                            class: "panel-action",
-                            "View All Projects"
-                        }
-                        for section in Section::ALL {
-                            Link {
-                                to: Route::SectionPage { section },
-                                class: "panel-action",
-                                "{section.name()}"
-                            }
-                        }
-                    },
-                    p { class: "card-summary",
-                        "The cards here are a pick. Everything else is in four sections."
-                    }
-                    ul { class: "card-bullets",
-                        for section in Section::ALL {
-                            li {
-                                "{section.name()}: "
-                                {section.projects().iter().map(|p| p.name).collect::<Vec<_>>().join(", ")}
-                            }
-                        }
-                    }
-                }
-            }
-            div { class: "band-col band-main",
-                h2 { class: "sr-only", "Featured Projects" }
-                for project in others {
-                    {project_card(project)}
                 }
             }
         }

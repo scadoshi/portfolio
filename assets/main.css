@@ -647,11 +647,10 @@ a.panel-action:visited {
     flex: 1 1 auto;
 }
 
-/* Except the home page's left column: three short panels against four tall
-   project cards stretched until About was mostly empty space. They keep
-   their own height, and the column ends early. */
-.band-aside > .panel-card,
-.band-featured > .panel-card {
+/* Except on the home page, where the columns hold different panels: stretched
+   to match, About was mostly empty space. Every panel keeps its own height,
+   and the shorter column ends early. */
+.home-band .panel-card {
     flex: 0 0 auto;
 }
 
@@ -680,19 +679,17 @@ a.panel-action:visited {
         max-height: 55vh;
     }
 
-    /* Single-stack order is about -> projects -> how I use AI -> all projects,
+    /* Single-stack order is about -> every featured card -> how I use AI,
        which no DOM order can give both columns at once.
-       display:contents dissolves the two column wrappers (and the featured
-       products' wrapper) so every panel becomes a flex item of the band
-       itself, then order interleaves them. The featured products share the
-       right column's order and come first in the DOM, so they lead the
-       projects. The .sr-only headings are position:absolute, so they never
-       become flex items. About is counted from the top (child 1 is the
-       heading), the last two panels from the bottom, so any number of
-       featured products fits between. An aside panel without a place here
-       would default to order 0 and jump to the top, which is how contribute
-       ended up first on phones; the catch-all sends any new one to the
-       bottom. */
+       display:contents dissolves the two column wrappers (and the left
+       column's featured wrapper) so every panel becomes a flex item of the
+       band itself, then order interleaves them. Both columns' cards share one
+       order, the left's first in the DOM, so they read left then right; How
+       I Use AI, last in the right column, goes after them. The .sr-only
+       headings are position:absolute, so they never become flex items. An
+       aside panel without a place here would default to order 0 and jump to
+       the top, which is how contribute ended up first on phones; the
+       catch-all sends any new one to the bottom. */
     .band-aside > * {
         order: 9;
     }
@@ -715,12 +712,8 @@ a.panel-action:visited {
         order: 2;
     }
 
-    .band-aside > :nth-last-child(2) {
+    .band-main > :last-child {
         order: 3;
-    }
-
-    .band-aside > :last-child {
-        order: 4;
     }
 }
 

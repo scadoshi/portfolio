@@ -282,9 +282,16 @@ impl std::fmt::Display for UnknownSection {
     }
 }
 
-/// The home page's cards, picked by hand from any section, in this order.
-pub fn featured() -> &'static [Project] {
-    &[ZWIPE, STELLER, HERON, CHICKADEE]
+/// The home page's cards for the left column, under About, picked by hand
+/// from any section, in this order.
+pub fn featured_left() -> &'static [Project] {
+    &[ZWIPE, CHICKADEE]
+}
+
+/// The home page's cards for the right column, above How I Use AI. Steller and
+/// heron sit together; they are one story.
+pub fn featured_right() -> &'static [Project] {
+    &[STELLER, HERON]
 }
 
 /// Every project on the site, section by section.
@@ -1668,7 +1675,7 @@ public static async Task<Solved> Solve<T>(
 
 #[cfg(test)]
 mod tests {
-    use super::{MOVED, Section, all_projects, featured, moved_to};
+    use super::{MOVED, Section, all_projects, featured_left, featured_right, moved_to};
     // `static_routes` is a `Routable` method; without the trait in scope the
     // test does not compile.
     use dioxus::prelude::Routable as _;
@@ -1753,7 +1760,7 @@ mod tests {
 
     #[test]
     fn every_featured_project_is_on_a_section() {
-        for project in featured() {
+        for project in featured_left().iter().chain(featured_right()) {
             assert!(
                 all_projects().any(|p| p.slug == project.slug),
                 "{} is featured but on no section",

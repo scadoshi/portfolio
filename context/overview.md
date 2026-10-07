@@ -5,12 +5,12 @@ to static HTML, served by GitHub Pages.
 
 ## Where things live
 
-Content is data, not markup. Every project is a `Project` const in `src/data.rs` and lives at `/projects/<slug>`. Each sits on exactly one `Section` (Products, Systems, Tooling, Experiments); `Section::projects()` holds the order, and a test fails if a project is on two or none. `featured()` is the separate, hand-picked list of cards on the home page, drawn from any section. Adding a project means adding a const, putting it on a section (and in `featured()` if it belongs on the front page), and adding its `<loc>` to `public/sitemap.xml`. The nav's section dropdowns, the `/projects` index and the cards build themselves from the same data.
+Content is data, not markup. Every project is a `Project` const in `src/data.rs` and lives at `/projects/<slug>`. Each sits on exactly one `Section` (Products, Systems, Tooling, Experiments); `Section::projects()` holds the order, and a test fails if a project is on two or none. `featured_left()` and `featured_right()` are the separate, hand-picked cards for the home page's two columns, drawn from any section. Adding a project means adding a const, putting it on a section (and in `featured_left()` or `featured_right()` if it belongs on the front page), and adding its `<loc>` to `public/sitemap.xml`. The nav's section dropdowns, the `/projects` index and the cards build themselves from the same data.
 
 ```
 src/
   main.rs            Route enum, App, the head tags, static_routes() for SSG
-  data.rs            every Project and Snippet; Section, featured(), MOVED
+  data.rs            every Project and Snippet; Section, featured_left/right(), MOVED
   stats.rs           every number from heron: baked stats.json, live fetch after load
   stats.json         heron's answer, replaced before each build
   components/        navbar, footer, project_card, gallery, code_block,
