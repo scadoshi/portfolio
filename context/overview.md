@@ -5,23 +5,20 @@ to static HTML, served by GitHub Pages.
 
 ## Where things live
 
-Content is data, not markup. Every project is a `Project` const in `src/data.rs`, and
-`featured_projects()` / `side_quests()` are the only two lists that decide what the
-site shows. Adding a project means adding a const, putting it in one of those lists,
-and adding its `<loc>` to `public/sitemap.xml`. The navbar dropdown and the cards
-build themselves from the same data.
+Content is data, not markup. Every project is a `Project` const in `src/data.rs` and lives at `/projects/<slug>`. Each sits on exactly one `Section` (Products, Systems, Tooling, Experiments); `Section::projects()` holds the order, and a test fails if a project is on two or none. `featured()` is the separate, hand-picked list of cards on the home page, drawn from any section. Adding a project means adding a const, putting it on a section (and in `featured()` if it belongs on the front page), and adding its `<loc>` to `public/sitemap.xml`. The nav's section dropdowns, the `/projects` index and the cards build themselves from the same data.
 
 ```
 src/
   main.rs            Route enum, App, the head tags, static_routes() for SSG
-  data.rs            every Project and Snippet; the two ordering functions
+  data.rs            every Project and Snippet; Section, featured(), MOVED
   stats.rs           every number from heron: baked stats.json, live fetch after load
   stats.json         heron's answer, replaced before each build
   components/        navbar, footer, project_card, gallery, code_block,
                      linked_text, page_meta, heatmap, commits, fleet,
                      flow, benchmark, measured, chart, scroll
-  pages/             home, detail (shared by projects and side quests),
-                     side_quests, contribute, not_found
+  pages/             home, projects (the sectioned index), detail, moved
+                     (redirects, and the old /side-quests routes), contribute,
+                     not_found
 assets/              CSS, favicons, per-project media, the two ascii logos
 public/              copied to the site root verbatim: sitemap, robots, og image, fonts, highlight.js
 context/             this, the commit rules, per-project notes, marketing
@@ -37,7 +34,7 @@ source of truth for what the site shows; these are the working notes behind it.
 
 ## Moving a page
 
-GitHub Pages cannot answer with a redirect. When a project is renamed or changes lists, add its old address to `MOVED` in `src/data.rs`. SSG then prerenders the old address as a page carrying a refresh and a canonical to the new one. Tests check that every entry leads to a live page and that none shadows one.
+GitHub Pages cannot answer with a redirect. When a project is renamed, add its old address to `MOVED` in `src/data.rs`; moving a project between sections changes no address. The old `/side-quests` addresses keep two routes (`OldSideQuests`, `OldSideQuest` in `pages/moved.rs`) that only ever render these redirects. SSG then prerenders the old address as a page carrying a refresh and a canonical to the new one. Tests check that every entry leads to a live page and that none shadows one.
 
 ## GitHub numbers
 

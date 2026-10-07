@@ -16,7 +16,7 @@ pub fn Contribute() -> Element {
             description: "Support continued open-source Rust development from Scotty Fermo via Stripe, Buy Me a Coffee, or GitHub Sponsors.",
             path: "/contribute",
         }
-        div { class: "side-quests content-enter",
+        div { class: "index-page content-enter",
             Panel {
                 eyebrow: "Support",
                 title: "Contribute",

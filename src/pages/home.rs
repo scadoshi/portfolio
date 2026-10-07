@@ -3,8 +3,9 @@ use zwipe_components::{Banner, Decode, Panel, Replay, StatsStrip};
 
 use crate::{
     Route,
-    components::{heatmap::Heatmap, page_meta::PageMeta, project_card::ProjectCard},
-    data, stats,
+    components::{heatmap::Heatmap, page_meta::PageMeta, project_card::project_card},
+    data::{self, Section},
+    stats,
 };
 
 const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
@@ -28,7 +29,7 @@ const JSON_LD: &str = r#"{
 
 #[component]
 pub fn Home() -> Element {
-    let projects = data::featured_projects();
+    let projects = data::featured();
     let live = use_context::<stats::Live>();
     let totals = stats::totals(live.read().as_ref());
     let replay = use_context::<Replay>().0();
@@ -45,7 +46,7 @@ pub fn Home() -> Element {
             Banner {
                 "The numbers on this page come from heron, my server, cached in steller, my Redis. "
                 Link {
-                    to: Route::SideQuestDetail { slug: "heron".to_string() },
+                    to: Route::ProjectDetail { slug: "heron".to_string() },
                     "How it works"
                 }
             }
@@ -73,7 +74,7 @@ pub fn Home() -> Element {
                                 source: rsx! {
                                     Link {
                                         class: "tag tag-c0",
-                                        to: Route::SideQuestDetail { slug: "heron".to_string() },
+                                        to: Route::ProjectDetail { slug: "heron".to_string() },
                                         "counted by heron"
                                     }
                                     Link {
@@ -112,7 +113,7 @@ pub fn Home() -> Element {
                 }
             }
         }
-        // One lateral band below the hero, zite-style: the about/side-quest
+        // One lateral band below the hero, zite-style: the about/sections
         // stack sits beside the project cards so nothing renders as bare text
         // on the grid and the page stays compact.
         section { class: "home-band",
@@ -144,27 +145,30 @@ pub fn Home() -> Element {
                 }
                 Panel {
                     eyebrow: "Explore",
-                    title: "Side Quests",
+                    title: "All Projects",
                     actions: rsx! {
                         Link {
-                            to: Route::SideQuests {},
+                            to: Route::Projects {},
                             class: "panel-action",
-                            "View Side Quests"
+                            "View All Projects"
                         }
-                        for quest in data::side_quests() {
-                            Link {
-                                to: Route::SideQuestDetail { slug: quest.slug.to_string() },
+                        for section in Section::ALL {
+                            a {
+                                href: "/projects#{section.slug()}",
                                 class: "panel-action",
-                                "{quest.name}"
+                                "{section.name()}"
                             }
                         }
                     },
                     p { class: "card-summary",
-                        "Proofs of concept and learning projects. Each one explores a domain I wanted to understand by building something real."
+                        "The cards here are a pick. Everything else sits on four shelves."
                     }
                     ul { class: "card-bullets",
-                        for quest in data::side_quests() {
-                            li { "{quest.name}: {quest.category}" }
+                        for section in Section::ALL {
+                            li {
+                                "{section.name()}: "
+                                {section.projects().iter().map(|p| p.name).collect::<Vec<_>>().join(", ")}
+                            }
                         }
                     }
                 }
@@ -201,18 +205,7 @@ pub fn Home() -> Element {
             div { class: "band-col band-main",
                 h2 { class: "sr-only", "Featured Projects" }
                 for project in projects {
-                    ProjectCard {
-                        name: project.name.to_string(),
-                        slug: project.slug.to_string(),
-                        category: project.category.to_string(),
-                        summary: project.summary.to_string(),
-                        bullets: project.card_bullets.iter().map(std::string::ToString::to_string).collect(),
-                        impact_metric: project.impact_metric.to_string(),
-                        repo_url: project.repo_url.to_string(),
-                        site_url: project.site_url.map(str::to_string),
-                        status: project.status.banner_status(),
-                        status_label: project.status.label().to_string(),
-                    }
+                    {project_card(project)}
                 }
             }
         }

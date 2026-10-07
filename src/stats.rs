@@ -245,7 +245,7 @@ impl RepoStats {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::data::{featured_projects, side_quests};
+    use crate::data::all_projects;
 
     fn baked() -> &'static Snapshot {
         BAKED.as_ref().expect("snapshot parses")
@@ -261,9 +261,7 @@ mod tests {
     /// heron. Until it is, its card has no numbers, and this says which one.
     #[test]
     fn every_project_on_the_site_is_in_the_snapshot() {
-        let missing: Vec<&str> = featured_projects()
-            .iter()
-            .chain(side_quests())
+        let missing: Vec<&str> = all_projects()
             .filter(|project| baked().repo(project.repo_url).is_none())
             .map(|project| project.repo_url)
             .collect();
@@ -387,9 +385,7 @@ mod tests {
     /// workflow only bakes an answer in which every repository is measured.
     #[test]
     fn every_project_on_the_site_is_measured_in_the_snapshot() {
-        let unmeasured: Vec<&str> = featured_projects()
-            .iter()
-            .chain(side_quests())
+        let unmeasured: Vec<&str> = all_projects()
             .filter(|project| {
                 baked()
                     .repo(project.repo_url)
@@ -451,7 +447,7 @@ mod tests {
                 })
         };
         let mut typed = Vec::new();
-        for project in featured_projects().iter().chain(side_quests()) {
+        for project in all_projects() {
             let fields = [
                 ("headline", project.headline),
                 ("summary", project.summary),

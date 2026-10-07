@@ -26,7 +26,7 @@ last and overwrites the prerendered `index.html` with a bare shell.
 
 ## Layout
 
-- `src/data.rs` is the content; every project and side quest is a const in there
+- `src/data.rs` is the content; every project is a const in there, on one of four sections
 - `public/` is copied verbatim to the site root, so the OG card, `sitemap.xml`,
   and `robots.txt` keep un-hashed URLs
 - `index.html` is a custom dx shell, kept only to set `lang="en"`

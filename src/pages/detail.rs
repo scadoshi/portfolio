@@ -2,12 +2,12 @@ use dioxus::prelude::*;
 use zwipe_components::Panel;
 
 use crate::{
-    Route,
     components::{
         benchmark::Benchmark, code_block::CodeBlock, commits::Commits, fleet::Fleet, flow::Flow,
         gallery::ProjectGallery, linked_text::LinkedText, measured::Measured, page_meta::PageMeta,
     },
     data,
+    pages::moved::Moved,
 };
 
 /// Kept as a function rather than inlined so the panel's shape stays readable
@@ -112,6 +112,15 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                             span { class: "ext", "\u{2197}" }
                         }
                     }
+                    // Back to the shelf this sits on (a plain anchor, as in
+                    // the nav: the router has no hash routes).
+                    if let Some(section) = data::section_of(project.slug) {
+                        a {
+                            href: "/projects#{section.slug()}",
+                            class: "panel-action",
+                            "All {section.name()}"
+                        }
+                    }
                 },
                 p { class: "project-headline", "{project.headline}" }
                 Measured { repo_url: project.repo_url.to_string() }
@@ -184,69 +193,21 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
     }
 }
 
-/// A page that has moved.
-///
-/// Prerendered with a refresh and a canonical, which is what a direct visit and a
-/// crawler see. A visit from inside the app never loads that HTML, so the route is
-/// replaced here as well.
-#[component]
-fn Moved(to: &'static str) -> Element {
-    use_effect(move || {
-        if let Ok(route) = to.parse::<Route>() {
-            navigator().replace(route);
-        }
-    });
-    rsx! {
-        PageMeta {
-            title: "Moved",
-            description: "This page is now at {to}.",
-            path: to,
-        }
-        document::Meta { http_equiv: "refresh", content: "0; url={to}" }
-        div { class: "not-found",
-            h1 { "Moved" }
-            p {
-                "This page is now at "
-                a { href: "{to}", "{to}" }
-                "."
-            }
-        }
-    }
-}
-
-/// Not-found fallback shared by both routes. `kind` is Title-case ("Project" /
-/// "Side quest"); the body sentence lowercases it.
-fn not_found(kind: &str, slug: &str) -> Element {
-    let lower = kind.to_lowercase();
-    rsx! {
-        document::Title { "{kind} not found | Scotty Fermo" }
-        div { class: "not-found",
-            h1 { "{kind} not found" }
-            p { "No {lower} matches \"{slug}\"." }
-        }
-    }
-}
-
-/// Featured project page at `/projects/:slug`.
+/// Project page at `/projects/:slug`. A renamed project's old slug renders
+/// the redirect to its new one.
 #[component]
 pub fn ProjectDetail(slug: String) -> Element {
     if let Some(to) = data::moved_to(&format!("/projects/{slug}")) {
         return rsx! { Moved { to } };
     }
     let Some(project) = data::find_project(&slug) else {
-        return not_found("Project", &slug);
+        return rsx! {
+            document::Title { "Project not found | Scotty Fermo" }
+            div { class: "not-found",
+                h1 { "Project not found" }
+                p { "No project matches \"{slug}\"." }
+            }
+        };
     };
     detail_view(project, format!("/projects/{}", project.slug))
-}
-
-/// Side quest page at `/side-quests/:slug`.
-#[component]
-pub fn SideQuestDetail(slug: String) -> Element {
-    if let Some(to) = data::moved_to(&format!("/side-quests/{slug}")) {
-        return rsx! { Moved { to } };
-    }
-    let Some(project) = data::find_side_quest(&slug) else {
-        return not_found("Side quest", &slug);
-    };
-    detail_view(project, format!("/side-quests/{}", project.slug))
 }

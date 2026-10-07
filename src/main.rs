@@ -7,10 +7,11 @@ mod stats;
 
 use pages::{
     contribute::Contribute,
-    detail::{ProjectDetail, SideQuestDetail},
+    detail::ProjectDetail,
     home::Home,
+    moved::{OldSideQuest, OldSideQuests},
     not_found::NotFound,
-    side_quests::SideQuests,
+    projects::Projects,
 };
 use zwipe_components::{
     COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
@@ -29,14 +30,18 @@ pub enum Route {
     #[layout(NavbarLayout)]
         #[route("/")]
         Home {},
+        #[route("/projects")]
+        Projects {},
         #[route("/projects/:slug")]
         ProjectDetail { slug: String },
-        #[route("/side-quests")]
-        SideQuests {},
-        #[route("/side-quests/:slug")]
-        SideQuestDetail { slug: String },
         #[route("/contribute")]
         Contribute {},
+        // Side quests were folded into the sections. These addresses only
+        // ever render the redirect to where each page went (data::MOVED).
+        #[route("/side-quests")]
+        OldSideQuests {},
+        #[route("/side-quests/:slug")]
+        OldSideQuest { slug: String },
         // GitHub Pages serves 404.html (a copy of the app shell, made in
         // deploy.yml) for unknown paths, and the router lands here.
         #[route("/:..segments")]
@@ -72,15 +77,15 @@ fn main() {
 #[allow(clippy::unused_async)]
 #[server(endpoint = "static_routes")]
 async fn static_routes() -> ServerFnResult<Vec<String>> {
+    // A moved static route (the old side-quest index) arrives with the MOVED
+    // entries below, so it is skipped here rather than rendered twice.
     let mut routes: Vec<String> = Route::static_routes()
         .iter()
         .map(ToString::to_string)
+        .filter(|path| data::moved_to(path).is_none())
         .collect();
-    for p in data::featured_projects() {
+    for p in data::all_projects() {
         routes.push(format!("/projects/{}", p.slug));
-    }
-    for p in data::side_quests() {
-        routes.push(format!("/side-quests/{}", p.slug));
     }
     for moved in data::MOVED {
         routes.push(moved.from.to_string());

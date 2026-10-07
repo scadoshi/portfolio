@@ -459,6 +459,13 @@ a.panel-action:visited {
     right: auto;
 }
 
+/* The last row of a section menu leads to the whole section on /projects;
+   a rule above sets it apart from the projects. */
+.nav-dropdown-content .nav-dropdown-all {
+    border-top: 1px solid var(--border-muted);
+    color: var(--text-muted);
+}
+
 /* The theme menu is the exception: its rows carry color dots, which make it
    wide enough to run off the right edge from the last pill but one. It hangs
    from its pill's right edge instead. Above the hamburger breakpoint only, so
@@ -672,7 +679,7 @@ a.panel-action:visited {
         max-height: 55vh;
     }
 
-    /* Single-stack order is about -> projects -> how I use AI -> side quests
+    /* Single-stack order is about -> projects -> how I use AI -> all projects
        -> contribute, which no DOM order can give both columns at once.
        display:contents dissolves the two column wrappers so every panel
        becomes a flex item of the band itself, then order interleaves them.
@@ -1133,15 +1140,24 @@ a.panel-action:visited {
     }
 }
 
-/* === Side Quests === */
+/* === Index pages (projects, contribute) === */
 
-.side-quests {
+.index-page {
     max-width: 74rem;
     margin: 0 auto;
     padding: 2.5rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+}
+
+/* One section of /projects: its header panel, then its cards. The scroll
+   margin keeps a jumped-to section clear of the sticky nav. */
+.index-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    scroll-margin-top: 5rem;
 }
 
 /* === Not Found === */

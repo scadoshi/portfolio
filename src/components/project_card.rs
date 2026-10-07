@@ -1,7 +1,26 @@
 use dioxus::prelude::*;
 use zwipe_components::{BannerStatus, Panel};
 
-use crate::{Route, components::measured::Measured};
+use crate::{Route, components::measured::Measured, data::Project};
+
+/// The card for `project`, the same on the home page and the index.
+pub fn project_card(project: &'static Project) -> Element {
+    rsx! {
+        ProjectCard {
+            key: "{project.slug}",
+            name: project.name.to_string(),
+            slug: project.slug.to_string(),
+            category: project.category.to_string(),
+            summary: project.summary.to_string(),
+            bullets: project.card_bullets.iter().map(std::string::ToString::to_string).collect(),
+            impact_metric: project.impact_metric.to_string(),
+            repo_url: project.repo_url.to_string(),
+            site_url: project.site_url.map(str::to_string),
+            status: project.status.banner_status(),
+            status_label: project.status.label().to_string(),
+        }
+    }
+}
 
 #[component]
 pub fn ProjectCard(

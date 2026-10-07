@@ -184,21 +184,92 @@ fn opens_a_database_left_at_every_older_version() {
     status: ProjectStatus::Doing,
 };
 
-pub fn featured_projects() -> &'static [Project] {
+/// The shelves the work sits on. Each has a dropdown in the nav and a block on
+/// `/projects`, and every project is on exactly one.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Section {
+    Products,
+    Systems,
+    Tooling,
+    Experiments,
+}
+
+impl Section {
+    /// Nav and index order.
+    pub const ALL: [Self; 4] = [
+        Self::Products,
+        Self::Systems,
+        Self::Tooling,
+        Self::Experiments,
+    ];
+
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Products => "Products",
+            Self::Systems => "Systems",
+            Self::Tooling => "Tooling",
+            Self::Experiments => "Experiments",
+        }
+    }
+
+    /// The block's id on `/projects`.
+    pub fn slug(self) -> &'static str {
+        match self {
+            Self::Products => "products",
+            Self::Systems => "systems",
+            Self::Tooling => "tooling",
+            Self::Experiments => "experiments",
+        }
+    }
+
+    pub fn blurb(self) -> &'static str {
+        match self {
+            Self::Products => {
+                "Things people use: shipped to the stores, or open on my phone every day."
+            }
+            Self::Systems => {
+                "Learning builds of the layers under a backend: a key-value store on disk, one in memory, and the live service that runs on them."
+            }
+            Self::Tooling => {
+                "Tools that remove a chore. Data migrations for Halo Software clients, and the plumbing around Advent of Code in two languages."
+            }
+            Self::Experiments => {
+                "Short projects in a domain I wanted to understand: an AI agent, pose estimation, raw input devices."
+            }
+        }
+    }
+
+    /// The section's projects, in the order they are shown.
+    pub fn projects(self) -> &'static [Project] {
+        match self {
+            Self::Products => &[ZWIPE, CAIRN],
+            Self::Systems => &[STELLER, CHICKADEE, HERON],
+            Self::Tooling => &[
+                HALO_ACTION_IMPORTER,
+                HALO_CUSTOM_FIELD_BUILDER,
+                RUSTMAS,
+                SHARPMAS,
+            ],
+            Self::Experiments => &[MARVIN, UPSEE, GOTCHA],
+        }
+    }
+}
+
+/// The home page's cards, picked by hand from any section, in this order.
+pub fn featured() -> &'static [Project] {
     &[ZWIPE, STELLER, HERON, CHICKADEE]
 }
 
-pub fn side_quests() -> &'static [Project] {
-    &[
-        CAIRN,
-        RUSTMAS,
-        SHARPMAS,
-        HALO_ACTION_IMPORTER,
-        HALO_CUSTOM_FIELD_BUILDER,
-        MARVIN,
-        GOTCHA,
-        UPSEE,
-    ]
+/// Every project on the site, section by section.
+pub fn all_projects() -> impl Iterator<Item = &'static Project> {
+    Section::ALL.into_iter().flat_map(Section::projects)
+}
+
+/// The section a project sits on.
+pub fn section_of(slug: &str) -> Option<Section> {
+    Section::ALL
+        .into_iter()
+        .find(|section| section.projects().iter().any(|p| p.slug == slug))
 }
 
 /// An address that used to hold a page, and where that page is.
@@ -207,37 +278,35 @@ pub struct Moved {
     pub to: &'static str,
 }
 
+const fn moved(from: &'static str, to: &'static str) -> Moved {
+    Moved { from, to }
+}
+
 /// Every address that has moved. Each `from` is prerendered as a page that sends
 /// the visitor on to `to`, since GitHub Pages cannot answer with a redirect.
 pub const MOVED: &[Moved] = &[
-    Moved {
-        from: "/side-quests/diprotodon",
-        to: "/projects/steller",
-    },
-    Moved {
-        from: "/side-quests/steller",
-        to: "/projects/steller",
-    },
-    Moved {
-        from: "/side-quests/nighthawk",
-        to: "/projects/chickadee",
-    },
-    Moved {
-        from: "/side-quests/chickadee",
-        to: "/projects/chickadee",
-    },
-    Moved {
-        from: "/side-quests/heron",
-        to: "/projects/heron",
-    },
-    Moved {
-        from: "/projects/halo-action-importer",
-        to: "/side-quests/halo-action-importer",
-    },
-    Moved {
-        from: "/projects/halo-custom-field-builder",
-        to: "/side-quests/halo-custom-field-builder",
-    },
+    // Renames.
+    moved("/side-quests/diprotodon", "/projects/steller"),
+    moved("/side-quests/nighthawk", "/projects/chickadee"),
+    // Side quests folded into the sections, October 2026.
+    moved("/side-quests", "/projects"),
+    moved("/side-quests/cairn", "/projects/cairn"),
+    moved("/side-quests/chickadee", "/projects/chickadee"),
+    moved("/side-quests/gotcha", "/projects/gotcha"),
+    moved(
+        "/side-quests/halo-action-importer",
+        "/projects/halo-action-importer",
+    ),
+    moved(
+        "/side-quests/halo-custom-field-builder",
+        "/projects/halo-custom-field-builder",
+    ),
+    moved("/side-quests/heron", "/projects/heron"),
+    moved("/side-quests/marvin", "/projects/marvin"),
+    moved("/side-quests/rustmas", "/projects/rustmas"),
+    moved("/side-quests/sharpmas", "/projects/sharpmas"),
+    moved("/side-quests/steller", "/projects/steller"),
+    moved("/side-quests/upsee", "/projects/upsee"),
 ];
 
 /// Where the page at `path` went, if it moved.
@@ -249,11 +318,7 @@ pub fn moved_to(path: &str) -> Option<&'static str> {
 }
 
 pub fn find_project(slug: &str) -> Option<&'static Project> {
-    featured_projects().iter().find(|p| p.slug == slug)
-}
-
-pub fn find_side_quest(slug: &str) -> Option<&'static Project> {
-    side_quests().iter().find(|p| p.slug == slug)
+    all_projects().find(|p| p.slug == slug)
 }
 
 const ZWIPE: Project = Project {
@@ -1576,7 +1641,7 @@ public static async Task<Solved> Solve<T>(
 
 #[cfg(test)]
 mod tests {
-    use super::{MOVED, featured_projects, side_quests};
+    use super::{MOVED, Section, all_projects, featured, moved_to};
     // `static_routes` is a `Routable` method; without the trait in scope the
     // test does not compile.
     use dioxus::prelude::Routable as _;
@@ -1596,41 +1661,44 @@ mod tests {
             .skip(1)
             .filter_map(|s| s.split_once("</loc>").map(|(path, _)| path))
             .collect();
-        let mut expected: Vec<String> = crate::Route::static_routes()
-            .iter()
-            .map(ToString::to_string)
-            .chain(
-                featured_projects()
-                    .iter()
-                    .map(|p| format!("/projects/{}", p.slug)),
-            )
-            .chain(
-                side_quests()
-                    .iter()
-                    .map(|p| format!("/side-quests/{}", p.slug)),
-            )
-            .collect();
+        let mut expected = live_pages();
         listed.sort_unstable();
         expected.sort_unstable();
         assert_eq!(listed, expected);
     }
 
-    /// Every page the site serves, by path.
+    /// Every page the site serves, by path. The old side-quest index is a
+    /// static route that only ever redirects, so it is not one.
     fn live_pages() -> Vec<String> {
         crate::Route::static_routes()
             .iter()
             .map(ToString::to_string)
-            .chain(
-                featured_projects()
-                    .iter()
-                    .map(|p| format!("/projects/{}", p.slug)),
-            )
-            .chain(
-                side_quests()
-                    .iter()
-                    .map(|p| format!("/side-quests/{}", p.slug)),
-            )
+            .filter(|path| moved_to(path).is_none())
+            .chain(all_projects().map(|p| format!("/projects/{}", p.slug)))
             .collect()
+    }
+
+    /// A project on two sections would get two nav entries and two cards on
+    /// the index; one on none would have a page nothing links to.
+    #[test]
+    fn every_project_is_on_exactly_one_section() {
+        let mut slugs: Vec<&str> = all_projects().map(|p| p.slug).collect();
+        let total = slugs.len();
+        slugs.sort_unstable();
+        slugs.dedup();
+        assert_eq!(slugs.len(), total, "a project is on two sections");
+        assert!(Section::ALL.iter().all(|s| !s.projects().is_empty()));
+    }
+
+    #[test]
+    fn every_featured_project_is_on_a_section() {
+        for project in featured() {
+            assert!(
+                all_projects().any(|p| p.slug == project.slug),
+                "{} is featured but on no section",
+                project.slug
+            );
+        }
     }
 
     #[test]
@@ -1659,18 +1727,16 @@ mod tests {
         }
     }
 
+    /// A moved address that fell through to the catch-all would render the 404
+    /// page rather than the redirect.
     #[test]
     fn every_moved_address_parses_as_a_route() {
         for moved in MOVED {
             for path in [moved.from, moved.to] {
                 let route = path.parse::<crate::Route>();
                 assert!(
-                    matches!(
-                        route,
-                        Ok(crate::Route::ProjectDetail { .. }
-                            | crate::Route::SideQuestDetail { .. })
-                    ),
-                    "{path} is not a project or side quest address"
+                    matches!(route, Ok(ref r) if !matches!(r, crate::Route::NotFound { .. })),
+                    "{path} does not reach a page"
                 );
             }
         }

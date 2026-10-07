@@ -3,7 +3,7 @@ use zwipe_components::{
     BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemePicker, use_theme_wipe,
 };
 
-use crate::Route;
+use crate::{Route, data::Section};
 
 const LOGO_S: &str = include_str!("../../assets/s.txt");
 
@@ -11,7 +11,13 @@ const LOGO_S: &str = include_str!("../../assets/s.txt");
 pub fn Navbar() -> Element {
     let (theme, shown) = use_theme_wipe(use_context::<Signal<ThemeConfig>>(), ".theme-wrapper");
     let mut open = use_signal(|| false);
-    let mut projects_open = use_signal(|| false);
+    // One per section, in Section::ALL order.
+    let mut section_open = [
+        use_signal(|| false),
+        use_signal(|| false),
+        use_signal(|| false),
+        use_signal(|| false),
+    ];
     let mut replay = use_context::<Replay>().0;
     let mut hovering = use_signal(|| false);
 
@@ -24,7 +30,9 @@ pub fn Navbar() -> Element {
                     class: "nav-brand",
                     onclick: move |_| {
                         open.set(false);
-                        projects_open.set(false);
+                        for menu in &mut section_open {
+                            menu.set(false);
+                        }
                         // On the home page this runs the entrance again.
                         replay += 1;
                         spawn(async {
@@ -40,34 +48,35 @@ pub fn Navbar() -> Element {
                 }
             },
             links: rsx! {
-                li {
-                    // Built from data so the dropdown cannot drift from the
-                    // cards, the sitemap and the routes SSG renders. The
-                    // diprotodon/nighthawk rename is the kind of change that
-                    // used to leave this list pointing at a dead slug.
-                    NavDropdown {
-                        open: projects_open,
-                        label: "Projects",
-                        for project in crate::data::featured_projects() {
-                            Link {
-                                key: "{project.slug}",
-                                to: Route::ProjectDetail { slug: project.slug.to_string() },
-                                class: "nav-dropdown-item",
-                                onclick: move |_| {
-                                    projects_open.set(false);
-                                    open.set(false);
-                                },
-                                "{project.name}"
+                // Built from data so the dropdowns cannot drift from the
+                // cards, the sitemap and the routes SSG renders. The
+                // diprotodon/nighthawk rename is the kind of change that
+                // used to leave a list like this pointing at a dead slug.
+                for (section, mut menu) in Section::ALL.into_iter().zip(section_open) {
+                    li { key: "{section.slug()}",
+                        NavDropdown {
+                            open: menu,
+                            label: section.name(),
+                            for project in section.projects() {
+                                Link {
+                                    key: "{project.slug}",
+                                    to: Route::ProjectDetail { slug: project.slug.to_string() },
+                                    class: "nav-dropdown-item",
+                                    onclick: move |_| {
+                                        menu.set(false);
+                                        open.set(false);
+                                    },
+                                    "{project.name}"
+                                }
+                            }
+                            // A plain anchor: the router has no hash routes,
+                            // and a full load lands the browser on the id.
+                            a {
+                                href: "/projects#{section.slug()}",
+                                class: "nav-dropdown-item nav-dropdown-all",
+                                "All {section.name()}"
                             }
                         }
-                    }
-                }
-                li {
-                    Link {
-                        to: Route::SideQuests {},
-                        class: "nav-link",
-                        onclick: move |_| open.set(false),
-                        "Side Quests"
                     }
                 }
                 li {
