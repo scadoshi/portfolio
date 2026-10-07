@@ -338,6 +338,16 @@ a:visited {
     --nav-max-width: none;
 }
 
+/* The nav and the fixed banner stack both sit at z-index 100 in the shared
+   sheet, and the banner comes later in the page, so it won the tie and every
+   menu opened underneath it. A menu's own z-index cannot help: the sticky nav
+   is its stacking context. Lifting the whole nav one step clears it. The
+   .theme-wrapper prefix is for specificity, since the shared rule is inlined
+   after this sheet. */
+.theme-wrapper .nav-wrapper {
+    z-index: 101;
+}
+
 .nav-stores-persistent {
     display: none;
     align-items: center;
