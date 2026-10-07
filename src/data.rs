@@ -224,11 +224,9 @@ impl Section {
 
     pub fn blurb(self) -> &'static str {
         match self {
-            Self::Products => {
-                "Things people use: shipped to the stores, or open on my phone every day."
-            }
+            Self::Products => "Finished products: one on both app stores, one I open every day.",
             Self::Systems => {
-                "Learning builds of the layers under a backend: a key-value store on disk, one in memory, and the live service that runs on them."
+                "Learning builds of the layers under a backend: a key-value store on disk, one in memory, and a live service built on the in-memory one."
             }
             Self::Tooling => {
                 "Tools that remove a chore. Data migrations for Halo Software clients, and the plumbing around Advent of Code in two languages."
