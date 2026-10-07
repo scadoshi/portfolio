@@ -950,14 +950,6 @@ a.panel-action:visited {
     width: 100%;
 }
 
-.gallery-body {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 70vh;
-}
-
 .gallery-image {
     display: block;
     min-width: 0;
@@ -978,26 +970,11 @@ a.panel-action:visited {
     }
 }
 
+/* The gallery's layout is zwipe-components' SITE_CSS; this is the
+   portfolio's look on top of it. */
 .gallery-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     background: var(--bg-primary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-primary);
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    padding: 0;
-    font-size: 1rem;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: monospace;
     opacity: 0.75;
-    box-shadow: var(--shadow-sm);
     transition:
         opacity 0.15s,
         background 0.15s;
@@ -1008,34 +985,14 @@ a.panel-action:visited {
     background: var(--bg-sink);
 }
 
-.gallery-prev {
-    left: 0;
-}
-.gallery-next {
-    right: 0;
-}
-
 /* Rides in Panel's `actions` slot, which is itself a flex row, so the footer
    needs to claim the full width or it collapses to its content and the counter
    stops sitting hard right. */
 .gallery-footer {
-    display: flex;
     width: 100%;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-.gallery-caption {
-    margin: 0;
-    font-style: italic;
 }
 
 .gallery-counter {
-    flex-shrink: 0;
-    font-variant-numeric: tabular-nums;
     color: var(--text-muted);
 }
 

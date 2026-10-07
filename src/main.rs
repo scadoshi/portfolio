@@ -13,7 +13,7 @@ use pages::{
     side_quests::SideQuests,
 };
 use zwipe_components::{
-    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, THEMES_CSS, ThemeConfig, use_persisted_theme,
+    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SITE_CSS, THEMES_CSS, ThemeConfig, use_persisted_theme,
 };
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
@@ -139,10 +139,11 @@ fn App() -> Element {
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
         document::Link { rel: "apple-touch-icon", sizes: "180x180", href: APPLE_TOUCH_ICON }
         // Shared CSS inlined from zwipe-components (a git dep can't be reached
-        // by an asset pipeline). Order matters: themes -> components -> site,
-        // so site rules can override component rules.
+        // by an asset pipeline). Order matters: themes -> components -> the
+        // shared site sheet -> main.css, so site rules can override shared ones.
         document::Style { {THEMES_CSS} }
         document::Style { {COMPONENTS_CSS} }
+        document::Style { {SITE_CSS} }
         document::Stylesheet { href: MAIN_CSS }
         // highlight.js 11.9.0, vendored under public/ so the site makes no
         // third-party request. Deferred so it doesn't block first paint;

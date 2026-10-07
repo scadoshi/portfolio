@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::Panel;
+use zwipe_components::{GalleryFooter, GalleryFrame, Panel};
 
 use crate::data::{MediaItem, MediaKind};
 
@@ -9,7 +9,7 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
         return rsx! {};
     }
 
-    let mut index = use_signal(|| 0usize);
+    let index = use_signal(|| 0usize);
     let total = items.len();
     let current = &items[index()];
 
@@ -24,16 +24,9 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                 eyebrow: "Demo",
                 title: "Watch it work",
                 actions: rsx! {
-                    div { class: "gallery-footer",
-                        if let Some(caption) = current.caption {
-                            figcaption { class: "gallery-caption", "{caption}" }
-                        }
-                        if total > 1 {
-                            span { class: "gallery-counter", "{index() + 1} / {total}" }
-                        }
-                    }
+                    GalleryFooter { index: index(), total, caption: current.caption.map(str::to_string) }
                 },
-                div { class: "gallery-body",
+                GalleryFrame { index, total, noun: "image",
                     match current.kind {
                         MediaKind::Image => rsx! {
                             img {
@@ -58,26 +51,6 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                                 preload: "metadata",
                             }
                         },
-                    }
-                    if total > 1 {
-                        button {
-                            class: "gallery-nav gallery-prev",
-                            aria_label: "Previous image",
-                            onclick: move |_| {
-                                let i = index();
-                                index.set(if i == 0 { total - 1 } else { i - 1 });
-                            },
-                            "\u{2190}"
-                        }
-                        button {
-                            class: "gallery-nav gallery-next",
-                            aria_label: "Next image",
-                            onclick: move |_| {
-                                let i = index();
-                                index.set((i + 1) % total);
-                            },
-                            "\u{2192}"
-                        }
                     }
                 }
             }
