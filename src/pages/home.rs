@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Banner, CountUp, Decode, Panel, Replay};
+use zwipe_components::{Banner, Decode, Panel, Replay, StatsStrip};
 
 use crate::{
     Route,
@@ -63,44 +63,35 @@ pub fn Home() -> Element {
                             h1 { key: "logo{run}", class: "logo", "aria-label": "Scotty Fermo", Decode { text: LOGO_ASCII } }
                         }
                         if let Some((totals, source)) = totals.as_ref() {
-                        div { class: "hero-figures",
-                        section { class: "stats-strip",
-                            div { class: "stat",
-                                span { class: "stat-num", CountUp { value: Some(totals.commits) } }
-                                span { class: "stat-label", "Commits" }
+                            StatsStrip {
+                                figures: vec![
+                                    (Some(totals.commits), "Commits"),
+                                    (Some(u64::from(totals.repos)), "Repos"),
+                                    (Some(totals.stars), "Stars"),
+                                ],
+                                // Where the numbers come from, as chips under the strip.
+                                source: rsx! {
+                                    Link {
+                                        class: "tag tag-c0",
+                                        to: Route::SideQuestDetail { slug: "heron".to_string() },
+                                        "counted by heron"
+                                    }
+                                    Link {
+                                        class: "tag tag-c0",
+                                        to: Route::ProjectDetail { slug: "steller".to_string() },
+                                        "cached in steller"
+                                    }
+                                    // Keyed on its text, so the live chip arrives with the
+                                    // ease rather than the as-of chip changing its words.
+                                    {
+                                        let label = match source {
+                                            stats::Source::Live => "live".to_string(),
+                                            stats::Source::AsOf(day) => format!("as of {day}"),
+                                        };
+                                        rsx! { span { key: "{label}", class: "tag tag-c0 tag-swap", "{label}" } }
+                                    }
+                                },
                             }
-                            div { class: "stat",
-                                span { class: "stat-num", CountUp { value: Some(u64::from(totals.repos)) } }
-                                span { class: "stat-label", "Repos" }
-                            }
-                            div { class: "stat",
-                                span { class: "stat-num", CountUp { value: Some(totals.stars) } }
-                                span { class: "stat-label", "Stars" }
-                            }
-                        }
-                        // Where the numbers come from, as chips under the strip.
-                        div { class: "tag-row stats-source",
-                            Link {
-                                class: "tag tag-c0",
-                                to: Route::SideQuestDetail { slug: "heron".to_string() },
-                                "counted by heron"
-                            }
-                            Link {
-                                class: "tag tag-c0",
-                                to: Route::ProjectDetail { slug: "steller".to_string() },
-                                "cached in steller"
-                            }
-                            // Keyed on its text, so the live chip arrives with the
-                            // ease rather than the as-of chip changing its words.
-                            {
-                                let label = match source {
-                                    stats::Source::Live => "live".to_string(),
-                                    stats::Source::AsOf(day) => format!("as of {day}"),
-                                };
-                                rsx! { span { key: "{label}", class: "tag tag-c0 tag-swap", "{label}" } }
-                            }
-                        }
-                        }
                         }
                     }
                     p { class: "hero-tagline",
