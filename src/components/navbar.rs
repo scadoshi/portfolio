@@ -97,7 +97,7 @@ pub fn Navbar() -> Element {
                                     menu.set(false);
                                     open.set(false);
                                 },
-                                "All {section.name()}"
+                                "All"
                             }
                         }
                     }
