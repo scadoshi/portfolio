@@ -358,9 +358,9 @@ const ZWIPE: Project = Project {
     repo_url: "https://github.com/scadoshi/zwipe",
     summary: "Mobile-first Magic: The Gathering deck builder with swipe-based navigation.",
     card_bullets: &[
-        "Native iOS + Android from one Dioxus codebase",
-        "Axum + PostgreSQL backend, 118k+ printings, materialized search",
-        "6 workspace crates, unwrap banned by CI",
+        "iOS and Android apps from one Rust codebase",
+        "Its own server and database, with fast search across 118,000+ card printings",
+        "The build rejects any code that could crash on bad data",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
     objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Six workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-client (the typed API client both clients call), zwipe-components (shared UI), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
