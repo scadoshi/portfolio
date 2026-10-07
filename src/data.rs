@@ -1351,10 +1351,10 @@ pub fn observe(&mut self, pose: &Pose) -> Option<u32> {
 const GOTCHA: Project = Project {
     name: "Gotcha",
     slug: "gotcha",
-    headline: "Cross-platform security camera. Input device grabbing, intruder photos, platform-specific I/O.",
+    headline: "A desk lock for macOS and Linux: it takes over the keyboard and mouse and photographs anyone who touches them.",
     category: "Systems Programming",
     repo_url: "https://github.com/scadoshi/gotcha",
-    summary: "Cross-platform security camera. Grabs all input devices, snaps intruder photos, only releases with a secret key.",
+    summary: "Locks the keyboard and mouse, takes a webcam photo of anyone who touches them, and unlocks only with a secret key sequence.",
     card_bullets: &[
         "Linux: raw evdev with nix::poll for selective device grabbing",
         "macOS: rdev with Accessibility API callbacks",
