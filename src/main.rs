@@ -13,7 +13,8 @@ use pages::{
     side_quests::SideQuests,
 };
 use zwipe_components::{
-    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SITE_CSS, THEMES_CSS, ThemeConfig, use_persisted_theme,
+    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
+    use_persisted_theme,
 };
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
@@ -163,6 +164,9 @@ fn App() -> Element {
         document::Script { {REVEAL_JS} }
         // Nav items pushed by a wider theme label slide over instead of jumping.
         document::Script { {NAV_GLIDE_JS} }
+        // Edge fades on the sideways chart scrollers where CSS can't drive
+        // them (Firefox has no scroll timelines).
+        document::Script { {SCROLL_FADE_JS} }
         Router::<Route> {}
     }
 }
