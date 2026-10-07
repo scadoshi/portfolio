@@ -115,7 +115,7 @@ pub fn Home() -> Element {
                     p { class: "about-text",
                         "The day job is a large, mature enterprise codebase. "
                         "Before moving into the core product, I spent four years designing request-management systems for clients from cities and counties to universities, financial firms and big tech, and wrote the CLI tools that turned multi-week data migrations into one-command jobs. "
-                        "The Rust is where I go deeper. Both key-value stores went past the tutorial: steller is benchmarked against Redis and serves a live service, and both were debugged where real clients broke them. Zwipe is the proof I can ship a whole product alone. "
+                        "My own work is in Rust. Both key-value stores went past the tutorial: steller is benchmarked against Redis and serves a live service, and both were debugged where real clients broke them. Zwipe is the proof I can ship a whole product alone. "
                         "What I enjoy most is what's on this page: storage, wire protocols, the parts of a system that have to be right."
                     }
                 }
