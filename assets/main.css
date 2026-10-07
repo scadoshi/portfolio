@@ -904,8 +904,10 @@ a.panel-action:visited {
 
 .project-detail {
     max-width: 74rem;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem;
+    /* Same 1rem under the nav as the home hero: the nav's 3rem bottom margin,
+       pulled up 2rem. */
+    margin: -2rem auto 0;
+    padding: 0 1.5rem 2.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -1131,7 +1133,7 @@ a.panel-action:visited {
     max-width: 25rem;
     /* bottom margin auto absorbs the free space in the flex column, pinning a
        following footer to the bottom without stretching this card. */
-    margin: 3.75rem auto auto;
+    margin: -2rem auto auto;
 }
 
 .not-found-page .panel-title {
@@ -1161,8 +1163,9 @@ a.panel-action:visited {
 
 .index-page {
     max-width: 74rem;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem;
+    /* 1rem under the nav, as on the home page and the project pages. */
+    margin: -2rem auto 0;
+    padding: 0 1.5rem 2.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
