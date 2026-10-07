@@ -956,6 +956,12 @@ a.panel-action:visited {
     width: 100%;
 }
 
+/* Zwipe's architecture carousel (zwipe_components::ZwipeArchitecture, sized
+   by the shared site sheet) fades its diagrams in like the gallery's media. */
+.arch-slide {
+    animation: gallery-fade-in 0.25s ease-out;
+}
+
 .gallery-image {
     display: block;
     min-width: 0;

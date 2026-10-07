@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::Panel;
+use zwipe_components::{Panel, ZwipeArchitecture};
 
 use crate::{
     Route,
@@ -31,7 +31,8 @@ fn approach_panel(project: &'static data::Project) -> Element {
 
 /// Panels only one project has. heron is the project this site is a client of,
 /// so its page shows the path a number takes and what heron is measuring right
-/// now; steller's page shows its benchmark against Redis. Empty for the rest.
+/// now; steller's page shows its benchmark against Redis; zwipe's shows how
+/// its crates and running pieces fit together. Empty for the rest.
 fn project_panels(project: &'static data::Project) -> Element {
     match project.slug {
         // The numbers first, then the path they took to get here.
@@ -57,6 +58,9 @@ fn project_panels(project: &'static data::Project) -> Element {
                     Flow {}
                 }
             }
+        },
+        "zwipe" => rsx! {
+            ZwipeArchitecture {}
         },
         "steller" => rsx! {
             Panel {
