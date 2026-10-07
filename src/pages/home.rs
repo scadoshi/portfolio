@@ -87,14 +87,15 @@ pub fn Home() -> Element {
                         }
                     }
                     p { class: "hero-tagline",
+                        "Software engineer at Halo Software, writing production C#. On my own time, "
                         span { class: "hl-warning", "Rust" }
                         " that runs: an "
                         span { class: "hl-success", "app" }
-                        " on both stores, a "
+                        " on both stores, a live "
                         span { class: "hl-error", "server" }
-                        " counting the numbers above, and two "
+                        ", and two "
                         span { class: "hl-tertiary", "key-value stores" }
-                        " built from scratch to learn how the real ones work."
+                        " built to learn how the real ones work."
                     }
                     // The year of contributions, from the same answer.
                     if totals.is_some() {
@@ -114,9 +115,9 @@ pub fn Home() -> Element {
                     eyebrow: "About",
                     title: "Software Engineer | Systems | Rust",
                     p { class: "about-text",
-                        "I write production C# into Halo Software's core product, a large, mature enterprise codebase, shipping through the same pipeline their staff engineers use. "
-                        "Before that, four years at Halo designing enterprise request-management systems for universities, government entities, and financial institutions, and building the CLI tools that turned multi-week migrations into one-command jobs. "
-                        "My own work is Rust and systems: an LSM-tree key-value store and a Redis-compatible server, both learning builds I took past the tutorial: benchmarked, put in front of real clients, and debugged where they broke. Zwipe, a full-stack mobile app live on both stores, is the proof I can ship the whole thing alone. "
+                        "The day job is a large, mature enterprise codebase, where my changes ship through the same review and release pipeline as the staff engineers'. "
+                        "Before moving into the core product, I spent four years designing request-management systems for universities, government bodies and financial institutions, and wrote the CLI tools that turned multi-week data migrations into one-command jobs. "
+                        "The Rust is where I go deeper. Both key-value stores went past the tutorial: steller is benchmarked against Redis and serves a live service, and both were debugged where real clients broke them. Zwipe is the proof I can ship a whole product alone. "
                         "The work I want more of is what's on this page: storage, wire protocols, the parts of a system that have to be right."
                     }
                 }
