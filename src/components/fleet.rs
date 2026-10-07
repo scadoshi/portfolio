@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use zwipe_components::{Chip, Replay};
+use zwipe_components::{Chip, Replay, with_separators};
 
-use crate::stats::{self, with_separators};
+use crate::stats;
 
 /// Which measurement the bars show.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

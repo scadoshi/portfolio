@@ -1,14 +1,13 @@
 use dioxus::prelude::*;
 use std::collections::BTreeMap;
-use zwipe_components::Replay;
+use zwipe_components::{Replay, area, curve, peak_indices, tip_anchor, with_separators};
 
 use crate::{
     components::{
-        chart::{Tip, anchor, month_name, show},
+        chart::{Tip, month_name, show},
         commits::{ceiling, ticks},
-        curve::{area, curve},
     },
-    stats::{self, Day, with_separators},
+    stats::{self, Day},
 };
 
 /// Cell size and the gap between cells, in SVG units.
@@ -173,21 +172,11 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
 /// median of the days with any contributions, the largest `MAX_PEAKS` of them.
 /// A steady busy stretch never qualifies; a spike does.
 fn peaks(days: &[Day]) -> Vec<&str> {
-    let mut busy: Vec<u32> = days
-        .iter()
-        .map(|day| day.count)
-        .filter(|&n| n > 0)
-        .collect();
-    if busy.is_empty() {
-        return Vec::new();
-    }
-    busy.sort_unstable();
-    let median = busy[busy.len() / 2];
-    let floor = median.saturating_mul(PEAK_RATIO);
-    let mut peaks: Vec<&Day> = days.iter().filter(|day| day.count >= floor).collect();
-    peaks.sort_by_key(|day| std::cmp::Reverse(day.count));
-    peaks.truncate(MAX_PEAKS);
-    peaks.into_iter().map(|day| day.date.as_str()).collect()
+    let counts: Vec<u32> = days.iter().map(|day| day.count).collect();
+    peak_indices(&counts, PEAK_RATIO, MAX_PEAKS)
+        .into_iter()
+        .filter_map(|i| days.get(i).map(|day| day.date.as_str()))
+        .collect()
 }
 
 /// The points carried on to either edge of the grid along the slope they
@@ -285,7 +274,9 @@ pub fn Heatmap() -> Element {
     };
 
     rsx! {
-        div { class: "heatmap",
+        // Rises into view with the panels (REVEAL_JS), which also holds its
+        // cells' animation until then.
+        div { class: "heatmap", "data-reveal": "true",
             // The chip is placed by percentages of the grid, so it lives in a
             // wrapper that holds only the grid.
             div { class: "chart-scroll scroll-end scroll-fade-x",
@@ -419,7 +410,7 @@ pub fn Heatmap() -> Element {
             }
             if let Some(tip) = tip() {
                 span {
-                    class: "tag tag-c0 heatmap-tip {anchor(tip.left)}",
+                    class: "tag tag-c0 heatmap-tip {tip_anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }

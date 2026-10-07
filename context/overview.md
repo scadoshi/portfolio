@@ -17,23 +17,17 @@ src/
   data.rs            every Project and Snippet; the two ordering functions
   stats.rs           every number from heron: baked stats.json, live fetch after load
   stats.json         heron's answer, replaced before each build
-  theme_store.rs     localStorage theme persistence, no-ops on the server build
   components/        navbar, footer, project_card, gallery, code_block,
                      linked_text, page_meta, heatmap, commits, fleet,
-                     flow, benchmark, measured, chart, curve, scroll
+                     flow, benchmark, measured, chart, scroll
   pages/             home, detail (shared by projects and side quests),
                      side_quests, contribute, not_found
-assets/              CSS, scripts, favicons, per-project media, the two ascii logos
+assets/              CSS, favicons, per-project media, the two ascii logos
 public/              copied to the site root verbatim: sitemap, robots, og image, fonts, highlight.js
 context/             this, the commit rules, per-project notes, marketing
 ```
 
-The shared UI (themes, `Panel`, `Banner`, `NavBar`, `ThemePicker`, `PageMeta`) comes
-from `zwipe-components`, a git dependency on the zwipe repo. `Cargo.lock` pins the
-exact commit, so pulling changes is a deliberate `cargo update -p zwipe-components`.
-Its CSS is inlined as a string constant because a git dep cannot be reached by an
-asset pipeline. That also means a fix to shared CSS has to land in zwipe first, and
-pushing zwipe's `main` deploys zwipe's production.
+The shared UI comes from `zwipe-components`: themes, `Panel`, `Banner`, `NavBar`, `ThemePicker`, `PageMeta`, and the site kit it shares with zite (the stored theme through `use_persisted_theme`, the hero's `StatsStrip`, the gallery's `GalleryFrame` and `GalleryFooter`, the scroll reveal and nav glide scripts, `with_separators`, and the chart helpers `curve`, `area`, `tip_anchor` and `peak_indices`). It is a git dependency on the zwipe repo. `Cargo.lock` pins the exact commit, so pulling changes is a deliberate `cargo update -p zwipe-components`. Its CSS (`THEMES_CSS`, `COMPONENTS_CSS`, `SITE_CSS`) and the two scripts (`REVEAL_JS`, `NAV_GLIDE_JS`) are inlined as string constants because a git dep cannot be reached by an asset pipeline. In the prerendered head Dioxus writes those inline `<style>` blocks after the linked `main.css`, so a shared rule wins a tie: a `main.css` override of a shared selector needs more specificity (`.project-gallery .gallery-body`, not `.gallery-body`). `main.css` keeps only this site's look on top of the shared rules. The reveal picks up anything marked `data-reveal` (every `Panel`, and the home heatmap), the glide the children of anything marked `data-nav-glide`. That also means a fix to shared CSS or script has to land in zwipe first, and pushing zwipe's `main` deploys zwipe's production.
 
 Iterating on shared CSS through that loop costs a zwipe deploy and a pin commit per attempt; one afternoon produced five pins for one radius. The cheaper loop is a local override while iterating: put `[patch."https://github.com/scadoshi/zwipe"] zwipe-components = { path = "../zwipe/zwipe-components" }` in `.cargo/config.toml` (not `Cargo.toml`, so it never gets committed), build and screenshot until it looks right, delete the file, restore `Cargo.lock`, push zwipe once, and pin once.
 
@@ -57,7 +51,7 @@ A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as
 
 ## Charts
 
-Every chart is an inline SVG the site draws itself from the `GET /stats` answer, so it takes the theme's colors and needs no chart library. The home page has the year of contributions (heron's `calendar`, from GitHub's GraphQL) as a heatmap with a contributions-by-month line drawn on the same columns; `heatmap.rs` lays both out, and the year's outlier days get a lit edge (`PEAK_RATIO` times the median busy day, `MAX_PEAKS` at most). The heron page has the flow diagram (shared `Diagram*` pieces from zwipe-components), the fleet bar chart of lines, tests and lints, and commits by month summed from `weekly_commits`, which only covers the repositories heron measures and says so in its caption. The steller page has the benchmark against Redis, the one hand-typed number set, with its link pinned to the commit of `BENCHMARKS.md` the rows came from. Hover chips are shared in `chart.rs`; the monotone curve in `curve.rs`. On a phone a chart keeps a readable width inside a `.chart-scroll` box and the time charts open on the newest months (`scroll.rs`).
+Every chart is an inline SVG the site draws itself from the `GET /stats` answer, so it takes the theme's colors and needs no chart library. The home page has the year of contributions (heron's `calendar`, from GitHub's GraphQL) as a heatmap with a contributions-by-month line drawn on the same columns; `heatmap.rs` lays both out, and the year's outlier days get a lit edge (`PEAK_RATIO` times the median busy day, `MAX_PEAKS` at most). The heron page has the flow diagram (shared `Diagram*` pieces from zwipe-components), the fleet bar chart of lines, tests and lints, and commits by month summed from `weekly_commits`, which only covers the repositories heron measures and says so in its caption. The steller page has the benchmark against Redis, the one hand-typed number set, with its link pinned to the commit of `BENCHMARKS.md` the rows came from. Hover chips are shared in `chart.rs`; the monotone curve, the chips' edge anchoring and the peak pick come from zwipe-components. On a phone a chart keeps a readable width inside a `.chart-scroll` box and the time charts open on the newest months (`scroll.rs`).
 
 ## The entrance
 

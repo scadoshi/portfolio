@@ -98,8 +98,8 @@ jobs:
         run: cargo test --locked
 
       - name: Clippy
-        # Three targets because the code differs per target: theme_store is
-        # wasm-only, and `server` is the feature the prerender actually runs
+        # Three targets because the code differs per target: the live stats
+        # fetch is wasm-only, and `server` is the feature the prerender actually runs
         # under. Linting only the default target missed three errors in
         # main.rs for as long as this workflow has existed.
         run: |

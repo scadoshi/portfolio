@@ -22,14 +22,14 @@ local discipline, kept identical to zwipe's so this crate and the shared
 from zwipe's style. Always:
 
 ```bash
-cargo +nightly fmt        # NOT `cargo fmt` — stable can't apply the Crate imports rule
+cargo +nightly fmt        # NOT `cargo fmt`: stable can't apply the Crate imports rule
 ```
 
 ### 2. Clippy: warnings are errors
 ```bash
 cargo clippy --all-targets -- -D warnings
 ```
-Some code is wasm-only (e.g. `theme_store`) and the prerender runs under the `server` feature, so also lint both:
+Some code is wasm-only (e.g. `stats::fetch_live`) and the prerender runs under the `server` feature, so also lint both:
 ```bash
 cargo clippy --target wasm32-unknown-unknown -- -D warnings
 cargo clippy --no-default-features --features server --all-targets -- -D warnings

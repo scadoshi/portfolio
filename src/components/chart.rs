@@ -13,18 +13,6 @@ pub fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
     tip.set(Some(Tip { text, left, top }));
 }
 
-/// Which way the chip hangs off its point: centered in the middle of the
-/// chart, and from its edge near either side so it never leaves the panel.
-pub fn anchor(left: f64) -> &'static str {
-    if left < 15.0 {
-        "tip-start"
-    } else if left > 85.0 {
-        "tip-end"
-    } else {
-        ""
-    }
-}
-
 /// `Jan` for `01`, the month of a `YYYY-MM-DD` date.
 pub fn month_name(month: &str) -> Option<&'static str> {
     Some(match month {
@@ -47,13 +35,6 @@ pub fn month_name(month: &str) -> Option<&'static str> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn the_chip_hangs_from_its_edge_near_either_side() {
-        assert_eq!(anchor(5.0), "tip-start");
-        assert_eq!(anchor(50.0), "");
-        assert_eq!(anchor(95.0), "tip-end");
-    }
 
     #[test]
     fn months_come_from_their_two_digits() {

@@ -1,12 +1,9 @@
 use dioxus::prelude::*;
-use zwipe_components::Replay;
+use zwipe_components::{Replay, area, curve, tip_anchor, with_separators};
 
 use crate::{
-    components::{
-        chart::{Tip, anchor, month_name, show},
-        curve::{area, curve},
-    },
-    stats::{self, WeekCommits, with_separators},
+    components::chart::{Tip, month_name, show},
+    stats::{self, WeekCommits},
 };
 
 const WIDTH: f64 = 640.0;
@@ -236,7 +233,7 @@ pub fn Commits() -> Element {
             }
             if let Some(tip) = tip() {
                 span {
-                    class: "tag tag-c0 commits-tip {anchor(tip.left)}",
+                    class: "tag tag-c0 commits-tip {tip_anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }
