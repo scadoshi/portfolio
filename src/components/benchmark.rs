@@ -1,10 +1,7 @@
 use dioxus::prelude::*;
-use zwipe_components::{Chip, Replay, with_separators};
+use zwipe_components::{Chip, Replay, curve, tip_anchor, with_separators};
 
-use crate::components::{
-    chart::{Tip, anchor, show},
-    curve::curve,
-};
+use crate::components::chart::{Tip, show};
 
 /// One row of steller's `BENCHMARKS.md`: `redis-benchmark` at a client count,
 /// requests per second for steller and for Redis 8.10, median of three runs on
@@ -275,7 +272,7 @@ pub fn Benchmark() -> Element {
             }
             if let Some(tip) = tip() {
                 span {
-                    class: "tag tag-c0 bench-tip {anchor(tip.left)}",
+                    class: "tag tag-c0 bench-tip {tip_anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }
