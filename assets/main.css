@@ -647,6 +647,13 @@ a.panel-action:visited {
     flex: 1 1 auto;
 }
 
+/* Except the home page's left column: three short panels against four tall
+   project cards stretched until About was mostly empty space. They keep
+   their own height, and the column ends early. */
+.band-aside > .panel-card {
+    flex: 0 0 auto;
+}
+
 @media (max-width: 56rem) {
     .home-band,
     .detail-band {
