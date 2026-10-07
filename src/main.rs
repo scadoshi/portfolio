@@ -139,8 +139,10 @@ fn App() -> Element {
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
         document::Link { rel: "apple-touch-icon", sizes: "180x180", href: APPLE_TOUCH_ICON }
         // Shared CSS inlined from zwipe-components (a git dep can't be reached
-        // by an asset pipeline). Order matters: themes -> components -> the
-        // shared site sheet -> main.css, so site rules can override shared ones.
+        // by an asset pipeline). Themes, then components, then the shared site
+        // sheet. The prerendered head puts these inline blocks after the linked
+        // main.css, so a main.css override of a shared selector needs higher
+        // specificity, not just a later position.
         document::Style { {THEMES_CSS} }
         document::Style { {COMPONENTS_CSS} }
         document::Style { {SITE_CSS} }
