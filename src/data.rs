@@ -860,7 +860,7 @@ async fn list_models(api_key: &str) -> Result<Vec<Model>> {
         "Tavily rejects null for optional fields, which serde sends by default. #[serde(skip_serializing_if)] fixed it",
     ],
     progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
-    impact: "A learning project that ended up sending a fix back to the framework it was built on. Flagged a production bug in Rig, proposed the architectural fix in-thread, and shipped the better pattern locally rather than waiting on the upstream refactor.",
+    impact: "A learning project that found a bug in the framework it was built on. Reported it to Rig with a proposed fix, argued for a better pattern in the thread, and shipped that pattern in Marvin rather than waiting for upstream.",
     site_url: None,
     scope: None,
     status: ProjectStatus::Done,
@@ -1362,7 +1362,7 @@ const GOTCHA: Project = Project {
         "One binary, two platforms",
     ],
     impact_metric: "2 platforms, one binary",
-    objective: "Cross-platform security camera that grabs input devices, snaps a photo of anyone who touches keyboard or mouse, and only unlocks with a secret key. Same goal, two fundamentally different OS I/O models.",
+    objective: "A desk lock that takes over the keyboard and mouse, photographs anyone who touches them, and unlocks only with a secret key sequence. Same goal on macOS and Linux, through two very different ways of reading input.",
     tags: &["evdev", "rdev"],
     media: &[MediaItem {
         src: asset!("/assets/projects/gotcha/demo.mp4"),
