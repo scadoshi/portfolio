@@ -139,13 +139,6 @@ html.js:not(.hydrated) .heatmap-cell {
     font-weight: normal;
 }
 
-/* === Announcement Banner === */
-
-/* The whole banner system is the shared zwipe_components::Banner as of the
-   824ff96 pin: .banner-stack positioning (with its viewport-aware phone
-   margin), .announcement-banner, and the slide/leave/countdown animations.
-   Nothing site-specific remains. */
-
 /* === Base === */
 
 * {

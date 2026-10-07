@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Banner, Decode, Panel, Replay, StatsStrip};
+use zwipe_components::{Decode, Panel, Replay, StatsStrip};
 
 use crate::{
     Route,
@@ -42,15 +42,6 @@ pub fn Home() -> Element {
             path: "/",
         }
         document::Script { r#type: "application/ld+json", "{JSON_LD}" }
-        div { class: "banner-stack",
-            Banner {
-                "The numbers on this page come from heron, my server, cached in steller, my Redis. "
-                Link {
-                    to: Route::ProjectDetail { slug: "heron".to_string() },
-                    "How it works"
-                }
-            }
-        }
         section { class: "hero content-enter",
             // Keyed on the replay count so the spacing animation runs again
             // with the decode.
