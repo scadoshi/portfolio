@@ -288,7 +288,7 @@ pub fn Heatmap() -> Element {
         div { class: "heatmap",
             // The chip is placed by percentages of the grid, so it lives in a
             // wrapper that holds only the grid.
-            div { class: "chart-scroll scroll-end",
+            div { class: "chart-scroll scroll-end scroll-fade-x",
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
             // Keyed on the replay count: a new key is a new SVG, and every
             // animation below starts over.

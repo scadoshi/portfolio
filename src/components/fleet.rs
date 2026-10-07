@@ -108,7 +108,7 @@ pub fn Fleet() -> Element {
                     }
                 }
             }
-            div { class: "chart-scroll",
+            div { class: "chart-scroll scroll-fade-x",
             // Keyed on the replay count, as the heatmap is: a theme wipe makes a
             // new key, a new SVG, and every animation below starts over.
             for run in [run] {

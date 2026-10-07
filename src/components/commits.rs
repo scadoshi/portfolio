@@ -161,7 +161,7 @@ pub fn Commits() -> Element {
         div { class: "commits",
             // The chip is placed by percentages of the chart, so it lives in a
             // wrapper that holds only the chart.
-            div { class: "chart-scroll scroll-end",
+            div { class: "chart-scroll scroll-end scroll-fade-x",
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
             // Keyed on the replay count, as the heatmap is: a theme wipe makes a
             // new key, a new SVG, and every animation below starts over.
