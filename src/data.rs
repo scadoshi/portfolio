@@ -255,6 +255,35 @@ impl Section {
     }
 }
 
+/// A section is a route segment (`/projects/<section>`). Parsing fails for
+/// anything else, which is what lets the router fall through to a project.
+impl std::str::FromStr for Section {
+    type Err = UnknownSection;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|section| section.slug() == s)
+            .ok_or(UnknownSection)
+    }
+}
+
+impl std::fmt::Display for Section {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.slug())
+    }
+}
+
+/// A path segment that names no section.
+#[derive(Debug)]
+pub struct UnknownSection;
+
+impl std::fmt::Display for UnknownSection {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("not a section")
+    }
+}
+
 /// The home page's cards, picked by hand from any section, in this order.
 pub fn featured() -> &'static [Project] {
     &[ZWIPE, STELLER, HERON, CHICKADEE]
@@ -1674,8 +1703,42 @@ mod tests {
             .iter()
             .map(ToString::to_string)
             .filter(|path| moved_to(path).is_none())
+            .chain(Section::ALL.map(|s| format!("/projects/{s}")))
             .chain(all_projects().map(|p| format!("/projects/{}", p.slug)))
             .collect()
+    }
+
+    /// Sections and projects share `/projects/<segment>`; the section route
+    /// comes first and only parses the four names.
+    #[test]
+    fn section_and_project_addresses_reach_their_own_pages() {
+        for section in Section::ALL {
+            let route = format!("/projects/{section}").parse::<crate::Route>();
+            assert!(
+                matches!(route, Ok(crate::Route::SectionPage { section: s }) if s == section),
+                "/projects/{section} is not its section page"
+            );
+        }
+        for project in all_projects() {
+            let route = format!("/projects/{}", project.slug).parse::<crate::Route>();
+            assert!(
+                matches!(route, Ok(crate::Route::ProjectDetail { ref slug }) if slug == project.slug),
+                "/projects/{} is not its project page",
+                project.slug
+            );
+        }
+    }
+
+    /// A project named like a section would be unreachable behind it.
+    #[test]
+    fn no_project_slug_is_a_section_name() {
+        for project in all_projects() {
+            assert!(
+                project.slug.parse::<Section>().is_err(),
+                "{} is also a section",
+                project.slug
+            );
+        }
     }
 
     /// A project on two sections would get two nav entries and two cards on

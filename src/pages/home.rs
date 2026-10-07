@@ -153,8 +153,8 @@ pub fn Home() -> Element {
                             "View All Projects"
                         }
                         for section in Section::ALL {
-                            a {
-                                href: "/projects#{section.slug()}",
+                            Link {
+                                to: Route::SectionPage { section },
                                 class: "panel-action",
                                 "{section.name()}"
                             }

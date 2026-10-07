@@ -348,6 +348,13 @@ a:visited {
     z-index: 101;
 }
 
+/* Same tie inside the nav: menus and triggers are both z-index 200, so in the
+   hamburger panel, where a menu drops over the stacked triggers below its
+   own, every later trigger was painted over it. One step up clears them. */
+.theme-wrapper .nav-dropdown-content {
+    z-index: 201;
+}
+
 .nav-stores-persistent {
     display: none;
     align-items: center;
@@ -1159,15 +1166,6 @@ a.panel-action:visited {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-}
-
-/* One section of /projects: its header panel, then its cards. The scroll
-   margin keeps a jumped-to section clear of the sticky nav. */
-.index-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    scroll-margin-top: 5rem;
 }
 
 /* === Not Found === */

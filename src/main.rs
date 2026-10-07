@@ -11,7 +11,7 @@ use pages::{
     home::Home,
     moved::{OldSideQuest, OldSideQuests},
     not_found::NotFound,
-    projects::Projects,
+    projects::{Projects, SectionPage},
 };
 use zwipe_components::{
     COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
@@ -32,6 +32,10 @@ pub enum Route {
         Home {},
         #[route("/projects")]
         Projects {},
+        // Before the project route: only the four section names parse, so
+        // every other slug falls through to ProjectDetail.
+        #[route("/projects/:section")]
+        SectionPage { section: data::Section },
         #[route("/projects/:slug")]
         ProjectDetail { slug: String },
         #[route("/contribute")]
@@ -84,6 +88,9 @@ async fn static_routes() -> ServerFnResult<Vec<String>> {
         .map(ToString::to_string)
         .filter(|path| data::moved_to(path).is_none())
         .collect();
+    for section in data::Section::ALL {
+        routes.push(format!("/projects/{section}"));
+    }
     for p in data::all_projects() {
         routes.push(format!("/projects/{}", p.slug));
     }

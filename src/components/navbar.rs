@@ -69,11 +69,13 @@ pub fn Navbar() -> Element {
                                     "{project.name}"
                                 }
                             }
-                            // A plain anchor: the router has no hash routes,
-                            // and a full load lands the browser on the id.
-                            a {
-                                href: "/projects#{section.slug()}",
+                            Link {
+                                to: Route::SectionPage { section },
                                 class: "nav-dropdown-item nav-dropdown-all",
+                                onclick: move |_| {
+                                    menu.set(false);
+                                    open.set(false);
+                                },
                                 "All {section.name()}"
                             }
                         }

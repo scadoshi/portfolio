@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use zwipe_components::Panel;
 
 use crate::{
+    Route,
     components::{
         benchmark::Benchmark, code_block::CodeBlock, commits::Commits, fleet::Fleet, flow::Flow,
         gallery::ProjectGallery, linked_text::LinkedText, measured::Measured, page_meta::PageMeta,
@@ -112,11 +113,10 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                             span { class: "ext", "\u{2197}" }
                         }
                     }
-                    // Back to the shelf this sits on (a plain anchor, as in
-                    // the nav: the router has no hash routes).
+                    // Back to the shelf this sits on.
                     if let Some(section) = data::section_of(project.slug) {
-                        a {
-                            href: "/projects#{section.slug()}",
+                        Link {
+                            to: Route::SectionPage { section },
                             class: "panel-action",
                             "All {section.name()}"
                         }
