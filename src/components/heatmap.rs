@@ -285,7 +285,9 @@ pub fn Heatmap() -> Element {
     };
 
     rsx! {
-        div { class: "heatmap",
+        // Rises into view with the panels (REVEAL_JS), which also holds its
+        // cells' animation until then.
+        div { class: "heatmap", "data-reveal": "true",
             // The chip is placed by percentages of the grid, so it lives in a
             // wrapper that holds only the grid.
             div { class: "chart-scroll scroll-end scroll-fade-x",

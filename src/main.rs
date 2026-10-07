@@ -4,7 +4,6 @@ mod components;
 mod data;
 mod pages;
 mod stats;
-mod theme_store;
 
 use pages::{
     contribute::Contribute,
@@ -13,11 +12,11 @@ use pages::{
     not_found::NotFound,
     side_quests::SideQuests,
 };
-use zwipe_components::{COMPONENTS_CSS, THEMES_CSS, ThemeConfig};
+use zwipe_components::{
+    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, THEMES_CSS, ThemeConfig, use_persisted_theme,
+};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
-const REVEAL_JS: Asset = asset!("/assets/reveal.js");
-const NAV_GLIDE_JS: Asset = asset!("/assets/nav-glide.js");
 const FAVICON_ICO: Asset = asset!("/assets/favicon/favicon.ico");
 const FAVICON_16: Asset = asset!("/assets/favicon/favicon-16x16.png");
 const FAVICON_32: Asset = asset!("/assets/favicon/favicon-32x32.png");
@@ -94,35 +93,19 @@ async fn static_routes() -> ServerFnResult<Vec<String>> {
 
 #[component]
 fn App() -> Element {
-    // Start at the default so the first client render matches the server's.
-    // Seeding from localStorage here would desync hydration: it keeps the
-    // server DOM (picker label, wrapper theme class) and won't reconcile the
-    // mismatch. The stored theme is adopted after mount instead.
-    let mut theme = use_signal(ThemeConfig::default);
+    // Starts at the default so hydration matches the prerendered page, adopts
+    // the theme stored in localStorage just after mount and saves every pick.
+    // The shell's script already put the wrapper on the stored theme, so the
+    // adoption changes nothing visible.
+    let theme = use_persisted_theme("zwipe.theme");
     use_context_provider(|| theme);
-    let mut loaded = use_signal(|| false);
 
-    // Post-mount state change, so the picker label and theme wrapper re-render.
-    // The shell's script already put the wrapper on the stored theme, so this
-    // render changes nothing visible. `hydrated` on the document releases the
-    // hero's entrance, which the stylesheet holds until the app can run it.
+    // `hydrated` on the document releases the hero's entrance, which the
+    // stylesheet holds until the app can run it.
     use_effect(move || {
-        if let Some(stored) = theme_store::load() {
-            theme.set(stored);
-        }
-        loaded.set(true);
         spawn(async {
             let _ = document::eval("document.documentElement.classList.add('hydrated');").await;
         });
-    });
-
-    // Persist every theme change so the next visit opens in it. The `loaded`
-    // guard keeps the pre-load default render from clobbering the stored theme.
-    use_effect(move || {
-        let cfg = theme.read().clone();
-        if loaded() {
-            theme_store::save(&cfg);
-        }
     });
 
     // Live numbers from heron, asked for once after mount. Empty on the first
@@ -171,11 +154,12 @@ fn App() -> Element {
         // Rust's, which colors five keywords the two languages share and
         // leaves public, sealed, record, interface, var and switch plain.
         document::Script { defer: true, src: "/vendor/csharp.min.js" }
-        // Scroll reveal for panels below the fold; deferred for the same
-        // first-paint reason, and everything it does is progressive.
-        document::Script { defer: true, src: REVEAL_JS }
+        // Scroll reveal for everything marked `data-reveal` below the fold.
+        // Inlined from zwipe-components; it waits for the document to parse,
+        // as a deferred script would, and everything it does is progressive.
+        document::Script { {REVEAL_JS} }
         // Nav items pushed by a wider theme label slide over instead of jumping.
-        document::Script { defer: true, src: NAV_GLIDE_JS }
+        document::Script { {NAV_GLIDE_JS} }
         Router::<Route> {}
     }
 }

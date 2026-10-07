@@ -293,8 +293,9 @@ a:visited {
     }
 }
 
-/* Scroll reveal (assets/reveal.js): panels start sunk and faded, then ease
-   up when the observer flags them on screen. The .theme-wrapper prefix
+/* Scroll reveal (zwipe_components::REVEAL_JS, on every `data-reveal`):
+   panels start sunk and faded, then ease up when the observer flags them on
+   screen. The .theme-wrapper prefix
    outranks the hover block's transition on the same elements while the
    reveal runs; the script strips both classes afterward, handing the panel
    back to its normal hover behavior. Without JS nothing gets the pending
@@ -1753,7 +1754,7 @@ rect.fleet-bar {
 
 /* A chart the scroll reveal has not reached yet holds its first frame and
    runs when it arrives on screen, so the motion is never spent below the
-   fold. `reveal.js` observes the panels and the home chart; anything already
+   fold. The reveal observes the panels and the home chart; anything already
    on screen at load is left alone and animates at once. The pause lifts the
    moment the reveal starts, so the chart draws as its panel rises rather
    than after it. */
