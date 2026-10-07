@@ -1,12 +1,9 @@
 use dioxus::prelude::*;
-use zwipe_components::{Chip, Replay};
+use zwipe_components::{Chip, Replay, with_separators};
 
-use crate::{
-    components::{
-        chart::{Tip, anchor, show},
-        curve::curve,
-    },
-    stats::with_separators,
+use crate::components::{
+    chart::{Tip, anchor, show},
+    curve::curve,
 };
 
 /// One row of steller's `BENCHMARKS.md`: `redis-benchmark` at a client count,

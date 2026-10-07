@@ -13,6 +13,7 @@
 use dioxus::prelude::*;
 use serde::Deserialize;
 use std::sync::LazyLock;
+use zwipe_components::with_separators;
 
 const SNAPSHOT: &str = include_str!("stats.json");
 
@@ -239,19 +240,6 @@ impl RepoStats {
         }
         chips
     }
-}
-
-/// Groups digits in threes: `3534` becomes `3,534`.
-pub fn with_separators(number: u64) -> String {
-    let digits = number.to_string();
-    let mut grouped = String::with_capacity(digits.len() + digits.len() / 3);
-    for (position, digit) in digits.chars().enumerate() {
-        if position > 0 && (digits.len() - position).is_multiple_of(3) {
-            grouped.push(',');
-        }
-        grouped.push(digit);
-    }
-    grouped
 }
 
 #[cfg(test)]
@@ -484,21 +472,6 @@ mod tests {
             }
         }
         assert!(typed.is_empty(), "counts typed by hand: {typed:#?}");
-    }
-
-    #[test]
-    fn digits_are_grouped_in_threes() {
-        for (number, grouped) in [
-            (0, "0"),
-            (7, "7"),
-            (999, "999"),
-            (1000, "1,000"),
-            (3534, "3,534"),
-            (100_000, "100,000"),
-            (1_234_567, "1,234,567"),
-        ] {
-            assert_eq!(with_separators(number), grouped);
-        }
     }
 
     #[test]

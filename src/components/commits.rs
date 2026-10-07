@@ -1,12 +1,12 @@
 use dioxus::prelude::*;
-use zwipe_components::Replay;
+use zwipe_components::{Replay, with_separators};
 
 use crate::{
     components::{
         chart::{Tip, anchor, month_name, show},
         curve::{area, curve},
     },
-    stats::{self, WeekCommits, with_separators},
+    stats::{self, WeekCommits},
 };
 
 const WIDTH: f64 = 640.0;

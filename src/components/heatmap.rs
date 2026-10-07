@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use std::collections::BTreeMap;
-use zwipe_components::Replay;
+use zwipe_components::{Replay, with_separators};
 
 use crate::{
     components::{
@@ -8,7 +8,7 @@ use crate::{
         commits::{ceiling, ticks},
         curve::{area, curve},
     },
-    stats::{self, Day, with_separators},
+    stats::{self, Day},
 };
 
 /// Cell size and the gap between cells, in SVG units.
