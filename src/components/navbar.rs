@@ -18,6 +18,27 @@ pub fn Navbar() -> Element {
         use_signal(|| false),
         use_signal(|| false),
     ];
+    // One menu at a time. A trigger sits above another menu's click-away
+    // backdrop and stops its own click, so opening a second menu never
+    // closed the first and they piled over each other. Watch the four
+    // instead: whichever opened last closes the rest.
+    let mut last_opened = use_signal(|| None::<usize>);
+    use_effect(move || {
+        let opened: Vec<usize> = (0..section_open.len())
+            .filter(|&i| section_open[i]())
+            .collect();
+        let previous = *last_opened.peek();
+        if let Some(&newest) = opened.iter().find(|&&i| Some(i) != previous) {
+            for (i, mut menu) in section_open.into_iter().enumerate() {
+                if i != newest && *menu.peek() {
+                    menu.set(false);
+                }
+            }
+            last_opened.set(Some(newest));
+        } else if opened.is_empty() && previous.is_some() {
+            last_opened.set(None);
+        }
+    });
     let mut replay = use_context::<Replay>().0;
     let mut hovering = use_signal(|| false);
 
