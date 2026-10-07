@@ -264,11 +264,11 @@ pub fn Heatmap() -> Element {
     };
     let caption = match source {
         stats::Source::Live => format!(
-            "{} contributions on GitHub in the last year, every repository counted: by month above, by day below",
+            "{} contributions in the last year across all of GitHub, counting commits, pull requests, issues and reviews: by month above, by day below",
             with_separators(u64::from(calendar.total))
         ),
         stats::Source::AsOf(day) => format!(
-            "{} contributions on GitHub in the year to {day}, every repository counted: by month above, by day below",
+            "{} contributions in the year to {day} across all of GitHub, counting commits, pull requests, issues and reviews: by month above, by day below",
             with_separators(u64::from(calendar.total))
         ),
     };
