@@ -1261,14 +1261,14 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
 const UPSEE: Project = Project {
     name: "Upsee",
     slug: "upsee",
-    headline: "Real-time pullup counter. Webcam + MoveNet pose estimation via tract ONNX runtime.",
+    headline: "Counts pull-ups from a webcam in real time, with the pose-estimation model running on the machine, not in the cloud.",
     category: "ML Inference",
     repo_url: "https://github.com/scadoshi/upsee",
     summary: "Real-time pullup counter using webcam + MoveNet pose estimation. Runs entirely on-device.",
     card_bullets: &[
         "tract ONNX runtime for inference; no cloud dependency",
         "Counter, milestones and crop bounds are pure functions with tests",
-        "Confidence filtering + hysteresis state machine for accurate counts",
+        "Skips low-confidence frames and leaves a dead zone between up and down, so jitter doesn't add false reps",
         "Webcam frame to rep count, no Python",
     ],
     impact_metric: "On-device ML, no cloud",
