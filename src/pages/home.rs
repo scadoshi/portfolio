@@ -128,11 +128,9 @@ pub fn Home() -> Element {
                         "Slow on purpose while learning. Fast once I understand it."
                     }
                     ul { class: "card-bullets",
-                        li { "New domains start with my own research, cross-referenced with a model, until I can pick an approach and defend it" }
-                        li { "Learning projects I write by hand, taking a beat to rely on my own brain instead of passing the mental cycles to a model. The reps are the point" }
-                        li { "Once I can explain and type every line myself, AI takes over the iteration and refactoring. That's where the speed comes from" }
-                        li { "Either way I read all of it: security checked at every stop, implementations validated against other models, everything tested" }
-                        li { "All of it is open source. Read the code; criticism is welcome" }
+                        li { "Learning projects I write by hand; the reps are the point" }
+                        li { "Once I can explain every line, AI speeds up the iteration and refactoring" }
+                        li { "I read and test all of it, and all of it is open source" }
                     }
                 }
                 Panel {
