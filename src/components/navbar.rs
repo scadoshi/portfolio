@@ -7,43 +7,41 @@ use crate::{Route, data::Section};
 
 const LOGO_S: &str = include_str!("../../assets/s.txt");
 
-/// Closes the theme menu if it is open. `ThemePicker` keeps its open state to
-/// itself, so this clicks its click-away backdrop, which runs the picker's
-/// own close handler.
-const CLOSE_THEME_MENU_JS: &str =
-    "document.querySelector('.theme-switcher .nav-dropdown-backdrop')?.click();";
-
 #[component]
 pub fn Navbar() -> Element {
     let (theme, shown) = use_theme_wipe(use_context::<Signal<ThemeConfig>>(), ".theme-wrapper");
     let mut open = use_signal(|| false);
     // One per section, in Section::ALL order.
-    let mut section_open = [
+    let section_open = [
         use_signal(|| false),
         use_signal(|| false),
         use_signal(|| false),
         use_signal(|| false),
     ];
+    // Handed to ThemePicker, so its menu takes part in the rule below.
+    let theme_open = use_signal(|| false);
+    let mut menus = [
+        section_open[0],
+        section_open[1],
+        section_open[2],
+        section_open[3],
+        theme_open,
+    ];
     // One menu at a time. A trigger sits above another menu's click-away
     // backdrop and stops its own click, so opening a second menu never
-    // closed the first and they piled over each other. Watch the four
+    // closed the first and they piled over each other. Watch them all
     // instead: whichever opened last closes the rest.
     let mut last_opened = use_signal(|| None::<usize>);
     use_effect(move || {
-        let opened: Vec<usize> = (0..section_open.len())
-            .filter(|&i| section_open[i]())
-            .collect();
+        let opened: Vec<usize> = (0..menus.len()).filter(|&i| menus[i]()).collect();
         let previous = *last_opened.peek();
         if let Some(&newest) = opened.iter().find(|&&i| Some(i) != previous) {
-            for (i, mut menu) in section_open.into_iter().enumerate() {
+            for (i, mut menu) in menus.into_iter().enumerate() {
                 if i != newest && *menu.peek() {
                     menu.set(false);
                 }
             }
             last_opened.set(Some(newest));
-            spawn(async {
-                let _ = eval(CLOSE_THEME_MENU_JS).await;
-            });
         } else if opened.is_empty() && previous.is_some() {
             last_opened.set(None);
         }
@@ -60,7 +58,7 @@ pub fn Navbar() -> Element {
                     class: "nav-brand",
                     onclick: move |_| {
                         open.set(false);
-                        for menu in &mut section_open {
+                        for menu in &mut menus {
                             menu.set(false);
                         }
                         // On the home page this runs the entrance again.
@@ -169,19 +167,7 @@ pub fn Navbar() -> Element {
                 }
             },
             trailing: rsx! {
-                // The other direction: touching the theme picker closes the
-                // section menus. Pointer-down, because its trigger stops the
-                // click from reaching here. display: contents (main.css), so
-                // the wrapper changes no layout.
-                div {
-                    class: "theme-slot",
-                    onpointerdown: move |_| {
-                        for menu in &mut section_open {
-                            menu.set(false);
-                        }
-                    },
-                    ThemePicker { theme, shown }
-                }
+                ThemePicker { theme, shown, open: theme_open }
             },
         }
     }
