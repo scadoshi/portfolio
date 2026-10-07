@@ -151,7 +151,7 @@ pub fn Home() -> Element {
                         }
                     },
                     p { class: "card-summary",
-                        "The cards here are a pick. Everything else sits on four shelves."
+                        "The cards here are a pick. Everything else is in four sections."
                     }
                     ul { class: "card-bullets",
                         for section in Section::ALL {
