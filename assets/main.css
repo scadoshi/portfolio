@@ -666,8 +666,8 @@ a.panel-action:visited {
         max-height: 55vh;
     }
 
-    /* Single-stack order is about -> projects -> how I use AI -> all projects
-       -> contribute, which no DOM order can give both columns at once.
+    /* Single-stack order is about -> projects -> how I use AI -> all projects,
+       which no DOM order can give both columns at once.
        display:contents dissolves the two column wrappers so every panel
        becomes a flex item of the band itself, then order interleaves them.
        The .sr-only headings are position:absolute, so they never become flex
@@ -702,10 +702,6 @@ a.panel-action:visited {
 
     .band-aside > :nth-child(4) {
         order: 4;
-    }
-
-    .band-aside > :nth-child(5) {
-        order: 5;
     }
 }
 

@@ -162,35 +162,6 @@ pub fn Home() -> Element {
                         }
                     }
                 }
-                Panel {
-                    eyebrow: "Support",
-                    title: "Contribute",
-                    actions: rsx! {
-                        Link {
-                            to: Route::Contribute {},
-                            class: "panel-action",
-                            "Contribute"
-                        }
-                        a {
-                            href: crate::pages::contribute::STRIPE_URL,
-                            class: "panel-action",
-                            "Stripe" span { class: "ext", "\u{2197}" }
-                        }
-                        a {
-                            href: crate::pages::contribute::BMC_URL,
-                            class: "panel-action",
-                            "Buy Me a Coffee" span { class: "ext", "\u{2197}" }
-                        }
-                        a {
-                            href: crate::pages::contribute::GITHUB_SPONSORS_URL,
-                            class: "panel-action",
-                            "GitHub Sponsors" span { class: "ext", "\u{2197}" }
-                        }
-                    },
-                    p { class: "card-summary",
-                        "I build open-source Rust tools. If my work has been useful, consider supporting continued development."
-                    }
-                }
             }
             div { class: "band-col band-main",
                 h2 { class: "sr-only", "Featured Projects" }
