@@ -479,8 +479,7 @@ a.panel-action:visited {
 
 .hero {
     text-align: center;
-    /* Bottom gap is the panel margin below, matching the band's 1.5rem
-       rhythm. */
+    /* Bottom gap is the panel margin below. */
     padding: 0 1.5rem 0;
 }
 
@@ -490,7 +489,7 @@ a.panel-action:visited {
    beat after the wordmark so the hero lands in two steps. */
 .hero-panel {
     max-width: 71rem;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto var(--panel-gap);
     animation: content-enter 0.5s ease-out 0.15s backwards;
 }
 
@@ -616,7 +615,7 @@ a.panel-action:visited {
 .detail-band {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 1.5rem;
+    gap: var(--panel-gap);
     align-items: stretch;
 }
 
@@ -633,7 +632,7 @@ a.panel-action:visited {
 .band-col {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--panel-gap);
 }
 
 /* Panels in a column grow from their content to absorb the band's extra
@@ -738,7 +737,7 @@ a.panel-action:visited {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+    gap: var(--panel-gap);
 }
 
 /* Card chrome (panel, eyebrow, title, status pills, actions) is the shared
@@ -887,7 +886,7 @@ a.panel-action:visited {
     padding: 0 1.5rem 2.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--panel-gap);
 }
 
 .project-headline {
@@ -1150,7 +1149,7 @@ a.panel-action:visited {
     padding: 0 1.5rem 2.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--panel-gap);
 }
 
 /* === Not Found === */
