@@ -86,11 +86,11 @@ pub fn Home() -> Element {
                     }
                     p { class: "hero-tagline",
                         "Software engineer at Halo Software, writing production C#. On my own time, "
-                        span { class: "hl-warning", "Rust" }
+                        span { class: "hl-p5", "Rust" }
                         " that runs: an "
-                        span { class: "hl-success", "app" }
+                        span { class: "hl-p3", "app" }
                         " on both stores, a live "
-                        span { class: "hl-error", "server" }
+                        span { class: "hl-p2", "server" }
                         ", and two "
                         span { class: "hl-tertiary", "key-value stores" }
                         " built to learn how the real ones work."

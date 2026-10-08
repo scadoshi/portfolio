@@ -351,7 +351,7 @@ a:visited {
     box-sizing: border-box;
     height: 1.85rem;
     text-decoration: none;
-    color: var(--color-warning);
+    color: var(--palette-5);
     background-color: var(--bg-primary);
     border: 1px solid var(--border-primary);
     border-radius: 0.4rem;
@@ -370,8 +370,8 @@ a:visited {
     .store-link:visited:hover,
     .nav-links a.store-link:hover,
     .nav-links a.store-link:visited:hover {
-        color: var(--color-warning);
-        border-color: var(--color-warning);
+        color: var(--palette-5);
+        border-color: var(--palette-5);
     }
 }
 
@@ -408,13 +408,12 @@ a.panel-action:visited {
 .nav-brand {
     font-weight: 700;
     font-size: 1.2rem;
-    color: var(--color-warning);
     text-decoration: none;
 }
 
 @media (hover: hover) {
     .nav-brand:hover {
-        color: var(--border-warning);
+        color: var(--palette-5);
     }
 }
 
@@ -530,18 +529,18 @@ a.panel-action:visited {
 }
 
 /* Keyword highlights cycle the palette, zite-tagline-style. */
-.hl-success {
-    color: var(--color-success);
+.hl-p3 {
+    color: var(--palette-3);
     font-weight: 600;
 }
 
-.hl-error {
-    color: var(--color-error);
+.hl-p2 {
+    color: var(--palette-2);
     font-weight: 600;
 }
 
-.hl-warning {
-    color: var(--color-warning);
+.hl-p5 {
+    color: var(--palette-5);
     font-weight: 600;
 }
 
@@ -570,42 +569,42 @@ a.panel-action:visited {
 }
 
 .tag-c0 {
-    color: var(--accent-primary);
+    color: var(--palette-1);
     background-color: color-mix(
         in srgb,
-        var(--accent-primary) 12%,
+        var(--palette-1) 12%,
         transparent
     );
-    border-color: color-mix(in srgb, var(--accent-primary) 40%, transparent);
+    border-color: color-mix(in srgb, var(--palette-1) 40%, transparent);
 }
 
 .tag-c1 {
-    color: var(--color-warning);
-    background-color: color-mix(in srgb, var(--color-warning) 12%, transparent);
-    border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
+    color: var(--palette-2);
+    background-color: color-mix(in srgb, var(--palette-2) 12%, transparent);
+    border-color: color-mix(in srgb, var(--palette-2) 40%, transparent);
 }
 
 .tag-c2 {
-    color: var(--accent-secondary);
+    color: var(--palette-3);
     background-color: color-mix(
         in srgb,
-        var(--accent-secondary) 12%,
+        var(--palette-3) 12%,
         transparent
     );
-    border-color: color-mix(in srgb, var(--accent-secondary) 40%, transparent);
+    border-color: color-mix(in srgb, var(--palette-3) 40%, transparent);
 }
 
 .tag-c3 {
-    color: var(--text-muted);
-    background-color: color-mix(in srgb, var(--text-muted) 12%, transparent);
-    border-color: color-mix(in srgb, var(--text-muted) 30%, transparent);
+    color: var(--palette-4);
+    background-color: color-mix(in srgb, var(--palette-4) 12%, transparent);
+    border-color: color-mix(in srgb, var(--palette-4) 30%, transparent);
 }
 
 /* The fifth accent for the measured chips, which run five to a card. */
 .tag-c4 {
-    color: var(--color-success);
-    background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
-    border-color: color-mix(in srgb, var(--color-success) 40%, transparent);
+    color: var(--palette-5);
+    background-color: color-mix(in srgb, var(--palette-5) 12%, transparent);
+    border-color: color-mix(in srgb, var(--palette-5) 40%, transparent);
 }
 
 /* === Lateral bands === */
@@ -777,11 +776,11 @@ a.panel-action:visited {
 
 .card-impact {
     font-size: 0.85rem;
-    color: var(--border-warning);
+    color: var(--palette-5);
     margin-bottom: 1rem;
     padding: 0.5rem 0.75rem;
     background: var(--bg-sink);
-    border-left: 2px solid var(--color-warning);
+    border-left: 2px solid var(--palette-5);
     border-radius: 0.4rem;
 }
 
@@ -1048,16 +1047,16 @@ a.panel-action:visited {
 }
 .code-content .hljs-keyword,
 .code-content .hljs-built_in {
-    color: var(--border-error);
+    color: var(--palette-2);
 }
 .code-content .hljs-type,
 .code-content .hljs-class .hljs-title,
 .code-content .hljs-title.class_ {
-    color: var(--border-warning);
+    color: var(--palette-5);
 }
 .code-content .hljs-function .hljs-title,
 .code-content .hljs-title.function_ {
-    color: var(--border-success);
+    color: var(--palette-3);
 }
 .code-content .hljs-string,
 .code-content .hljs-doctag {
