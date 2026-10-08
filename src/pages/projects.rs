@@ -19,7 +19,6 @@ pub fn Projects() -> Element {
         }
         div { class: "index-page content-enter",
             Panel {
-                eyebrow: "Index",
                 title: "Projects",
                 // Page hero, so the title is this page's h1 (see detail.rs).
                 title_h1: true,
@@ -31,7 +30,6 @@ pub fn Projects() -> Element {
                 for section in Section::ALL {
                     Panel {
                         key: "{section.slug()}",
-                        eyebrow: "Section",
                         title: section.name().to_string(),
                         actions: rsx! {
                             Link {
@@ -70,7 +68,6 @@ pub fn SectionPage(section: Section) -> Element {
         }
         div { class: "index-page content-enter",
             Panel {
-                eyebrow: "Section",
                 title: section.name().to_string(),
                 // Page hero, so the title is this page's h1 (see detail.rs).
                 title_h1: true,

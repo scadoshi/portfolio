@@ -21,7 +21,6 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
     rsx! {
         figure { class: "project-gallery",
             Panel {
-                eyebrow: "Demo",
                 title: "Watch it work",
                 actions: rsx! {
                     GalleryFooter { index: index(), total, caption: current.caption.map(str::to_string) }

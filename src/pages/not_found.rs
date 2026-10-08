@@ -20,7 +20,6 @@ pub fn NotFound(segments: Vec<String>) -> Element {
         // Deliberately a dead end, the nav is right there.
         div { class: "not-found-page content-enter",
             Panel {
-                eyebrow: "404",
                 title: "Page not found",
                 title_h1: true,
                 p { class: "card-summary",

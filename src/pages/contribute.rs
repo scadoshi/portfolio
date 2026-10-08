@@ -18,7 +18,6 @@ pub fn Contribute() -> Element {
         }
         div { class: "index-page content-enter",
             Panel {
-                eyebrow: "Support",
                 title: "Contribute",
                 // Page hero, so the title is this page's h1 (see detail.rs).
                 title_h1: true,

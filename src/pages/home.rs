@@ -138,7 +138,6 @@ pub fn Home() -> Element {
                     {project_card(project)}
                 }
                 Panel {
-                    eyebrow: "Process",
                     title: "How I Use AI",
                     p { class: "card-summary",
                         "Slow on purpose while learning. Fast once I understand it."
