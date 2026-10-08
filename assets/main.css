@@ -258,7 +258,7 @@ a:visited {
 }
 
 @media (hover: hover) {
-    a:hover {
+    a:not(.tag):hover {
         /* 30% keeps a trace of the accent hue but reads as a clear
            brighten; the earlier 55% mix was too close to the resting
            color to register as a hover at all. */
@@ -824,6 +824,11 @@ a.panel-action:visited {
     margin-top: 1rem;
 }
 
+/* A link inside a tag keeps the tag's color. */
+.tag a {
+    color: inherit;
+}
+
 .stats-source a.tag {
     text-decoration: none;
     transition:
@@ -856,7 +861,7 @@ a.panel-action:visited {
 @media (hover: hover) {
     .stats-source a.tag:hover {
         transform: translateY(-2px) scale(1.04);
-        border-color: var(--accent-primary);
+        filter: brightness(1.15);
     }
 }
 
