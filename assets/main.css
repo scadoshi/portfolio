@@ -224,7 +224,7 @@ body {
 
 a,
 a:visited {
-    color: var(--accent-primary);
+    color: var(--palette-1);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -264,7 +264,7 @@ a:visited {
            color to register as a hover at all. */
         color: color-mix(
             in srgb,
-            var(--accent-primary) 30%,
+            var(--palette-1) 30%,
             var(--text-primary)
         );
     }
@@ -1181,7 +1181,7 @@ a.panel-action:visited {
 
 .footer-copy a,
 .footer-copy a:visited {
-    color: var(--accent-primary);
+    color: var(--palette-1);
     text-decoration: underline;
 }
 
@@ -1196,7 +1196,7 @@ a.panel-action:visited {
 
 .footer-built-repo,
 .footer-built-repo:visited {
-    color: var(--accent-primary);
+    color: var(--palette-1);
     text-decoration: underline;
 }
 
