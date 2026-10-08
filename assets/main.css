@@ -904,7 +904,7 @@ a.panel-action:visited {
     line-height: 1.4;
 }
 
-/* Grey whatever accent the cycle gave them, so only the measured chips carry
+/* Gray whatever accent the cycle gave them, so only the measured chips carry
    color. Same formula as .tag-c3. */
 .title-tag.tag {
     color: var(--text-muted);
