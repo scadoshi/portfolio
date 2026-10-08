@@ -16,7 +16,6 @@ use crate::{
 fn approach_panel(project: &'static data::Project) -> Element {
     rsx! {
         Panel {
-            eyebrow: "Approach",
             title: "How it's built",
             section { class: "project-section",
                 ul {
@@ -38,21 +37,18 @@ fn project_panels(project: &'static data::Project) -> Element {
         // The numbers first, then the path they took to get here.
         "heron" => rsx! {
             Panel {
-                eyebrow: "Measured",
                 title: "What it is counting right now",
                 section { class: "project-section",
                     Fleet {}
                 }
             }
             Panel {
-                eyebrow: "Over time",
                 title: "Commits, month by month",
                 section { class: "project-section",
                     Commits {}
                 }
             }
             Panel {
-                eyebrow: "Pipeline",
                 title: "How a number gets here",
                 section { class: "project-section",
                     Flow {}
@@ -64,8 +60,7 @@ fn project_panels(project: &'static data::Project) -> Element {
         },
         "steller" => rsx! {
             Panel {
-                eyebrow: "Measured",
-                title: "Against Redis 8",
+                title: "Benchmarked against Redis 8",
                 section { class: "project-section",
                     Benchmark {}
                 }
@@ -131,7 +126,6 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
             }
 
             Panel {
-                eyebrow: "Objective",
                 title: "The goal",
                 section { class: "project-section",
                     p { LinkedText { text: project.objective.to_string() } }
@@ -157,7 +151,6 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
             // Code wants the full column width, so implementation stays a
             // single wide panel.
             Panel {
-                eyebrow: "Implementation",
                 title: "The code up close",
                 section { class: "project-section",
                     for snippet in project.snippets {
@@ -174,7 +167,6 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
 
             div { class: "detail-band",
                 Panel {
-                    eyebrow: "Obstacles",
                     title: "What fought back",
                     section { class: "project-section",
                         ul {
@@ -185,7 +177,6 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                     }
                 }
                 Panel {
-                    eyebrow: "Progress & Impact",
                     title: "Where it stands",
                     section { class: "project-section",
                         p { LinkedText { text: project.progress.to_string() } }
