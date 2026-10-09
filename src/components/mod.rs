@@ -12,4 +12,3 @@ pub mod measured;
 pub mod navbar;
 pub mod page_meta;
 pub mod project_card;
-pub mod scroll;

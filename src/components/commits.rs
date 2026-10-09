@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Replay, area, curve, tip_anchor, with_separators};
+use zwipe_components::{Replay, area, curve, tip_anchor, use_scroll_to_end, with_separators};
 
 use crate::{
     components::chart::{Tip, month_name, show},
@@ -130,7 +130,7 @@ pub fn Commits() -> Element {
     let run = use_context::<Replay>().0();
     let live = use_context::<stats::Live>();
     let mut tip: Signal<Option<Tip>> = use_signal(|| None);
-    crate::components::scroll::use_scroll_to_end();
+    use_scroll_to_end();
     let live = live.read();
     let Some((weeks, source)) = stats::weekly_commits(live.as_ref()) else {
         return rsx! {};

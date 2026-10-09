@@ -1,6 +1,9 @@
 use dioxus::prelude::*;
-use std::collections::BTreeMap;
-use zwipe_components::{Replay, area, curve, peak_indices, tip_anchor, with_separators};
+use std::{collections::BTreeMap, rc::Rc};
+use zwipe_components::{
+    HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, Replay, area, curve, heat_span, peak_indices,
+    tip_anchor, use_scroll_to_end, with_separators,
+};
 
 use crate::{
     components::{
@@ -10,10 +13,6 @@ use crate::{
     stats::{self, Day},
 };
 
-/// Cell size and the gap between cells, in SVG units.
-const CELL: f64 = 11.0;
-const GAP: f64 = 2.0;
-const STEP: f64 = CELL + GAP;
 /// Room on the left for the weekday labels and the line's ticks.
 const LEFT: f64 = 34.0;
 /// The month line sits above the grid, on the same columns.
@@ -29,10 +28,9 @@ const MAX_PEAKS: usize = 12;
 
 /// The entrance: the line draws first, the dots pop in behind it from
 /// `DOTS_AFTER_MS` with `DOT_STAGGER_MS` between them, and the grid sweeps in
-/// a column every `SWEEP_STEP_MS`. The durations are in the stylesheet.
+/// behind them on the kit's own timing. The durations are in the stylesheet.
 const DOTS_AFTER_MS: usize = 250;
 const DOT_STAGGER_MS: usize = 70;
-const SWEEP_STEP_MS: usize = 12;
 
 /// A first month with fewer days than this in the year is left off the line,
 /// so a year that starts mid-month does not open on a dip. The last month
@@ -217,18 +215,12 @@ fn line_points(series: &[Series], top: u32) -> Vec<(f64, f64)> {
     series
         .iter()
         .map(|month| {
-            let middle = px(month.first_column + month.last_column) / 2.0;
-            let x = LEFT + middle * STEP + CELL / 2.0;
+            let x =
+                LEFT + heat_span(month.first_column + month.last_column) / 2.0 + HEAT_CELL / 2.0;
             let y = LINE_BOTTOM - LINE_HEIGHT * f64::from(month.total) / f64::from(top.max(1));
             (x, y)
         })
         .collect()
-}
-
-/// A count as a coordinate. Weeks and weekdays are tiny, nothing is lost.
-#[allow(clippy::cast_precision_loss)]
-fn px(n: usize) -> f64 {
-    n as f64
 }
 
 /// The last year of contributions on GitHub as the profile's grid, drawn from
@@ -238,7 +230,7 @@ fn px(n: usize) -> f64 {
 pub fn Heatmap() -> Element {
     let live = use_context::<stats::Live>();
     let mut tip: Signal<Option<Tip>> = use_signal(|| None);
-    crate::components::scroll::use_scroll_to_end();
+    use_scroll_to_end();
     let live = live.read();
     let Some((calendar, source)) = stats::calendar(live.as_ref()) else {
         return rsx! {};
@@ -250,8 +242,8 @@ pub fn Heatmap() -> Element {
     let Some(columns) = cells.iter().map(|cell| cell.column + 1).max() else {
         return rsx! {};
     };
-    let width = LEFT + px(columns) * STEP;
-    let height = TOP + 7.0 * STEP;
+    let width = LEFT + heat_span(columns);
+    let height = TOP + heat_span(HEAT_ROWS);
     let top = ceiling(series.iter().map(|month| month.total).max().unwrap_or(0));
     let ticks = ticks(top);
     let line_points = line_points(&series, top);
@@ -262,6 +254,21 @@ pub fn Heatmap() -> Element {
     let tip_at = move |text: String, x: f64, y: f64| {
         show(tip, text, x / width * 100.0, y / height * 100.0);
     };
+    // What each cell's chip says, by the cell's index, for both handlers.
+    let texts: Rc<[String]> = cells
+        .iter()
+        .map(|cell| format!("{} on {}", cell.count, cell.date))
+        .collect();
+    let grid: Vec<zwipe_components::HeatCell> = cells
+        .iter()
+        .map(|cell| zwipe_components::HeatCell {
+            column: cell.column,
+            row: cell.row,
+            level: cell.level,
+            peak: peaks.contains(&cell.date.as_str()),
+            key: cell.date.clone(),
+        })
+        .collect();
     let caption = match source {
         stats::Source::Live => format!(
             "{} contributions in the last year across all of GitHub, counting commits, pull requests, issues and reviews: by month above, by day below",
@@ -286,7 +293,7 @@ pub fn Heatmap() -> Element {
             for run in [run] {
             svg {
                 key: "run{run}",
-                class: "heatmap-grid",
+                class: "heat-grid",
                 view_box: "0 0 {width} {height}",
                 role: "img",
                 "aria-label": "{caption}",
@@ -298,7 +305,7 @@ pub fn Heatmap() -> Element {
                         rsx! {
                             g { key: "t{tick}",
                                 line { class: "commits-grid", x1: "{LEFT}", y1: "{y}", x2: "{width}", y2: "{y}" }
-                                text { class: "heatmap-label", x: "{LEFT - 5.0}", y: "{y + 3.0}", text_anchor: "end", "{with_separators(u64::from(tick))}" }
+                                text { class: "heat-label", x: "{LEFT - 5.0}", y: "{y + 3.0}", text_anchor: "end", "{with_separators(u64::from(tick))}" }
                             }
                         }
                     }
@@ -316,8 +323,8 @@ pub fn Heatmap() -> Element {
                         let enter = text.clone();
                         let tap = text;
                         let (cx, cy) = (*x, *y);
-                        let hit_x = LEFT + px(month.first_column) * STEP;
-                        let hit_width = px(month.last_column - month.first_column + 1) * STEP;
+                        let hit_x = LEFT + heat_span(month.first_column);
+                        let hit_width = heat_span(month.last_column - month.first_column + 1);
                         rsx! {
                             g { key: "s{month.label}",
                                 rect {
@@ -342,14 +349,14 @@ pub fn Heatmap() -> Element {
                 }
                 for month in months.iter() {
                     {
-                        let x = LEFT + px(month.column) * STEP;
+                        let x = LEFT + heat_span(month.column);
                         let text = format!("{} in {}", with_separators(u64::from(month.total)), month.name);
                         let enter = text.clone();
                         let tap = text;
                         rsx! {
                             text {
                                 key: "m{month.column}",
-                                class: "heatmap-label heatmap-month",
+                                class: "heat-label heatmap-month",
                                 x: "{x}",
                                 y: "{TOP - 5.0}",
                                 onmouseenter: move |_| tip_at(enter.clone(), x, TOP - 5.0),
@@ -362,47 +369,29 @@ pub fn Heatmap() -> Element {
                 for (row, name) in [(1usize, "Mon"), (3, "Wed"), (5, "Fri")] {
                     text {
                         key: "d{row}",
-                        class: "heatmap-label",
+                        class: "heat-label",
                         x: "0",
-                        y: "{TOP + px(row) * STEP + CELL - 2.0}",
+                        y: "{TOP + heat_span(row) + HEAT_CELL - 2.0}",
                         "{name}"
                     }
                 }
-                for cell in cells.iter() {
-                    {
-                        let x = LEFT + px(cell.column) * STEP;
-                        let y = TOP + px(cell.row) * STEP;
-                        let text = format!("{} on {}", cell.count, cell.date);
-                        let peak = if peaks.contains(&cell.date.as_str()) { " heat-peak" } else { "" };
-                        let enter = text.clone();
-                        let tap = text;
-                        rsx! {
-                            g { key: "{cell.date}",
-                            // The halo is a shape of its own rather than a filter:
-                            // iOS Safari applies no CSS filter to an SVG child.
-                            if !peak.is_empty() {
-                                rect {
-                                    class: "heat-halo",
-                                    style: "animation-delay: {cell.column * SWEEP_STEP_MS}ms",
-                                    x: "{x - 2.5}",
-                                    y: "{y - 2.5}",
-                                    width: "{CELL + 5.0}",
-                                    height: "{CELL + 5.0}",
-                                    rx: "4",
+                {
+                    let (enter, tap) = (Rc::clone(&texts), Rc::clone(&texts));
+                    rsx! {
+                        HeatGrid {
+                            cells: grid.clone(),
+                            left: LEFT,
+                            top: TOP,
+                            on_enter: move |hit: HeatHit| {
+                                if let Some(text) = enter.get(hit.index) {
+                                    tip_at(text.clone(), hit.x + HEAT_CELL / 2.0, hit.y);
                                 }
-                            }
-                            rect {
-                                class: "heatmap-cell heat-{cell.level}{peak}",
-                                style: "animation-delay: {cell.column * SWEEP_STEP_MS}ms",
-                                x: "{x}",
-                                y: "{y}",
-                                width: "{CELL}",
-                                height: "{CELL}",
-                                rx: "2",
-                                onmouseenter: move |_| tip_at(enter.clone(), x + CELL / 2.0, y),
-                                onclick: move |_| tip_at(tap.clone(), x + CELL / 2.0, y),
-                            }
-                            }
+                            },
+                            on_tap: move |hit: HeatHit| {
+                                if let Some(text) = tap.get(hit.index) {
+                                    tip_at(text.clone(), hit.x + HEAT_CELL / 2.0, hit.y);
+                                }
+                            },
                         }
                     }
                 }

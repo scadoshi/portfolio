@@ -13,7 +13,7 @@ serde_json = "1.0"
 # Shared UI with zwipe.net (themes, ThemePicker, PageMeta, NavBar shell).
 # Cargo.lock pins the exact commit; `cargo update -p zwipe-components` pulls
 # the latest deliberately.
-zwipe-components = { git = "https://github.com/scadoshi/zwipe" }
+zwipe-components = { git = "https://github.com/scadoshi/zwipe", rev = "0c079531268fcbe1665064ea0d3454232a352b57" }
 # getrandom 0.4+ requires the explicit wasm_js feature on
 # wasm32-unknown-unknown (pulled transitively via zwipe-core's uuid v4);
 # same fix as zite's.

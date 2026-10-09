@@ -118,10 +118,10 @@
    whole entrance runs as one once the app is up. Without script neither
    class lands and the prerendered page shows settled. */
 
-html.js:not(.hydrated) .heatmap-grid .commits-line,
-html.js:not(.hydrated) .heatmap-grid .commits-area,
-html.js:not(.hydrated) .heatmap-grid .commits-dot,
-html.js:not(.hydrated) .heatmap-cell {
+html.js:not(.hydrated) .heat-grid .commits-line,
+html.js:not(.hydrated) .heat-grid .commits-area,
+html.js:not(.hydrated) .heat-grid .commits-dot,
+html.js:not(.hydrated) .heat-cell {
     animation-play-state: paused;
 }
 
@@ -1450,18 +1450,13 @@ rect.fleet-bar {
     margin-inline: auto;
 }
 
-/* Wraps a chart so one wider than the screen scrolls sideways. A scrolling
-   box clips whatever hangs out of it, so the top padding leaves room for a
+/* The shared sheet makes .chart-scroll scroll sideways. A scrolling box
+   clips whatever hangs out of it, so the top padding leaves room for a
    hover chip over the top row and the negative margin gives that space back
    to the page. The box overlaps the strip above the chart, so the chip rows
    that sit there are raised over it; a box that ignored the pointer instead
    would not scroll under a finger on iOS. */
 .chart-scroll {
-    overflow-x: auto;
-    /* Stops at either end rather than rubber-banding the chart's edge into
-       empty space. */
-    overscroll-behavior-x: none;
-    scrollbar-width: thin;
     padding-top: 2.25rem;
     margin-top: -2.25rem;
 }
@@ -1538,23 +1533,7 @@ rect.fleet-bar {
     transform: translate(calc(-100% + 0.5rem), calc(-100% - 0.4rem));
 }
 
-.heatmap-grid {
-    display: block;
-    width: 100%;
-    height: auto;
-    font-family: inherit;
-    /* A peak's halo on the last column or bottom row reaches past the
-       viewBox and draws whole. */
-    overflow: visible;
-}
-
-.heatmap-label {
-    fill: var(--text-muted);
-    font-size: 9px;
-}
-
-.heatmap-month,
-.heatmap-cell {
+.heatmap-month {
     cursor: default;
 }
 
@@ -1563,7 +1542,7 @@ rect.fleet-bar {
         fill: var(--text-primary);
     }
 
-    .heatmap-cell:hover {
+    .heat-cell:hover {
         stroke: var(--text-primary);
         stroke-width: 1;
     }
@@ -1571,29 +1550,22 @@ rect.fleet-bar {
 
 /* The entrance, also replayed by a click on the S: the line draws left to
    right, the fill rises behind it, the dots pop in along it, and the grid
-   sweeps in column by column with a brightening band on its leading edge.
-   Each delay is set inline per dot and per cell. `backwards` holds the start
-   state through the delay and lets the resting style take over after, so the
-   hover rules still apply. */
-.heatmap-grid .commits-line {
+   sweeps in column by column on the shared sheet's own animation. Each delay
+   is set inline per dot. `backwards` holds the start state through the delay
+   and lets the resting style take over after, so the hover rules still apply. */
+.heat-grid .commits-line {
     stroke-dasharray: 1;
     animation: chart-draw 1.1s ease-out backwards;
 }
 
-.heatmap-grid .commits-area {
+.heat-grid .commits-area {
     animation: chart-fade 0.7s ease-out 0.4s backwards;
 }
 
-.heatmap-grid .commits-dot {
+.heat-grid .commits-dot {
     transform-box: fill-box;
     transform-origin: center;
     animation: chart-pop 0.3s cubic-bezier(0.33, 1, 0.68, 1) backwards;
-}
-
-.heatmap-cell {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: chart-sweep 0.4s ease-out backwards;
 }
 
 @keyframes chart-draw {
@@ -1625,70 +1597,12 @@ rect.fleet-bar {
     }
 }
 
-@keyframes chart-sweep {
-    from {
-        opacity: 0;
-        transform: scale(0.5);
-        filter: brightness(1.8);
-    }
-    55% {
-        opacity: 1;
-        transform: scale(1.12);
-        filter: brightness(1.8);
-    }
-    to {
-        opacity: 1;
-        transform: none;
-        filter: none;
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
-    .heatmap-grid .commits-line,
-    .heatmap-grid .commits-area,
-    .heatmap-grid .commits-dot,
-    .heatmap-cell {
+    .heat-grid .commits-line,
+    .heat-grid .commits-area,
+    .heat-grid .commits-dot {
         animation: none;
     }
-}
-
-/* GitHub's five shades, in the primary accent: the empty cell is a faint
-   outline, the rest rise to the full color. */
-.heatmap-cell {
-    fill: var(--border-secondary);
-}
-
-.heat-1 {
-    fill: color-mix(in srgb, var(--accent-primary) 30%, var(--bg-primary));
-}
-
-.heat-2 {
-    fill: color-mix(in srgb, var(--accent-primary) 55%, var(--bg-primary));
-}
-
-.heat-3 {
-    fill: color-mix(in srgb, var(--accent-primary) 80%, var(--bg-primary));
-}
-
-.heat-4 {
-    fill: var(--accent-primary);
-}
-
-/* The year's outlier days: a lit edge in a lighter shade of the accent and a
-   soft cast of the same, so a spike reads at a glance without a halo smearing
-   into the cells around it. */
-.heat-peak {
-    stroke: color-mix(in srgb, var(--accent-primary) 60%, #fff);
-    stroke-width: 1;
-}
-
-/* The glow behind a peak: a soft square of the accent, drawn as a shape so
-   every browser shows it. Sweeps in with its cell. */
-.heat-halo {
-    fill: color-mix(in srgb, var(--accent-primary) 45%, transparent);
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: chart-sweep 0.4s ease-out backwards;
 }
 
 .heatmap-caption {
@@ -1729,7 +1643,7 @@ rect.fleet-bar {
 .reveal-pending:not(.reveal-in) .commits-dot,
 .reveal-pending:not(.reveal-in) .bench-line,
 .reveal-pending:not(.reveal-in) .bench-dot,
-.reveal-pending:not(.reveal-in) .heatmap-cell {
+.reveal-pending:not(.reveal-in) .heat-cell {
     animation-play-state: paused;
 }
 
