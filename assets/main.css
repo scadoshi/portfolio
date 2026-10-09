@@ -1437,6 +1437,13 @@ rect.fleet-bar {
     min-width: 44rem;
 }
 
+/* Room inside the scroll box for a halo that hangs past the last column or
+   bottom row, which the box would otherwise clip. */
+.heatmap .chart-scroll {
+    padding-right: 3px;
+    padding-bottom: 3px;
+}
+
 .fleet-chart {
     width: 90%;
     min-width: 32rem;
@@ -1451,6 +1458,9 @@ rect.fleet-bar {
    would not scroll under a finger on iOS. */
 .chart-scroll {
     overflow-x: auto;
+    /* Stops at either end rather than rubber-banding the chart's edge into
+       empty space. */
+    overscroll-behavior-x: none;
     scrollbar-width: thin;
     padding-top: 2.25rem;
     margin-top: -2.25rem;
@@ -1533,6 +1543,9 @@ rect.fleet-bar {
     width: 100%;
     height: auto;
     font-family: inherit;
+    /* A peak's halo on the last column or bottom row reaches past the
+       viewBox and draws whole. */
+    overflow: visible;
 }
 
 .heatmap-label {
