@@ -1,5 +1,5 @@
 use dioxus::{document::eval, prelude::*};
-use zwipe_components::{
+use orangui::{
     BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemePicker, use_theme_wipe,
 };
 

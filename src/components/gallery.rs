@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{GalleryFooter, GalleryFrame, Panel};
+use orangui::{GalleryFooter, GalleryFrame, Panel};
 
 use crate::data::{MediaItem, MediaKind};
 

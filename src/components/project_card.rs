@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{BannerStatus, Panel};
+use orangui::{BannerStatus, Panel};
 
 use crate::{Route, components::measured::Measured, data::Project};
 

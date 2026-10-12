@@ -1,7 +1,7 @@
 //! Status colors mean an outcome. Decoration draws from the palette slots. Every
 //! status reference in the stylesheet must be one of these selectors.
 
-use zwipe_components::status_uses;
+use orangui::status_uses;
 
 const ALLOWED: [&str; 2] = [".not-found h1", ".not-found-page .panel-title"];
 

@@ -1,9 +1,9 @@
 use dioxus::prelude::*;
-use std::{collections::BTreeMap, rc::Rc};
-use zwipe_components::{
+use orangui::{
     HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, Replay, area, curve, heat_span, peak_indices,
     tip_anchor, use_scroll_to_end, with_separators,
 };
+use std::{collections::BTreeMap, rc::Rc};
 
 use crate::{
     components::{
@@ -259,9 +259,9 @@ pub fn Heatmap() -> Element {
         .iter()
         .map(|cell| format!("{} on {}", cell.count, cell.date))
         .collect();
-    let grid: Vec<zwipe_components::HeatCell> = cells
+    let grid: Vec<orangui::HeatCell> = cells
         .iter()
-        .map(|cell| zwipe_components::HeatCell {
+        .map(|cell| orangui::HeatCell {
             column: cell.column,
             row: cell.row,
             level: cell.level,

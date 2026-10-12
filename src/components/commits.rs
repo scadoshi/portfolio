@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Replay, area, curve, tip_anchor, use_scroll_to_end, with_separators};
+use orangui::{Replay, area, curve, tip_anchor, use_scroll_to_end, with_separators};
 
 use crate::{
     components::chart::{Tip, month_name, show},

@@ -5,6 +5,10 @@ mod data;
 mod pages;
 mod stats;
 
+use orangui::{
+    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
+    use_persisted_theme,
+};
 use pages::{
     contribute::Contribute,
     detail::ProjectDetail,
@@ -12,10 +16,6 @@ use pages::{
     moved::{OldSideQuest, OldSideQuests},
     not_found::NotFound,
     projects::{Projects, SectionPage},
-};
-use zwipe_components::{
-    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
-    use_persisted_theme,
 };
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
@@ -126,7 +126,7 @@ fn App() -> Element {
     let mut live: stats::Live = use_signal(|| None);
     use_context_provider(|| live);
     // The hero's entrance runs again whenever this moves; the nav S bumps it.
-    let replay = zwipe_components::Replay(use_signal(|| 0u32));
+    let replay = orangui::Replay(use_signal(|| 0u32));
     use_context_provider(|| replay);
     use_effect(move || {
         spawn(async move {
@@ -151,7 +151,7 @@ fn App() -> Element {
         document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
         document::Link { rel: "apple-touch-icon", sizes: "180x180", href: APPLE_TOUCH_ICON }
-        // Shared CSS inlined from zwipe-components (a git dep can't be reached
+        // Shared CSS inlined from orangui (a git dep can't be reached
         // by an asset pipeline). Themes, then components, then the shared site
         // sheet. The prerendered head puts these inline blocks after the linked
         // main.css, so a main.css override of a shared selector needs higher
@@ -171,7 +171,7 @@ fn App() -> Element {
         // leaves public, sealed, record, interface, var and switch plain.
         document::Script { defer: true, src: "/vendor/csharp.min.js" }
         // Scroll reveal for everything marked `data-reveal` below the fold.
-        // Inlined from zwipe-components; it waits for the document to parse,
+        // Inlined from orangui; it waits for the document to parse,
         // as a deferred script would, and everything it does is progressive.
         document::Script { {REVEAL_JS} }
         // Nav items pushed by a wider theme label slide over instead of jumping.

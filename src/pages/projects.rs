@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::Panel;
+use orangui::Panel;
 
 use crate::{
     Route,

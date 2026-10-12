@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Chip, Replay, curve, tip_anchor, with_separators};
+use orangui::{Chip, Replay, curve, tip_anchor, with_separators};
 
 use crate::components::chart::{Tip, show};
 

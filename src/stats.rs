@@ -11,9 +11,9 @@
 //! sees an empty number.
 
 use dioxus::prelude::*;
+use orangui::with_separators;
 use serde::Deserialize;
 use std::sync::LazyLock;
-use zwipe_components::with_separators;
 
 const SNAPSHOT: &str = include_str!("stats.json");
 

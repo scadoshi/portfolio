@@ -2,7 +2,7 @@
 //! `static_routes()` skips it.
 
 use dioxus::prelude::*;
-use zwipe_components::Panel;
+use orangui::Panel;
 
 use crate::components::page_meta::PageMeta;
 

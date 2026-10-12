@@ -1,11 +1,12 @@
 use dioxus::prelude::*;
-use zwipe_components::{Panel, ZwipeArchitecture};
+use orangui::Panel;
 
 use crate::{
     Route,
     components::{
         benchmark::Benchmark, code_block::CodeBlock, commits::Commits, fleet::Fleet, flow::Flow,
         gallery::ProjectGallery, linked_text::LinkedText, measured::Measured, page_meta::PageMeta,
+        zwipe_architecture::ZwipeArchitecture,
     },
     data,
     pages::moved::Moved,

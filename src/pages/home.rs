@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Decode, Panel, Replay, StatsStrip};
+use orangui::{Decode, Panel, Replay, StatsStrip};
 
 use crate::{
     Route,

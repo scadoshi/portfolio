@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{DiagramArrow, DiagramDefs, DiagramNode, DiagramTone};
+use orangui::{DiagramArrow, DiagramDefs, DiagramNode, DiagramTone};
 
 /// How a number reaches this site: GitHub and a tarball into heron, heron into
 /// steller and back, and heron out to the site's build and to the browser. Inline

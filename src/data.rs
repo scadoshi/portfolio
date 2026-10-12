@@ -55,10 +55,10 @@ impl ProjectStatus {
     }
     /// Maps to the shared status pill; the label ("Done"/"Doing") is passed
     /// separately so the pill keeps our wording, not the component's default.
-    pub fn banner_status(self) -> zwipe_components::BannerStatus {
+    pub fn banner_status(self) -> orangui::BannerStatus {
         match self {
-            Self::Done => zwipe_components::BannerStatus::Done,
-            Self::Doing => zwipe_components::BannerStatus::Doing,
+            Self::Done => orangui::BannerStatus::Done,
+            Self::Doing => orangui::BannerStatus::Doing,
         }
     }
 }

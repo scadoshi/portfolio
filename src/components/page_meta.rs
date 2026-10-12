@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{PageMeta as SharedPageMeta, SiteMeta};
+use orangui::{PageMeta as SharedPageMeta, SiteMeta};
 
 /// This site's constants for the shared head-meta component. The OG image
 /// (which also selects the `summary_large_image` Twitter card) lives in

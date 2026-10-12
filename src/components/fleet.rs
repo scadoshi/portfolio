@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use zwipe_components::{Chip, Replay, with_separators};
+use orangui::{Chip, Replay, with_separators};
 
 use crate::stats;
 
