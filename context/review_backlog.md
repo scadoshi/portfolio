@@ -24,7 +24,3 @@ What four outside reviews (Claude, Gemini, Grok, ChatGPT, October 2026) said abo
 - Zwipe: demo videos sit below the code; show it working first
 - Zwipe: an architecture diagram would beat the six-crate sentence
 - Zwipe impact line ("six crates, unwrap banned by CI") is an engineering detail, not an outcome
-
-## New entries
-
-- orangui ([github.com/scadoshi/orangui](https://github.com/scadoshi/orangui), MIT): the Dioxus UI kit lifted out of zwipe's `zwipe-components` on 2026-10-12, which this site, cairn and zwipe will all depend on. Needs its own project page and card: `context/projects/orangui.md`, an entry in `data.rs`, a Tooling or Systems dropdown slot, and heron counting its repo. The name is orangutan, a call sign, plus GUI. Write it once the site is on it, so the page can say so
