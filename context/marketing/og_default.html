@@ -8,7 +8,10 @@
      context/marketing/og_default.html: the gruvbox-dark 28px grid on a
      darkened --bg-sink, the block-glyph wordmark (assets/scotty.txt)
      sitting on the grid, and everything else in a hero-style bubble panel.
-     Tokens are the gruvbox-dark :root values from zwipe-components themes.css.
+     Tokens are the gruvbox-dark values from zwipe-components themes.css, and
+     the colors play the roles the home hero gives them: Rust in palette-5,
+     the app in palette-3, the server in palette-2, the stores in the tertiary
+     accent, the value chip in palette-5, the domain in the primary accent.
      The block glyphs (U+258E/U+2589) need the self-hosted JetBrains Mono (CDN
      fontsource subsets drop U+2580-U+259F), loaded from the sibling zwipe
      checkout. Rendered into public/ (dx serves it verbatim at
@@ -36,7 +39,11 @@
   --bg-primary: #282828;
   --text-primary: #ebdba2;
   --text-muted: #a89984;
-  --accent-primary: #689d6a;
+  --accent-primary: #83a598;
+  --accent-tertiary: #d3869b;
+  --palette-2: #fe8019;
+  --palette-3: #b8bb26;
+  --palette-5: #fabd2f;
   --border-secondary: #3c3836;
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
   --grid-line: rgba(235, 219, 162, 0.04);
@@ -67,6 +74,7 @@ body {
 
 .wordmark {
   white-space: pre;
+  font-family: inherit;
   font-weight: 700;
   font-size: 21px;
   line-height: 0.82;
@@ -94,7 +102,10 @@ body {
   text-align: center;
   white-space: nowrap;
 }
-.hl { color: var(--accent-primary); font-weight: 700; }
+.hl-p5 { color: var(--palette-5); font-weight: 700; }
+.hl-p3 { color: var(--palette-3); font-weight: 700; }
+.hl-p2 { color: var(--palette-2); font-weight: 700; }
+.hl-tertiary { color: var(--accent-tertiary); font-weight: 700; }
 
 .tags {
   display: flex;
@@ -108,9 +119,9 @@ body {
   white-space: nowrap;
 }
 .tag-value {
-  color: var(--accent-primary);
-  background-color: color-mix(in srgb, var(--accent-primary) 12%, transparent);
-  border-color: color-mix(in srgb, var(--accent-primary) 40%, transparent);
+  color: var(--palette-5);
+  background-color: color-mix(in srgb, var(--palette-5) 12%, transparent);
+  border-color: color-mix(in srgb, var(--palette-5) 40%, transparent);
 }
 .tag-plat {
   color: var(--text-muted);
@@ -140,7 +151,7 @@ body {
                                  ▎▎▉▉▉▉▉</pre>
 
   <div class="hero">
-    <div class="tagline"><span class="hl">Rust</span> that runs: an app, a server, two key-value stores</div>
+    <div class="tagline"><span class="hl-p5">Rust</span> that runs: an <span class="hl-p3">app</span>, a <span class="hl-p2">server</span>, two <span class="hl-tertiary">key-value stores</span></div>
     <div class="tags">
       <span class="tag tag-value">Software Engineer</span>
       <span class="tag tag-plat">Mobile apps</span>
