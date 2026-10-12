@@ -286,7 +286,7 @@ a:visited {
     }
 }
 
-/* Scroll reveal (zwipe_components::REVEAL_JS, on every `data-reveal`):
+/* Scroll reveal (orangui::REVEAL_JS, on every `data-reveal`):
    panels start sunk and faded, then ease up when the observer flags them on
    screen. The .theme-wrapper prefix
    outranks the hover block's transition on the same elements while the
@@ -323,7 +323,7 @@ a:visited {
 /* === Navbar === */
 
 /* The nav shell (sticky wrapper, hamburger, collapsing panel, link pills)
-   comes from zwipe-components; note its components.css is inlined AFTER this
+   comes from orangui; note its components.css is inlined AFTER this
    sheet in the built head, so equal-specificity overrides here lose the
    cascade. This site sets its narrower column and keeps brand/logo/dropdown
    specifics below. */
@@ -441,7 +441,7 @@ a.panel-action:visited {
 /* === Dropdowns === */
 
 /* NavDropdown (trigger pill, floating menu, backdrop, hover bridge,
-   anchor-item support) comes from zwipe-components. One site preference:
+   anchor-item support) comes from orangui. One site preference:
    menus open with left edges aligned to the trigger, jutting right. The
    crate default (right: 0, jutting left, sized for zite's edge-hugging
    picker) reads off-balance in this nav. The crate's in-panel rules are
@@ -466,7 +466,7 @@ a.panel-action:visited {
 /* === Theme Switcher === */
 
 /* The theme picker (switcher, dropdown, mode toggle) comes from
-   zwipe-components: rules ship in its components.css, inlined in <head>
+   orangui: rules ship in its components.css, inlined in <head>
    after this stylesheet. */
 
 /* === Content === */
@@ -741,7 +741,7 @@ a.panel-action:visited {
 }
 
 /* Card chrome (panel, eyebrow, title, status pills, actions) is the shared
-   zwipe_components::Panel now; only the card body content stays below. */
+   orangui::Panel; only the card body content stays below. */
 
 .card-summary {
     font-size: 0.9rem;
@@ -801,7 +801,7 @@ a.panel-action:visited {
 
 /* Three boxed figures, the same tile cairn's home screen uses: a sunk panel
    with the number in the accent over its label. The tile itself is
-   zwipe-components' StatsStrip base; the sizes are this page's. */
+   orangui's StatsStrip base; the sizes are this page's. */
 .stats-strip .stat {
     padding: 0.7rem 0.35rem 0.6rem;
 }
@@ -959,8 +959,8 @@ a.panel-action:visited {
     width: 100%;
 }
 
-/* Zwipe's architecture carousel (zwipe_components::ZwipeArchitecture, sized
-   by the shared site sheet) fades its diagrams in like the gallery's media. */
+/* Zwipe's architecture carousel (components::zwipe_architecture, sized by
+   orangui's site sheet) fades its diagrams in like the gallery's media. */
 .arch-slide {
     animation: gallery-fade-in 0.25s ease-out;
 }
@@ -985,7 +985,7 @@ a.panel-action:visited {
     }
 }
 
-/* The gallery's layout is zwipe-components' SITE_CSS; this is the
+/* The gallery's layout is orangui's SITE_CSS; this is the
    portfolio's look on top of it. */
 .gallery-nav {
     background: var(--bg-primary);
@@ -1214,7 +1214,7 @@ a.panel-action:visited {
     }
 
     /* Hamburger, collapsing panel, in-panel sizing, and the banner-stack
-       slide-out-of-the-open-menu behavior all come from zwipe-components. */
+       slide-out-of-the-open-menu behavior all come from orangui. */
 }
 
 /* === Heron: the fleet chart (the flow diagram uses the shared .diagram styles) === */

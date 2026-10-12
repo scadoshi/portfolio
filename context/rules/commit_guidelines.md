@@ -13,8 +13,8 @@
 Pushing to `main` triggers the GitHub Pages deploy
 (`.github/workflows/deploy.yml`, `dx build --release --ssg --force-sequential`). Tests and clippy now
 gate the deploy: a red check means the site does not update. Formatting is still
-local discipline, kept identical to zwipe's so this crate and the shared
-`zwipe-components` (consumed via git dep) hold the same bar.
+local discipline, kept identical to orangui's so this crate and the shared
+UI kit (consumed via git dep) hold the same bar.
 
 ### 1. Format with **nightly**: the one that bites
 `rustfmt.toml` enables `imports_granularity = "Crate"`, an *unstable* option, so

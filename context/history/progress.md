@@ -66,3 +66,7 @@ All 7 project descriptions reviewed against actual source code and updated:
 - [ ] Transitions and scroll animations
 - [ ] SEO metadata
 - [ ] Performance optimization (lazy loading, code splitting if applicable)
+
+## Shared UI (2026-10-12)
+
+- [ ] 2026-10-12 Branch `orangui`, not merged: the site takes its shared UI from the orangui crate instead of zwipe's `zwipe-components`, drops the zwipe repo as a dependency, and keeps its own copy of the Zwipe architecture carousel in `components/zwipe_architecture.rs`
