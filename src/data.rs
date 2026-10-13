@@ -536,7 +536,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
 };
 
 const ORANGUI: Project = Project {
-    name: "orangui",
+    name: "Orangui",
     slug: "orangui",
     headline: "The Rust UI kit under zwipe, cairn and this site, with 31 color themes.",
     category: "UI Kit",
