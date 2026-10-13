@@ -1,6 +1,6 @@
 //! Orangui's app pieces in a phone drawn in CSS: a page header, a settings
-//! list whose Theme and Mode rows open the theme sheet and flip dark and
-//! light, and an action bar whose buttons open a bottom sheet and fire toasts.
+//! list whose Theme row opens the theme sheet and flips dark and light, and
+//! an action bar whose buttons open a bottom sheet and fire toasts.
 //!
 //! The pieces place themselves against the viewport with `position: fixed`.
 //! The phone's screen carries a `transform`, which makes it their containing
@@ -73,7 +73,7 @@ pub fn OranguiPhone() -> Element {
                 div { class: "kit-phone-copy project-section",
                     ul {
                         li { "Sheet slides a panel up from the bottom." }
-                        li { "Theme and Mode work like they do in the apps, and change the whole site." }
+                        li { "The Theme row works like it does in the apps, and changes the whole site." }
                         li { "Toast sends a notification. Send a few and they stack; tap to spread them." }
                         li { "The header and bottom bar are the same ones the apps use." }
                     }
@@ -144,17 +144,12 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                             span { class: "settings-row-label", "Theme" }
                             div { class: "settings-row-value",
                                 span { "{name}" }
+                                DarkModeButton { is_dark: current.is_dark, onclick: toggle_dark }
                                 Button {
                                     variant: ButtonVariant::Action,
                                     onclick: move |_| themes_open.set(true),
                                     "Change"
                                 }
-                            }
-                        }
-                        div { class: "settings-row",
-                            span { class: "settings-row-label", "Mode" }
-                            div { class: "settings-row-value",
-                                DarkModeButton { is_dark: current.is_dark, onclick: toggle_dark }
                             }
                         }
                     }
