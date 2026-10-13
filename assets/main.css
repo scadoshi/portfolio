@@ -634,6 +634,13 @@ a.panel-action:visited {
 
 /* === Project Detail === */
 
+/* The entrance fills backwards only, so the page holds no transform once it
+   is in. A held one, even an identity matrix, makes the page the containing
+   block for the dialogs' and banners' position: fixed. */
+.theme-wrapper .project-detail.content-enter {
+    animation-fill-mode: backwards;
+}
+
 .project-detail {
     max-width: 74rem;
     margin: 0 auto;
@@ -755,42 +762,130 @@ a.panel-action:visited {
     color: var(--text-muted);
 }
 
-/* === Orangui's live demo === */
+/* === Orangui's showcase === */
 
-/* The kit's own pieces on a sunken stage inside the panel: the demo panel
-   beside a column holding the picker's note and a release banner. */
-.orangui-demo {
+/* A panel per piece, two to a row. Each panel opens on a line saying when
+   to use the piece, and its actions row links the source. */
+.kit-grid {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    align-items: start;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--panel-gap);
-    padding: 1.25rem;
-    border-radius: 0.8rem;
-    background-color: var(--bg-sink);
 }
 
-.demo-side {
-    display: flex;
-    flex-direction: column;
-    gap: var(--panel-gap);
-    min-width: 0;
+@media (max-width: 56rem) {
+    .kit-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
-.demo-label {
-    margin: 1.25rem 0 0.6rem;
+.kit-intro p + p {
+    margin-top: 0.6rem;
+}
+
+.kit-credit {
+    font-size: 0.85rem;
+}
+
+.kit-use {
+    margin-bottom: 1rem;
+    color: var(--text-subtle);
+    line-height: 1.6;
+}
+
+.kit-label {
+    display: block;
+    margin: 0.9rem 0 0.45rem;
     font-size: 0.7rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 
-.demo-swatches {
+.kit-note {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.kit-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.kit-row .btn-xs {
+    margin: 0;
+}
+
+/* Chips are buttons, which do not inherit the page's font on their own. */
+.theme-wrapper .kit-grid .chip,
+.theme-wrapper .phone-screen .chip {
+    font-family: inherit;
+}
+
+/* The panel's button row sits at the foot of its body, edge to edge, as the
+   apps pin it to the foot of a screen. */
+.panel-body:has(> .kit-action-bar) {
+    display: flex;
+    flex-direction: column;
+}
+
+.theme-wrapper .kit-action-bar {
+    margin: auto -1.5rem 0;
+    padding-bottom: 0;
+}
+
+/* The full-width button keeps its width and drops its form margin. */
+.theme-wrapper .kit-buttons .btn {
+    margin-bottom: 0;
+}
+
+.kit-button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+}
+
+.theme-wrapper .kit-button-row .btn-xs {
+    margin: 0;
+}
+
+/* Room under the trigger for the open menu, so it stays inside the card.
+   The stacking context keeps the kit's raised trigger and menu under the
+   sticky nav as the page scrolls. */
+.kit-dropdown {
+    position: relative;
+    z-index: 1;
+    min-height: 11rem;
+}
+
+/* An open menu's panel holds still: the hover lift's transform would trap
+   the click-away layer inside the panel. */
+.theme-wrapper .panel-card:has(.nav-dropdown-open) {
+    transform: none;
+}
+
+.kit-dialog-input {
+    margin-bottom: 0;
+}
+
+.kit-hint-line {
+    line-height: 2;
+    color: var(--text-subtle);
+}
+
+.kit-replay {
+    margin-top: 0.75rem;
+}
+
+.kit-swatches {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 0.5rem;
 }
 
-.demo-swatch {
+.kit-swatch {
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -801,51 +896,207 @@ a.panel-action:visited {
     color: var(--bg-primary);
 }
 
-.demo-row {
+.kit-decode {
     display: flex;
-    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1.5rem;
+}
+
+.kit-decode-art {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+    line-height: 0.9;
+    white-space: pre;
+    color: var(--logo);
+}
+
+/* The gallery's frame without the video-height floor, and room at the sides
+   for the arrows. */
+.theme-wrapper .gallery-body.kit-slides {
+    min-height: 0;
+    padding: 0 3.25rem;
+}
+
+.theme-wrapper .kit-slide {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 100%;
+    min-height: 7.5rem;
+    border-radius: 0.8rem;
+    font-size: 0.8rem;
+    animation: gallery-fade-in 0.25s ease-out;
 }
 
-.orangui-demo .btn-xs {
-    margin: 0;
+.kit-slide-name {
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
-/* The banner stands in the demo rather than rising in at load, which would
-   play while it is still below the fold. Its leaving animation is the kit's. */
-.orangui-demo .banner {
-    animation: none;
+.kit-slides + .gallery-footer {
+    margin-top: 0.9rem;
 }
 
-.demo-note {
-    margin-bottom: 1rem;
-    color: var(--text-subtle);
-    line-height: 1.6;
+/* The line chart fits a half-width panel; on a phone it scrolls sideways
+   inside .chart-scroll. */
+.kit-plot {
+    position: relative;
+    min-width: 24rem;
 }
 
-/* The grid keeps a readable cell on a phone and scrolls sideways, with room
-   for a halo on the edge cells. The site's chart-scroll lift is for hover
-   chips, which this grid has none of. */
-.orangui-demo .chart-scroll {
-    padding: 3px;
-    margin-top: 0;
+.theme-wrapper .kit-diagram .diagram {
+    width: 100%;
+    min-width: 24rem;
 }
 
-.demo-heat .heat-grid {
-    min-width: 32rem;
+/* The heat grid keeps a readable cell on a phone and scrolls sideways, with
+   room for a halo on the edge cells. */
+.kit-heat {
+    padding-right: 3px;
+    padding-bottom: 3px;
+}
+
+.kit-heat-plot {
+    position: relative;
+    min-width: 40rem;
+}
+
+.kit-heat-plot .heat-grid {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* A raised banner rises at once; the kit's delay is for a banner present at
+   page load. */
+.theme-wrapper .kit-banners .banner {
+    animation-delay: 0s;
+}
+
+/* == the phone == */
+
+.kit-phone-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+}
+
+.kit-phone-copy {
+    max-width: 30rem;
 }
 
 @media (max-width: 56rem) {
-    .orangui-demo {
+    .kit-phone-panel {
         grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
     }
 }
 
-@media (max-width: 30rem) {
-    .orangui-demo {
-        padding: 0.75rem;
-    }
+/* The bezel and the notch. Near-black in every theme, as a phone is. */
+.phone {
+    --bezel: #121214;
+    position: relative;
+    width: min(19rem, 100%);
+    aspect-ratio: 9 / 18.5;
+    padding: 0.55rem;
+    border-radius: 2.6rem;
+    background: var(--bezel);
+    box-shadow: var(--shadow-md);
+}
+
+.phone::after {
+    content: "";
+    position: absolute;
+    top: 0.95rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5.5rem;
+    height: 1.25rem;
+    border-radius: 1rem;
+    background: var(--bezel);
+    z-index: 2;
+}
+
+/* The screen is the containing block for the app pieces' position: fixed
+   (the transform does that) and clips them at its edges. */
+.phone-screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    transform: translateZ(0);
+    border-radius: 2.1rem;
+    background: var(--bg-sink);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+.phone-app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* The strip the notch sits in. */
+.phone-status {
+    flex-shrink: 0;
+    height: 2.1rem;
+    background: var(--bg-primary);
+}
+
+.theme-wrapper .phone-screen .page-header {
+    padding: 0.4rem 0 0.8rem;
+}
+
+.theme-wrapper .phone-screen .settings-sections {
+    width: calc(100% - 1.5rem);
+}
+
+.theme-wrapper .phone-screen .settings-row,
+.theme-wrapper .phone-screen .settings-list-header {
+    padding: 0.6rem 0.8rem;
+}
+
+.theme-wrapper .phone-screen .settings-row-label,
+.theme-wrapper .phone-screen .settings-row-value,
+.theme-wrapper .phone-screen .settings-list-title {
+    font-size: 0.8rem;
+}
+
+.theme-wrapper .phone-screen .action-bar {
+    padding-bottom: 1.1rem;
+}
+
+/* Sheets measure against the phone, not the window. */
+.theme-wrapper .phone-screen .bottom-sheet {
+    max-height: 85%;
+}
+
+.theme-wrapper .phone-screen .sheet-header,
+.theme-wrapper .phone-screen .sheet-content {
+    padding: 1rem;
+}
+
+.theme-wrapper .phone-screen .pref-row {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.78rem;
+}
+
+/* Toasts land under the notch. */
+.theme-wrapper .phone-screen .toast-container {
+    top: 2.4rem;
+    left: 0.75rem;
+    max-width: calc(100% - 1.5rem);
+}
+
+.theme-wrapper .phone-screen .toast-container [role="alertdialog"] {
+    padding: 0.7rem 0.9rem;
+}
+
+.kit-sheet-chips {
+    justify-content: center;
 }
 
 /* === Code Blocks === */

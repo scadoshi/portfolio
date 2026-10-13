@@ -6,7 +6,8 @@ use crate::{
     components::{
         benchmark::Benchmark, code_block::CodeBlock, commits::Commits, fleet::Fleet, flow::Flow,
         gallery::ProjectGallery, linked_text::LinkedText, measured::Measured,
-        orangui_demo::OranguiDemo, page_meta::PageMeta, zwipe_architecture::ZwipeArchitecture,
+        orangui_showcase::OranguiShowcase, page_meta::PageMeta,
+        zwipe_architecture::ZwipeArchitecture,
     },
     data,
     pages::moved::Moved,
@@ -32,8 +33,8 @@ fn approach_panel(project: &'static data::Project) -> Element {
 /// Panels only one project has. heron is the project this site is a client of,
 /// so its page shows the path a number takes and what heron is measuring right
 /// now; steller's page shows its benchmark against Redis; zwipe's shows how
-/// its crates and running pieces fit together; orangui's runs the kit itself
-/// in the site's theme. Empty for the rest.
+/// its crates and running pieces fit together; orangui's runs every piece of
+/// the kit in the site's theme. Empty for the rest.
 fn project_panels(project: &'static data::Project) -> Element {
     match project.slug {
         // The numbers first, then the path they took to get here.
@@ -61,7 +62,7 @@ fn project_panels(project: &'static data::Project) -> Element {
             ZwipeArchitecture {}
         },
         "orangui" => rsx! {
-            OranguiDemo {}
+            OranguiShowcase {}
         },
         "steller" => rsx! {
             Panel {
