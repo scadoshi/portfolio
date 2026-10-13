@@ -14,13 +14,8 @@ use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use orangui::{
     ActionBar, BottomSheet, Button, ButtonVariant, Chip, DarkModeButton, PageHeader, Panel,
-    TOAST_NORMAL, ThemeConfig, ThemeSheet, ToastStack, display_theme_name, use_theme_follow,
+    TOAST_NORMAL, ThemeConfig, ThemeSheet, ToastStack, display_theme_name,
 };
-
-/// A selector that matches nothing. The theme sheet reads a follower of the
-/// theme it writes; the site's wipe already sweeps the phone, so this one
-/// commits each pick with no sweep of its own.
-const NO_WIPE: &str = ".phone-no-wipe";
 
 /// Sets the phone's `--phone-scale` to its viewport's width over the 414
 /// points of an iPhone 11 Pro Max, the size the app lays out at, and keeps it
@@ -90,8 +85,9 @@ fn Phone() -> Element {
     // The site's theme. A pick goes to the wipe's `picked`, which sweeps it
     // across the page and commits it here.
     let site = use_context::<Signal<ThemeConfig>>();
-    let ThemeWipe { picked, .. } = use_context();
-    let follow = use_theme_follow(picked, NO_WIPE);
+    // The theme sheet waits on the site's wipe: Back on a discarded pick
+    // keeps it up while the old theme sweeps back, gone on the other side.
+    let ThemeWipe { picked, follow, .. } = use_context();
     use_context_provider(|| follow);
     let class = site.read().css_class();
     // The app lays out at a real phone's size and the screen scales it down

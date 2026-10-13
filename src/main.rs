@@ -7,7 +7,7 @@ mod stats;
 
 use orangui::{
     COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
-    use_persisted_theme, use_theme_wipe,
+    use_persisted_theme, use_theme_wipe_follow,
 };
 use pages::{
     contribute::Contribute,
@@ -186,8 +186,12 @@ fn App() -> Element {
 #[component]
 fn NavbarLayout() -> Element {
     let theme = use_context::<Signal<ThemeConfig>>();
-    let (picked, shown) = use_theme_wipe(theme, ".theme-wrapper");
-    use_context_provider(|| components::navbar::ThemeWipe { picked, shown });
+    let (picked, follow) = use_theme_wipe_follow(theme, ".theme-wrapper");
+    use_context_provider(|| components::navbar::ThemeWipe {
+        picked,
+        shown: follow.shown,
+        follow,
+    });
     // Core's css_class() is just "theme-{name}-{mode}"; the wrapper class
     // carries this site's fixed-grid background layer.
     let css_class = theme.read().css_class();

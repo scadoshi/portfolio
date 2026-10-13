@@ -1085,6 +1085,60 @@ html[data-wipe="left"]::view-transition-new(phone-screen) {
     animation-name: theme-wipe-up;
 }
 
+/* The sticky header is a layer of its own, stacked over the phone's so the
+   phone never wipes across it. It wipes with the page: its clip is measured
+   in viewport units from the top of the screen, where it sits, so its edge
+   runs level with the page's. */
+.nav-wrapper {
+    view-transition-name: site-nav;
+}
+
+::view-transition-group(site-nav) {
+    z-index: 2;
+    animation: none;
+}
+
+::view-transition-old(site-nav) {
+    animation: none;
+}
+
+::view-transition-new(site-nav) {
+    mix-blend-mode: normal;
+    animation: theme-wipe 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html[data-wipe="left"]::view-transition-new(site-nav) {
+    animation-name: theme-wipe-left;
+}
+
+@media (max-width: 60rem) {
+    ::view-transition-new(site-nav) {
+        animation-name: nav-wipe-down;
+    }
+
+    html[data-wipe="left"]::view-transition-new(site-nav) {
+        animation-name: nav-wipe-up;
+    }
+}
+
+@keyframes nav-wipe-down {
+    from {
+        clip-path: inset(0 0 100% 0);
+    }
+    to {
+        clip-path: inset(0 0 calc(100% - 100vh) 0);
+    }
+}
+
+@keyframes nav-wipe-up {
+    from {
+        clip-path: inset(100vh 0 0 0);
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
 .phone-app {
     display: flex;
     flex-direction: column;
@@ -1124,6 +1178,18 @@ html[data-wipe="left"]::view-transition-new(phone-screen) {
 
 .kit-sheet-chips {
     justify-content: center;
+}
+
+/* The orangutan under the orangui page's goal, sized so its 48 columns fit a
+   phone's panel. */
+.orangutan-art {
+    margin: 1.5rem auto 0;
+    width: fit-content;
+    font-family: "JetBrains Mono", monospace;
+    font-size: clamp(0.45rem, 2.2vw, 0.75rem);
+    line-height: 1.05;
+    white-space: pre;
+    color: var(--logo);
 }
 
 /* === Code Blocks === */

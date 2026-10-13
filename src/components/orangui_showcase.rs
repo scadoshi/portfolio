@@ -191,6 +191,8 @@ fn ButtonShowcase() -> Element {
     rsx! {
         Panel {
             title: "Button",
+            status: if pressed().is_some() { BannerStatus::Done } else { BannerStatus::Doing },
+            status_label: pressed().unwrap_or("None yet").to_string(),
             actions: rsx! {
                 Source { path: "src/button.rs" }
                 Source { path: "assets/components.css#L171-L247" }
@@ -234,12 +236,6 @@ fn ButtonShowcase() -> Element {
                             "Send"
                         }
                     }
-                }
-            }
-            p { class: "kit-note",
-                match pressed() {
-                    Some(label) => format!("Pressed {label}."),
-                    None => "Nothing pressed yet.".to_string(),
                 }
             }
         }
@@ -340,8 +336,6 @@ const SECTIONS: [&str; 4] = ["Products", "Systems", "Tooling", "Experiments"];
 
 #[component]
 fn DropdownShowcase() -> Element {
-    let mut open = use_signal(|| false);
-    let mut picked = use_signal(|| None::<&'static str>);
     rsx! {
         Panel {
             title: "NavDropdown",
@@ -350,21 +344,33 @@ fn DropdownShowcase() -> Element {
                 Source { path: "assets/components.css#L820-L1046" }
             },
             p { class: "kit-use",
-                "A menu behind a nav pill, like the theme picker up top."
+                "A menu behind a nav pill, like the ones up top. Open one, then another, to see how they hand off."
             }
-            div { class: "kit-dropdown",
-                NavDropdown { open, label: picked().unwrap_or("Sections").to_string(),
-                    for name in SECTIONS {
-                        button {
-                            key: "{name}",
-                            class: if picked() == Some(name) { "nav-dropdown-item active" } else { "nav-dropdown-item" },
-                            onclick: move |_| {
-                                picked.set(Some(name));
-                                open.set(false);
-                            },
-                            "{name}"
-                        }
-                    }
+            div { class: "kit-dropdown kit-row",
+                DemoDropdown { label: "Sections", items: &SECTIONS }
+                DemoDropdown { label: "Sort", items: &["Newest", "Oldest", "Name"] }
+                DemoDropdown { label: "View", items: &["List", "Grid", "Compact"] }
+            }
+        }
+    }
+}
+
+/// One dropdown of the demo row, with its own open state and pick.
+#[component]
+fn DemoDropdown(label: &'static str, items: &'static [&'static str]) -> Element {
+    let mut open = use_signal(|| false);
+    let mut picked = use_signal(|| None::<&'static str>);
+    rsx! {
+        NavDropdown { open, label: picked().unwrap_or(label).to_string(),
+            for name in items.iter().copied() {
+                button {
+                    key: "{name}",
+                    class: if picked() == Some(name) { "nav-dropdown-item active" } else { "nav-dropdown-item" },
+                    onclick: move |_| {
+                        picked.set(Some(name));
+                        open.set(false);
+                    },
+                    "{name}"
                 }
             }
         }

@@ -1,5 +1,7 @@
 use dioxus::{document::eval, prelude::*};
-use orangui::{BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemePicker};
+use orangui::{
+    BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemeFollow, ThemePicker,
+};
 
 use crate::{Route, data::Section};
 
@@ -7,11 +9,13 @@ const LOGO_S: &str = include_str!("../../assets/s.txt");
 
 /// The site's theme wipe, shared by everything that picks a theme: the nav's
 /// picker and the phone on the orangui page. `picked` takes a pick and sweeps
-/// it across the page; `shown` is what a picker shows as current meanwhile.
+/// it across the page; `shown` is what a picker shows as current meanwhile;
+/// `follow` is the same wipe for a theme sheet that waits on it.
 #[derive(Clone, Copy)]
 pub struct ThemeWipe {
     pub picked: Signal<ThemeConfig>,
     pub shown: Signal<ThemeConfig>,
+    pub follow: ThemeFollow,
 }
 
 #[component]
@@ -19,6 +23,7 @@ pub fn Navbar() -> Element {
     let ThemeWipe {
         picked: theme,
         shown,
+        ..
     } = use_context();
     let mut open = use_signal(|| false);
     // One per section, in Section::ALL order.
