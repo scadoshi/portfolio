@@ -1056,9 +1056,11 @@ p.kit-label {
     view-transition-name: phone-screen;
 }
 
-/* The app at the phone's own 414 by 896 points, scaled down to the glass.
-   The transform also makes the screen the containing block for the kit's
-   fixed sheets and toasts, so they rise and land inside the phone. */
+/* The app at the phone's own 414 by 896 points, zoomed down to the glass.
+   Zoom draws it at the size it shows, so a theme wipe's snapshot is not a
+   shrunken picture of the grid, which leaves stray lines. The transform
+   does nothing visible; it makes the screen the containing block for the
+   kit's fixed sheets and toasts, so they rise and land inside the phone. */
 .phone-screen {
     position: absolute;
     top: 0;
@@ -1066,8 +1068,8 @@ p.kit-label {
     width: 414px;
     height: 896px;
     overflow: hidden;
-    transform: scale(var(--phone-scale, 0.73));
-    transform-origin: 0 0;
+    zoom: var(--phone-scale, 0.73);
+    transform: translateZ(0);
     background: var(--bg-sink);
     color: var(--text-primary);
 }
