@@ -8,8 +8,8 @@ this file stays out of that business (and out of the business of going stale).
 - [Dioxus](https://dioxuslabs.com/) 0.7.10, Rust compiled to WASM, prerendered to
   static HTML so crawlers and link unfurlers get real markup
 - Shared UI (panels, nav, themes, banners) from
-  [zwipe-components](https://github.com/scadoshi/zwipe), a git dependency pinned
-  in `Cargo.lock`
+  [orangui](https://github.com/scadoshi/orangui), a git dependency pinned in
+  `Cargo.lock`
 - GitHub Pages on a custom domain, deployed by GitHub Actions on push to
   `main`
 
