@@ -78,7 +78,7 @@ pub fn Home() -> Element {
                                             stats::Source::Live => "live".to_string(),
                                             stats::Source::AsOf(day) => format!("as of {day}"),
                                         };
-                                        rsx! { span { key: "{label}", class: "tag tag-p1 tag-swap", "{label}" } }
+                                        rsx! { span { key: "{label}", class: "tag tag-p1 chip-in", "{label}" } }
                                     }
                                 },
                             }

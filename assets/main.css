@@ -96,21 +96,6 @@
 
 /* === Animations === */
 
-@keyframes content-enter {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.content-enter {
-    animation: content-enter 0.3s ease-out both;
-}
-
 /* The hero's entrance waits for the app. The shell's script marks the
    document `js` before first paint and the app marks it `hydrated` once it
    can count and decode, so the logo and the numbers stay out of sight and
@@ -313,7 +298,6 @@ a:visited {
         transform: none;
     }
 
-    .content-enter,
     .hero-panel,
     .home-band {
         animation: none;
@@ -783,28 +767,6 @@ a.panel-action:visited {
     transition:
         transform 0.15s ease,
         border-color 0.15s ease;
-}
-
-/* The chip that says which numbers are showing fades up when it changes. */
-.stats-source .tag-swap {
-    animation: chip-in 0.4s ease-out both;
-}
-
-@keyframes chip-in {
-    from {
-        opacity: 0;
-        transform: translateY(0.35rem);
-    }
-    to {
-        opacity: 1;
-        transform: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .stats-source .tag-swap {
-        animation: none;
-    }
 }
 
 @media (hover: hover) {
