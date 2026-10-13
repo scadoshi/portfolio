@@ -369,7 +369,7 @@ const ZWIPE: Project = Project {
         "The build rejects any code that could crash on bad data",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
-    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Six workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-client (the typed API client both clients call), zwipe-components (the Magic UI, over [orangui](https://github.com/scadoshi/orangui), the UI kit in its own repo), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
+    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Six workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwipe-client (the typed API client both clients call), components (the Magic UI, over [orangui](https://github.com/scadoshi/orangui), the UI kit in its own repo), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
     tags: &["ios", "android", "hexagonal"],
     media: &[
         MediaItem {
