@@ -4,9 +4,16 @@ use orangui::Panel;
 use crate::{
     Route,
     components::{
-        benchmark::Benchmark, code_block::CodeBlock, commits::Commits, fleet::Fleet, flow::Flow,
-        gallery::ProjectGallery, linked_text::LinkedText, measured::Measured,
-        orangui_showcase::OranguiShowcase, page_meta::PageMeta,
+        benchmark::Benchmark,
+        code_block::CodeBlock,
+        commits::Commits,
+        fleet::Fleet,
+        flow::Flow,
+        gallery::ProjectGallery,
+        linked_text::LinkedText,
+        measured::Measured,
+        orangui_showcase::{OranguiShowcase, OrangutanShowcase},
+        page_meta::PageMeta,
         zwipe_architecture::ZwipeArchitecture,
     },
     data,
@@ -75,6 +82,25 @@ fn closing_panels(project: &'static data::Project) -> Element {
                     section { class: "project-section",
                         p { LinkedText { text: project.progress.to_string() } }
                         p { class: "impact-statement", "{project.impact}" }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// The goal, its points, and what the project isn't.
+fn goal_panel(project: &'static data::Project) -> Element {
+    rsx! {
+        Panel {
+            title: "The goal",
+            section { class: "project-section",
+                p { LinkedText { text: project.objective.to_string() } }
+                {goal_points(project)}
+                if let Some(scope) = project.scope {
+                    p { class: "project-scope",
+                        strong { "What it isn't. " }
+                        LinkedText { text: scope.to_string() }
                     }
                 }
             }
@@ -204,18 +230,13 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 Measured { repo_url: project.repo_url.to_string() }
             }
 
-            Panel {
-                title: "The goal",
-                section { class: "project-section",
-                    p { LinkedText { text: project.objective.to_string() } }
-                    {goal_points(project)}
-                    if let Some(scope) = project.scope {
-                        p { class: "project-scope",
-                            strong { "What it isn't. " }
-                            LinkedText { text: scope.to_string() }
-                        }
-                    }
+            if project.slug == "orangui" {
+                div { class: "detail-band",
+                    {goal_panel(project)}
+                    OrangutanShowcase {}
                 }
+            } else {
+                {goal_panel(project)}
             }
 
             {project_panels(project)}

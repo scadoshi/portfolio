@@ -118,7 +118,6 @@ pub fn OranguiShowcase() -> Element {
         // the phone. None of their class names appear elsewhere on the site.
         document::Style { {APP_CSS} }
         document::Style { {TOAST_CSS} }
-        OrangutanShowcase {}
         div { class: "kit-grid",
             div { class: "kit-stack",
                 PanelShowcase {}
@@ -598,9 +597,9 @@ fn PaletteShowcase() -> Element {
 }
 
 /// The orangutan from the README in a panel of its own, decoding in, with its
-/// own replay.
+/// own replay. The detail page sets it beside the goal.
 #[component]
-fn OrangutanShowcase() -> Element {
+pub(crate) fn OrangutanShowcase() -> Element {
     let replay = use_signal(|| 0u32);
     use_context_provider(|| Replay(replay));
     rsx! {
@@ -629,6 +628,14 @@ fn DecodeShowcase() -> Element {
             title: "Decode",
             actions: rsx! {
                 ReplayButton { replay }
+                for (i, (label, _)) in MARKS.into_iter().enumerate() {
+                    Chip {
+                        key: "{label}",
+                        selected: mark() == i,
+                        onclick: move |_| mark.set(i),
+                        "{label}"
+                    }
+                }
                 Source { path: "src/entrance.rs" }
             },
             p { class: "kit-use",
@@ -644,16 +651,6 @@ fn DecodeShowcase() -> Element {
                         onmouseenter: move |_| hovering.set(true),
                         onmouseleave: move |_| hovering.set(false),
                         orangui::Decode { text: art, hover: hovering }
-                    }
-                }
-            }
-            div { class: "kit-row",
-                for (i, (label, _)) in MARKS.into_iter().enumerate() {
-                    Chip {
-                        key: "{label}",
-                        selected: mark() == i,
-                        onclick: move |_| mark.set(i),
-                        "{label}"
                     }
                 }
             }

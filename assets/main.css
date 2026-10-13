@@ -919,10 +919,6 @@ p.kit-label {
     gap: 1.5rem;
 }
 
-.kit-decode + .kit-row {
-    margin-top: 1rem;
-}
-
 .kit-decode-art {
     font-family: "JetBrains Mono", monospace;
     font-size: 0.85rem;
@@ -1181,6 +1177,15 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     top: 2.4rem;
     left: 0.75rem;
     max-width: calc(100% - 1.5rem);
+}
+
+/* The phone scrolls the way a phone does, with no scrollbar showing. */
+.phone-screen * {
+    scrollbar-width: none;
+}
+
+.phone-screen *::-webkit-scrollbar {
+    display: none;
 }
 
 /* A settings label with its "?" beside it, as the apps lay it out. */
