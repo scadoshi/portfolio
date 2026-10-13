@@ -995,15 +995,17 @@ a.panel-action:visited {
     }
 }
 
-/* The bezel and the notch. Near-black in every theme, as a phone is. */
+/* The bezel and the notch: the page's background darkened, so the body
+   follows the site's theme while the screen keeps the phone's own. */
 .phone {
-    --bezel: #121214;
+    --bezel: color-mix(in srgb, var(--bg-primary), #000 45%);
     position: relative;
     width: min(19rem, 100%);
     aspect-ratio: 9 / 18.5;
     padding: 0.55rem;
     border-radius: 2.6rem;
     background: var(--bezel);
+    border: 1px solid var(--border-secondary);
     box-shadow: var(--shadow-md);
 }
 
