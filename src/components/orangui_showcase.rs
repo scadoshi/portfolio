@@ -20,7 +20,13 @@ use super::orangui_phone::OranguiPhone;
 const REPO: &str = "https://github.com/scadoshi/orangui/blob/main";
 
 /// The nav's S, the art the Decode panel resolves.
-const LOGO_S: &str = include_str!("../../assets/s.txt");
+/// The marks the Decode panel can show: this site's S, orangui's O and
+/// cairn's C.
+const MARKS: [(&str, &str); 3] = [
+    ("S", include_str!("../../assets/s.txt")),
+    ("O", include_str!("../../assets/o.txt")),
+    ("C", include_str!("../../assets/c.txt")),
+];
 
 /// Weeks on the heat grid.
 const WEEKS: usize = 52;
@@ -110,11 +116,13 @@ pub fn OranguiShowcase() -> Element {
         document::Style { {APP_CSS} }
         document::Style { {TOAST_CSS} }
         div { class: "kit-grid",
-            PanelShowcase {}
+            div { class: "kit-stack",
+                PanelShowcase {}
+                DropdownShowcase {}
+            }
             ButtonShowcase {}
             ChipShowcase {}
             BannerShowcase { banners }
-            DropdownShowcase {}
             DialogShowcase {}
             PasswordShowcase {}
             HintShowcase {}
@@ -558,6 +566,8 @@ fn DecodeShowcase() -> Element {
     let replay = use_signal(|| 0u32);
     use_context_provider(|| Replay(replay));
     let mut hovering = use_signal(|| false);
+    let mut mark = use_signal(|| 0usize);
+    let (name, art) = MARKS.get(mark()).copied().unwrap_or(MARKS[0]);
     rsx! {
         Panel {
             title: "Decode",
@@ -566,15 +576,29 @@ fn DecodeShowcase() -> Element {
                 Source { path: "src/entrance.rs" }
             },
             p { class: "kit-use",
-                "Block art that resolves out of noise, like the S in the nav. Hover to make it shimmer."
+                "Block art that resolves out of noise, like the S in the nav. Pick a letter to watch it decode, and hover to make it shimmer."
             }
             div { class: "kit-decode",
-                pre {
-                    class: "kit-decode-art",
-                    "aria-label": "The S logo",
-                    onmouseenter: move |_| hovering.set(true),
-                    onmouseleave: move |_| hovering.set(false),
-                    orangui::Decode { text: LOGO_S, hover: hovering }
+                // Keyed on the mark, so a pick mounts it fresh and it decodes.
+                for (name, art) in [(name, art)] {
+                    pre {
+                        key: "{name}",
+                        class: "kit-decode-art",
+                        "aria-label": "The {name} logo",
+                        onmouseenter: move |_| hovering.set(true),
+                        onmouseleave: move |_| hovering.set(false),
+                        orangui::Decode { text: art, hover: hovering }
+                    }
+                }
+            }
+            div { class: "kit-row",
+                for (i, (label, _)) in MARKS.into_iter().enumerate() {
+                    Chip {
+                        key: "{label}",
+                        selected: mark() == i,
+                        onclick: move |_| mark.set(i),
+                        "{label}"
+                    }
                 }
             }
         }

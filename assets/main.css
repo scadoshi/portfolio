@@ -819,10 +819,21 @@ p.kit-label {
     font-family: inherit;
 }
 
-/* The Panel panel's body is one paragraph: the card keeps its own height
-   rather than stretching to the taller panel beside it. */
-.kit-grid > .panel-card:has(.kit-panel-copy) {
-    align-self: start;
+/* Two short panels share the left column beside a tall one; the lower one
+   grows so both columns end level. */
+.kit-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--panel-gap);
+}
+
+.kit-stack > .panel-card:last-child {
+    flex: 1;
+}
+
+/* A panel left over at the end takes the whole row. */
+.kit-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
 }
 
 .kit-panel-copy {
@@ -844,8 +855,9 @@ p.kit-label {
 
 .kit-button-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
 }
 
 .theme-wrapper .kit-button-row .btn-xs {
@@ -858,12 +870,13 @@ p.kit-label {
 .kit-dropdown {
     position: relative;
     z-index: 1;
-    min-height: 11rem;
 }
 
 /* An open menu's panel holds still: the hover lift's transform would trap
    the click-away layer inside the panel. */
 .theme-wrapper .panel-card:has(.nav-dropdown-open) {
+    position: relative;
+    z-index: 5;
     transform: none;
 }
 
@@ -897,6 +910,10 @@ p.kit-label {
     display: flex;
     align-items: flex-end;
     gap: 1.5rem;
+}
+
+.kit-decode + .kit-row {
+    margin-top: 1rem;
 }
 
 .kit-decode-art {
@@ -1002,8 +1019,8 @@ p.kit-label {
 .phone {
     --bezel: color-mix(in srgb, var(--bg-primary), #000 45%);
     position: relative;
-    width: min(19rem, 100%);
-    aspect-ratio: 9 / 18.5;
+    width: 20rem;
+    max-width: 100%;
     padding: 0.55rem;
     border-radius: 2.6rem;
     background: var(--bezel);
@@ -1026,16 +1043,30 @@ p.kit-label {
 
 /* The screen is the containing block for the app pieces' position: fixed
    (the transform does that) and clips them at its edges. */
-.phone-screen {
+/* The frame's glass: an iPhone 11 Pro Max's proportions, clipping the
+   screen inside it. */
+.phone-viewport {
     position: relative;
-    height: 100%;
+    aspect-ratio: 414 / 896;
     overflow: hidden;
-    transform: translateZ(0);
     border-radius: 2.1rem;
+    view-transition-name: phone-screen;
+}
+
+/* The app at the phone's own 414 by 896 points, scaled down to the glass.
+   The transform also makes the screen the containing block for the kit's
+   fixed sheets and toasts, so they rise and land inside the phone. */
+.phone-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 414px;
+    height: 896px;
+    overflow: hidden;
+    transform: scale(var(--phone-scale, 0.73));
+    transform-origin: 0 0;
     background: var(--bg-sink);
     color: var(--text-primary);
-    font-size: 0.85rem;
-    view-transition-name: phone-screen;
 }
 
 /* The phone wipes down its screen as the apps do, whatever way the page
@@ -1075,17 +1106,6 @@ html[data-wipe="left"]::view-transition-new(phone-screen) {
     width: calc(100% - 1.5rem);
 }
 
-.theme-wrapper .phone-screen .settings-row,
-.theme-wrapper .phone-screen .settings-list-header {
-    padding: 0.6rem 0.8rem;
-}
-
-.theme-wrapper .phone-screen .settings-row-label,
-.theme-wrapper .phone-screen .settings-row-value,
-.theme-wrapper .phone-screen .settings-list-title {
-    font-size: 0.8rem;
-}
-
 .theme-wrapper .phone-screen .action-bar {
     padding-bottom: 1.1rem;
 }
@@ -1095,25 +1115,11 @@ html[data-wipe="left"]::view-transition-new(phone-screen) {
     max-height: 85%;
 }
 
-.theme-wrapper .phone-screen .sheet-header,
-.theme-wrapper .phone-screen .sheet-content {
-    padding: 1rem;
-}
-
-.theme-wrapper .phone-screen .pref-row {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.78rem;
-}
-
 /* Toasts land under the notch. */
 .theme-wrapper .phone-screen .toast-container {
     top: 2.4rem;
     left: 0.75rem;
     max-width: calc(100% - 1.5rem);
-}
-
-.theme-wrapper .phone-screen .toast-container [role="alertdialog"] {
-    padding: 0.7rem 0.9rem;
 }
 
 .kit-sheet-chips {

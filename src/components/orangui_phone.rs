@@ -22,6 +22,18 @@ use orangui::{
 /// commits each pick with no sweep of its own.
 const NO_WIPE: &str = ".phone-no-wipe";
 
+/// Sets the phone's `--phone-scale` to its viewport's width over the 414
+/// points of an iPhone 11 Pro Max, the size the app lays out at, and keeps it
+/// in step as the page resizes.
+const SCALE_JS: &str = r#"
+const view = document.querySelector(".phone-viewport");
+if (view) {
+    const fit = () => view.style.setProperty("--phone-scale", view.clientWidth / 414);
+    fit();
+    new ResizeObserver(fit).observe(view);
+}
+"#;
+
 /// The files behind the phone's pieces, and their stylesheets.
 const SOURCES: [&str; 6] = [
     "src/page_header.rs",
@@ -82,11 +94,18 @@ fn Phone() -> Element {
     let follow = use_theme_follow(picked, NO_WIPE);
     use_context_provider(|| follow);
     let class = site.read().css_class();
+    // The app lays out at a real phone's size and the screen scales it down
+    // to fit the frame, which CSS cannot work out from the frame's width.
+    use_effect(|| {
+        document::eval(SCALE_JS);
+    });
     rsx! {
         div { class: "phone",
-            div { class: "phone-screen {class}",
-                ToastStack {
-                    PhoneApp { site, picked }
+            div { class: "phone-viewport",
+                div { class: "phone-screen {class}",
+                    ToastStack {
+                        PhoneApp { site, picked }
+                    }
                 }
             }
         }
