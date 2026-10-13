@@ -651,9 +651,8 @@ a.panel-action:visited {
 }
 
 /* Content tags inside the hero's heading, wrapping with the title text. Sized
-   down from the tag row so the title still leads; the extra class outranks the
-   kit's .tag, which loads after this sheet. */
-.tag.title-tag {
+   down from the tag row so the title still leads. */
+.title-tag {
     display: inline-block;
     vertical-align: middle;
     margin-left: 0.5rem;
@@ -1082,15 +1081,6 @@ rect.fleet-bar {
     font-size: 11px;
 }
 
-/* Each series in its own color. The extra class outranks the kit's
-   .chart-line stroke, which loads after this sheet. */
-.bench-chart .bench-line {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linejoin: round;
-}
-
 .bench-dot {
     fill: currentColor;
 }
@@ -1100,6 +1090,7 @@ rect.fleet-bar {
     cursor: default;
 }
 
+/* Each series in its own color, which its line and dots take. */
 .bench-steller {
     color: var(--accent-primary);
 }

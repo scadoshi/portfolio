@@ -215,8 +215,8 @@ pub fn Benchmark() -> Element {
                 // The two series, with a dot on every measured point. pathLength
                 // 1 so one dash animation draws either curve; the dots pop in
                 // behind the pen on their own delays.
-                path { class: "bench-line chart-line bench-steller", d: "{curve(&steller)}", path_length: "1" }
-                path { class: "bench-line chart-line bench-redis", d: "{curve(&redis)}", path_length: "1" }
+                path { class: "chart-line bench-steller", d: "{curve(&steller)}", path_length: "1" }
+                path { class: "chart-line bench-redis", d: "{curve(&redis)}", path_length: "1" }
                 for (i, (x, y)) in steller.iter().enumerate() {
                     circle {
                         key: "s{i}",
