@@ -55,45 +55,6 @@
         U+A720-A7FF;
 }
 
-/* ==================
-   colors (default: gruvbox-dark)
- ==================== */
-
-:root {
-    /* Background */
-    --bg-primary: #282828;
-    --bg-overlay: rgba(0, 0, 0, 0.6);
-
-    /* Text */
-    --text-primary: #ebdbb2;
-    --text-muted: #a89984;
-    --text-subtle: #c0b196;
-
-    /* Borders */
-    --border-primary: #665c54;
-    --border-secondary: #3c3836;
-    --border-muted: #504945;
-
-    /* Status Colors */
-    --color-error: #fb4934;
-    --color-success: #b8bb26;
-    --color-warning: #fabd2f;
-
-    /* Status Borders */
-    --border-error: #cc241d;
-    --border-success: #98971a;
-    --border-warning: #d79921;
-
-    /* Accents (aqua / red / yellow) */
-    --accent-primary: #689d6a;
-    --accent-secondary: #cc241d;
-    --accent-tertiary: #d79921;
-
-    /* Shadows */
-    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
 /* === Animations === */
 
 /* The hero's entrance waits for the app. The shell's script marks the
@@ -279,11 +240,7 @@ a:visited {
 /* The nav shell (sticky wrapper, hamburger, collapsing panel, link pills)
    comes from orangui; note its components.css is inlined AFTER this
    sheet in the built head, so equal-specificity overrides here lose the
-   cascade. This site sets its narrower column and keeps brand/logo/dropdown
-   specifics below. */
-.nav-wrapper {
-    --nav-max-width: none;
-}
+   cascade. This site keeps its brand, logo and dropdown specifics below. */
 
 .nav-stores-persistent {
     display: none;
@@ -696,30 +653,6 @@ a.panel-action:visited {
     margin-bottom: 1rem;
 }
 
-/* The hero's stats strip, ported from zwipe.net so the two sites match. The
-   rule breaks out of the panel's 1.5rem padding to run edge to edge. */
-.hero-rule {
-    border: none;
-    border-top: 1px solid var(--border-secondary);
-    margin: 1rem -1.5rem;
-}
-
-/* Three boxed figures, the same tile cairn's home screen uses: a sunk panel
-   with the number in the accent over its label. The tile itself is
-   orangui's StatsStrip base; the sizes are this page's. */
-.stats-strip .stat {
-    padding: 0.7rem 0.35rem 0.6rem;
-}
-
-.stats-strip .stat-num {
-    font-size: 1.5rem;
-}
-
-.stats-strip .stat-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-}
-
 /* The source chips sit under the strip, centered with it, in the primary
    accent, laid out like a .tag-row. The linked ones lift on hover like zite's
    chips; hover only on devices that have one, since a WebView hover can stick
@@ -863,8 +796,6 @@ a.panel-action:visited {
 /* The gallery's layout is orangui's SITE_CSS; this is the
    portfolio's look on top of it. */
 .gallery-nav {
-    background: var(--bg-primary);
-    opacity: 0.75;
     transition:
         opacity 0.15s,
         background 0.15s;

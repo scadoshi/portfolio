@@ -97,7 +97,7 @@ pub fn Home() -> Element {
                     }
                     // The year of contributions, from the same answer.
                     if totals.is_some() {
-                        hr { class: "hero-rule" }
+                        hr { class: "panel-rule" }
                         Heatmap {}
                     }
                 }
