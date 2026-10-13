@@ -2255,8 +2255,8 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "orangui"
-version = "0.1.0"
-source = "git+https://github.com/scadoshi/orangui#b0b1c8b5153e7ab57e18cb90c4c5cb68c99fcdda"
+version = "0.0.0"
+source = "git+https://github.com/scadoshi/orangui#798b964d9a8ad95d9e4fc1bfa690e6132a8c4026"
 dependencies = [
  "dioxus",
  "gloo-timers 0.4.0",

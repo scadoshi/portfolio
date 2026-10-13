@@ -457,13 +457,13 @@ a.panel-action:visited {
    from its pill's right edge instead. Above the hamburger breakpoint only, so
    the crate's in-panel placement still applies below it. */
 @media (width > 60rem) {
-    .theme-switcher .nav-dropdown-content {
+    .theme-picker .nav-dropdown-content {
         left: auto;
         right: 0;
     }
 }
 
-/* === Theme Switcher === */
+/* === Theme Picker === */
 
 /* The theme picker (switcher, dropdown, mode toggle) comes from
    orangui: rules ship in its components.css, inlined in <head>
@@ -508,7 +508,7 @@ a.panel-action:visited {
 }
 
 /* The numbers take the rest of the row, centered in what the mark leaves. */
-.hero-figures {
+.stats-figures {
     flex: 1;
     min-width: 0;
 }
@@ -816,10 +816,14 @@ a.panel-action:visited {
 }
 
 /* The source chips sit under the strip, centered with it, in the primary
-   accent. The linked ones lift on hover like zite's chips; hover only on
-   devices that have one, since a WebView hover can stick after a tap. */
+   accent, laid out like a .tag-row. The linked ones lift on hover like zite's
+   chips; hover only on devices that have one, since a WebView hover can stick
+   after a tap. */
 .stats-source {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 0.5rem;
     margin-top: 1rem;
 }
 
@@ -961,7 +965,7 @@ a.panel-action:visited {
 
 /* Zwipe's architecture carousel (components::zwipe_architecture, sized by
    orangui's site sheet) fades its diagrams in like the gallery's media. */
-.arch-slide {
+.diagram-slide {
     animation: gallery-fade-in 0.25s ease-out;
 }
 
