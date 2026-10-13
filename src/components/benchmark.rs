@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use orangui::{Chip, Replay, curve, tip_anchor, with_separators};
+use orangui::{ChartTip, Chip, Replay, curve, with_separators};
 
 use crate::components::chart::{Tip, show};
 
@@ -215,8 +215,8 @@ pub fn Benchmark() -> Element {
                 // The two series, with a dot on every measured point. pathLength
                 // 1 so one dash animation draws either curve; the dots pop in
                 // behind the pen on their own delays.
-                path { class: "bench-line bench-steller", d: "{curve(&steller)}", path_length: "1" }
-                path { class: "bench-line bench-redis", d: "{curve(&redis)}", path_length: "1" }
+                path { class: "bench-line chart-line bench-steller", d: "{curve(&steller)}", path_length: "1" }
+                path { class: "bench-line chart-line bench-redis", d: "{curve(&redis)}", path_length: "1" }
                 for (i, (x, y)) in steller.iter().enumerate() {
                     circle {
                         key: "s{i}",
@@ -271,11 +271,7 @@ pub fn Benchmark() -> Element {
             }
             }
             if let Some(tip) = tip() {
-                span {
-                    class: "tag tag-p1 bench-tip {tip_anchor(tip.left)}",
-                    style: "left: {tip.left}%; top: {tip.top}%;",
-                    "{tip.text}"
-                }
+                ChartTip { text: tip.text, left: tip.left, top: tip.top, class: "tag tag-p1" }
             }
             }
             }

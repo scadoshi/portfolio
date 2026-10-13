@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use orangui::{Replay, area, curve, tip_anchor, use_scroll_to_end, with_separators};
+use orangui::{ChartTip, Replay, area, curve, use_scroll_to_end, with_separators};
 
 use crate::{
     components::chart::{Tip, month_name, show},
@@ -192,7 +192,7 @@ pub fn Commits() -> Element {
                 }
                 path { class: "commits-area", d: "{area}" }
                 // pathLength 1 so one dash animation draws any curve.
-                path { class: "commits-line", d: "{line}", path_length: "1" }
+                path { class: "commits-line chart-line", d: "{line}", path_length: "1" }
                 for (i, ((x, y), month)) in total_points.iter().zip(&months).enumerate() {
                     {
                         let text = if i == last {
@@ -232,11 +232,7 @@ pub fn Commits() -> Element {
             }
             }
             if let Some(tip) = tip() {
-                span {
-                    class: "tag tag-p1 commits-tip {tip_anchor(tip.left)}",
-                    style: "left: {tip.left}%; top: {tip.top}%;",
-                    "{tip.text}"
-                }
+                ChartTip { text: tip.text, left: tip.left, top: tip.top, class: "tag tag-p1" }
             }
             }
             }

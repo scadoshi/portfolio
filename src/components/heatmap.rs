@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use orangui::{
-    HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, Replay, area, curve, heat_span, peak_indices,
-    tip_anchor, use_scroll_to_end, with_separators,
+    ChartTip, HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, Replay, area, curve, heat_span,
+    peak_indices, use_scroll_to_end, with_separators,
 };
 use std::{collections::BTreeMap, rc::Rc};
 
@@ -312,7 +312,7 @@ pub fn Heatmap() -> Element {
                 }
                 path { class: "commits-area", d: "{area}" }
                 // pathLength 1 so one dash animation draws any curve.
-                path { class: "commits-line", d: "{line}", path_length: "1" }
+                path { class: "commits-line chart-line", d: "{line}", path_length: "1" }
                 for (i, ((x, y), month)) in line_points.iter().zip(&series).enumerate() {
                     {
                         let text = if i == last {
@@ -398,11 +398,7 @@ pub fn Heatmap() -> Element {
             }
             }
             if let Some(tip) = tip() {
-                span {
-                    class: "tag tag-p1 heatmap-tip {tip_anchor(tip.left)}",
-                    style: "left: {tip.left}%; top: {tip.top}%;",
-                    "{tip.text}"
-                }
+                ChartTip { text: tip.text, left: tip.left, top: tip.top, class: "tag tag-p1" }
             }
             }
             }
