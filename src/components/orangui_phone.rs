@@ -138,7 +138,7 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                 div { class: "settings-sections",
                     div { class: "settings-list",
                         div { class: "settings-list-header",
-                            span { class: "settings-list-title", "This phone" }
+                            span { class: "settings-list-title", "Appearance" }
                         }
                         div { class: "settings-row",
                             span { class: "settings-row-label", "Theme" }
@@ -157,8 +157,33 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                                 DarkModeButton { is_dark: current.is_dark, onclick: toggle_dark }
                             }
                         }
+                    }
+                    div { class: "settings-list",
+                        div { class: "settings-list-header",
+                            span { class: "settings-list-title", "When to count" }
+                        }
+                        CycleRow { label: "Day starts", options: &["Midnight", "4 AM", "6 AM"] }
+                        CycleRow { label: "Week starts", options: &["Monday", "Sunday"] }
+                        CycleRow { label: "Rest days", options: &["Weekends", "Sundays", "None"] }
+                    }
+                    div { class: "settings-list",
+                        div { class: "settings-list-header",
+                            span { class: "settings-list-title", "Decks" }
+                        }
+                        CycleRow { label: "Format", options: &["Commander", "Oathbreaker", "Brawl"] }
+                        CycleRow { label: "Price target", options: &["$100", "$250", "Any"] }
+                        CycleRow { label: "Confirm remove", options: &["On", "Off"] }
+                    }
+                    div { class: "settings-list",
+                        div { class: "settings-list-header",
+                            span { class: "settings-list-title", "About" }
+                        }
                         div { class: "settings-row",
-                            span { class: "settings-row-label", "Toasts" }
+                            span { class: "settings-row-label", "Version" }
+                            span { class: "settings-row-value", "1.0.0" }
+                        }
+                        div { class: "settings-row",
+                            span { class: "settings-row-label", "Toasts sent" }
                             span { class: "settings-row-value", "{fired}" }
                         }
                     }
@@ -210,6 +235,35 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                 toasts.success("Theme saved".to_string(), ToastOptions::new().duration(TOAST_NORMAL));
             },
             on_unchanged: |()| {},
+        }
+    }
+}
+
+/// A made-up setting like the apps' own: its value is the button, and a tap
+/// moves to the next one and says so in a toast.
+#[component]
+fn CycleRow(label: &'static str, options: &'static [&'static str]) -> Element {
+    let toasts = use_toast();
+    let mut at = use_signal(|| 0usize);
+    let value = options.get(at()).copied().unwrap_or_default();
+    rsx! {
+        div { class: "settings-row",
+            span { class: "settings-row-label", "{label}" }
+            div { class: "settings-row-value",
+                Button {
+                    variant: ButtonVariant::Action,
+                    onclick: move |_| {
+                        let next = (at() + 1) % options.len().max(1);
+                        at.set(next);
+                        let value = options.get(next).copied().unwrap_or_default();
+                        toasts.success(
+                            format!("{label}: {value}"),
+                            ToastOptions::new().duration(TOAST_NORMAL),
+                        );
+                    },
+                    "{value}"
+                }
+            }
         }
     }
 }
