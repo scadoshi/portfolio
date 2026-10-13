@@ -229,7 +229,7 @@ impl Section {
                 "Learning builds of the layers under a backend: a key-value store on disk, one in memory, and a live service built on the in-memory one."
             }
             Self::Tooling => {
-                "Tools that remove a chore. The UI kit under three of my apps and sites, data migrations for Halo Software clients, and the plumbing around Advent of Code in two languages."
+                "Tools that remove a chore. The UI kit my apps and this site share, data migrations for Halo Software clients, and the plumbing around Advent of Code in two languages."
             }
             Self::Experiments => {
                 "Short projects in a domain I wanted to understand: an AI agent, pose estimation, raw input devices."
@@ -538,65 +538,54 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
 const ORANGUI: Project = Project {
     name: "orangui",
     slug: "orangui",
-    headline: "The Dioxus UI kit under this site, zwipe and cairn. 31 themes, one panel shape, and a stylesheet held to two rules by its tests.",
+    headline: "The Rust UI kit under zwipe, cairn and this site, with 31 color themes.",
     category: "UI Kit",
     repo_url: "https://github.com/scadoshi/orangui",
-    summary: "The shared UI lifted out of zwipe: themes, panels, nav, chips, the entrance effects and the heat grid, as one crate three hosts pin.",
+    summary: "The components my apps and this site share, moved out of zwipe's repo.",
     card_bullets: &[
-        "One crate renders and styles the pieces, so this site, zwipe and cairn cannot drift apart",
-        "31 themes, each with a dark and a light block, and a test that every palette slot reads on its background",
-        "Status colors appear only where they mean an outcome; a test over the stylesheet holds the line",
-        "Knows nothing about any host: no product name, no domain type, no route",
+        "One Dioxus crate that knows none of the apps using it",
+        "31 themes, dark and light, each color tested for contrast",
+        "A test keeps the success, warning and error colors for outcomes",
     ],
-    impact_metric: "Three hosts, one look. This page is drawn with it.",
-    objective: "Pull the generic UI out of zwipe's `zwipe-components` so zwipe, this site and cairn share one kit instead of three copies drifting apart. The kit ships the pieces, the 31 palettes and the stylesheet rules; a host inlines the CSS in a fixed order so its own sheet wins ties. It is a git dependency pinned in each lockfile and moved on purpose with `cargo update -p orangui`. The name is orangutan, a call sign of mine, plus GUI.",
+    impact_metric: "Swapped under this site, no visible change",
+    objective: "This site and cairn already used zwipe's components, but they lived in zwipe's repo, so a style fix here meant a zwipe deploy and a re-pin. One corner radius took five. Give the kit its own repo.",
     tags: &["dioxus", "css", "themes"],
     media: &[
         MediaItem {
             src: asset!("/assets/projects/orangui/01-gruvbox-dark.jpeg"),
-            alt: "The kit's panel with a stats strip, six palette swatches, chips, buttons, status pills and a heat grid in Gruvbox dark, beside a theme picker panel and a banner",
-            caption: Some(
-                "Gruvbox dark, the default. One page of the kit's pieces, drawn with its own stylesheet",
-            ),
+            alt: "A panel of the kit's pieces in Gruvbox dark: stats, six palette swatches, chips, buttons, status pills and a heat grid, beside a theme picker and a banner",
+            caption: Some("Gruvbox dark, the default"),
             kind: MediaKind::Image,
         },
         MediaItem {
             src: asset!("/assets/projects/orangui/02-rose-pine-light.jpeg"),
-            alt: "The same composition in Rosé Pine light: cream background, teal accent, six palette swatches in the same slot order",
-            caption: Some(
-                "Rosé Pine light. Same markup, a different theme block; the six palette slots keep their warm and cool order",
-            ),
+            alt: "The same page in Rosé Pine light: cream background, teal accent, the six swatches in the same order",
+            caption: Some("Rosé Pine light. Same page, same swatch order"),
             kind: MediaKind::Image,
         },
         MediaItem {
             src: asset!("/assets/projects/orangui/03-tokyo-night-dark.jpeg"),
-            alt: "The same composition in Tokyo Night dark: navy background, violet accent, the heat grid shaded in violet",
-            caption: Some(
-                "Tokyo Night dark. The heat grid shades in the theme's accent; the status pills keep their meaning",
-            ),
+            alt: "The same page in Tokyo Night dark: navy background, violet accent, the heat grid shaded in violet",
+            caption: Some("Tokyo Night dark. The heat grid takes the theme's accent"),
             kind: MediaKind::Image,
         },
         MediaItem {
             src: asset!("/assets/projects/orangui/04-solarized-light.jpeg"),
-            alt: "The same composition in Solarized light: pale yellow background, red-orange accent, the heat grid shaded in orange",
-            caption: Some(
-                "Solarized light. Nothing in the markup names a theme; the class on the body is the whole switch",
-            ),
+            alt: "The same page in Solarized light: pale yellow background, red-orange accent, the heat grid shaded in orange",
+            caption: Some("Solarized light. One class on the page picks the theme"),
             kind: MediaKind::Image,
         },
     ],
     approach: &[
-        "Three color tiers with one job each. Accents mark the title and the selected state, status colors mean an outcome, and six palette slots carry variety with no meaning: tags, chart series, chip tints. No variable crosses tiers",
-        "Slot order is fixed across themes, so slot 1 is the theme's blue and slot 2 its orange everywhere, and a row of chips alternates warm and cool in every theme. Values come from published palettes, with the source named above each block; the four color-vision themes are built from the deficiency outward",
-        "The theme list and the stylesheet are held equal by a test: alphabetical, each name with both blocks. A host that stores a theme elsewhere keeps its own list and pins it to this one the same way",
-        "A theme change is a view transition. The picker writes a pending theme, the class is swapped inside the snapshot, and the real theme commits only once the swap is in, so the sweep reveals a page already laid out for it",
-        "The cascade is the contract: themes, then components, then the app or site sheet, then the host's own. A component rule names a theme variable and never a color literal, so a host overrides at equal specificity",
+        "Components never hard-code a color. They read the theme's, so all 31 themes share one stylesheet and a host can restyle any piece from its own stylesheet",
+        "Success, warning and error colors only mean an outcome. Tags, chart lines and chips draw from six palette colors instead, and a test reads the stylesheet and fails on a stray",
+        "The six keep their order in every theme, from each theme's published palette: the first is its blue, the second its orange. A row of chips alternates warm and cool whichever theme is on",
+        "Picking a theme sweeps it across the page rather than flashing it in",
     ],
-    snippets: &[
-        Snippet {
-            title: "A theme is a class",
-            lang: "rust",
-            code: r#"/// The theme a host displays. Serializable so a host can keep the last pick
+    snippets: &[Snippet {
+        title: "A theme is a class",
+        lang: "rust",
+        code: r#"/// The theme a host displays. Serializable so a host can keep the last pick
 /// in local storage and theme its first paint before anything else loads.
 #[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct ThemeConfig {
@@ -623,46 +612,16 @@ fn every_allowed_theme_has_both_blocks_in_the_stylesheet() {
         }
     }
 }"#,
-            description: "The whole theme model is a name and a mode, and the stylesheet is the other half. The test reads themes.css at compile time and fails when a listed theme is missing a block, and its twin fails when the stylesheet has a theme the list does not.",
-        },
-        Snippet {
-            title: "Where the status colors are",
-            lang: "rust",
-            code: r#"/// Every `var(--status)` reference in `css`, in order, each with the selector of
-/// the rule it appears in. A reference inside an `@media` block reports the
-/// rule's own selector, not the query.
-pub fn status_uses(css: &str) -> Vec<StatusUse> {
-    let mut out = Vec::new();
-    let mut from = 0;
-    while let Some(rel) = css.get(from..).and_then(|rest| rest.find("var(--")) {
-        let at = from + rel;
-        let Some(tail) = css.get(at + 4..) else { break };
-        let Some(close) = tail.find(')') else { break };
-        let Some(name) = tail.get(..close) else { break };
-        if STATUS_VARS.contains(&name) {
-            out.push(StatusUse {
-                selector: selector_before(css, at),
-                variable: name.to_string(),
-            });
-        }
-        from = at + 4 + close;
-    }
-    out
-}"#,
-            description: "The second gate. A test lists every selector allowed to use a status color, each of which marks an outcome, and this finds every reference in the stylesheet with the selector it sits under. It is public so a host can hold its own sheet to the same rule.",
-        },
-    ],
+        description: "The whole theme model is a name and a mode. The test reads themes.css at compile time and fails when a listed theme has no block there. Its twin fails the other way round.",
+    }],
     obstacles: &[
-        "The theme model had to move, and also had to stay. zwipe's server validates a saved theme against the list, and its core crate cannot depend on a UI crate, so orangui carries its own `ThemeConfig` and zwipe's side converts between the two and pins the two lists equal in a test",
-        "crates.io is off the table for now. The toast stack pins `dioxus-primitives` to a git commit, crates.io has only its 0.0.0, and a git dependency is refused even behind a feature. The split into a published `orangui` and a git-only `orangui-toast` is written down for when that changes",
-        "The name was taken, by me. The old orangui repository was the Tampermonkey scripts that give Teams and Outlook zwipe's look; it is tamper-orangui now",
+        "The theme list had to move and also stay. zwipe's server checks a saved theme against it, and zwipe's core crate cannot depend on a UI kit, so both keep a copy and a test on zwipe's side fails if they differ",
+        "It is not on crates.io. The toast stack needs `dioxus-primitives` at a git commit, crates.io has only its 0.0.0, and a published crate cannot have a git dependency, even behind a feature",
     ],
-    progress: "Lifted on 2026-10-12 with its gates and CI green. zwipe, this site and cairn each have a branch on it, built and screenshotted against the old components with nothing visible moved; the production switch happens one host at a time, at a device. Shared CSS or script fixes land here first, and a host picks them up by re-pinning.",
-    impact: "One fix lands once and reaches three hosts when each chooses to take it. The kit knows nothing about any of them, which is what keeps it small.",
+    progress: "Split out on 12 October 2026. This site runs on it; zwipe and cairn each have a branch on it, built and checked, and move over one at a time.",
+    impact: "Fixing a style on this site no longer means shipping zwipe. A shared fix lands once, and each host takes it when it re-pins.",
     site_url: None,
-    scope: Some(
-        "The pieces its three hosts use, not a design system in the abstract. Anything that knows a host stays in the host, built from these pieces: a Magic card row, a deck chart, this site's project cards.",
-    ),
+    scope: None,
     status: ProjectStatus::Doing,
 };
 
