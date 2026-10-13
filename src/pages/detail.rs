@@ -30,6 +30,79 @@ fn approach_panel(project: &'static data::Project) -> Element {
     }
 }
 
+/// The approach, the code, what fought back and where it stands. A page whose
+/// own panels say enough, as the orangui showcase does, leaves these empty and
+/// they drop out.
+fn closing_panels(project: &'static data::Project) -> Element {
+    rsx! {
+        if !project.approach.is_empty() {
+            {approach_panel(project)}
+        }
+
+        // Code wants the full column width, so implementation stays a
+        // single wide panel.
+        if !project.snippets.is_empty() {
+            Panel {
+                title: "The code up close",
+                section { class: "project-section",
+                    for snippet in project.snippets {
+                        CodeBlock {
+                            key: "{project.slug}-{snippet.title}",
+                            title: snippet.title.to_string(),
+                            code: snippet.code.to_string(),
+                            description: snippet.description.to_string(),
+                            lang: snippet.lang.to_string(),
+                        }
+                    }
+                }
+            }
+        }
+
+        if !project.obstacles.is_empty() {
+            div { class: "detail-band",
+                Panel {
+                    title: "What fought back",
+                    section { class: "project-section",
+                        ul {
+                            for obstacle in project.obstacles {
+                                li { LinkedText { text: obstacle.to_string() } }
+                            }
+                        }
+                    }
+                }
+                Panel {
+                    title: "Where it stands",
+                    section { class: "project-section",
+                        p { LinkedText { text: project.progress.to_string() } }
+                        p { class: "impact-statement", "{project.impact}" }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Points under the goal that only one project has. The orangui page shows
+/// the kit live below, so its goal says what the panels are and credits the
+/// work it builds on.
+fn goal_points(project: &'static data::Project) -> Element {
+    match project.slug {
+        "orangui" => rsx! {
+            ul {
+                li { "Every panel below is the real component, in this page's theme. Switch themes up top and they follow." }
+                li {
+                    "The layout follows the "
+                    a { href: "https://dioxuslabs.com/components", "Dioxus component library" }
+                    ", and the phone's toasts build on "
+                    a { href: "https://github.com/DioxusLabs/components", "dioxus-primitives" }
+                    "."
+                }
+            }
+        },
+        _ => rsx! {},
+    }
+}
+
 /// Panels only one project has. heron is the project this site is a client of,
 /// so its page shows the path a number takes and what heron is measuring right
 /// now; steller's page shows its benchmark against Redis; zwipe's shows how
@@ -135,6 +208,7 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 title: "The goal",
                 section { class: "project-section",
                     p { LinkedText { text: project.objective.to_string() } }
+                    {goal_points(project)}
                     if let Some(scope) = project.scope {
                         p { class: "project-scope",
                             strong { "What it isn't. " }
@@ -152,44 +226,7 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 ProjectGallery { items: project.media }
             }
 
-            {approach_panel(project)}
-
-            // Code wants the full column width, so implementation stays a
-            // single wide panel.
-            Panel {
-                title: "The code up close",
-                section { class: "project-section",
-                    for snippet in project.snippets {
-                        CodeBlock {
-                            key: "{project.slug}-{snippet.title}",
-                            title: snippet.title.to_string(),
-                            code: snippet.code.to_string(),
-                            description: snippet.description.to_string(),
-                            lang: snippet.lang.to_string(),
-                        }
-                    }
-                }
-            }
-
-            div { class: "detail-band",
-                Panel {
-                    title: "What fought back",
-                    section { class: "project-section",
-                        ul {
-                            for obstacle in project.obstacles {
-                                li { LinkedText { text: obstacle.to_string() } }
-                            }
-                        }
-                    }
-                }
-                Panel {
-                    title: "Where it stands",
-                    section { class: "project-section",
-                        p { LinkedText { text: project.progress.to_string() } }
-                        p { class: "impact-statement", "{project.impact}" }
-                    }
-                }
-            }
+            {closing_panels(project)}
         }
     }
 }

@@ -778,14 +778,6 @@ a.panel-action:visited {
     }
 }
 
-.kit-intro p + p {
-    margin-top: 0.6rem;
-}
-
-.kit-credit {
-    font-size: 0.85rem;
-}
-
 .kit-use {
     margin-bottom: 1rem;
     color: var(--text-subtle);
@@ -795,10 +787,13 @@ a.panel-action:visited {
 .kit-label {
     display: block;
     margin: 0.9rem 0 0.45rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-subtle);
+}
+
+/* A label over a group of samples reads as a bullet, like the page's lists. */
+p.kit-label {
+    display: list-item;
+    list-style: disc inside;
 }
 
 .kit-note {
@@ -1040,6 +1035,23 @@ a.panel-action:visited {
     background: var(--bg-sink);
     color: var(--text-primary);
     font-size: 0.85rem;
+    view-transition-name: phone-screen;
+}
+
+/* The phone wipes down its screen as the apps do, whatever way the page
+   around it wipes; light to dark runs back up. */
+::view-transition-group(phone-screen),
+::view-transition-old(phone-screen) {
+    animation: none;
+}
+
+::view-transition-new(phone-screen) {
+    mix-blend-mode: normal;
+    animation: theme-wipe-down 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html[data-wipe="left"]::view-transition-new(phone-screen) {
+    animation-name: theme-wipe-up;
 }
 
 .phone-app {

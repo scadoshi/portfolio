@@ -551,47 +551,9 @@ const ORANGUI: Project = Project {
     objective: "This site and cairn already used zwipe's components, but they lived in zwipe's repo, so a style fix here meant a zwipe deploy and a re-pin. One corner radius took five. Give the kit its own repo.",
     tags: &["dioxus", "css", "themes"],
     media: &[],
-    approach: &[
-        "Components never hard-code a color. They read the theme's, so all 31 themes share one stylesheet and a host can restyle any piece from its own stylesheet",
-        "Success, warning and error colors only mean an outcome. Tags, chart lines and chips draw from six palette colors instead, and a test reads the stylesheet and fails on a stray",
-        "The six keep their order in every theme, from each theme's published palette: the first is its blue, the second its orange. A row of chips alternates warm and cool whichever theme is on",
-        "Picking a theme sweeps it across the page rather than flashing it in",
-    ],
-    snippets: &[Snippet {
-        title: "A theme is a class",
-        lang: "rust",
-        code: r#"/// The theme a host displays. Serializable so a host can keep the last pick
-/// in local storage and theme its first paint before anything else loads.
-#[derive(Clone, PartialEq, Serialize, Deserialize)]
-pub struct ThemeConfig {
-    /// Theme identifier, one of [`ALLOWED_THEMES`].
-    pub name: String,
-    /// Whether dark mode is active.
-    pub is_dark: bool,
-}
-
-impl ThemeConfig {
-    /// The class to put on the themed element: `theme-{name}-{dark|light}`.
-    pub fn css_class(&self) -> String {
-        let mode = if self.is_dark { "dark" } else { "light" };
-        format!("theme-{}-{}", self.name, mode)
-    }
-}
-
-#[test]
-fn every_allowed_theme_has_both_blocks_in_the_stylesheet() {
-    for slug in ALLOWED_THEMES {
-        for mode in ["dark", "light"] {
-            let class = format!(".theme-{slug}-{mode} {{");
-            assert!(CSS.contains(&class), "{class} missing from themes.css");
-        }
-    }
-}"#,
-        description: "The whole theme model is a name and a mode. The test reads themes.css at compile time and fails when a listed theme has no block there. Its twin fails the other way round.",
-    }],
-    obstacles: &[
-        "The theme list had to move and also stay. zwipe's server checks a saved theme against it, and zwipe's core crate cannot depend on a UI kit, so both keep a copy and a test on zwipe's side fails if they differ",
-    ],
+    approach: &[],
+    snippets: &[],
+    obstacles: &[],
     progress: "Split out on 12 October 2026. This site, zwipe and cairn all run on it.",
     impact: "Fixing a style on this site no longer means shipping zwipe. A shared fix lands once, and each host takes it when it re-pins.",
     site_url: None,

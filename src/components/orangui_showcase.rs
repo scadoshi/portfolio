@@ -109,20 +109,6 @@ pub fn OranguiShowcase() -> Element {
         // the phone. None of their class names appear elsewhere on the site.
         document::Style { {APP_CSS} }
         document::Style { {TOAST_CSS} }
-        Panel { title: "Every piece, live",
-            section { class: "project-section kit-intro",
-                p {
-                    "Each panel below runs one piece of the kit in this page's theme, with a link to its source. Pick another theme up top and they all follow."
-                }
-                p { class: "kit-credit",
-                    "The layout follows the "
-                    a { href: "https://dioxuslabs.com/components", "Dioxus component library" }
-                    ". The toast stack in the phone builds on "
-                    a { href: "https://github.com/DioxusLabs/components", "dioxus-primitives" }
-                    "."
-                }
-            }
-        }
         div { class: "kit-grid",
             PanelShowcase {}
             ButtonShowcase {}
@@ -149,7 +135,7 @@ pub fn OranguiShowcase() -> Element {
                     status: BannerStatus::Done,
                     status_label: "Live",
                     auto_dismiss_secs: 8,
-                    "A banner like this one announces a release. It leaves when the bar runs out."
+                    "This is a banner. It leaves when the bar runs out."
                 }
             }
         }
@@ -185,7 +171,7 @@ fn PanelShowcase() -> Element {
                 Source { path: "src/action_bar.rs" }
             },
             p { class: "kit-use kit-panel-copy",
-                "The card everything sits in: an eyebrow, a title, a status pill, the body. An ActionBar holds a screen's buttons; the apps pin it to the bottom."
+                "The card everything else sits in: a title, a status pill, the body and a row of actions."
             }
         }
     }
@@ -201,7 +187,7 @@ fn ButtonShowcase() -> Element {
                 Source { path: "src/button.rs" }
                 Source { path: "assets/components.css#L171-L247" }
             },
-            p { class: "kit-use", "One component in three sizes. Pick the size by where the button sits." }
+            p { class: "kit-use", "One button in three sizes, picked by where it sits." }
             div { class: "kit-buttons",
                 p { class: "kit-label", "Full width, to finish a form" }
                 Button { onclick: move |_| pressed.set(Some("Sign in")), "Sign in" }
@@ -271,9 +257,9 @@ fn ChipShowcase() -> Element {
                 Source { path: "assets/components.css#L54-L170" }
             },
             p { class: "kit-use",
-                "A chip toggles a filter. A tag only labels: a palette tone for decoration, an outcome tone when it reports a result."
+                "Chips toggle filters. Tags just label things, in a palette color or an outcome color like pass or fail."
             }
-            p { class: "kit-label", "Chips, tap to toggle" }
+            p { class: "kit-label", "Chips, tap to toggle them" }
             div { class: "kit-row",
                 for (i, (label, _)) in CHIPS.into_iter().enumerate() {
                     Chip {
@@ -289,7 +275,7 @@ fn ChipShowcase() -> Element {
                 }
                 Chip { selected: false, disabled: true, onclick: |_| {}, "go" }
             }
-            p { class: "kit-label", "Palette tones, slots 1 to 6" }
+            p { class: "kit-label", "Palette colors, slots 1 to 6" }
             div { class: "kit-row",
                 span { class: "tag tag-p1", "backend" }
                 span { class: "tag tag-p2", "frontend" }
@@ -298,7 +284,7 @@ fn ChipShowcase() -> Element {
                 span { class: "tag tag-p5", "docs" }
                 span { class: "tag tag-p6", "infra" }
             }
-            p { class: "kit-label", "Outcome tones" }
+            p { class: "kit-label", "Outcome colors" }
             div { class: "kit-row",
                 span { class: "tag tag-success", "passed" }
                 span { class: "tag tag-warning", "slow" }
@@ -334,7 +320,7 @@ fn BannerShowcase(banners: Signal<Vec<u32>>) -> Element {
                 Source { path: "assets/components.css#L1047-L1238" }
             },
             p { class: "kit-use",
-                "News a visitor should see once, like a release. It counts down and leaves on its own, or on its close button."
+                "For news like a release. It counts down and leaves on its own, or you close it."
             }
             p { class: "kit-note", "It rises at the bottom left of the window." }
         }
@@ -356,7 +342,7 @@ fn DropdownShowcase() -> Element {
                 Source { path: "assets/components.css#L820-L1046" }
             },
             p { class: "kit-use",
-                "A menu behind a nav pill. The host holds the open state, so a pick can close it."
+                "A menu behind a nav pill, like the theme picker up top."
             }
             div { class: "kit-dropdown",
                 NavDropdown { open, label: picked().unwrap_or("Sections").to_string(),
@@ -414,10 +400,10 @@ fn DialogShowcase() -> Element {
                 Source { path: "assets/app.css#L233-L439" }
             },
             p { class: "kit-use",
-                "A question that has to be answered before anything else happens. An ActionButton can wait on input, or stay busy while it works."
+                "A question you have to answer before doing anything else."
             }
-            p { class: "kit-note",
-                {outcome().unwrap_or_else(|| "Save stays off until you type a name.".to_string())}
+            if let Some(outcome) = outcome() {
+                p { class: "kit-note", "{outcome}" }
             }
             AlertDialog {
                 open: confirm_open,
@@ -458,7 +444,7 @@ fn PasswordShowcase() -> Element {
                 Source { path: "assets/components.css#L1359-L1390" }
             },
             p { class: "kit-use",
-                "Any field that takes a password. Show lets the user check what they typed."
+                "A password field with Show, so you can check what you typed."
             }
             label { class: "kit-label", r#for: "kit-password", "Password" }
             PasswordInput {
@@ -482,7 +468,7 @@ fn HintShowcase() -> Element {
                 Source { path: "assets/components.css#L1945-L1985" }
             },
             p { class: "kit-use",
-                "Help inside a line of text. The ? opens a hint; a HintKey draws the button the hint talks about."
+                "Inline help. Tap the ? for a hint; HintKey draws the button it's talking about."
             }
             p { class: "kit-hint-line",
                 "Tap "
@@ -527,7 +513,7 @@ fn StatsShowcase() -> Element {
                 Source { path: "src/entrance.rs" }
             },
             p { class: "kit-use",
-                "Headline numbers. Each rolls up to its value as the page loads."
+                "Headline numbers that count up as they load."
             }
             StatsStrip {
                 figures: vec![(Some(31), "themes"), (Some(6), "palette slots"), (Some(3), "hosts")],
@@ -580,7 +566,7 @@ fn DecodeShowcase() -> Element {
                 Source { path: "src/entrance.rs" }
             },
             p { class: "kit-use",
-                "Block-glyph art that resolves from noise, as the S in the nav does on load. Hover it and it shimmers."
+                "Block art that resolves out of noise, like the S in the nav. Hover to make it shimmer."
             }
             div { class: "kit-decode",
                 pre {
@@ -615,7 +601,7 @@ fn GalleryShowcase() -> Element {
                 Source { path: "assets/site.css#L40-L119" }
             },
             p { class: "kit-use",
-                "One item at a time, with arrows and a counter. The demo videos on this site and the Zwipe diagrams sit in one."
+                "One item at a time, with arrows and a counter. This site's demo videos use it."
             }
             GalleryFrame { index, total, noun: "host", class: "kit-slides".to_string(),
                 div { key: "{index()}", class: "kit-slide tag tag-p{index() + 1}",
@@ -688,7 +674,7 @@ fn ChartShowcase() -> Element {
                 Source { path: "src/chart_tip.rs" }
             },
             p { class: "kit-use",
-                "A value over time. The kit's curve and area draw a line that never overshoots a point, and ChartTip names the month under the pointer."
+                "A value over time. The line never overshoots a point, and hovering names the month."
             }
             div { class: "chart-scroll scroll-fade-x",
                 div { class: "kit-plot", onmouseleave: move |_| tip.set(None),
@@ -825,7 +811,7 @@ fn HeatShowcase() -> Element {
                 Source { path: "assets/components.css#L1593-L1688" }
             },
             p { class: "kit-use",
-                "A year of days, one cell each, shaded by how busy the day was. The busiest few get a lit edge."
+                "A year, one cell a day, darker when busier. The three busiest days glow."
             }
             div { class: "chart-scroll scroll-fade-x kit-heat",
                 div { class: "kit-heat-plot", onmouseleave: move |_| tip.set(None),

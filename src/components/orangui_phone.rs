@@ -60,10 +60,10 @@ pub fn OranguiPhone() -> Element {
             div { class: "kit-phone-panel",
                 div { class: "kit-phone-copy project-section",
                     ul {
-                        li { "Sheet slides a bottom sheet up from the bottom edge." }
-                        li { "Theme and Mode sit in the settings list, as in the apps; changes apply to the whole site." }
-                        li { "Toast fires a notification; send three and they stack, tap to spread them." }
-                        li { "The header and the button bar are the same ones the apps use." }
+                        li { "Sheet slides a panel up from the bottom." }
+                        li { "Theme and Mode work like they do in the apps, and change the whole site." }
+                        li { "Toast sends a notification. Send a few and they stack; tap to spread them." }
+                        li { "The header and bottom bar are the same ones the apps use." }
                     }
                 }
                 Phone {}
