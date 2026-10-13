@@ -1190,6 +1190,12 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     display: none;
 }
 
+/* The phone's settings lists take tighter corners than the apps' 1rem, so
+   the narrow cards sit level with the page's panels around them. */
+.theme-wrapper .phone-screen .settings-list {
+    border-radius: 0.6rem;
+}
+
 /* A settings label with its "?" beside it, as the apps lay it out. */
 .theme-wrapper .phone-screen .row-label-with-hint {
     display: inline-flex;
