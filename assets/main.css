@@ -755,6 +755,99 @@ a.panel-action:visited {
     color: var(--text-muted);
 }
 
+/* === Orangui's live demo === */
+
+/* The kit's own pieces on a sunken stage inside the panel: the demo panel
+   beside a column holding the picker's note and a release banner. */
+.orangui-demo {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--panel-gap);
+    padding: 1.25rem;
+    border-radius: 0.8rem;
+    background-color: var(--bg-sink);
+}
+
+.demo-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--panel-gap);
+    min-width: 0;
+}
+
+.demo-label {
+    margin: 1.25rem 0 0.6rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.demo-swatches {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.demo-swatch {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 2.75rem;
+    padding-bottom: 0.2rem;
+    border-radius: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--bg-primary);
+}
+
+.demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.orangui-demo .btn-xs {
+    margin: 0;
+}
+
+/* The banner stands in the demo rather than rising in at load, which would
+   play while it is still below the fold. Its leaving animation is the kit's. */
+.orangui-demo .banner {
+    animation: none;
+}
+
+.demo-note {
+    margin-bottom: 1rem;
+    color: var(--text-subtle);
+    line-height: 1.6;
+}
+
+/* The grid keeps a readable cell on a phone and scrolls sideways, with room
+   for a halo on the edge cells. The site's chart-scroll lift is for hover
+   chips, which this grid has none of. */
+.orangui-demo .chart-scroll {
+    padding: 3px;
+    margin-top: 0;
+}
+
+.demo-heat .heat-grid {
+    min-width: 32rem;
+}
+
+@media (max-width: 56rem) {
+    .orangui-demo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 30rem) {
+    .orangui-demo {
+        padding: 0.75rem;
+    }
+}
+
 /* === Code Blocks === */
 
 .code-block {

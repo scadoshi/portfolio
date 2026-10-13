@@ -550,32 +550,7 @@ const ORANGUI: Project = Project {
     impact_metric: "Swapped under this site, no visible change",
     objective: "This site and cairn already used zwipe's components, but they lived in zwipe's repo, so a style fix here meant a zwipe deploy and a re-pin. One corner radius took five. Give the kit its own repo.",
     tags: &["dioxus", "css", "themes"],
-    media: &[
-        MediaItem {
-            src: asset!("/assets/projects/orangui/01-gruvbox-dark.jpeg"),
-            alt: "A panel of the kit's pieces in Gruvbox dark: stats, six palette swatches, chips, buttons, status pills and a heat grid, beside a theme picker and a banner",
-            caption: Some("Gruvbox dark, the default"),
-            kind: MediaKind::Image,
-        },
-        MediaItem {
-            src: asset!("/assets/projects/orangui/02-rose-pine-light.jpeg"),
-            alt: "The same page in Rosé Pine light: cream background, teal accent, the six swatches in the same order",
-            caption: Some("Rosé Pine light. Same page, same swatch order"),
-            kind: MediaKind::Image,
-        },
-        MediaItem {
-            src: asset!("/assets/projects/orangui/03-tokyo-night-dark.jpeg"),
-            alt: "The same page in Tokyo Night dark: navy background, violet accent, the heat grid shaded in violet",
-            caption: Some("Tokyo Night dark. The heat grid takes the theme's accent"),
-            kind: MediaKind::Image,
-        },
-        MediaItem {
-            src: asset!("/assets/projects/orangui/04-solarized-light.jpeg"),
-            alt: "The same page in Solarized light: pale yellow background, red-orange accent, the heat grid shaded in orange",
-            caption: Some("Solarized light. One class on the page picks the theme"),
-            kind: MediaKind::Image,
-        },
-    ],
+    media: &[],
     approach: &[
         "Components never hard-code a color. They read the theme's, so all 31 themes share one stylesheet and a host can restyle any piece from its own stylesheet",
         "Success, warning and error colors only mean an outcome. Tags, chart lines and chips draw from six palette colors instead, and a test reads the stylesheet and fails on a stray",
@@ -616,9 +591,8 @@ fn every_allowed_theme_has_both_blocks_in_the_stylesheet() {
     }],
     obstacles: &[
         "The theme list had to move and also stay. zwipe's server checks a saved theme against it, and zwipe's core crate cannot depend on a UI kit, so both keep a copy and a test on zwipe's side fails if they differ",
-        "It is not on crates.io. The toast stack needs `dioxus-primitives` at a git commit, crates.io has only its 0.0.0, and a published crate cannot have a git dependency, even behind a feature",
     ],
-    progress: "Split out on 12 October 2026. This site runs on it; zwipe and cairn each have a branch on it, built and checked, and move over one at a time.",
+    progress: "Split out on 12 October 2026. This site, zwipe and cairn all run on it.",
     impact: "Fixing a style on this site no longer means shipping zwipe. A shared fix lands once, and each host takes it when it re-pins.",
     site_url: None,
     scope: None,

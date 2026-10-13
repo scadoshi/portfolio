@@ -22,15 +22,15 @@ How this site inlines the CSS, and why a shared fix lands in orangui first, is u
 
 ## Where the detail is
 
-orangui keeps its own notes: `~/Developer/orangui/context/`, starting at `README.md`. The color rules are in `development/styling.md`, the host switch in `plans/host_migration.md`, and why it is not on crates.io in the same plan, under "Not now". Nothing here repeats them.
+orangui keeps its own notes: `~/Developer/orangui/context/`, starting at `README.md`. The color rules are in `development/styling.md`, and the host switch in `plans/host_migration.md`. Nothing here repeats them.
 
 ## What the entry on the site leaves out, on purpose
 
-The cascade order, the CSS variable names, OKLab and the color-vision themes, the theme wipe's mechanics, and the `status_uses` scanner. They are real and they are in the repo. The entry keeps one snippet, the theme model with its stylesheet test, since it shows the idea in the fewest lines.
+The cascade order, the CSS variable names, OKLab and the color-vision themes, the theme wipe's mechanics, and the `status_uses` scanner. They are real and they are in the repo. The entry keeps one snippet, the theme model with its stylesheet test, since it shows the idea in the fewest lines. The page runs the kit itself (`src/components/orangui_demo.rs`) rather than showing pictures of it, so it takes the visitor's theme.
 
 ## Status
 
-Doing. CI green. This site moves over with this entry; zwipe and cairn each have a branch on it, built and checked, and switch one at a time at a device. On 2026-10-12 three pages of this site matched pixel for pixel before and after, apart from a playing video.
+Doing. CI green. Split out on 2026-10-12; this site, zwipe and cairn all run on it as of 2026-10-13. On 2026-10-12 three pages of this site matched pixel for pixel before and after, apart from a playing video.
 
 ## Repo
 

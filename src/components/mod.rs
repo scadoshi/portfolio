@@ -10,6 +10,7 @@ pub mod heatmap;
 pub mod linked_text;
 pub mod measured;
 pub mod navbar;
+pub mod orangui_demo;
 pub mod page_meta;
 pub mod project_card;
 pub mod zwipe_architecture;
