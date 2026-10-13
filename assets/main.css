@@ -238,9 +238,10 @@ a:visited {
 /* === Navbar === */
 
 /* The nav shell (sticky wrapper, hamburger, collapsing panel, link pills)
-   comes from orangui; note its components.css is inlined AFTER this
-   sheet in the built head, so equal-specificity overrides here lose the
-   cascade. This site keeps its brand, logo and dropdown specifics below. */
+   comes from orangui. Its components.css is inlined after this sheet in the
+   built head: its soft defaults (:where rules) give way to any rule here, but
+   its plain class rules win at equal specificity. This site keeps its logo
+   and dropdown specifics below. */
 
 /* Visited-proofing for panel action pills (the shared class colors via
    .panel-action only, which the global a:visited outranks). */
@@ -257,8 +258,6 @@ a.panel-action:visited {
 }
 
 .nav-brand {
-    font-weight: 700;
-    font-size: 1.2rem;
     text-decoration: none;
 }
 
