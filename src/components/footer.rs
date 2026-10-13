@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 #[component]
 pub fn Footer() -> Element {
     rsx! {
-        footer { class: "footer",
+        footer { class: "site-footer",
             p { class: "footer-copy",
                 "\u{00a9} 2026 Scotty Fermo | "
                 a {
@@ -21,7 +21,7 @@ pub fn Footer() -> Element {
                     "Email" span { class: "ext", "\u{2197}" }
                 }
             }
-            p { class: "footer-built-text",
+            p { class: "site-footer-note",
                 a {
                     class: "footer-built-repo",
                     href: "https://github.com/scadoshi/portfolio",

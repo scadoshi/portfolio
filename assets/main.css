@@ -974,17 +974,6 @@ a.panel-action:visited {
 
 /* === Footer === */
 
-.footer {
-    background-color: var(--bg-primary);
-    border-top: 1px solid var(--accent-primary);
-    padding: 2rem 1.5rem;
-    margin-top: auto;
-    box-shadow: var(--shadow-md);
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.78rem;
-}
-
 .footer-copy {
     margin: 0;
 }
@@ -993,15 +982,6 @@ a.panel-action:visited {
 .footer-copy a:visited {
     color: var(--palette-1);
     text-decoration: underline;
-}
-
-.footer-built-text {
-    max-width: 42rem;
-    margin: 0.85rem auto 0;
-    font-size: 0.7rem;
-    line-height: 1.5;
-    color: var(--text-subtle);
-    opacity: 0.75;
 }
 
 .footer-built-repo,
