@@ -1159,57 +1159,61 @@ html[data-wipe="left"]::view-transition-new(phone-screen) {
     white-space: pre;
 }
 
-/* highlight.js overrides using theme variables */
+/* highlight.js classes colored from the theme's syntax slots, which hold
+   each theme's own editor colors, so code here looks the way the theme does
+   in an editor. */
 .code-content .hljs {
     background: transparent;
     color: var(--text-primary);
 }
 .code-content .hljs-keyword,
-.code-content .hljs-built_in {
-    color: var(--palette-2);
+.code-content .hljs-selector-tag {
+    color: var(--syntax-keyword);
 }
 .code-content .hljs-type,
+.code-content .hljs-title.class_,
 .code-content .hljs-class .hljs-title,
-.code-content .hljs-title.class_ {
-    color: var(--palette-5);
+.code-content .hljs-selector-class {
+    color: var(--syntax-type);
 }
-.code-content .hljs-function .hljs-title,
-.code-content .hljs-title.function_ {
-    color: var(--palette-3);
+.code-content .hljs-title.function_,
+.code-content .hljs-function .hljs-title {
+    color: var(--syntax-function);
 }
 .code-content .hljs-string,
-.code-content .hljs-doctag {
-    color: var(--accent-primary);
+.code-content .hljs-regexp {
+    color: var(--syntax-string);
 }
 .code-content .hljs-number,
-.code-content .hljs-literal {
-    color: var(--accent-secondary);
+.code-content .hljs-literal,
+.code-content .hljs-symbol {
+    color: var(--syntax-constant);
 }
-.code-content .hljs-comment {
-    color: var(--text-muted);
+.code-content .hljs-comment,
+.code-content .hljs-doctag {
+    color: var(--syntax-comment);
     font-style: italic;
 }
-.code-content .hljs-meta,
-.code-content .hljs-meta .hljs-keyword {
-    color: var(--accent-tertiary);
+.code-content .hljs-built_in {
+    color: var(--syntax-macro);
 }
+.code-content .hljs-meta,
 .code-content .hljs-attr,
 .code-content .hljs-attribute {
-    color: var(--accent-primary);
+    color: var(--syntax-attribute);
 }
-.code-content .hljs-symbol,
-.code-content .hljs-bullet {
-    color: var(--accent-tertiary);
+.code-content .hljs-meta .hljs-string {
+    color: var(--syntax-string);
+}
+.code-content .hljs-punctuation,
+.code-content .hljs-operator {
+    color: var(--syntax-punctuation);
 }
 .code-content .hljs-variable,
-.code-content .hljs-template-variable {
+.code-content .hljs-template-variable,
+.code-content .hljs-params,
+.code-content .hljs-property {
     color: var(--text-primary);
-}
-.code-content .hljs-params {
-    color: var(--text-subtle);
-}
-.code-content .hljs-punctuation {
-    color: var(--text-muted);
 }
 
 .code-description {
