@@ -1,24 +1,26 @@
-//! Orangui's app pieces in a phone drawn in CSS: a page header, a body, an
-//! action bar whose buttons open a bottom sheet and the theme sheet and fire
-//! toasts.
+//! Orangui's app pieces in a phone drawn in CSS: a page header, a settings
+//! list whose Theme and Mode rows open the theme sheet and flip dark and
+//! light, and an action bar whose buttons open a bottom sheet and fire toasts.
 //!
 //! The pieces place themselves against the viewport with `position: fixed`.
 //! The phone's screen carries a `transform`, which makes it their containing
 //! block, and clips them, so a sheet rises from the phone's bottom edge and a
-//! toast lands at its top. The screen also carries its own theme class, from
-//! a theme signal of its own: a pick in the theme sheet changes the phone and
-//! nothing around it.
+//! toast lands at its top. The phone and the site share one theme: a pick in
+//! the phone goes through the site's wipe, as a pick in the nav does, and the
+//! screen's theme class follows the site's.
 
-use super::orangui_showcase::Source;
+use super::{navbar::ThemeWipe, orangui_showcase::Source};
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use orangui::{
-    ActionBar, BottomSheet, Button, ButtonVariant, Chip, PageHeader, Panel, TOAST_NORMAL,
-    ThemeConfig, ThemeSheet, ToastStack, display_theme_name, use_theme_follow,
+    ActionBar, BottomSheet, Button, ButtonVariant, Chip, DarkModeButton, PageHeader, Panel,
+    TOAST_NORMAL, ThemeConfig, ThemeSheet, ToastStack, display_theme_name, use_theme_follow,
 };
 
-/// The element that carries the phone's theme class, for the theme wipe.
-const SCREEN: &str = ".phone-screen";
+/// A selector that matches nothing. The theme sheet reads a follower of the
+/// theme it writes; the site's wipe already sweeps the phone, so this one
+/// commits each pick with no sweep of its own.
+const NO_WIPE: &str = ".phone-no-wipe";
 
 /// The files behind the phone's pieces, and their stylesheets.
 const SOURCES: [&str; 6] = [
@@ -44,7 +46,7 @@ enum Kind {
     Warning,
 }
 
-/// The phone in a panel, with a line on what each button does.
+/// The phone in a panel, with a list of what each button does.
 #[component]
 pub fn OranguiPhone() -> Element {
     rsx! {
@@ -56,12 +58,12 @@ pub fn OranguiPhone() -> Element {
                 }
             },
             div { class: "kit-phone-panel",
-                div { class: "kit-phone-copy",
-                    p { class: "kit-use",
-                        "The pieces the phone apps share: PageHeader across the top, ActionBar at the bottom, BottomSheet, ThemeSheet and ToastStack. They run here as they do on a phone."
-                    }
-                    p { class: "kit-note",
-                        "Sheet opens a bottom sheet. Theme opens the theme sheet, and a pick there changes only the phone. Toast fires one; fire three and they stack, then tap the stack to spread it out."
+                div { class: "kit-phone-copy project-section",
+                    ul {
+                        li { "Sheet slides a bottom sheet up from the bottom edge." }
+                        li { "Theme and Mode sit in the settings list, as in the apps; changes apply to the whole site." }
+                        li { "Toast fires a notification; send three and they stack, tap to spread them." }
+                        li { "The header and the button bar are the same ones the apps use." }
                     }
                 }
                 Phone {}
@@ -73,16 +75,18 @@ pub fn OranguiPhone() -> Element {
 /// The frame, the screen and the app on it.
 #[component]
 fn Phone() -> Element {
-    // The phone's own theme, apart from the site's.
-    let theme = use_signal(ThemeConfig::default);
-    let follow = use_theme_follow(theme, SCREEN);
+    // The site's theme. A pick goes to the wipe's `picked`, which sweeps it
+    // across the page and commits it here.
+    let site = use_context::<Signal<ThemeConfig>>();
+    let ThemeWipe { picked, .. } = use_context();
+    let follow = use_theme_follow(picked, NO_WIPE);
     use_context_provider(|| follow);
-    let class = follow.shown.read().css_class();
+    let class = site.read().css_class();
     rsx! {
         div { class: "phone",
             div { class: "phone-screen {class}",
                 ToastStack {
-                    PhoneApp { theme }
+                    PhoneApp { site, picked }
                 }
             }
         }
@@ -90,15 +94,22 @@ fn Phone() -> Element {
 }
 
 #[component]
-fn PhoneApp(theme: Signal<ThemeConfig>) -> Element {
+fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
     let toasts = use_toast();
     let mut sheet_open = use_signal(|| false);
     let mut themes_open = use_signal(|| false);
     let mut fired = use_signal(|| 0usize);
     let mut tags = use_signal(|| [true, false, true, false]);
-    let current = theme.read().clone();
+    let current = site.read().clone();
     let name = display_theme_name(&current.name);
-    let mode = if current.is_dark { "Dark" } else { "Light" };
+    let mut picked = picked;
+    let toggle_dark = move |_| {
+        let prev = site.peek().clone();
+        picked.set(ThemeConfig {
+            name: prev.name,
+            is_dark: !prev.is_dark,
+        });
+    };
 
     rsx! {
         div { class: "phone-app",
@@ -112,18 +123,26 @@ fn PhoneApp(theme: Signal<ThemeConfig>) -> Element {
                         }
                         div { class: "settings-row",
                             span { class: "settings-row-label", "Theme" }
-                            span { class: "settings-row-value", "{name}" }
+                            div { class: "settings-row-value",
+                                span { "{name}" }
+                                Button {
+                                    variant: ButtonVariant::Action,
+                                    onclick: move |_| themes_open.set(true),
+                                    "Change"
+                                }
+                            }
                         }
                         div { class: "settings-row",
                             span { class: "settings-row-label", "Mode" }
-                            span { class: "settings-row-value", "{mode}" }
+                            div { class: "settings-row-value",
+                                DarkModeButton { is_dark: current.is_dark, onclick: toggle_dark }
+                            }
                         }
                         div { class: "settings-row",
                             span { class: "settings-row-label", "Toasts" }
                             span { class: "settings-row-value", "{fired}" }
                         }
                     }
-                    p { class: "pref-note", "The page around the phone keeps its own theme." }
                 }
             }
             ActionBar {
@@ -131,11 +150,6 @@ fn PhoneApp(theme: Signal<ThemeConfig>) -> Element {
                     variant: ButtonVariant::Action,
                     onclick: move |_| sheet_open.set(true),
                     "Sheet"
-                }
-                Button {
-                    variant: ButtonVariant::Action,
-                    onclick: move |_| themes_open.set(true),
-                    "Theme"
                 }
                 Button {
                     variant: ButtonVariant::Action,
@@ -172,7 +186,7 @@ fn PhoneApp(theme: Signal<ThemeConfig>) -> Element {
         }
         ThemeSheet {
             open: themes_open,
-            theme,
+            theme: picked,
             on_save: move |_| {
                 toasts.success("Theme saved".to_string(), ToastOptions::new().duration(TOAST_NORMAL));
             },

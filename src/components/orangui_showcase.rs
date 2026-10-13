@@ -6,11 +6,11 @@
 use dioxus::prelude::*;
 use gloo_timers::future::TimeoutFuture;
 use orangui::{
-    APP_CSS, ActionBar, ActionButton, AlertDialog, Banner, BannerStatus, Button, ButtonVariant,
-    ChartTip, Chip, DiagramArrow, DiagramDefs, DiagramNode, DiagramTone, DialogAction,
-    DialogHostView, GalleryFooter, GalleryFrame, HEAT_CELL, HEAT_ROWS, HeatCell, HeatGrid, HeatHit,
-    HintBullet, HintBullets, HintKey, HintLine, InfoButton, NavDropdown, Panel, PasswordInput,
-    Replay, StatsStrip, TOAST_CSS, ThemeConfig, area, curve, display_theme_name, heat_span,
+    APP_CSS, ActionButton, AlertDialog, Banner, BannerStatus, Button, ButtonVariant, ChartTip,
+    Chip, DiagramArrow, DiagramDefs, DiagramNode, DiagramTone, DialogAction, DialogHostView,
+    GalleryFooter, GalleryFrame, HEAT_CELL, HEAT_ROWS, HeatCell, HeatGrid, HeatHit, HintBullet,
+    HintBullets, HintKey, HintLine, InfoButton, NavDropdown, Panel, PasswordInput, Replay,
+    StatsStrip, TOAST_CSS, ThemeConfig, area, curve, display_theme_name, heat_span,
     use_dialog_host, use_overlay_back_stack,
 };
 
@@ -82,6 +82,15 @@ pub(super) fn Source(path: &'static str) -> Element {
             "{name}"
             span { class: "ext", "\u{2197}" }
         }
+    }
+}
+
+/// The first button in an animated piece's action row: bumps that panel's own
+/// count, so the piece runs its animation again and nothing else does.
+#[component]
+fn ReplayButton(replay: Signal<u32>) -> Element {
+    rsx! {
+        button { class: "panel-action", onclick: move |_| replay += 1, "Replay" }
     }
 }
 
@@ -160,25 +169,23 @@ fn PanelShowcase() -> Element {
             status_label: if saved() { "Saved" } else { "Unsaved" },
             title: "Panel",
             actions: rsx! {
-                Source { path: "src/panel.rs" }
-                Source { path: "src/action_bar.rs" }
-            },
-            p { class: "kit-use",
-                "The card everything sits in: an eyebrow, a title, a status pill, the body. An ActionBar holds a screen's buttons; the apps pin it to the bottom."
-            }
-            ActionBar { class: "kit-action-bar".to_string(),
-                Button {
-                    variant: ButtonVariant::Action,
+                button {
+                    class: "panel-action",
                     disabled: !saved(),
                     onclick: move |_| saved.set(false),
                     "Undo"
                 }
-                Button {
-                    variant: ButtonVariant::Action,
+                button {
+                    class: "panel-action",
                     disabled: saved(),
                     onclick: move |_| saved.set(true),
                     "Save"
                 }
+                Source { path: "src/panel.rs" }
+                Source { path: "src/action_bar.rs" }
+            },
+            p { class: "kit-use kit-panel-copy",
+                "The card everything sits in: an eyebrow, a title, a status pill, the body. An ActionBar holds a screen's buttons; the apps pin it to the bottom."
             }
         }
     }
@@ -309,15 +316,8 @@ fn BannerShowcase(banners: Signal<Vec<u32>>) -> Element {
         Panel {
             title: "Banner",
             actions: rsx! {
-                Source { path: "src/banner.rs" }
-                Source { path: "assets/components.css#L1047-L1238" }
-            },
-            p { class: "kit-use",
-                "News a visitor should see once, like a release. It counts down and leaves on its own, or on its close button."
-            }
-            div { class: "kit-row",
-                Button {
-                    variant: ButtonVariant::Action,
+                button {
+                    class: "panel-action",
                     onclick: move |_| {
                         raised += 1;
                         let id = raised();
@@ -330,6 +330,11 @@ fn BannerShowcase(banners: Signal<Vec<u32>>) -> Element {
                     },
                     "Raise a banner"
                 }
+                Source { path: "src/banner.rs" }
+                Source { path: "assets/components.css#L1047-L1238" }
+            },
+            p { class: "kit-use",
+                "News a visitor should see once, like a release. It counts down and leaves on its own, or on its close button."
             }
             p { class: "kit-note", "It rises at the bottom left of the window." }
         }
@@ -392,26 +397,24 @@ fn DialogShowcase() -> Element {
         Panel {
             title: "AlertDialog",
             actions: rsx! {
-                Source { path: "src/alert_dialog.rs" }
-                Source { path: "assets/app.css#L233-L439" }
-            },
-            p { class: "kit-use",
-                "A question that has to be answered before anything else happens. An ActionButton can wait on input, or stay busy while it works."
-            }
-            div { class: "kit-row",
-                Button {
-                    variant: ButtonVariant::Action,
+                button {
+                    class: "panel-action",
                     onclick: move |_| confirm_open.set(true),
                     "Delete the draft"
                 }
-                Button {
-                    variant: ButtonVariant::Action,
+                button {
+                    class: "panel-action",
                     onclick: move |_| {
                         name.set(String::new());
                         name_open.set(true);
                     },
                     "Name the draft"
                 }
+                Source { path: "src/alert_dialog.rs" }
+                Source { path: "assets/app.css#L233-L439" }
+            },
+            p { class: "kit-use",
+                "A question that has to be answered before anything else happens. An ActionButton can wait on input, or stay busy while it works."
             }
             p { class: "kit-note",
                 {outcome().unwrap_or_else(|| "Save stays off until you type a name.".to_string())}
@@ -513,12 +516,13 @@ fn HintShowcase() -> Element {
 fn StatsShowcase() -> Element {
     // Its own replay counter, so the button reruns these figures and nothing
     // else on the page.
-    let mut replay = use_signal(|| 0u32);
+    let replay = use_signal(|| 0u32);
     use_context_provider(|| Replay(replay));
     rsx! {
         Panel {
             title: "StatsStrip",
             actions: rsx! {
+                ReplayButton { replay }
                 Source { path: "src/stats_strip.rs" }
                 Source { path: "src/entrance.rs" }
             },
@@ -527,9 +531,6 @@ fn StatsShowcase() -> Element {
             }
             StatsStrip {
                 figures: vec![(Some(31), "themes"), (Some(6), "palette slots"), (Some(3), "hosts")],
-            }
-            div { class: "kit-row kit-replay",
-                Button { variant: ButtonVariant::Small, onclick: move |_| replay += 1, "Replay" }
             }
         }
     }
@@ -568,13 +569,14 @@ fn PaletteShowcase() -> Element {
 
 #[component]
 fn DecodeShowcase() -> Element {
-    let mut replay = use_signal(|| 0u32);
+    let replay = use_signal(|| 0u32);
     use_context_provider(|| Replay(replay));
     let mut hovering = use_signal(|| false);
     rsx! {
         Panel {
             title: "Decode",
             actions: rsx! {
+                ReplayButton { replay }
                 Source { path: "src/entrance.rs" }
             },
             p { class: "kit-use",
@@ -588,7 +590,6 @@ fn DecodeShowcase() -> Element {
                     onmouseleave: move |_| hovering.set(false),
                     orangui::Decode { text: LOGO_S, hover: hovering }
                 }
-                Button { variant: ButtonVariant::Small, onclick: move |_| replay += 1, "Replay" }
             }
         }
     }
@@ -662,6 +663,7 @@ fn px(n: u32) -> f64 {
 #[component]
 fn ChartShowcase() -> Element {
     let mut tip = use_signal(|| None::<(String, f64, f64)>);
+    let replay = use_signal(|| 0u32);
     let last = u32::try_from(MONTHS.len() - 1).unwrap_or(1);
     let span_x = CHART_W - CHART_LEFT - CHART_RIGHT;
     let span_y = CHART_H - CHART_TOP - CHART_BOTTOM;
@@ -681,6 +683,7 @@ fn ChartShowcase() -> Element {
         Panel {
             title: "ChartTip",
             actions: rsx! {
+                ReplayButton { replay }
                 Source { path: "src/chart_math.rs" }
                 Source { path: "src/chart_tip.rs" }
             },
@@ -689,7 +692,11 @@ fn ChartShowcase() -> Element {
             }
             div { class: "chart-scroll scroll-fade-x",
                 div { class: "kit-plot", onmouseleave: move |_| tip.set(None),
+                    // Keyed on the panel's replay count: a new key, a new SVG,
+                    // and the line draws again.
+                    for run in [replay()] {
                     svg {
+                        key: "run{run}",
                         class: "commits-chart",
                         view_box: "0 0 {CHART_W} {CHART_H}",
                         role: "img",
@@ -738,6 +745,7 @@ fn ChartShowcase() -> Element {
                                 }
                             }
                         }
+                    }
                     }
                     if let Some((text, left, top)) = tip() {
                         ChartTip { text, left, top, class: "tag tag-p1" }
@@ -790,6 +798,7 @@ const WEEKDAYS: [&str; 7] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 fn HeatShowcase() -> Element {
     let cells = use_hook(year_of_days);
     let mut tip = use_signal(|| None::<(String, f64, f64)>);
+    let replay = use_signal(|| 0u32);
     let width = heat_span(WEEKS);
     let height = heat_span(HEAT_ROWS);
     let place = {
@@ -811,6 +820,7 @@ fn HeatShowcase() -> Element {
         Panel {
             title: "HeatGrid",
             actions: rsx! {
+                ReplayButton { replay }
                 Source { path: "src/heat_grid.rs" }
                 Source { path: "assets/components.css#L1593-L1688" }
             },
@@ -819,7 +829,11 @@ fn HeatShowcase() -> Element {
             }
             div { class: "chart-scroll scroll-fade-x kit-heat",
                 div { class: "kit-heat-plot", onmouseleave: move |_| tip.set(None),
+                    // Keyed on the panel's replay count: a new SVG, and the
+                    // cells sweep in again.
+                    for run in [replay()] {
                     svg {
+                        key: "run{run}",
                         class: "heat-grid",
                         view_box: "0 0 {width} {height}",
                         role: "img",
@@ -828,9 +842,10 @@ fn HeatShowcase() -> Element {
                             cells: cells.clone(),
                             left: 0.0,
                             top: 0.0,
-                            on_enter: place,
-                            on_tap: tap,
+                            on_enter: place.clone(),
+                            on_tap: tap.clone(),
                         }
+                    }
                     }
                     if let Some((text, left, top)) = tip() {
                         ChartTip { text, left, top, class: "tag tag-p5" }

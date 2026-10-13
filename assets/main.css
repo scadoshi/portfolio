@@ -824,16 +824,22 @@ a.panel-action:visited {
     font-family: inherit;
 }
 
-/* The panel's button row sits at the foot of its body, edge to edge, as the
-   apps pin it to the foot of a screen. */
-.panel-body:has(> .kit-action-bar) {
-    display: flex;
-    flex-direction: column;
+/* The Panel panel's body is one paragraph: the card keeps its own height
+   rather than stretching to the taller panel beside it. */
+.kit-grid > .panel-card:has(.kit-panel-copy) {
+    align-self: start;
 }
 
-.theme-wrapper .kit-action-bar {
-    margin: auto -1.5rem 0;
-    padding-bottom: 0;
+.kit-panel-copy {
+    margin-bottom: 0;
+}
+
+/* A button in a panel's action row that has nothing to do yet, as Undo
+   before a save. */
+.panel-action:disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
 }
 
 /* The full-width button keeps its width and drops its form margin. */
@@ -873,10 +879,6 @@ a.panel-action:visited {
 .kit-hint-line {
     line-height: 2;
     color: var(--text-subtle);
-}
-
-.kit-replay {
-    margin-top: 0.75rem;
 }
 
 .kit-swatches {
@@ -980,12 +982,17 @@ a.panel-action:visited {
 .kit-phone-panel {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
+    align-items: start;
     gap: 2rem;
 }
 
 .kit-phone-copy {
     max-width: 30rem;
+}
+
+/* The list's top edge meets the phone's. */
+.kit-phone-copy ul {
+    margin-top: 0;
 }
 
 @media (max-width: 56rem) {
