@@ -596,8 +596,8 @@ fn PaletteShowcase() -> Element {
     }
 }
 
-/// The orangutan from the README in a panel of its own, decoding in, with its
-/// own replay. The detail page sets it beside the goal.
+/// The orangutan from the README in a panel of its own, still on arrival, with
+/// a Replay that decodes it. The detail page sets it beside the goal.
 #[component]
 pub(crate) fn OrangutanShowcase() -> Element {
     let replay = use_signal(|| 0u32);
@@ -609,8 +609,13 @@ pub(crate) fn OrangutanShowcase() -> Element {
                 ReplayButton { replay }
                 Source { path: "README.md" }
             },
+            // Still on arrival; Replay decodes it.
             pre { class: "orangutan-art", "aria-label": "An orangutan in ASCII art",
-                orangui::Decode { text: ORANGUTAN }
+                if replay() == 0 {
+                    "{ORANGUTAN}"
+                } else {
+                    orangui::Decode { text: ORANGUTAN }
+                }
             }
         }
     }
