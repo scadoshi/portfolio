@@ -557,55 +557,6 @@ a.panel-action:visited {
     margin-top: 1rem;
 }
 
-/* Zwipe's chip formula: colored text on a faint same-hue tint with a soft
-   same-hue outline. The row cycles four accents via .tag-c0..3. */
-.tag {
-    border: 1px solid;
-    border-radius: 0.6rem;
-    padding: 0.2rem 0.7rem;
-    font-size: 0.78rem;
-    letter-spacing: 0.02em;
-}
-
-.tag-c0 {
-    color: var(--palette-1);
-    background-color: color-mix(
-        in srgb,
-        var(--palette-1) 12%,
-        transparent
-    );
-    border-color: color-mix(in srgb, var(--palette-1) 40%, transparent);
-}
-
-.tag-c1 {
-    color: var(--palette-2);
-    background-color: color-mix(in srgb, var(--palette-2) 12%, transparent);
-    border-color: color-mix(in srgb, var(--palette-2) 40%, transparent);
-}
-
-.tag-c2 {
-    color: var(--palette-3);
-    background-color: color-mix(
-        in srgb,
-        var(--palette-3) 12%,
-        transparent
-    );
-    border-color: color-mix(in srgb, var(--palette-3) 40%, transparent);
-}
-
-.tag-c3 {
-    color: var(--palette-4);
-    background-color: color-mix(in srgb, var(--palette-4) 12%, transparent);
-    border-color: color-mix(in srgb, var(--palette-4) 30%, transparent);
-}
-
-/* The fifth accent for the measured chips, which run five to a card. */
-.tag-c4 {
-    color: var(--palette-5);
-    background-color: color-mix(in srgb, var(--palette-5) 12%, transparent);
-    border-color: color-mix(in srgb, var(--palette-5) 40%, transparent);
-}
-
 /* === Lateral bands === */
 
 /* Two-column bands, zite-style: panel stacks fill each other's dead
@@ -827,11 +778,6 @@ a.panel-action:visited {
     margin-top: 1rem;
 }
 
-/* A link inside a tag keeps the tag's color. */
-.tag a {
-    color: inherit;
-}
-
 .stats-source a.tag {
     text-decoration: none;
     transition:
@@ -900,8 +846,9 @@ a.panel-action:visited {
 }
 
 /* Content tags inside the hero's heading, wrapping with the title text. Sized
-   down from the tag row so the title still leads. */
-.title-tag {
+   down from the tag row so the title still leads; the extra class outranks the
+   kit's .tag, which loads after this sheet. */
+.tag.title-tag {
     display: inline-block;
     vertical-align: middle;
     margin-left: 0.5rem;
@@ -909,14 +856,6 @@ a.panel-action:visited {
     font-weight: 400;
     letter-spacing: 0.02em;
     line-height: 1.4;
-}
-
-/* Gray whatever accent the cycle gave them, so only the measured chips carry
-   color. Same formula as .tag-c3. */
-.title-tag.tag {
-    color: var(--text-muted);
-    background-color: color-mix(in srgb, var(--text-muted) 12%, transparent);
-    border-color: color-mix(in srgb, var(--text-muted) 30%, transparent);
 }
 
 /* Sections now live inside panels; the page/band gap does the spacing. */

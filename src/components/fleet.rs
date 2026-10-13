@@ -164,7 +164,7 @@ pub fn Fleet() -> Element {
             }
             }
             div { class: "tag-row fleet-caption",
-                span { class: "tag tag-c0", "{when}" }
+                span { class: "tag tag-p1", "{when}" }
             }
         }
     }

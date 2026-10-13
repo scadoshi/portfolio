@@ -399,7 +399,7 @@ pub fn Heatmap() -> Element {
             }
             if let Some(tip) = tip() {
                 span {
-                    class: "tag tag-c0 heatmap-tip {tip_anchor(tip.left)}",
+                    class: "tag tag-p1 heatmap-tip {tip_anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }

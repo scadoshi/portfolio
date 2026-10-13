@@ -26,7 +26,7 @@ pub fn Measured(repo_url: String) -> Element {
             // Five chips at most, one accent each: primary, warning,
             // secondary, muted, success.
             for (i, chip) in chips.iter().enumerate() {
-                span { class: "tag tag-c{i % 5}", "{chip}" }
+                span { class: "tag tag-p{i % 5 + 1}", "{chip}" }
             }
         }
     }

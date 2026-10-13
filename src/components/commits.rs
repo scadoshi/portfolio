@@ -233,7 +233,7 @@ pub fn Commits() -> Element {
             }
             if let Some(tip) = tip() {
                 span {
-                    class: "tag tag-c0 commits-tip {tip_anchor(tip.left)}",
+                    class: "tag tag-p1 commits-tip {tip_anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }

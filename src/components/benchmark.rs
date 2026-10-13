@@ -272,7 +272,7 @@ pub fn Benchmark() -> Element {
             }
             if let Some(tip) = tip() {
                 span {
-                    class: "tag tag-c0 bench-tip {tip_anchor(tip.left)}",
+                    class: "tag tag-p1 bench-tip {tip_anchor(tip.left)}",
                     style: "left: {tip.left}%; top: {tip.top}%;",
                     "{tip.text}"
                 }

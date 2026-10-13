@@ -95,8 +95,8 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 // The content tags sit in the heading and wrap with it, which
                 // keeps them apart from the measured chips below.
                 title_trailing: rsx! {
-                    for (i, tag) in project.tags.iter().enumerate() {
-                        span { class: "tag title-tag tag-c{i % 4}", "{tag}" }
+                    for tag in project.tags.iter() {
+                        span { class: "tag title-tag tag-muted", "{tag}" }
                     }
                 },
                 actions: rsx! {

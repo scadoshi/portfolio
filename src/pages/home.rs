@@ -62,12 +62,12 @@ pub fn Home() -> Element {
                                 // Where the numbers come from, as chips under the strip.
                                 source: rsx! {
                                     Link {
-                                        class: "tag tag-c0",
+                                        class: "tag tag-p1",
                                         to: Route::ProjectDetail { slug: "heron".to_string() },
                                         "counted by heron"
                                     }
                                     Link {
-                                        class: "tag tag-c0",
+                                        class: "tag tag-p1",
                                         to: Route::ProjectDetail { slug: "steller".to_string() },
                                         "cached in steller"
                                     }
@@ -78,7 +78,7 @@ pub fn Home() -> Element {
                                             stats::Source::Live => "live".to_string(),
                                             stats::Source::AsOf(day) => format!("as of {day}"),
                                         };
-                                        rsx! { span { key: "{label}", class: "tag tag-c0 tag-swap", "{label}" } }
+                                        rsx! { span { key: "{label}", class: "tag tag-p1 tag-swap", "{label}" } }
                                     }
                                 },
                             }
