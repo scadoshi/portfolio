@@ -242,51 +242,7 @@ a:visited {
    sheet in the built head, so equal-specificity overrides here lose the
    cascade. This site keeps its brand, logo and dropdown specifics below. */
 
-.nav-stores-persistent {
-    display: none;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Outbound CTAs share the nav pill look (the .nav-links a rule in
-   components.css), restated here for the standalone .store-link class, in
-   the warning color, same as zite's store buttons. `:visited` rides in every
-   color declaration so the global `a:visited` rule (higher specificity than
-   a bare class) never recolors a visited pill. */
-.store-link,
-.store-link:visited,
-.nav-links a.store-link,
-.nav-links a.store-link:visited {
-    display: inline-flex;
-    align-items: center;
-    box-sizing: border-box;
-    height: 1.85rem;
-    text-decoration: none;
-    color: var(--palette-5);
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-primary);
-    border-radius: 0.4rem;
-    padding: 0 0.8rem;
-    font-family: inherit;
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    transition:
-        color 0.15s,
-        border-color 0.15s;
-}
-
-@media (hover: hover) {
-    .store-link:hover,
-    .store-link:visited:hover,
-    .nav-links a.store-link:hover,
-    .nav-links a.store-link:visited:hover {
-        color: var(--palette-5);
-        border-color: var(--palette-5);
-    }
-}
-
-/* Same visited-proofing for panel action pills (the shared class colors via
+/* Visited-proofing for panel action pills (the shared class colors via
    .panel-action only, which the global a:visited outranks). */
 a.panel-action,
 a.panel-action:visited {
@@ -297,22 +253,6 @@ a.panel-action:visited {
     a.panel-action:hover,
     a.panel-action:visited:hover {
         color: var(--accent-primary);
-    }
-}
-
-@media (max-width: 60rem) {
-    .nav-stores-persistent {
-        display: flex;
-        gap: 0.35rem;
-    }
-    .nav-stores-persistent .store-link {
-        height: 1.65rem;
-        padding: 0 0.55rem;
-        font-size: 0.7rem;
-    }
-    /* The persistent CTAs cover these at this width; hide the panel's. */
-    .nav-panel .nav-link-store {
-        display: none;
     }
 }
 

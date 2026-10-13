@@ -117,28 +117,28 @@ pub fn Navbar() -> Element {
                         "Contribute"
                     }
                 }
-                // Outbound CTAs, zite-style: store-link pills in the warning
-                // accent. Hidden in the collapsed panel on mobile, where the
+                // Outbound CTAs, zite-style: nav-cta pills in palette slot 5.
+                // Hidden in the collapsed panel on mobile, where the
                 // persistent copies below cover them.
-                li { class: "nav-link-store",
+                li { class: "nav-cta-item",
                     a {
-                        class: "store-link",
+                        class: "nav-cta",
                         href: "https://github.com/scadoshi",
                         onclick: move |_| open.set(false),
                         "GitHub" span { class: "ext", "\u{2197}" }
                     }
                 }
-                li { class: "nav-link-store",
+                li { class: "nav-cta-item",
                     a {
-                        class: "store-link",
+                        class: "nav-cta",
                         href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
                         onclick: move |_| open.set(false),
                         "LinkedIn" span { class: "ext", "\u{2197}" }
                     }
                 }
-                li { class: "nav-link-store",
+                li { class: "nav-cta-item",
                     a {
-                        class: "store-link",
+                        class: "nav-cta",
                         href: "mailto:scottyfermo@hotmail.com",
                         onclick: move |_| open.set(false),
                         "Email" span { class: "ext", "\u{2197}" }
@@ -148,22 +148,20 @@ pub fn Navbar() -> Element {
             // Mobile: the CTAs stay visible beside the hamburger instead of
             // hiding inside the collapsed panel (same trick as zite).
             persistent: rsx! {
-                div { class: "nav-stores-persistent",
-                    a {
-                        class: "store-link",
-                        href: "https://github.com/scadoshi",
-                        "GitHub" span { class: "ext", "\u{2197}" }
-                    }
-                    a {
-                        class: "store-link",
-                        href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                        "LinkedIn" span { class: "ext", "\u{2197}" }
-                    }
-                    a {
-                        class: "store-link",
-                        href: "mailto:scottyfermo@hotmail.com",
-                        "Email" span { class: "ext", "\u{2197}" }
-                    }
+                a {
+                    class: "nav-cta",
+                    href: "https://github.com/scadoshi",
+                    "GitHub" span { class: "ext", "\u{2197}" }
+                }
+                a {
+                    class: "nav-cta",
+                    href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
+                    "LinkedIn" span { class: "ext", "\u{2197}" }
+                }
+                a {
+                    class: "nav-cta",
+                    href: "mailto:scottyfermo@hotmail.com",
+                    "Email" span { class: "ext", "\u{2197}" }
                 }
             },
             trailing: rsx! {
