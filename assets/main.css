@@ -146,8 +146,8 @@ html {
 }
 
 /* Light themes flip the native chrome to light. The viewport scrollbar is
-   painted at the root, so :has() reaches down to the wrapper's mode class
-   (same "-light" suffix match as the sink rule below). */
+   painted at the root, so :has() reaches down to the wrapper's mode class,
+   "theme-{name}-{mode}". */
 html:has(.theme-wrapper[class$="-light"]) {
     color-scheme: light;
 }
@@ -162,23 +162,13 @@ body {
 }
 
 .theme-wrapper {
-    --grid-line: color-mix(in srgb, var(--text-primary) 4%, transparent);
     /* Every 4th line, drawn a notch stronger (see the ::before layers), so
        the backdrop reads as drafting paper instead of a flat mesh. */
     --grid-line-major: color-mix(in srgb, var(--text-primary) 9%, transparent);
-    --grid-size: 28px;
-    --bg-sink: color-mix(in srgb, var(--bg-primary), #000 15%);
     min-height: 100vh;
     color: var(--text-primary);
     display: flex;
     flex-direction: column;
-}
-
-/* Light themes: lift the sink toward white (fresh-paper feel) instead of the
-   #000 15% darkening that reads muddy on cream palettes. The theme class is
-   "theme-{name}-{mode}", so only "-light" matches; dark mode is untouched. */
-.theme-wrapper[class$="-light"] {
-    --bg-sink: color-mix(in srgb, var(--bg-primary), #fff 35%);
 }
 
 /* The grid lives on a viewport-fixed layer so it stays pinned while the
