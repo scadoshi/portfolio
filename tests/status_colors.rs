@@ -3,7 +3,11 @@
 
 use orangui::status_uses;
 
-const ALLOWED: [&str; 2] = [".not-found h1", ".not-found-page .panel-title"];
+const ALLOWED: [&str; 3] = [
+    ".not-found h1",
+    ".not-found-page .panel-title",
+    ".theme-wrapper .panel-action.btn-danger",
+];
 
 #[test]
 fn status_colors_only_where_they_mean_something() {

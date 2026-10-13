@@ -840,6 +840,13 @@ p.kit-label {
     margin-bottom: 0;
 }
 
+/* A destructive button in a panel's action row is red like every other
+   destructive button; the action row's own border and color would win. */
+.theme-wrapper .panel-action.btn-danger {
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
 /* A button in a panel's action row that has nothing to do yet, as Undo
    before a save. */
 .panel-action:disabled {
@@ -1176,14 +1183,24 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     max-width: calc(100% - 1.5rem);
 }
 
+/* A settings label with its "?" beside it, as the apps lay it out. */
+.theme-wrapper .phone-screen .row-label-with-hint {
+    display: inline-flex;
+    align-items: center;
+}
+
+.phone-hint-body {
+    margin: 0;
+    line-height: 1.5;
+}
+
 .kit-sheet-chips {
     justify-content: center;
 }
 
-/* The orangutan under the orangui page's goal, sized so its 48 columns fit a
-   phone's panel. */
+/* The orangutan's panel, sized so its 48 columns fit a phone's panel. */
 .orangutan-art {
-    margin: 1.5rem auto 0;
+    margin: 0 auto;
     width: fit-content;
     font-family: "JetBrains Mono", monospace;
     font-size: clamp(0.45rem, 2.2vw, 0.75rem);

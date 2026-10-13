@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use orangui::{Decode, Panel};
+use orangui::Panel;
 
 use crate::{
     Route,
@@ -82,9 +82,6 @@ fn closing_panels(project: &'static data::Project) -> Element {
     }
 }
 
-/// The orangutan from orangui's README, the kit's mark.
-const ORANGUTAN: &str = include_str!("../../assets/orangutan.txt");
-
 /// Points under the goal that only one project has. The orangui page shows
 /// the kit live below, so its goal says what the panels are and credits the
 /// work it builds on.
@@ -100,9 +97,6 @@ fn goal_points(project: &'static data::Project) -> Element {
                     a { href: "https://github.com/DioxusLabs/components", "dioxus-primitives" }
                     "."
                 }
-            }
-            pre { class: "orangutan-art", "aria-label": "An orangutan in ASCII art",
-                Decode { text: ORANGUTAN }
             }
         },
         _ => rsx! {},

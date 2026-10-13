@@ -13,9 +13,30 @@ use super::{navbar::ThemeWipe, orangui_showcase::Source};
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use orangui::{
-    ActionBar, BottomSheet, Button, ButtonVariant, Chip, DarkModeButton, PageHeader, Panel,
-    TOAST_NORMAL, ThemeConfig, ThemeSheet, ToastStack, display_theme_name,
+    ActionBar, AlertDialog, BottomSheet, Button, ButtonVariant, Chip, DarkModeButton, DialogAction,
+    DialogHostView, InfoButton, PageHeader, Panel, TOAST_NORMAL, ThemeConfig, ThemeSheet,
+    ToastStack, display_theme_name, use_dialog_host,
 };
+
+/// The hint the phone's "?" buttons open: a title and a line, as the apps'
+/// settings hints are. Shared by every row through context.
+#[derive(Clone, Copy)]
+struct PhoneHint {
+    open: Signal<bool>,
+    which: Signal<(&'static str, &'static str)>,
+}
+
+impl PhoneHint {
+    fn show(mut self, title: &'static str, body: &'static str) {
+        self.which.set((title, body));
+        self.open.set(true);
+    }
+}
+
+const THEME_HINT: (&str, &str) = (
+    "Theme",
+    "Picks the colors. Change opens every theme; the sun or moon flips light and dark.",
+);
 
 /// Sets the phone's `--phone-scale` to its viewport's width over the 414
 /// points of an iPhone 11 Pro Max, the size the app lays out at, and keeps it
@@ -89,6 +110,15 @@ fn Phone() -> Element {
     // keeps it up while the old theme sweeps back, gone on the other side.
     let ThemeWipe { picked, follow, .. } = use_context();
     use_context_provider(|| follow);
+    // Its own dialog host, drawn inside the screen, so a hint opens in the
+    // phone rather than over the page.
+    let host = use_dialog_host();
+    use_context_provider(|| host);
+    let hint = PhoneHint {
+        open: use_signal(|| false),
+        which: use_signal(|| THEME_HINT),
+    };
+    use_context_provider(|| hint);
     let class = site.read().css_class();
     // The app lays out at a real phone's size and the screen scales it down
     // to fit the frame, which CSS cannot work out from the frame's width.
@@ -102,6 +132,7 @@ fn Phone() -> Element {
                     ToastStack {
                         PhoneApp { site, picked }
                     }
+                    DialogHostView {}
                 }
             }
         }
@@ -115,6 +146,7 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
     let mut themes_open = use_signal(|| false);
     let mut fired = use_signal(|| 0usize);
     let mut tags = use_signal(|| [true, false, true, false]);
+    let hint: PhoneHint = use_context();
     let current = site.read().clone();
     let name = display_theme_name(&current.name);
     let mut picked = picked;
@@ -137,13 +169,19 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                             span { class: "settings-list-title", "Appearance" }
                         }
                         div { class: "settings-row",
-                            span { class: "settings-row-label", "Theme" }
+                            span { class: "row-label-with-hint",
+                                span { class: "settings-row-label", "Theme" }
+                                InfoButton { onclick: move |_| hint.show(THEME_HINT.0, THEME_HINT.1) }
+                            }
                             div { class: "settings-row-value",
                                 span { "{name}" }
                                 DarkModeButton { is_dark: current.is_dark, onclick: toggle_dark }
                                 Button {
                                     variant: ButtonVariant::Action,
-                                    onclick: move |_| themes_open.set(true),
+                                    onclick: move |_| {
+                                        hint.which.clone().set(THEME_HINT);
+                                        themes_open.set(true);
+                                    },
                                     "Change"
                                 }
                             }
@@ -153,17 +191,17 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                         div { class: "settings-list-header",
                             span { class: "settings-list-title", "When to count" }
                         }
-                        CycleRow { label: "Day starts", options: &["Midnight", "4 AM", "6 AM"] }
-                        CycleRow { label: "Week starts", options: &["Monday", "Sunday"] }
-                        CycleRow { label: "Rest days", options: &["Weekends", "Sundays", "None"] }
+                        CycleRow { label: "Day starts", hint: "When a new day begins, for anyone up past midnight.", options: &["Midnight", "4 AM", "6 AM"] }
+                        CycleRow { label: "Week starts", hint: "The first day of each week in the weekly totals.", options: &["Monday", "Sunday"] }
+                        CycleRow { label: "Rest days", hint: "Days that never break a streak.", options: &["Weekends", "Sundays", "None"] }
                     }
                     div { class: "settings-list",
                         div { class: "settings-list-header",
                             span { class: "settings-list-title", "Decks" }
                         }
-                        CycleRow { label: "Format", options: &["Commander", "Oathbreaker", "Brawl"] }
-                        CycleRow { label: "Price target", options: &["$100", "$250", "Any"] }
-                        CycleRow { label: "Confirm remove", options: &["On", "Off"] }
+                        CycleRow { label: "Format", hint: "The format a new deck starts in.", options: &["Commander", "Oathbreaker", "Brawl"] }
+                        CycleRow { label: "Price target", hint: "What a deck aims to cost. Cards over it are flagged.", options: &["$100", "$250", "Any"] }
+                        CycleRow { label: "Confirm remove", hint: "Asks before a card leaves a deck.", options: &["On", "Off"] }
                     }
                     div { class: "settings-list",
                         div { class: "settings-list-header",
@@ -222,24 +260,35 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
         ThemeSheet {
             open: themes_open,
             theme: picked,
+            hint: Some(hint.open),
             on_save: move |_| {
                 toasts.success("Theme saved".to_string(), ToastOptions::new().duration(TOAST_NORMAL));
             },
             on_unchanged: |()| {},
         }
+        AlertDialog {
+            open: hint.open,
+            title: (hint.which)().0.to_string(),
+            actions: vec![DialogAction::Dismiss("Got it".to_string())],
+            p { class: "phone-hint-body", "{(hint.which)().1}" }
+        }
     }
 }
 
-/// A made-up setting like the apps' own: its value is the button, and a tap
-/// moves to the next one and says so in a toast.
+/// A made-up setting like the apps' own: its value is the button, a tap moves
+/// to the next one and says so in a toast, and its "?" explains it.
 #[component]
-fn CycleRow(label: &'static str, options: &'static [&'static str]) -> Element {
+fn CycleRow(label: &'static str, hint: &'static str, options: &'static [&'static str]) -> Element {
     let toasts = use_toast();
+    let phone_hint: PhoneHint = use_context();
     let mut at = use_signal(|| 0usize);
     let value = options.get(at()).copied().unwrap_or_default();
     rsx! {
         div { class: "settings-row",
-            span { class: "settings-row-label", "{label}" }
+            span { class: "row-label-with-hint",
+                span { class: "settings-row-label", "{label}" }
+                InfoButton { onclick: move |_| phone_hint.show(label, hint) }
+            }
             div { class: "settings-row-value",
                 Button {
                     variant: ButtonVariant::Action,

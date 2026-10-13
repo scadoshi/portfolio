@@ -20,6 +20,9 @@ use super::orangui_phone::OranguiPhone;
 const REPO: &str = "https://github.com/scadoshi/orangui/blob/main";
 
 /// The nav's S, the art the Decode panel resolves.
+/// The orangutan from orangui's README, the kit's mark.
+const ORANGUTAN: &str = include_str!("../../assets/orangutan.txt");
+
 /// The marks the Decode panel can show: this site's S, orangui's O and
 /// cairn's C.
 const MARKS: [(&str, &str); 3] = [
@@ -115,6 +118,7 @@ pub fn OranguiShowcase() -> Element {
         // the phone. None of their class names appear elsewhere on the site.
         document::Style { {APP_CSS} }
         document::Style { {TOAST_CSS} }
+        OrangutanShowcase {}
         div { class: "kit-grid",
             div { class: "kit-stack",
                 PanelShowcase {}
@@ -336,6 +340,28 @@ const SECTIONS: [&str; 4] = ["Products", "Systems", "Tooling", "Experiments"];
 
 #[component]
 fn DropdownShowcase() -> Element {
+    let menus = [
+        use_signal(|| false),
+        use_signal(|| false),
+        use_signal(|| false),
+    ];
+    // One menu at a time, as in the nav: whichever opened last closes the rest.
+    let mut last_opened = use_signal(|| None::<usize>);
+    use_effect(move || {
+        let opened: Vec<usize> = (0..menus.len()).filter(|&i| menus[i]()).collect();
+        let previous = *last_opened.peek();
+        if let Some(&newest) = opened.iter().find(|&&i| Some(i) != previous) {
+            for (i, mut menu) in menus.into_iter().enumerate() {
+                if i != newest && *menu.peek() {
+                    menu.set(false);
+                }
+            }
+            last_opened.set(Some(newest));
+        } else if opened.is_empty() && previous.is_some() {
+            last_opened.set(None);
+        }
+    });
+    let [sections, sort, view] = menus;
     rsx! {
         Panel {
             title: "NavDropdown",
@@ -347,18 +373,22 @@ fn DropdownShowcase() -> Element {
                 "A menu behind a nav pill, like the ones up top. Open one, then another, to see how they hand off."
             }
             div { class: "kit-dropdown kit-row",
-                DemoDropdown { label: "Sections", items: &SECTIONS }
-                DemoDropdown { label: "Sort", items: &["Newest", "Oldest", "Name"] }
-                DemoDropdown { label: "View", items: &["List", "Grid", "Compact"] }
+                DemoDropdown { open: sections, label: "Sections", items: &SECTIONS }
+                DemoDropdown { open: sort, label: "Sort", items: &["Newest", "Oldest", "Name"] }
+                DemoDropdown { open: view, label: "View", items: &["List", "Grid", "Compact"] }
             }
         }
     }
 }
 
-/// One dropdown of the demo row, with its own open state and pick.
+/// One dropdown of the demo row, with its own pick.
 #[component]
-fn DemoDropdown(label: &'static str, items: &'static [&'static str]) -> Element {
-    let mut open = use_signal(|| false);
+fn DemoDropdown(
+    open: Signal<bool>,
+    label: &'static str,
+    items: &'static [&'static str],
+) -> Element {
+    let mut open = open;
     let mut picked = use_signal(|| None::<&'static str>);
     rsx! {
         NavDropdown { open, label: picked().unwrap_or(label).to_string(),
@@ -384,12 +414,12 @@ fn DialogShowcase() -> Element {
     let mut name = use_signal(String::new);
     let mut outcome = use_signal(|| None::<String>);
     let blank = use_memo(move || name().trim().is_empty());
-    let delete = use_callback(move |()| outcome.set(Some("Deleted the draft.".to_string())));
+    let delete = use_callback(move |()| outcome.set(Some("Deleted it.".to_string())));
     let save = ActionButton::new("Save")
         .disabled(blank)
         .busy("Saving...", move || async move {
             TimeoutFuture::new(1200).await;
-            outcome.set(Some(format!("Saved as {}.", name.peek().trim())));
+            outcome.set(Some(format!("Created {}.", name.peek().trim())));
             true
         });
 
@@ -398,9 +428,9 @@ fn DialogShowcase() -> Element {
             title: "AlertDialog",
             actions: rsx! {
                 button {
-                    class: "panel-action",
+                    class: "panel-action btn-danger",
                     onclick: move |_| confirm_open.set(true),
-                    "Delete the draft"
+                    "Delete something"
                 }
                 button {
                     class: "panel-action",
@@ -408,7 +438,7 @@ fn DialogShowcase() -> Element {
                         name.set(String::new());
                         name_open.set(true);
                     },
-                    "Name the draft"
+                    "Create something"
                 }
                 Source { path: "src/alert_dialog.rs" }
                 Source { path: "assets/app.css#L233-L439" }
@@ -421,7 +451,7 @@ fn DialogShowcase() -> Element {
             }
             AlertDialog {
                 open: confirm_open,
-                title: "Delete the draft?",
+                title: "Delete something?",
                 actions: vec![
                     DialogAction::Dismiss("Cancel".to_string()),
                     DialogAction::Confirm {
@@ -434,7 +464,7 @@ fn DialogShowcase() -> Element {
             }
             AlertDialog {
                 open: name_open,
-                title: "Name the draft",
+                title: "Create something",
                 actions: vec![DialogAction::Dismiss("Cancel".to_string()), save.into()],
                 input {
                     class: "input kit-dialog-input",
@@ -489,7 +519,7 @@ fn HintShowcase() -> Element {
                 HintKey { "Save" }
                 " to keep a theme, or "
                 HintKey { color: "--palette-1".to_string(), "Back" }
-                " to drop it."
+                " to drop it"
                 InfoButton { onclick: move |_| open.set(true) }
             }
             AlertDialog {
@@ -563,6 +593,26 @@ fn PaletteShowcase() -> Element {
                 }
             }
             p { class: "kit-note", "Showing {name}, {mode}." }
+        }
+    }
+}
+
+/// The orangutan from the README in a panel of its own, decoding in, with its
+/// own replay.
+#[component]
+fn OrangutanShowcase() -> Element {
+    let replay = use_signal(|| 0u32);
+    use_context_provider(|| Replay(replay));
+    rsx! {
+        Panel {
+            title: "The orangutan",
+            actions: rsx! {
+                ReplayButton { replay }
+                Source { path: "README.md" }
+            },
+            pre { class: "orangutan-art", "aria-label": "An orangutan in ASCII art",
+                orangui::Decode { text: ORANGUTAN }
+            }
         }
     }
 }
