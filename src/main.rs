@@ -160,16 +160,6 @@ fn App() -> Element {
         document::Style { {COMPONENTS_CSS} }
         document::Style { {SITE_CSS} }
         document::Stylesheet { href: MAIN_CSS }
-        // highlight.js 11.9.0, vendored under public/ so the site makes no
-        // third-party request. Deferred so it doesn't block first paint;
-        // CodeBlock only calls hljs from a post-hydration effect (with a
-        // typeof guard), long after deferred scripts have executed.
-        document::Script { defer: true, src: "/vendor/highlight.min.js" }
-        document::Script { defer: true, src: "/vendor/rust.min.js" }
-        // Sharpmas's snippets are C#. Without this grammar they fell back to
-        // Rust's, which colors five keywords the two languages share and
-        // leaves public, sealed, record, interface, var and switch plain.
-        document::Script { defer: true, src: "/vendor/csharp.min.js" }
         // Scroll reveal for everything marked `data-reveal` below the fold.
         // Inlined from orangui; it waits for the document to parse,
         // as a deferred script would, and everything it does is progressive.

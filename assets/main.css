@@ -1255,61 +1255,76 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     white-space: pre;
 }
 
-/* highlight.js classes colored from the theme's syntax slots, which hold
-   each theme's own editor colors, so code here looks the way the theme does
-   in an editor. */
-.code-content .hljs {
-    background: transparent;
-    color: var(--text-primary);
-}
-.code-content .hljs-keyword,
-.code-content .hljs-selector-tag {
+/* The l-* classes are the tree-sitter captures build.rs tags each snippet
+   with, grouped the way gruvbox.nvim groups them and colored from the
+   theme's syntax slots, so code here looks the way the theme does in an
+   editor. Variables and modules stay the text color. */
+.code-content .l-keyword,
+.code-content .l-keyword-conditional,
+.code-content .l-keyword-coroutine,
+.code-content .l-keyword-exception,
+.code-content .l-keyword-function,
+.code-content .l-keyword-modifier,
+.code-content .l-keyword-operator,
+.code-content .l-keyword-repeat,
+.code-content .l-keyword-return,
+.code-content .l-keyword-type,
+.code-content .l-variable-builtin {
     color: var(--syntax-keyword);
 }
-.code-content .hljs-type,
-.code-content .hljs-title.class_,
-.code-content .hljs-class .hljs-title,
-.code-content .hljs-selector-class {
+.code-content .l-type,
+.code-content .l-type-builtin,
+.code-content .l-type-definition,
+.code-content .l-constructor {
     color: var(--syntax-type);
 }
-.code-content .hljs-title.function_,
-.code-content .hljs-function .hljs-title {
+.code-content .l-function,
+.code-content .l-function-call,
+.code-content .l-function-method,
+.code-content .l-function-method-call {
     color: var(--syntax-function);
+    font-weight: 700;
 }
-.code-content .hljs-string,
-.code-content .hljs-regexp {
+.code-content .l-string,
+.code-content .l-character {
     color: var(--syntax-string);
+    font-style: italic;
 }
-.code-content .hljs-number,
-.code-content .hljs-literal,
-.code-content .hljs-symbol {
+.code-content .l-number,
+.code-content .l-number-float,
+.code-content .l-boolean,
+.code-content .l-constant,
+.code-content .l-constant-builtin {
     color: var(--syntax-constant);
 }
-.code-content .hljs-comment,
-.code-content .hljs-doctag {
+.code-content .l-comment,
+.code-content .l-comment-documentation {
     color: var(--syntax-comment);
     font-style: italic;
 }
-.code-content .hljs-built_in {
+.code-content .l-function-macro,
+.code-content .l-constant-macro,
+.code-content .l-keyword-import {
     color: var(--syntax-macro);
 }
-.code-content .hljs-meta,
-.code-content .hljs-attr,
-.code-content .hljs-attribute {
+.code-content .l-attribute,
+.code-content .l-attribute-builtin {
     color: var(--syntax-attribute);
 }
-.code-content .hljs-meta .hljs-string {
-    color: var(--syntax-string);
-}
-.code-content .hljs-punctuation,
-.code-content .hljs-operator {
+.code-content .l-operator,
+.code-content .l-punctuation-bracket,
+.code-content .l-punctuation-delimiter,
+.code-content .l-punctuation-special,
+.code-content .l-character-special,
+.code-content .l-string-escape {
     color: var(--syntax-punctuation);
 }
-.code-content .hljs-variable,
-.code-content .hljs-template-variable,
-.code-content .hljs-params,
-.code-content .hljs-property {
-    color: var(--text-primary);
+.code-content .l-variable-parameter {
+    color: var(--syntax-parameter);
+}
+.code-content .l-variable-member,
+.code-content .l-property {
+    color: var(--syntax-member);
 }
 
 .code-description {

@@ -1,0 +1,122 @@
+//! Syntax highlighting for the project pages' code snippets, run at build time.
+//!
+//! `build.rs` reads every `Snippet { lang, code, .. }` literal out of
+//! `src/data.rs` and highlights it with lumis, which parses the code with
+//! tree-sitter and tags it with Neovim's highlight captures, the way an editor
+//! does. The output is HTML spans with `l-*` classes (`l-function-call`,
+//! `l-variable-parameter`, ...) that `assets/main.css` maps onto the theme's
+//! `--syntax-*` slots. The tests in `tests/highlight.rs` include this file too.
+
+use lumis::{HtmlLinkedBuilder, languages::Language};
+use syn::visit::Visit;
+
+/// One `Snippet` literal from the data file.
+pub struct Snippet {
+    pub lang: String,
+    pub code: String,
+}
+
+/// Every `Snippet { .. }` struct literal in `source` that has a string `lang`
+/// and a string `code`, in file order.
+pub fn snippets(source: &str) -> syn::Result<Vec<Snippet>> {
+    struct Finder(Vec<Snippet>);
+
+    impl<'ast> Visit<'ast> for Finder {
+        fn visit_expr_struct(&mut self, node: &'ast syn::ExprStruct) {
+            if node.path.is_ident("Snippet") {
+                let field = |name: &str| {
+                    node.fields.iter().find_map(|f| match (&f.member, &f.expr) {
+                        (
+                            syn::Member::Named(ident),
+                            syn::Expr::Lit(syn::ExprLit {
+                                lit: syn::Lit::Str(s),
+                                ..
+                            }),
+                        ) if ident == name => Some(s.value()),
+                        _ => None,
+                    })
+                };
+                if let (Some(lang), Some(code)) = (field("lang"), field("code")) {
+                    self.0.push(Snippet { lang, code });
+                }
+            }
+            syn::visit::visit_expr_struct(self, node);
+        }
+    }
+
+    let file = syn::parse_file(source)?;
+    let mut finder = Finder(Vec::new());
+    finder.visit_file(&file);
+    Ok(finder.0)
+}
+
+/// The tree-sitter grammar for a snippet's `lang`.
+pub fn language(lang: &str) -> Option<Language> {
+    match lang {
+        "rust" => Some(Language::Rust),
+        "csharp" => Some(Language::CSharp),
+        _ => None,
+    }
+}
+
+/// The highlighted HTML that goes inside the snippet's `<code>` element.
+pub fn highlight(lang: &str, code: &str) -> Result<String, String> {
+    let language = language(lang).ok_or_else(|| format!("no grammar for lang {lang:?}"))?;
+    let formatter = HtmlLinkedBuilder::new()
+        .language(language)
+        .build()
+        .map_err(|e| e.to_string())?;
+    let html = lumis::highlight(code, formatter);
+    Ok(macros_as_macros(&inner_lines(&html)))
+}
+
+/// The lines inside lumis's `<pre><code>` wrapper, each unwrapped from its
+/// `l-line` span. The block's `white-space: pre` breaks the lines.
+fn inner_lines(html: &str) -> String {
+    let start = html
+        .find("<code")
+        .and_then(|i| html[i..].find('>').map(|j| i + j + 1))
+        .unwrap_or(0);
+    let end = html.rfind("</code>").unwrap_or(html.len());
+    html[start..end]
+        .split('\n')
+        .map(|line| match line.strip_prefix("<span class=\"l-line\"") {
+            Some(rest) => {
+                let body = rest.split_once('>').map_or(rest, |(_, body)| body);
+                body.strip_suffix("</span>").unwrap_or(body)
+            }
+            None => line,
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+/// Gives every Rust macro name the macro class. The tree-sitter queries tag
+/// `panic!`, `eprintln!` and their kin as exceptions or debug keywords, and
+/// rust-analyzer's semantic tokens, which an editor layers on top, color them
+/// as the macros they are.
+fn macros_as_macros(html: &str) -> String {
+    let mut out = String::with_capacity(html.len());
+    let mut rest = html;
+    while let Some(i) = rest.find("<span class=\"") {
+        out.push_str(&rest[..i]);
+        rest = &rest[i..];
+        let tag_end = rest.find('>').map_or(rest.len(), |j| j + 1);
+        let text_end = rest[tag_end..]
+            .find('<')
+            .map_or(rest.len(), |j| tag_end + j);
+        let text = &rest[tag_end..text_end];
+        let is_macro = text.strip_suffix('!').is_some_and(|name| {
+            !name.is_empty() && name.chars().all(|c| c.is_alphanumeric() || c == '_')
+        });
+        if is_macro {
+            out.push_str("<span class=\"l-function-macro\">");
+        } else {
+            out.push_str(&rest[..tag_end]);
+        }
+        out.push_str(text);
+        rest = &rest[text_end..];
+    }
+    out.push_str(rest);
+    out
+}

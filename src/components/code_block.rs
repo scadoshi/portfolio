@@ -1,43 +1,54 @@
 use dioxus::prelude::*;
 
-static BLOCK_ID: GlobalSignal<u32> = Signal::global(|| 0);
+include!(concat!(env!("OUT_DIR"), "/highlighted.rs"));
+
+/// The highlighted HTML build.rs made for a snippet's trimmed code.
+pub fn highlighted(code: &str) -> Option<&'static str> {
+    HIGHLIGHTED
+        .iter()
+        .find(|(source, _)| *source == code)
+        .map(|(_, html)| *html)
+}
 
 #[component]
 pub fn CodeBlock(title: String, code: String, description: String, lang: String) -> Element {
-    let trimmed = code.trim().to_string();
-    let id = use_hook(|| {
-        let current = *BLOCK_ID.peek();
-        *BLOCK_ID.write() = current + 1;
-        format!("code-block-{current}")
-    });
-
-    let id_clone = id.clone();
-    use_effect(move || {
-        let id = id_clone.clone();
-        spawn(async move {
-            gloo_timers::future::TimeoutFuture::new(50).await;
-            let js = format!(
-                r"
-                var el = document.querySelector('#{id} code');
-                if (el && typeof hljs !== 'undefined') {{
-                    el.removeAttribute('data-highlighted');
-                    hljs.highlightElement(el);
-                }}
-                "
-            );
-            let _ = document::eval(&js).await;
-        });
-    });
+    let trimmed = code.trim();
 
     rsx! {
         div { class: "code-block",
             div { class: "code-header", "{title}" }
-            pre { class: "code-content", id: "{id}",
-                code { class: "language-{lang}", "{trimmed}" }
+            pre { class: "code-content",
+                if let Some(html) = highlighted(trimmed) {
+                    code { class: "language-{lang}", dangerous_inner_html: html }
+                } else {
+                    code { class: "language-{lang}", "{trimmed}" }
+                }
             }
             if !description.is_empty() {
                 p { class: "code-description", "{description}" }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::highlighted;
+    use crate::data::all_projects;
+
+    #[test]
+    fn every_snippet_on_the_site_is_highlighted() {
+        let mut missing = Vec::new();
+        for project in all_projects() {
+            for snippet in project.snippets {
+                if highlighted(snippet.code.trim()).is_none() {
+                    missing.push(format!("{} / {}", project.slug, snippet.title));
+                }
+            }
+        }
+        assert!(
+            missing.is_empty(),
+            "snippets build.rs did not highlight: {missing:?}"
+        );
     }
 }

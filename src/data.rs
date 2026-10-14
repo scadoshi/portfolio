@@ -65,8 +65,9 @@ impl ProjectStatus {
 
 pub struct Snippet {
     pub title: &'static str,
-    /// highlight.js language class, e.g. "rust" or "csharp". Only the
-    /// grammars loaded in main.rs will actually color.
+    /// The tree-sitter grammar build.rs highlights the code with, "rust" or
+    /// "csharp" (see `language` in build/highlight.rs). Any other value fails
+    /// the build.
     pub lang: &'static str,
     pub code: &'static str,
     pub description: &'static str,
