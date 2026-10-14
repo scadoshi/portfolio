@@ -41,11 +41,11 @@ DURATION=${4:-}
 # Target width in pixels. Height follows the source aspect, rounded to even,
 # which yuv420p requires.
 WIDTH=1560
-# Constant Rate Factor. Flat terminal colours compress hard, so this sits well
+# Constant Rate Factor. Flat terminal colors compress hard, so this sits well
 # below the usual 23 default and still lands near the existing clips' bitrate.
 CRF=26
 # A pixel this bright counts as window rather than desktop. The terminal's own
-# background is around 29 on a 0-255 grey scale, so anything under it reads as
+# background is around 29 on a 0-255 gray scale, so anything under it reads as
 # the black behind the window.
 THRESHOLD=12
 
