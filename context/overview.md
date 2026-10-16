@@ -4,7 +4,17 @@ scottyfermo.com. A Rust developer's portfolio written in Rust: Dioxus, prerender
 
 ## Where things live
 
-Content is data, not markup. Every project is a `Project` const in `src/data.rs` and lives at `/projects/<slug>`. Each sits on exactly one `Section` (Products, Systems, Tooling, Experiments); `Section::projects()` holds the order, and a test fails if a project is on two or none. `featured_left()` and `featured_right()` are the separate, hand-picked cards for the home page's two columns, drawn from any section. Adding a project means adding a const, putting it on a section (and in `featured_left()` or `featured_right()` if it belongs on the front page), and adding its `<loc>` to `public/sitemap.xml`. The nav's section dropdowns, the `/projects` index and the cards build themselves from the same data.
+Content is data, not markup. Every project is a `Project` const in `src/data.rs` and lives at `/projects/<slug>`.
+
+- Each sits on exactly one `Section` (Products, Systems, Tooling, Experiments). `Section::projects()` holds the order, and a test fails if a project is on two or none.
+- `featured_left()` and `featured_right()` are the separate, hand-picked cards for the home page's two columns, drawn from any section.
+- The nav's section dropdowns, the `/projects` index and the cards build themselves from the same data.
+
+Adding a project:
+
+1. Add a const.
+2. Put it on a section, and in `featured_left()` or `featured_right()` if it belongs on the front page.
+3. Add its `<loc>` to `public/sitemap.xml`.
 
 ```
 src/
@@ -23,7 +33,15 @@ public/              copied to the site root verbatim: sitemap, robots, og image
 context/             this, the commit rules, per-project notes, marketing
 ```
 
-The shared UI comes from [orangui](https://github.com/scadoshi/orangui), the Dioxus UI kit lifted out of zwipe's `zwipe-components`: themes, `Panel`, `Banner`, `NavBar`, `ThemePicker`, `PageMeta`, and the site kit it shares with zite (the stored theme through `use_persisted_theme`, the hero's `StatsStrip`, the gallery's `GalleryFrame` and `GalleryFooter`, the scroll reveal and nav glide scripts, `with_separators`, and the chart helpers `curve`, `area`, `tip_anchor` and `peak_indices`). It is a git dependency on the orangui repo. `Cargo.lock` pins the exact commit, so pulling changes is a deliberate `cargo update -p orangui`. Its CSS (`THEMES_CSS`, `COMPONENTS_CSS`, `SITE_CSS`) and the scripts (`REVEAL_JS`, `NAV_GLIDE_JS`, `SCROLL_FADE_JS`) are inlined as string constants because a git dep cannot be reached by an asset pipeline. In the prerendered head Dioxus writes those inline `<style>` blocks after the linked `main.css`, so a shared rule wins a tie: a `main.css` override of a shared selector needs more specificity (`.project-gallery .gallery-body`, not `.gallery-body`). `main.css` keeps only this site's look on top of the shared rules. The reveal picks up anything marked `data-reveal` (every `Panel`, and the home heatmap), the glide the children of anything marked `data-nav-glide`. A fix to shared CSS or script lands in orangui first, then gets pinned here; orangui has no deploy of its own, so a push there changes nothing live until a host re-pins. The Zwipe architecture carousel on the Zwipe page is Zwipe content, so it is this site's own copy (`components/zwipe_architecture.rs`, built from orangui's diagram and gallery pieces) and zite keeps its own; the site no longer depends on the zwipe repo.
+The shared UI comes from [orangui](https://github.com/scadoshi/orangui), the Dioxus UI kit lifted out of zwipe's `zwipe-components`: themes, `Panel`, `Banner`, `NavBar`, `ThemePicker`, `PageMeta`, and the site kit it shares with zite (the stored theme through `use_persisted_theme`, the hero's `StatsStrip`, the gallery's `GalleryFrame` and `GalleryFooter`, the scroll reveal and nav glide scripts, `with_separators`, and the chart helpers `curve`, `area`, `tip_anchor` and `peak_indices`).
+
+- It is a git dependency on the orangui repo. `Cargo.lock` pins the exact commit, so pulling changes is a deliberate `cargo update -p orangui`.
+- A fix to shared CSS or script lands in orangui first, then gets pinned here. orangui has no deploy of its own, so a push there changes nothing live until a host re-pins.
+- Its CSS (`THEMES_CSS`, `COMPONENTS_CSS`, `SITE_CSS`) and the scripts (`REVEAL_JS`, `NAV_GLIDE_JS`, `SCROLL_FADE_JS`) are inlined as string constants, because a git dep cannot be reached by an asset pipeline.
+- In the prerendered head, Dioxus writes those inline `<style>` blocks after the linked `main.css`, so a shared rule wins a tie. A `main.css` override of a shared selector needs more specificity (`.project-gallery .gallery-body`, not `.gallery-body`).
+- `main.css` keeps only this site's look on top of the shared rules.
+- The reveal picks up anything marked `data-reveal` (every `Panel`, and the home heatmap), and the glide picks up the children of anything marked `data-nav-glide`.
+- The Zwipe architecture carousel on the Zwipe page is Zwipe content, so it is this site's own copy (`components/zwipe_architecture.rs`, built from orangui's diagram and gallery pieces), and zite keeps its own. The site no longer depends on the zwipe repo.
 
 Iterating on shared CSS still costs a pin commit per attempt. The cheaper loop is a local override while iterating: put `[patch."https://github.com/scadoshi/orangui"] orangui = { path = "../orangui" }` in `.cargo/config.toml` (not `Cargo.toml`, so it never gets committed), build and screenshot until it looks right, delete the file, restore `Cargo.lock`, push orangui once, and pin once.
 
@@ -31,7 +49,11 @@ Iterating on shared CSS still costs a pin commit per attempt. The cheaper loop i
 
 ## Moving a page
 
-GitHub Pages cannot answer with a redirect. When a project is renamed, add its old address to `MOVED` in `src/data.rs`; moving a project between sections changes no address. The old `/side-quests` addresses keep two routes (`OldSideQuests`, `OldSideQuest` in `pages/moved.rs`) that only ever render these redirects. SSG then prerenders the old address as a page carrying a refresh and a canonical to the new one. Tests check that every entry leads to a live page and that none shadows one.
+GitHub Pages cannot answer with a redirect. When a project is renamed, add its old address to `MOVED` in `src/data.rs`; moving a project between sections changes no address.
+
+- The old `/side-quests` addresses keep two routes (`OldSideQuests`, `OldSideQuest` in `pages/moved.rs`) that only ever render these redirects.
+- SSG then prerenders the old address as a page carrying a refresh and a canonical to the new one.
+- Tests check that every entry leads to a live page and that none shadows one.
 
 ## GitHub numbers
 
@@ -39,13 +61,23 @@ The commit counts and last-push dates on the cards come from heron (`~/Developer
 
 The numbers are baked in when the site builds. The deploy workflow asks heron for a new answer before each build and keeps the committed `src/stats.json` when heron is down or could not resolve every repository, so a build never waits on heron. The workflow also runs every morning.
 
-After a page loads, the browser asks heron once more (`stats::fetch_live`, wasm only) and swaps the live answer in. The hero's source line says ", live" when that worked and ", as of <day>" when it did not, where the day is the baked snapshot's `generated_at`. The prerendered HTML always carries the baked numbers, so hydration matches. Cloudflare caches `GET /stats` for five minutes, so a traffic spike on the site does not reach heron.
+After a page loads, the browser asks heron once more (`stats::fetch_live`, wasm only) and swaps the live answer in.
+
+- The hero's source line says ", live" when that worked and ", as of <day>" when it did not, where the day is the baked snapshot's `generated_at`.
+- The prerendered HTML always carries the baked numbers, so hydration matches.
+- Cloudflare caches `GET /stats` for five minutes, so a traffic spike on the site does not reach heron.
 
 A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as well. Until it is, `every_project_on_the_site_is_in_the_snapshot` fails and names it.
 
 ## Charts
 
-Every chart is an inline SVG the site draws itself from the `GET /stats` answer, so it takes the theme's colors and needs no chart library. The home page has the year of contributions (heron's `calendar`, from GitHub's GraphQL) as a heatmap with a contributions-by-month line drawn on the same columns; `heatmap.rs` lays both out, and the year's outlier days get a lit edge (`PEAK_RATIO` times the median busy day, `MAX_PEAKS` at most). The heron page has the flow diagram (shared `Diagram*` pieces from orangui), the fleet bar chart of lines, tests and lints, and commits by month summed from `weekly_commits`, which only covers the repositories heron measures and says so in its caption. The steller page has the benchmark against Redis, the one hand-typed number set, with its link pinned to the commit of `BENCHMARKS.md` the rows came from. Hover chips are shared in `chart.rs`; the monotone curve, the chips' edge anchoring and the peak pick come from orangui. On a phone a chart keeps a readable width inside a `.chart-scroll` box and the time charts open on the newest months (`scroll.rs`).
+Every chart is an inline SVG the site draws itself from the `GET /stats` answer, so it takes the theme's colors and needs no chart library.
+
+- The home page has the year of contributions (heron's `calendar`, from GitHub's GraphQL) as a heatmap, with a contributions-by-month line drawn on the same columns. `heatmap.rs` lays both out, and the year's outlier days get a lit edge (`PEAK_RATIO` times the median busy day, `MAX_PEAKS` at most).
+- The heron page has the flow diagram (shared `Diagram*` pieces from orangui), the fleet bar chart of lines, tests and lints, and commits by month summed from `weekly_commits`. That last one only covers the repositories heron measures, and its caption says so.
+- The steller page has the benchmark against Redis, the one hand-typed number set, with its link pinned to the commit of `BENCHMARKS.md` the rows came from.
+- Hover chips are shared in `chart.rs`. The monotone curve, the chips' edge anchoring and the peak pick come from orangui.
+- On a phone, a chart keeps a readable width inside a `.chart-scroll` box, and the time charts open on the newest months (`scroll.rs`).
 
 ## The entrance
 
@@ -65,7 +97,11 @@ Because the numbers come from heron, the copy in `data.rs` never types one. `no_
 dx build --release --ssg --force-sequential
 ```
 
-`--force-sequential` is what makes `index.html` a real prerendered page rather than a bare shell. After a build, check `target/dx/portfolio/release/web/public/index.html` is tens of kilobytes: a stale server holding port 9999, or macOS killing the fresh server binary on a cached signature, both leave a shell with a green log. Deleting `target/dx/portfolio/release/web/server` before the build clears the second. Pushing to `main` runs the same build in Actions and publishes it. Tests and clippy gate that deploy: red means the site does not update. See `rules/commit_guidelines.md` for the exact commands, which are worth running before you push rather than after.
+`--force-sequential` is what makes `index.html` a real prerendered page rather than a bare shell.
+
+- After a build, check `target/dx/portfolio/release/web/public/index.html` is tens of kilobytes. A stale server holding port 9999, or macOS killing the fresh server binary on a cached signature, both leave a shell with a green log. Deleting `target/dx/portfolio/release/web/server` before the build clears the second.
+- Pushing to `main` runs the same build in Actions and publishes it. Tests and clippy gate that deploy: red means the site does not update.
+- See `rules/commit_guidelines.md` for the exact commands, which are worth running before you push rather than after.
 
 Two things the build does that are easy to miss. `/404` is prerendered through the catch-all route so the workflow can ship it as `404.html`, which is why unknown URLs get a real title and a noindex instead of the home page's. And `asset!()` content-hashes filenames, so anything referenced by a literal path has to live in `public/`, not `assets/`.
 
