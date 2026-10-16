@@ -1,7 +1,6 @@
 # Portfolio
 
-scottyfermo.com. A Rust developer's portfolio written in Rust: Dioxus, prerendered
-to static HTML, served by GitHub Pages.
+scottyfermo.com. A Rust developer's portfolio written in Rust: Dioxus, prerendered to static HTML, served by GitHub Pages.
 
 ## Where things live
 
@@ -28,9 +27,7 @@ The shared UI comes from [orangui](https://github.com/scadoshi/orangui), the Dio
 
 Iterating on shared CSS still costs a pin commit per attempt. The cheaper loop is a local override while iterating: put `[patch."https://github.com/scadoshi/orangui"] orangui = { path = "../orangui" }` in `.cargo/config.toml` (not `Cargo.toml`, so it never gets committed), build and screenshot until it looks right, delete the file, restore `Cargo.lock`, push orangui once, and pin once.
 
-`projects/` holds per-project background notes, one per entry in `data.rs`. They go
-deeper than the site does and are where the numbers came from. `data.rs` is still the
-source of truth for what the site shows; these are the working notes behind it.
+`projects/` holds per-project background notes, one per entry in `data.rs`. They go deeper than the site does and are where the numbers came from. `data.rs` is still the source of truth for what the site shows; these are the working notes behind it.
 
 ## Moving a page
 
@@ -68,30 +65,14 @@ Because the numbers come from heron, the copy in `data.rs` never types one. `no_
 dx build --release --ssg --force-sequential
 ```
 
-`--force-sequential` is what makes `index.html` a real prerendered page rather than a
-bare shell. After a build, check `target/dx/portfolio/release/web/public/index.html`
-is tens of kilobytes: a stale server holding port 9999, or macOS killing the fresh
-server binary on a cached signature, both leave a shell with a green log. Deleting
-`target/dx/portfolio/release/web/server` before the build clears the second. Pushing to `main` runs the same build in Actions and publishes it. Tests
-and clippy gate that deploy: red means the site does not update. See
-`rules/commit_guidelines.md` for the exact commands, which are worth running before
-you push rather than after.
+`--force-sequential` is what makes `index.html` a real prerendered page rather than a bare shell. After a build, check `target/dx/portfolio/release/web/public/index.html` is tens of kilobytes: a stale server holding port 9999, or macOS killing the fresh server binary on a cached signature, both leave a shell with a green log. Deleting `target/dx/portfolio/release/web/server` before the build clears the second. Pushing to `main` runs the same build in Actions and publishes it. Tests and clippy gate that deploy: red means the site does not update. See `rules/commit_guidelines.md` for the exact commands, which are worth running before you push rather than after.
 
-Two things the build does that are easy to miss. `/404` is prerendered through the
-catch-all route so the workflow can ship it as `404.html`, which is why unknown URLs
-get a real title and a noindex instead of the home page's. And `asset!()`
-content-hashes filenames, so anything referenced by a literal path has to live in
-`public/`, not `assets/`.
+Two things the build does that are easy to miss. `/404` is prerendered through the catch-all route so the workflow can ship it as `404.html`, which is why unknown URLs get a real title and a noindex instead of the home page's. And `asset!()` content-hashes filenames, so anything referenced by a literal path has to live in `public/`, not `assets/`.
 
 ## Writing content
 
-The bar is in `rules/commit_guidelines.md`, `rules/comment_guidelines.md` and the `/human` skill: short enough
-that a person reads it, specific enough to be checkable, and the code is the real
-evidence. Long comprehensive prose reads as machine-written and gets skipped, which
-is worse than saying less.
+The bar is in `rules/commit_guidelines.md`, `rules/comment_guidelines.md` and the `/human` skill: short enough that a person reads it, specific enough to be checkable, and the code is the real evidence. Long comprehensive prose reads as machine-written and gets skipped, which is worse than saying less.
 
 ## History
 
-`history/` holds the planning and progress docs from the original build. They record
-what was intended in 2026, not what is true now. Read them for background, never as a
-description of the current tree.
+`history/` holds the planning and progress docs from the original build. They record what was intended in 2026, not what is true now. Read them for background, never as a description of the current tree.
