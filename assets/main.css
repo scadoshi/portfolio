@@ -170,6 +170,8 @@ body {
     top: calc(var(--row) * var(--grid-size) + 1px);
     width: calc(var(--grid-size) - 2px);
     height: calc(var(--grid-size) - 2px);
+    /* The heatmap's corners: 2px on an 11px cell. */
+    border-radius: 18%;
     background: color-mix(in srgb, var(--text-primary) var(--lit), transparent);
     animation: cell-rain 0.35s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
