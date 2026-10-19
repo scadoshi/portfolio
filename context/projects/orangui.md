@@ -2,7 +2,7 @@
 
 ## Headline
 
-The Rust UI kit under zwipe, cairn and this site, with 40 color themes.
+The Rust UI kit under zwipe, cairn and this site, with 50 color themes.
 
 ## Category
 
