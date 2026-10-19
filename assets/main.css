@@ -145,67 +145,65 @@ body {
     z-index: -1;
     pointer-events: none;
     background-color: var(--bg-sink);
-    /* Major lines every 4 cells layered over the minor mesh; the sizes pair
-       up with background-size below (majors at 4x the cell, minors at 1x). */
-    background-image:
-        linear-gradient(var(--grid-line-major) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line-major) 1px, transparent 1px),
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size:
-        calc(var(--grid-size) * 4) calc(var(--grid-size) * 4),
-        calc(var(--grid-size) * 4) calc(var(--grid-size) * 4),
-        var(--grid-size) var(--grid-size),
-        var(--grid-size) var(--grid-size);
+    /* The line gradients are off on this branch: GridCells draws the grid as
+       shaded squares instead. */
 }
 
-/* Lit cells on the grid: a sparse scatter of squares a shade off the sink,
-   on the same fixed layer logic as the grid so they stay on its lines, and
-   masked out below the hero so the cards sit on the plain mesh. They settle
-   in with the hero and hold; the ones marked breathe drift a few percent
-   over half a minute. GridCells places them on the grid's cell size. */
+/* Shaded cells: every square of the backdrop grid in its own shade, on a
+   fixed layer like the old lines, brightest at the top and fading out down
+   the viewport. They rain in row by row with the hero and hold; a third of
+   them breathe a few percent over half a minute. GridCells places them on
+   the grid's cell size. */
 .grid-cells {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
     overflow: hidden;
-    mask-image: linear-gradient(to bottom, #000 0, #000 40vh, transparent 72vh);
-    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 40vh, transparent 72vh);
+    mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.55) 45vh, transparent 100vh);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.55) 45vh, transparent 100vh);
 }
 
 .grid-cell {
     position: absolute;
     left: calc(var(--col) * var(--grid-size) + 1px);
     top: calc(var(--row) * var(--grid-size) + 1px);
-    width: calc(var(--grid-size) - 1px);
-    height: calc(var(--grid-size) - 1px);
+    width: calc(var(--grid-size) - 2px);
+    height: calc(var(--grid-size) - 2px);
     background: color-mix(in srgb, var(--text-primary) var(--lit), transparent);
-    animation: cell-settle 0.6s ease-out both;
+    animation: cell-rain 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
 .grid-cell-1 {
-    --lit: 10%;
+    --lit: 3%;
 }
 
 .grid-cell-2 {
-    --lit: 16%;
+    --lit: 7%;
 }
 
 .grid-cell-3 {
-    --lit: 24%;
+    --lit: 12%;
+}
+
+.grid-cell-4 {
+    --lit: 18%;
+}
+
+.grid-cell-5 {
+    --lit: 26%;
 }
 
 .grid-cell-breathes {
     animation:
-        cell-settle 0.6s ease-out both,
+        cell-rain 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both,
         cell-breathe 32s ease-in-out infinite;
 }
 
-@keyframes cell-settle {
+@keyframes cell-rain {
     from {
         opacity: 0;
-        transform: scale(0.6);
+        transform: translateY(calc(var(--grid-size) * -3));
     }
     to {
         opacity: 1;
