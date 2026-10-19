@@ -217,6 +217,9 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                             span { class: "ext", "\u{2197}" }
                         }
                     }
+                    if let Some(path) = project.privacy_path {
+                        Link { to: path, class: "panel-action", "Privacy policy" }
+                    }
                     // Back to the shelf this sits on.
                     if let Some(section) = data::section_of(project.slug) {
                         Link {

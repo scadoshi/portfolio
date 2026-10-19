@@ -15,6 +15,7 @@ use pages::{
     home::Home,
     moved::{OldSideQuest, OldSideQuests},
     not_found::NotFound,
+    privacy::CairnPrivacy,
     projects::{Projects, SectionPage},
 };
 
@@ -32,6 +33,10 @@ pub enum Route {
         Home {},
         #[route("/projects")]
         Projects {},
+        // The App Store listing's privacy policy URL. Two segments, so it
+        // never collides with a section or a project slug.
+        #[route("/projects/cairn/privacy")]
+        CairnPrivacy {},
         // Before the project route: only the four section names parse, so
         // every other slug falls through to ProjectDetail.
         #[route("/projects/:section")]
