@@ -195,9 +195,9 @@ fn NavbarLayout() -> Element {
     rsx! {
         div { class: "theme-wrapper {css_class}",
             components::navbar::Navbar {}
-            // Keyed on the theme class so the field rains in again on a theme
-            // or mode change, and holds across navigation.
-            GridCells { key: "{css_class}" }
+            // Rains in once, on load; a theme change and navigation both leave
+            // it where it is.
+            GridCells {}
             main { class: "content",
                 Outlet::<Route> {}
             }
