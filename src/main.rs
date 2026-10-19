@@ -5,7 +5,7 @@ mod data;
 mod pages;
 mod stats;
 
-use components::grid_cells::GridCells;
+use orangui::GridCells;
 
 use orangui::{
     COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,

@@ -133,102 +133,6 @@ body {
     flex-direction: column;
 }
 
-/* The grid lives on a viewport-fixed layer so it stays pinned while the
-   page content scrolls over it. A fixed pseudo-element (rather than
-   background-attachment: fixed) because iOS Safari ignores fixed
-   attachment. z-index -1 tucks it behind all in-flow content; the
-   wrapper itself paints no background so the layer shows through. */
-.theme-wrapper::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-color: var(--bg-sink);
-    /* The line gradients are off on this branch: GridCells draws the grid as
-       shaded squares instead. */
-}
-
-/* Shaded cells: every square of the backdrop grid in its own shade, on a
-   fixed layer like the old lines, brightest at the top and fading out down
-   the viewport. They rain in row by row with the hero and hold; a third of
-   them breathe a few percent over half a minute. GridCells places them on
-   the grid's cell size. */
-.grid-cells {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    overflow: hidden;
-    mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 45vh, transparent 100vh);
-    -webkit-mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 45vh, transparent 100vh);
-}
-
-.grid-cell {
-    position: absolute;
-    left: calc(var(--col) * var(--grid-size) + 1px);
-    top: calc(var(--row) * var(--grid-size) + 1px);
-    width: calc(var(--grid-size) - 2px);
-    height: calc(var(--grid-size) - 2px);
-    /* The heatmap's corners: 2px on an 11px cell. */
-    border-radius: 18%;
-    background: color-mix(in srgb, var(--text-primary) var(--lit), transparent);
-    animation: cell-rain 0.35s cubic-bezier(0.2, 0.7, 0.3, 1) both;
-}
-
-.grid-cell-1 {
-    --lit: 1.5%;
-}
-
-.grid-cell-2 {
-    --lit: 3%;
-}
-
-.grid-cell-3 {
-    --lit: 5%;
-}
-
-.grid-cell-4 {
-    --lit: 7.5%;
-}
-
-.grid-cell-5 {
-    --lit: 10%;
-}
-
-.grid-cell-breathes {
-    animation:
-        cell-rain 0.35s cubic-bezier(0.2, 0.7, 0.3, 1) both,
-        cell-breathe 32s ease-in-out infinite;
-}
-
-@keyframes cell-rain {
-    from {
-        opacity: 0;
-        transform: translateY(calc(var(--grid-size) * -3));
-    }
-    to {
-        opacity: 1;
-        transform: none;
-    }
-}
-
-@keyframes cell-breathe {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.45;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .grid-cell {
-        animation: none;
-    }
-}
-
 a,
 a:visited {
     color: var(--palette-1);
@@ -1904,9 +1808,10 @@ rect.fleet-bar {
     font-size: 0.85rem;
 }
 
-/* The shell is its own stacking context, so the grid cells layer (z-index -1)
-   stays under every screen, sheet and dialog in it, including mid-rain when
-   each cell carries a transform. */
+/* The wrapper is its own stacking context, so the GridCells layer (z-index
+   -1) stays under every panel in it, including mid-rain when each cell
+   carries a transform. The wrapper paints no background of its own; the
+   layer paints the sink. */
 .theme-wrapper {
     isolation: isolate;
 }
