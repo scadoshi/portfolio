@@ -185,15 +185,15 @@ body {
 }
 
 .grid-cell-1 {
-    --lit: 3%;
+    --lit: 10%;
 }
 
 .grid-cell-2 {
-    --lit: 5%;
+    --lit: 16%;
 }
 
 .grid-cell-3 {
-    --lit: 8%;
+    --lit: 24%;
 }
 
 .grid-cell-breathes {

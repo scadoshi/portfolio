@@ -12,7 +12,7 @@ use dioxus::prelude::*;
 const COLUMNS: u32 = 80;
 const ROWS: u32 = 24;
 /// One cell in this many is lit.
-const DENSITY: u32 = 28;
+const DENSITY: u32 = 9;
 /// How far apart the columns settle, so the scatter arrives left to right
 /// the way the heatmap does.
 const SETTLE_STEP_MS: u32 = 14;
