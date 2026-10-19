@@ -20,7 +20,8 @@ use super::orangui_phone::OranguiPhone;
 const REPO: &str = "https://github.com/scadoshi/orangui/blob/main";
 
 /// The nav's S, the art the Decode panel resolves.
-/// The orangutan from orangui's README, the kit's mark.
+/// The orangutan, the kit's mark: a larger cut than the README's, 166
+/// columns by 91 rows, so the face reads.
 const ORANGUTAN: &str = include_str!("../../assets/orangutan.txt");
 
 /// The marks the Decode panel can show: this site's S, orangui's O and
@@ -596,27 +597,18 @@ fn PaletteShowcase() -> Element {
     }
 }
 
-/// The orangutan from the README in a panel of its own, still on arrival, with
-/// a Replay that decodes it. The detail page sets it beside the goal.
+/// The orangutan in a panel of its own, shown as it is: at this size a
+/// decode would be noise for most of a second, so there is no Replay. The
+/// detail page sets it beside the goal.
 #[component]
 pub(crate) fn OrangutanShowcase() -> Element {
-    let replay = use_signal(|| 0u32);
-    use_context_provider(|| Replay(replay));
     rsx! {
         Panel {
             title: "The orangutan",
             actions: rsx! {
-                ReplayButton { replay }
                 Source { path: "README.md" }
             },
-            // Still on arrival; Replay decodes it.
-            pre { class: "orangutan-art", "aria-label": "An orangutan in ASCII art",
-                if replay() == 0 {
-                    "{ORANGUTAN}"
-                } else {
-                    orangui::Decode { text: ORANGUTAN }
-                }
-            }
+            pre { class: "orangutan-art", "aria-label": "An orangutan in ASCII art", "{ORANGUTAN}" }
         }
     }
 }

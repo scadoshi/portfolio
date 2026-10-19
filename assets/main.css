@@ -1209,13 +1209,14 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     justify-content: center;
 }
 
-/* The orangutan's panel, sized so its 48 columns fit a phone's panel. */
+/* The orangutan's panel: 166 columns, sized to the panel's width, so it
+   fills a desktop panel and shrinks to fit a phone's. */
 .orangutan-art {
     margin: 0 auto;
     width: fit-content;
     font-family: "JetBrains Mono", monospace;
-    font-size: clamp(0.45rem, 2.2vw, 0.75rem);
-    line-height: 1.05;
+    font-size: clamp(0.2rem, 0.6vw, 0.65rem);
+    line-height: 1;
     white-space: pre;
     color: var(--logo);
 }
