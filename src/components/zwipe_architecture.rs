@@ -80,7 +80,7 @@ fn Crates() -> Element {
     }
 }
 
-/// The running system: both clients call the server, which keeps PostgreSQL
+/// The running system: both clients call the server, which keeps `PostgreSQL`
 /// and pulls the catalog from Scryfall.
 #[component]
 fn Infrastructure() -> Element {
