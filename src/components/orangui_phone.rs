@@ -59,7 +59,8 @@ if (view) {
 const TOUCH_JS: &str = r#"
 if (!window.__phoneTouch) {
     window.__phoneTouch = true;
-    const scroller = (target) => target.closest?.(".phone-screen .screen-content");
+    // The screen's list, and a sheet's body, which scrolls on its own.
+    const scroller = (target) => target.closest?.(".phone-screen .screen-content, .phone-screen .sheet-content");
     document.addEventListener("wheel", (e) => {
         if (e.target.closest?.(".phone-screen")) e.preventDefault();
     }, { passive: false });

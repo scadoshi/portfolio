@@ -1170,12 +1170,14 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
 
 /* The phone scrolls the way a phone does: no scrollbar, no wheel, a drag
    moves the list (TOUCH_JS), and the hand says so. */
-.phone-screen .screen-content {
+.phone-screen .screen-content,
+.phone-screen .sheet-content {
     cursor: grab;
     overscroll-behavior: contain;
 }
 
-.phone-screen .screen-content.phone-dragging {
+.phone-screen .screen-content.phone-dragging,
+.phone-screen .sheet-content.phone-dragging {
     cursor: grabbing;
     user-select: none;
 }
