@@ -1904,3 +1904,9 @@ rect.fleet-bar {
     font-size: 0.85rem;
 }
 
+/* The shell is its own stacking context, so the grid cells layer (z-index -1)
+   stays under every screen, sheet and dialog in it, including mid-rain when
+   each cell carries a transform. */
+.theme-wrapper {
+    isolation: isolate;
+}

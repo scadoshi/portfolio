@@ -46,6 +46,7 @@ fn cells() -> Vec<Cell> {
     out
 }
 
+/// The field: a fixed layer of shaded cells under everything on screen.
 #[component]
 pub fn GridCells() -> Element {
     rsx! {
