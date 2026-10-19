@@ -1156,7 +1156,30 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     max-width: calc(100% - 1.5rem);
 }
 
-/* The phone scrolls the way a phone does, with no scrollbar showing. */
+/* The phone's backdrop: GridCells sits absolute inside the screen (whose
+   transform is its containing block anyway), and its fade runs over the
+   phone's own height instead of the page's viewport. */
+.phone-screen .grid-cells {
+    position: absolute;
+}
+
+.phone-screen .grid-cells-canvas {
+    mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 45%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 45%, transparent 100%);
+}
+
+/* The phone scrolls the way a phone does: no scrollbar, no wheel, a drag
+   moves the list (TOUCH_JS), and the hand says so. */
+.phone-screen .screen-content {
+    cursor: grab;
+    overscroll-behavior: contain;
+}
+
+.phone-screen .screen-content.phone-dragging {
+    cursor: grabbing;
+    user-select: none;
+}
+
 .phone-screen * {
     scrollbar-width: none;
 }

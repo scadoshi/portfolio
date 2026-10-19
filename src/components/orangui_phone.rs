@@ -14,8 +14,8 @@ use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use orangui::{
     ActionBar, AlertDialog, BottomSheet, Button, ButtonVariant, Chip, DarkModeButton, DialogAction,
-    DialogHostView, InfoButton, PageHeader, Panel, TOAST_NORMAL, ThemeConfig, ThemeSheet,
-    ToastStack, display_theme_name, use_dialog_host,
+    DialogHostView, GridCells, InfoButton, PageHeader, Panel, TOAST_NORMAL, ThemeConfig,
+    ThemeSheet, ToastStack, display_theme_name, use_dialog_host,
 };
 
 /// The hint the phone's "?" buttons open: a title and a line, as the apps'
@@ -47,6 +47,62 @@ if (view) {
     const fit = () => view.style.setProperty("--phone-scale", view.clientWidth / 414);
     fit();
     new ResizeObserver(fit).observe(view);
+}
+"#;
+
+/// The phone scrolls like a phone: the wheel does nothing over it, and a
+/// pointer drag moves the list, with a little glide when it lets go. A drag
+/// that moved more than a few pixels swallows the click it would have ended
+/// on, so a swipe over a button does not press it. Delegated from the
+/// document, so a re-rendered screen keeps working; the guard keeps it to
+/// one install.
+const TOUCH_JS: &str = r#"
+if (!window.__phoneTouch) {
+    window.__phoneTouch = true;
+    const scroller = (target) => target.closest?.(".phone-screen .screen-content");
+    document.addEventListener("wheel", (e) => {
+        if (e.target.closest?.(".phone-screen")) e.preventDefault();
+    }, { passive: false });
+    let drag = null;
+    document.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "touch" || e.button !== 0) return;
+        const el = scroller(e.target);
+        if (!el) return;
+        if (drag?.raf) cancelAnimationFrame(drag.raf);
+        drag = { el, y: e.clientY, start: e.clientY, top: el.scrollTop, v: 0, t: performance.now(), moved: false, raf: 0 };
+        el.classList.add("phone-dragging");
+    });
+    document.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        const now = performance.now();
+        const dy = (e.clientY - drag.y) / (parseFloat(getComputedStyle(drag.el).zoom) || 1);
+        drag.el.scrollTop -= dy;
+        drag.v = dy / Math.max(1, now - drag.t);
+        drag.y = e.clientY;
+        drag.t = now;
+        if (Math.abs(e.clientY - drag.start) > 5) drag.moved = true;
+    });
+    const release = () => {
+        if (!drag) return;
+        const d = drag;
+        drag = null;
+        d.el.classList.remove("phone-dragging");
+        let v = d.v * 16;
+        const glide = () => {
+            if (Math.abs(v) < 0.3) return;
+            d.el.scrollTop -= v;
+            v *= 0.94;
+            d.raf = requestAnimationFrame(glide);
+        };
+        if (d.moved) d.raf = requestAnimationFrame(glide);
+        if (d.moved) {
+            const swallow = (e) => { e.stopPropagation(); e.preventDefault(); };
+            document.addEventListener("click", swallow, { capture: true, once: true });
+            setTimeout(() => document.removeEventListener("click", swallow, { capture: true }), 50);
+        }
+    };
+    document.addEventListener("pointerup", release);
+    document.addEventListener("pointercancel", release);
 }
 "#;
 
@@ -124,11 +180,16 @@ fn Phone() -> Element {
     // to fit the frame, which CSS cannot work out from the frame's width.
     use_effect(|| {
         document::eval(SCALE_JS);
+        document::eval(TOUCH_JS);
     });
     rsx! {
         div { class: "phone",
             div { class: "phone-viewport",
                 div { class: "phone-screen {class}",
+                    // The apps' backdrop, in place: the screen's transform
+                    // makes it the layer's containing block, so it fills the
+                    // phone and not the page.
+                    GridCells { still: true }
                     ToastStack {
                         PhoneApp { site, picked }
                     }
