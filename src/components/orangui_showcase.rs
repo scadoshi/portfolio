@@ -559,7 +559,7 @@ fn StatsShowcase() -> Element {
                 "Headline numbers that count up as they load."
             }
             StatsStrip {
-                figures: vec![(Some(31), "themes"), (Some(6), "palette slots"), (Some(3), "hosts")],
+                figures: vec![(Some(34), "themes"), (Some(6), "palette slots"), (Some(3), "hosts")],
             }
         }
     }
