@@ -195,9 +195,10 @@ fn NavbarLayout() -> Element {
     rsx! {
         div { class: "theme-wrapper {css_class}",
             components::navbar::Navbar {}
-            // Rains in once, on load; a theme change and navigation both leave
-            // it where it is.
-            GridCells {}
+            // Rains in once, after the content's 0.3s entrance has landed, so
+            // the cells never show through a panel still fading in; a theme
+            // change and navigation both leave it where it is.
+            GridCells { delay_ms: 350 }
             main { class: "content",
                 Outlet::<Route> {}
             }
