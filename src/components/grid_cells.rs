@@ -1,8 +1,8 @@
 //! Shaded cells on the backdrop: every grid square gets its own shade, so the
 //! cells are the grid, with no lines drawn. Fixed like the old grid so they
 //! stay put while the page scrolls, brightest at the top and fading out down
-//! the viewport. They rain in row by row with the hero's entrance and then
-//! hold; a third of them breathe a few percent over half a minute. The
+//! the viewport. They rain in row by row as soon as the page paints, on every
+//! screen, and then hold; a third of them breathe a few percent over half a minute. The
 //! shades are seeded, so it is the same field on every load.
 
 use dioxus::prelude::*;
@@ -12,7 +12,7 @@ use dioxus::prelude::*;
 const COLUMNS: u32 = 80;
 const ROWS: u32 = 44;
 /// How far apart the rows arrive, so the field rains down from the top.
-const RAIN_STEP_MS: u32 = 45;
+const RAIN_STEP_MS: u32 = 18;
 
 struct Cell {
     column: u32,
@@ -38,7 +38,7 @@ fn cells() -> Vec<Cell> {
                 column,
                 row,
                 shade: roll % 5 + 1,
-                rain_ms: row * RAIN_STEP_MS + (roll >> 4) % 400,
+                rain_ms: row * RAIN_STEP_MS + (roll >> 4) % 160,
                 breathe_ms: (roll % 3 == 0).then_some((roll >> 6) % 20_000),
             });
         }

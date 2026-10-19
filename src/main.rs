@@ -5,6 +5,8 @@ mod data;
 mod pages;
 mod stats;
 
+use components::grid_cells::GridCells;
+
 use orangui::{
     COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
     use_persisted_theme, use_theme_wipe_follow,
@@ -193,6 +195,7 @@ fn NavbarLayout() -> Element {
     rsx! {
         div { class: "theme-wrapper {css_class}",
             components::navbar::Navbar {}
+            GridCells {}
             main { class: "content",
                 Outlet::<Route> {}
             }

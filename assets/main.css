@@ -171,7 +171,7 @@ body {
     width: calc(var(--grid-size) - 2px);
     height: calc(var(--grid-size) - 2px);
     background: color-mix(in srgb, var(--text-primary) var(--lit), transparent);
-    animation: cell-rain 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    animation: cell-rain 0.35s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
 .grid-cell-1 {
@@ -196,7 +196,7 @@ body {
 
 .grid-cell-breathes {
     animation:
-        cell-rain 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both,
+        cell-rain 0.35s cubic-bezier(0.2, 0.7, 0.3, 1) both,
         cell-breathe 32s ease-in-out infinite;
 }
 
@@ -219,10 +219,6 @@ body {
     50% {
         opacity: 0.45;
     }
-}
-
-html.js:not(.hydrated) .grid-cell {
-    animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
