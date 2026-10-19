@@ -3,7 +3,9 @@ use orangui::{Decode, Panel, Replay, StatsStrip};
 
 use crate::{
     Route,
-    components::{heatmap::Heatmap, page_meta::PageMeta, project_card::project_card},
+    components::{
+        grid_cells::GridCells, heatmap::Heatmap, page_meta::PageMeta, project_card::project_card,
+    },
     data, stats,
 };
 
@@ -40,6 +42,7 @@ pub fn Home() -> Element {
             path: "/",
         }
         document::Script { r#type: "application/ld+json", "{JSON_LD}" }
+        GridCells {}
         section { class: "hero content-enter",
             // Keyed on the replay count so the spacing animation runs again
             // with the decode.

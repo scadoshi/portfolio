@@ -159,6 +159,80 @@ body {
         var(--grid-size) var(--grid-size);
 }
 
+/* Lit cells on the grid: a sparse scatter of squares a shade off the sink,
+   on the same fixed layer logic as the grid so they stay on its lines, and
+   masked out below the hero so the cards sit on the plain mesh. They settle
+   in with the hero and hold; the ones marked breathe drift a few percent
+   over half a minute. GridCells places them on the grid's cell size. */
+.grid-cells {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, #000 0, #000 40vh, transparent 72vh);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 40vh, transparent 72vh);
+}
+
+.grid-cell {
+    position: absolute;
+    left: calc(var(--col) * var(--grid-size) + 1px);
+    top: calc(var(--row) * var(--grid-size) + 1px);
+    width: calc(var(--grid-size) - 1px);
+    height: calc(var(--grid-size) - 1px);
+    background: color-mix(in srgb, var(--text-primary) var(--lit), transparent);
+    animation: cell-settle 0.6s ease-out both;
+}
+
+.grid-cell-1 {
+    --lit: 3%;
+}
+
+.grid-cell-2 {
+    --lit: 5%;
+}
+
+.grid-cell-3 {
+    --lit: 8%;
+}
+
+.grid-cell-breathes {
+    animation:
+        cell-settle 0.6s ease-out both,
+        cell-breathe 32s ease-in-out infinite;
+}
+
+@keyframes cell-settle {
+    from {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes cell-breathe {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.45;
+    }
+}
+
+html.js:not(.hydrated) .grid-cell {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .grid-cell {
+        animation: none;
+    }
+}
+
 a,
 a:visited {
     color: var(--palette-1);
