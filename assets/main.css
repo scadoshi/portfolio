@@ -1215,8 +1215,8 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
    type size, onto the 166 by 91 art, framed on the face and bleeding to the
    panel's edges so the rest runs off. The size follows the panel's width. */
 .orangutan-frame {
-    font-size: clamp(0.4rem, 0.95vw, 0.85rem);
-    height: 42em;
+    font-size: clamp(0.33rem, 0.84vw, 0.75rem);
+    height: 52em;
     margin: 0 -1.5rem;
     overflow: hidden;
     display: flex;
@@ -1224,14 +1224,14 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
 }
 
 .orangutan-art {
-    margin: -12em 0 0;
+    margin: -7em 0 0;
     font-family: "JetBrains Mono", monospace;
     font-size: inherit;
     line-height: 1;
     white-space: pre;
     color: var(--logo);
     /* The face sits left of the art's middle; this centers it. */
-    transform: translateX(3em);
+    transform: translateX(2em);
 }
 
 /* === Code Blocks === */
