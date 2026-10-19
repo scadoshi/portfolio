@@ -1211,16 +1211,27 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     justify-content: center;
 }
 
-/* The orangutan's panel: 166 columns, sized to the panel's width, so it
-   fills a desktop panel and shrinks to fit a phone's. */
+/* The orangutan's band: a fixed-height window, in rows of the art's own
+   type size, onto the 166 by 91 art, framed on the face and bleeding to the
+   panel's edges so the rest runs off. The size follows the panel's width. */
+.orangutan-frame {
+    font-size: clamp(0.4rem, 0.95vw, 0.85rem);
+    height: 42em;
+    margin: 0 -1.5rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
 .orangutan-art {
-    margin: 0 auto;
-    width: fit-content;
+    margin: -12em 0 0;
     font-family: "JetBrains Mono", monospace;
-    font-size: clamp(0.2rem, 0.6vw, 0.65rem);
+    font-size: inherit;
     line-height: 1;
     white-space: pre;
     color: var(--logo);
+    /* The face sits left of the art's middle; this centers it. */
+    transform: translateX(3em);
 }
 
 /* === Code Blocks === */

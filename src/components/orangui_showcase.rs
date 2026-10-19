@@ -597,9 +597,9 @@ fn PaletteShowcase() -> Element {
     }
 }
 
-/// The orangutan in a panel of its own, shown as it is: at this size a
-/// decode would be noise for most of a second, so there is no Replay. The
-/// detail page sets it beside the goal.
+/// The orangutan in a band of its own under the goal, cropped to the face
+/// and shown as it is: at this size a decode would be noise for most of a
+/// second, so there is no Replay.
 #[component]
 pub(crate) fn OrangutanShowcase() -> Element {
     rsx! {
@@ -608,7 +608,11 @@ pub(crate) fn OrangutanShowcase() -> Element {
             actions: rsx! {
                 Source { path: "README.md" }
             },
-            pre { class: "orangutan-art", "aria-label": "An orangutan in ASCII art", "{ORANGUTAN}" }
+            // A window onto the art, cropped to the face; the rest runs off
+            // the panel's edges.
+            div { class: "orangutan-frame",
+                pre { class: "orangutan-art", "aria-label": "An orangutan in ASCII art", "{ORANGUTAN}" }
+            }
         }
     }
 }

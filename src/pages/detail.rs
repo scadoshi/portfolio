@@ -233,13 +233,10 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                 Measured { repo_url: project.repo_url.to_string() }
             }
 
+            {goal_panel(project)}
+            // Its own band under the goal, cropped to the face.
             if project.slug == "orangui" {
-                div { class: "detail-band",
-                    {goal_panel(project)}
-                    OrangutanShowcase {}
-                }
-            } else {
-                {goal_panel(project)}
+                OrangutanShowcase {}
             }
 
             {project_panels(project)}
