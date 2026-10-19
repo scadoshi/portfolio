@@ -67,7 +67,8 @@
 html.js:not(.hydrated) .heat-grid .commits-line,
 html.js:not(.hydrated) .heat-grid .commits-area,
 html.js:not(.hydrated) .heat-grid .commits-dot,
-html.js:not(.hydrated) .heat-cell {
+html.js:not(.hydrated) .heat-cell,
+html.js:not(.hydrated) .heat-halo {
     animation-play-state: paused;
 }
 
