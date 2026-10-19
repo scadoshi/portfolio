@@ -24,3 +24,4 @@ What four outside reviews (Claude, Gemini, Grok, ChatGPT, October 2026) said abo
 - Zwipe: demo videos sit below the code; show it working first
 - Zwipe: an architecture diagram would beat the six-crate sentence
 - Zwipe impact line ("six crates, unwrap banned by CI") is an engineering detail, not an outcome
+- Zwipe: the screenshots and demo videos show the old look. Since 2026-10-19 gruvbox's accent is its aqua, the backdrop is shaded squares and the app opens on a splash, so they need reshooting from the 16 Pro Max simulator once 1.12.0 is live; zwipe's own store shots and marketing videos go with them (its todo has the item). Skipped on purpose for now
