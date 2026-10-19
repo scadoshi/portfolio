@@ -1776,19 +1776,21 @@ rect.fleet-bar {
     font-size: 11px;
 }
 
+/* The commit line matches the heatmap: a theme's --heat where it sets one
+   (gruvbox's green), the accent otherwise. */
 .commits-area {
-    fill: color-mix(in srgb, var(--accent-primary) 18%, transparent);
+    fill: color-mix(in srgb, var(--heat, var(--accent-primary)) 18%, transparent);
 }
 
 .commits-line {
     fill: none;
-    stroke: var(--accent-primary);
+    stroke: var(--heat, var(--accent-primary));
     stroke-width: 2;
     stroke-linejoin: round;
 }
 
 .commits-dot {
-    fill: var(--accent-primary);
+    fill: var(--heat, var(--accent-primary));
 }
 
 .commits-hit {
