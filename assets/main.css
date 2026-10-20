@@ -1163,6 +1163,12 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     position: absolute;
 }
 
+/* WebKit draws a sheet's canvas over its header, body and bar inside the
+   zoomed phone; giving each its own layer keeps them on top. */
+.phone-screen .bottom-sheet > :not(.grid-cells) {
+    transform: translateZ(0);
+}
+
 .phone-screen .grid-cells-canvas {
     mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 45%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, #000 0, rgba(0, 0, 0, 0.45) 45%, transparent 100%);
