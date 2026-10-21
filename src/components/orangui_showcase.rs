@@ -640,7 +640,7 @@ fn DecodeShowcase() -> Element {
                 Source { path: "src/entrance.rs" }
             },
             p { class: "kit-use",
-                "Block art that resolves out of noise, like the S in the nav. Pick a letter to watch it decode, and hover to make it shimmer."
+                "Block art that builds left to right out of noise, like the S in the nav. Pick a letter to watch it decode, and hover to make it shimmer."
             }
             div { class: "kit-decode",
                 // Keyed on the mark, so a pick mounts it fresh and it decodes.
