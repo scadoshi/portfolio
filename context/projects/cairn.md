@@ -51,11 +51,11 @@ Quote attribution is worse than expected. "You don't stop running because you ge
 
 ## Roadmap
 
-TestFlight and App Store review. Editing a past day, CSV import. An Apple Watch face eventually, which is why the domain stays pure.
+Editing a past day, CSV import. An Apple Watch face eventually, which is why the domain stays pure.
 
 ## Status
 
-Doing. In daily use: 225 days, 9,914 taps, 98,300 reps. 8,600 lines, 110 tests.
+Doing. Live on the App Store as Cairn Counter, and in daily use: 225 days, 9,914 taps, 98,300 reps. 8,600 lines, 110 tests.
 
 ## Repo
 

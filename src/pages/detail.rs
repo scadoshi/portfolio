@@ -209,6 +209,13 @@ fn detail_view(project: &'static data::Project, path: String) -> Element {
                         class: "panel-action",
                         "View on GitHub" span { class: "ext", "\u{2197}" }
                     }
+                    if let Some(store) = project.store_url {
+                        a {
+                            href: "{store}",
+                            class: "panel-action",
+                            "App Store" span { class: "ext", "\u{2197}" }
+                        }
+                    }
                     if let Some(site) = project.site_url {
                         a {
                             href: "{site}",

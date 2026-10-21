@@ -9,7 +9,8 @@ use crate::{
 /// Cairn's release history. Linked from the cairn project page.
 pub const CAIRN_CHANGELOG_PATH: &str = "/projects/cairn/changelog";
 
-const APP_STORE_URL: &str = "https://apps.apple.com/us/app/cairn-counter/id6824349629";
+/// Cairn's store listing. Linked here and from the cairn page.
+pub const CAIRN_APP_STORE_URL: &str = "https://apps.apple.com/us/app/cairn-counter/id6824349629";
 
 #[component]
 pub fn CairnChangelog() -> Element {
@@ -26,7 +27,7 @@ pub fn CairnChangelog() -> Element {
                 // Page hero, so the title is this page's h1 (see detail.rs).
                 title_h1: true,
                 actions: rsx! {
-                    a { href: APP_STORE_URL, class: "panel-action",
+                    a { href: CAIRN_APP_STORE_URL, class: "panel-action",
                         "App Store" span { class: "ext", "\u{2197}" }
                     }
                     Link {
