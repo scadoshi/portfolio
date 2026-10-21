@@ -7,7 +7,7 @@ use crate::{
     data, stats,
 };
 
-const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
+pub(crate) const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
 
 /// JSON-LD `Person` markup emitted into `<head>` on the home page. Ties the
 /// domain to the GitHub/LinkedIn profiles for rich person results in search.

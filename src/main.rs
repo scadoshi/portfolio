@@ -139,6 +139,9 @@ fn App() -> Element {
     // The hero's entrance runs again whenever this moves; the nav S bumps it.
     let replay = orangui::Replay(use_signal(|| 0u32));
     use_context_provider(|| replay);
+    // Closed until the splash starts to fade, so the hero's entrances run as
+    // it leaves. A load with no splash opens it at once (NavbarLayout).
+    use_context_provider(|| orangui::SplashGate(Signal::new(false)));
     use_effect(move || {
         spawn(async move {
             if let Some(snapshot) = stats::fetch_live().await {
@@ -196,6 +199,24 @@ fn NavbarLayout() -> Element {
     // Core's css_class() is just "theme-{name}-{mode}"; the wrapper class
     // carries this site's fixed-grid background layer.
     let css_class = theme.read().css_class();
+    // The opening, on the first landing on the home page in a session.
+    // index.html decides before first paint and marks the document
+    // `splash-skip` otherwise, which hides the prerendered overlay; the app
+    // reads the same mark here and opens the gate for the entrances at once.
+    let route = use_route::<Route>();
+    let mut splash = use_signal(|| route == Route::Home {});
+    let mut gate = use_context::<orangui::SplashGate>().0;
+    use_effect(move || {
+        spawn(async move {
+            let mut eval = document::eval(
+                "const root = document.documentElement; root.classList.add('splash-live'); dioxus.send(root.classList.contains('splash-skip'));",
+            );
+            if eval.recv::<bool>().await.unwrap_or(true) {
+                splash.set(false);
+                gate.set(true);
+            }
+        });
+    });
     rsx! {
         div { class: "theme-wrapper {css_class}",
             components::navbar::Navbar {}
@@ -207,6 +228,11 @@ fn NavbarLayout() -> Element {
                 Outlet::<Route> {}
             }
             components::footer::Footer {}
+            if splash() {
+                orangui::Splash { pace: 67,
+                    pre { class: "logo", orangui::Decode { text: pages::home::LOGO_ASCII } }
+                }
+            }
         }
     }
 }
