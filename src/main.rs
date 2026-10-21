@@ -229,7 +229,7 @@ fn NavbarLayout() -> Element {
             }
             components::footer::Footer {}
             if splash() {
-                orangui::Splash { pace: 67,
+                orangui::Splash { pace: 67, prerendered: true,
                     pre { class: "logo", orangui::Decode { text: pages::home::LOGO_ASCII } }
                 }
             }
