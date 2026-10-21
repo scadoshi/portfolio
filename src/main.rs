@@ -220,10 +220,10 @@ fn NavbarLayout() -> Element {
     rsx! {
         div { class: "theme-wrapper {css_class}",
             components::navbar::Navbar {}
-            // Rains in once, after the content's 0.3s entrance has landed, so
-            // the cells never show through a panel still fading in; a theme
-            // change and navigation both leave it where it is.
-            GridCells { delay_ms: 350 }
+            // Still: drawn in place on first paint. The splash's own field
+            // rains in over it, the same seeded cells, so when the overlay
+            // fades the backdrop is already there and nothing rains twice.
+            GridCells { still: true }
             main { class: "content",
                 Outlet::<Route> {}
             }
