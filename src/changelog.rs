@@ -21,18 +21,20 @@ pub struct Release {
 
 /// Versions built but not yet on the App Store, newest first. Rendered at
 /// the top with an "Upcoming" badge instead of "Latest".
-pub const UPCOMING: &[Release] = &[
-    Release {
-        version: "1.1.1",
-        date: "",
-        entries: &[
-            "Flexoki theme replaces Visual Studio, whose users move to VS Code",
-            "Synthwave '84's colors match the original theme",
-        ],
-    },
+pub const UPCOMING: &[Release] = &[Release {
+    version: "1.1.1",
+    date: "",
+    entries: &[
+        "Flexoki theme replaces Visual Studio, whose users move to VS Code",
+        "Synthwave '84's colors match the original theme",
+    ],
+}];
+
+/// Shipped releases, newest first.
+pub const RELEASES: &[Release] = &[
     Release {
         version: "1.1.0",
-        date: "",
+        date: "Oct 21, 2026",
         entries: &[
             "Four Monokai Pro themes: Pro, Machine, Octagon and Spectrum, each in dark and light",
             "Editor defaults as themes: Darcula, Xcode, Visual Studio, Eclipse and Neovim, each in dark and light",
@@ -49,28 +51,26 @@ pub const UPCOMING: &[Release] = &[
             "The splash spells out the full Cairn wordmark",
         ],
     },
+    Release {
+        version: "1.0.0",
+        date: "Oct 20, 2026",
+        entries: &[
+            "Counters that keep a lifetime total, with a breakdown by year",
+            "Goals per day, week or year, with pace: what today still owes, ahead or behind, and the projected year end",
+            "A goal tag on each card counting down to the day's share, green once met",
+            "A step per counter, from 1 to 100, and an optional big step beside it",
+            "Trend charts: this week, 60 days with a 7-day average, weekly totals, monthly averages, weekday pattern and hour of day",
+            "Every day of the last year as a grid, each day shaded by how it ranks",
+            "A numbers card: streaks, consistency, the last 7 days against the 7 before, and best week and month",
+            "Rest days that don't count against consistency or break a streak",
+            "Six goal animations that play when a counter meets its daily goal, set app-wide or per counter",
+            "A quote that turns over on the hour",
+            "31 themes, each in dark and light, and an App icon picker to match",
+            "CSV export, one file per counter",
+            "No account and no server: everything stays on the phone",
+        ],
+    },
 ];
-
-/// Shipped releases, newest first.
-pub const RELEASES: &[Release] = &[Release {
-    version: "1.0.0",
-    date: "Oct 20, 2026",
-    entries: &[
-        "Counters that keep a lifetime total, with a breakdown by year",
-        "Goals per day, week or year, with pace: what today still owes, ahead or behind, and the projected year end",
-        "A goal tag on each card counting down to the day's share, green once met",
-        "A step per counter, from 1 to 100, and an optional big step beside it",
-        "Trend charts: this week, 60 days with a 7-day average, weekly totals, monthly averages, weekday pattern and hour of day",
-        "Every day of the last year as a grid, each day shaded by how it ranks",
-        "A numbers card: streaks, consistency, the last 7 days against the 7 before, and best week and month",
-        "Rest days that don't count against consistency or break a streak",
-        "Six goal animations that play when a counter meets its daily goal, set app-wide or per counter",
-        "A quote that turns over on the hour",
-        "31 themes, each in dark and light, and an App icon picker to match",
-        "CSV export, one file per counter",
-        "No account and no server: everything stays on the phone",
-    ],
-}];
 
 #[cfg(test)]
 mod tests {
