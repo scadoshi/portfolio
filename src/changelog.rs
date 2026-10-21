@@ -2,8 +2,10 @@
 //!
 //! Cairn makes no network requests, so nothing serves this to the app; the
 //! site is the only place it shows. The working copy is cairn's
-//! `context/progress/changelog.md`; at cut time its entries move here,
-//! reworded to zwipe's changelog rules, which the tests below hold.
+//! `context/progress/changelog.md`: every entry added there lands here in the
+//! same sitting, in [`UPCOMING`] under the next version, reworded to zwipe's
+//! changelog rules, which the tests below hold. At cut time the version moves
+//! to [`RELEASES`] with its date.
 
 /// One version and its notes. Dates are the App Store's "Ready for
 /// Distribution" date; newest first.
@@ -19,25 +21,35 @@ pub struct Release {
 
 /// Versions built but not yet on the App Store, newest first. Rendered at
 /// the top with an "Upcoming" badge instead of "Latest".
-pub const UPCOMING: &[Release] = &[Release {
-    version: "1.1.0",
-    date: "",
-    entries: &[
-        "Four Monokai Pro themes: Pro, Machine, Octagon and Spectrum, each in dark and light",
-        "Editor defaults as themes: Darcula, Xcode, Visual Studio, Eclipse and Neovim, each in dark and light",
-        "Ten more themes: Bluloco, GitHub High Contrast, Kanagawa Dragon, Material, Melange, Modus, Nightfox, Oxocarbon, Poimandres and Terafox, each in dark and light, bringing the set to 50",
-        "The theme and App icon pickers group themes under headings by look, with high contrast and color blind last",
-        "Ristretto is now called Monokai Pro Ristretto",
-        "The App icon picker offers the new themes too",
-        "The backdrop is a field of shaded squares instead of grid lines, on screens and sheets",
-        "The app opens on a short splash: the backdrop rains in and the C resolves over it before the first screen, whose cards, figures and quote arrive as it leaves",
-        "The app icon can match your theme, switching with it in dark and light",
-        "The app no longer flashes unstyled for a moment before the splash",
-        "The logo builds left to right, its shape arriving as noise and then decoding into the mark, on the splash and the home screen",
-        "The splash's logo leaves the way it arrived, turning back to noise and clearing left to right before the home screen shows",
-        "The splash spells out the full Cairn wordmark",
-    ],
-}];
+pub const UPCOMING: &[Release] = &[
+    Release {
+        version: "1.1.1",
+        date: "",
+        entries: &[
+            "Flexoki theme replaces Visual Studio, whose users move to VS Code",
+            "Synthwave '84's colors match the original theme",
+        ],
+    },
+    Release {
+        version: "1.1.0",
+        date: "",
+        entries: &[
+            "Four Monokai Pro themes: Pro, Machine, Octagon and Spectrum, each in dark and light",
+            "Editor defaults as themes: Darcula, Xcode, Visual Studio, Eclipse and Neovim, each in dark and light",
+            "Ten more themes: Bluloco, GitHub High Contrast, Kanagawa Dragon, Material, Melange, Modus, Nightfox, Oxocarbon, Poimandres and Terafox, each in dark and light, bringing the set to 50",
+            "The theme and App icon pickers group themes under headings by look, with high contrast and color blind last",
+            "Ristretto is now called Monokai Pro Ristretto",
+            "The App icon picker offers the new themes too",
+            "The backdrop is a field of shaded squares instead of grid lines, on screens and sheets",
+            "The app opens on a short splash: the backdrop rains in and the C resolves over it before the first screen, whose cards, figures and quote arrive as it leaves",
+            "The app icon can match your theme, switching with it in dark and light",
+            "The app no longer flashes unstyled for a moment before the splash",
+            "The logo builds left to right, its shape arriving as noise and then decoding into the mark, on the splash and the home screen",
+            "The splash's logo leaves the way it arrived, turning back to noise and clearing left to right before the home screen shows",
+            "The splash spells out the full Cairn wordmark",
+        ],
+    },
+];
 
 /// Shipped releases, newest first.
 pub const RELEASES: &[Release] = &[Release {

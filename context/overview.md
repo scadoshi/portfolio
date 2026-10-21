@@ -45,6 +45,8 @@ The shared UI comes from [orangui](https://github.com/scadoshi/orangui), the Dio
 
 Iterating on shared CSS still costs a pin commit per attempt. The cheaper loop is a local override while iterating: put `[patch."https://github.com/scadoshi/orangui"] orangui = { path = "../orangui" }` in `.cargo/config.toml` (not `Cargo.toml`, so it never gets committed), build and screenshot until it looks right, delete the file, restore `Cargo.lock`, push orangui once, and pin once.
 
+Cairn's changelog page (`/projects/cairn/changelog`) is compiled from `src/changelog.rs`, modeled on zwipe's `zwipe-core/src/content/changelog`. Cairn makes no network requests, so this is the only place it shows. Whenever cairn's `context/progress/changelog.md` gains an entry, the same change lands here in the same sitting: an Unreleased entry goes into `UPCOMING` under the next version, reworded to zwipe's changelog rules (one phrase, no period), and at cut time that version moves to `RELEASES` with its date. Cairn's changelog says the same, so editing either repo points to the other.
+
 `projects/` holds per-project background notes, one per entry in `data.rs`. They go deeper than the site does and are where the numbers came from. `data.rs` is still the source of truth for what the site shows; these are the working notes behind it.
 
 ## Moving a page
