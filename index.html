@@ -102,8 +102,11 @@
                 try {
                     var stored = JSON.parse(localStorage.getItem("zwipe.theme"));
                     var wrapper = document.querySelector(".theme-wrapper");
+                    // orangui's RETIRED_THEMES: a retired slug paints as its replacement.
+                    var retired = { "ristretto": "monokai-pro-ristretto", "visual-studio": "vscode" };
                     if (stored && stored.name && wrapper) {
-                        var theme = "theme-" + stored.name + "-" + (stored.is_dark ? "dark" : "light");
+                        var name = retired[stored.name] || stored.name;
+                        var theme = "theme-" + name + "-" + (stored.is_dark ? "dark" : "light");
                         // Swap only the theme class; anything else on the wrapper stays.
                         wrapper.classList.forEach(function (c) {
                             if (c.indexOf("theme-") === 0 && c !== "theme-wrapper") wrapper.classList.remove(c);

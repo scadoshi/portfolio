@@ -236,3 +236,17 @@ fn NavbarLayout() -> Element {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn the_first_paint_script_retires_the_themes_orangui_retires() {
+        let html = include_str!("../index.html");
+        for (from, to) in orangui::RETIRED_THEMES {
+            assert!(
+                html.contains(&format!("\"{from}\": \"{to}\"")),
+                "index.html's retired map lacks {from} -> {to}"
+            );
+        }
+    }
+}
