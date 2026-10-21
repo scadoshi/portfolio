@@ -22,17 +22,18 @@ pub struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub const UPCOMING: &[Release] = &[Release {
-    version: "1.1.1",
-    date: "",
-    entries: &[
-        "Flexoki theme replaces Visual Studio, whose users move to VS Code",
-        "Synthwave '84's colors match the original theme",
-    ],
-}];
+pub const UPCOMING: &[Release] = &[];
 
 /// Shipped releases, newest first.
 pub const RELEASES: &[Release] = &[
+    Release {
+        version: "1.1.1",
+        date: "Oct 21, 2026",
+        entries: &[
+            "Flexoki theme replaces Visual Studio, whose users move to VS Code",
+            "Synthwave '84's colors match the original theme",
+        ],
+    },
     Release {
         version: "1.1.0",
         date: "Oct 21, 2026",
