@@ -4,11 +4,12 @@
 //! site is the only place it shows. The working copy is cairn's
 //! `context/progress/changelog.md`: every entry added there lands here in the
 //! same sitting, in [`UPCOMING`] under the next version, reworded to zwipe's
-//! changelog rules, which the tests below hold. At cut time the version moves
-//! to [`RELEASES`] with its date.
+//! changelog rules, which the tests below hold. At cut time, when cairn's
+//! Unreleased entries move under a dated version heading, the version moves
+//! to the top of [`RELEASES`] with that date and becomes the "Latest".
 
-/// One version and its notes. Dates are the App Store's "Ready for
-/// Distribution" date; newest first.
+/// One version and its notes. Dates are the cut date, the same as the
+/// version's heading in cairn's changelog; newest first.
 pub struct Release {
     /// Semantic version string, e.g. `"1.1.0"`.
     pub version: &'static str,
@@ -19,8 +20,8 @@ pub struct Release {
     pub entries: &'static [&'static str],
 }
 
-/// Versions built but not yet on the App Store, newest first. Rendered at
-/// the top with an "Upcoming" badge instead of "Latest".
+/// Entries for the next version, not yet cut, newest first. Rendered at the
+/// top with an "Upcoming" badge instead of "Latest".
 pub const UPCOMING: &[Release] = &[Release {
     version: "1.1.1",
     date: "",
