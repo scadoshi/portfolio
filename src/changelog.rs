@@ -19,33 +19,25 @@ pub struct Release {
 
 /// Versions built but not yet on the App Store, newest first. Rendered at
 /// the top with an "Upcoming" badge instead of "Latest".
-pub const UPCOMING: &[Release] = &[
-    Release {
-        version: "1.1.1",
-        date: "",
-        entries: &[
-            "The app icon can match your theme, switching with it in dark and light",
-            "The app no longer flashes unstyled for a moment before the splash",
-            "The logo builds left to right, its shape arriving as noise and then decoding into the mark, on the splash and the home screen",
-            "The splash's logo leaves the way it arrived, turning back to noise and clearing left to right before the home screen shows",
-            "The splash spells out the full Cairn wordmark",
-        ],
-    },
-    Release {
-        version: "1.1.0",
-        date: "",
-        entries: &[
-            "Four Monokai Pro themes: Pro, Machine, Octagon and Spectrum, each in dark and light",
-            "Editor defaults as themes: Darcula, Xcode, Visual Studio, Eclipse and Neovim, each in dark and light",
-            "Ten more themes: Bluloco, GitHub High Contrast, Kanagawa Dragon, Material, Melange, Modus, Nightfox, Oxocarbon, Poimandres and Terafox, each in dark and light, bringing the set to 50",
-            "The theme and App icon pickers group themes under headings by look, with high contrast and color blind last",
-            "Ristretto is now called Monokai Pro Ristretto",
-            "The App icon picker offers the new themes too",
-            "The backdrop is a field of shaded squares instead of grid lines, on screens and sheets",
-            "The app opens on a short splash: the backdrop rains in and the C resolves over it before the first screen, whose cards, figures and quote arrive as it leaves",
-        ],
-    },
-];
+pub const UPCOMING: &[Release] = &[Release {
+    version: "1.1.0",
+    date: "",
+    entries: &[
+        "Four Monokai Pro themes: Pro, Machine, Octagon and Spectrum, each in dark and light",
+        "Editor defaults as themes: Darcula, Xcode, Visual Studio, Eclipse and Neovim, each in dark and light",
+        "Ten more themes: Bluloco, GitHub High Contrast, Kanagawa Dragon, Material, Melange, Modus, Nightfox, Oxocarbon, Poimandres and Terafox, each in dark and light, bringing the set to 50",
+        "The theme and App icon pickers group themes under headings by look, with high contrast and color blind last",
+        "Ristretto is now called Monokai Pro Ristretto",
+        "The App icon picker offers the new themes too",
+        "The backdrop is a field of shaded squares instead of grid lines, on screens and sheets",
+        "The app opens on a short splash: the backdrop rains in and the C resolves over it before the first screen, whose cards, figures and quote arrive as it leaves",
+        "The app icon can match your theme, switching with it in dark and light",
+        "The app no longer flashes unstyled for a moment before the splash",
+        "The logo builds left to right, its shape arriving as noise and then decoding into the mark, on the splash and the home screen",
+        "The splash's logo leaves the way it arrived, turning back to noise and clearing left to right before the home screen shows",
+        "The splash spells out the full Cairn wordmark",
+    ],
+}];
 
 /// Shipped releases, newest first.
 pub const RELEASES: &[Release] = &[Release {
