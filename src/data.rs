@@ -21,6 +21,9 @@ pub struct Project {
     /// An on-site privacy policy page, when a store listing needs one
     /// (rendered as an action pill next to the repo).
     pub privacy_path: Option<&'static str>,
+    /// An on-site release history, for an app with nothing to serve one to
+    /// (rendered as an action pill after the privacy policy).
+    pub changelog_path: Option<&'static str>,
     /// What a learning build deliberately leaves out, shown under the
     /// objective so the scope is stated before anyone has to infer it.
     pub scope: Option<&'static str>,
@@ -185,6 +188,7 @@ fn opens_a_database_left_at_every_older_version() {
     impact: "The thing I open every day, which is the only real test of a personal tool. It also taught me to distrust a green suite: mutation testing found three assertions that could not fail.",
     site_url: None,
     privacy_path: Some(crate::pages::privacy::CAIRN_PRIVACY_PATH),
+    changelog_path: Some(crate::pages::changelog::CAIRN_CHANGELOG_PATH),
     scope: None,
     status: ProjectStatus::Doing,
 };
@@ -537,6 +541,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     impact: "Built and run alone, end to end: the server, the database, both app stores and the website, shipped on a regular release cadence from one Rust codebase.",
     site_url: Some("https://zwipe.net"),
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Doing,
 };
@@ -564,6 +569,7 @@ const ORANGUI: Project = Project {
     impact: "Fixing a style on this site no longer means shipping zwipe. A shared fix lands once, and each host takes it when it re-pins.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Doing,
 };
@@ -680,6 +686,7 @@ fn read_cached_ids() -> CacheData {
     impact: "Cut client migrations from weeks to days. Runs unattended for hours against millions of records, recovering on its own from expired logins, timeouts, dropped connections and missing tickets.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Done,
 };
@@ -775,6 +782,7 @@ impl From<&CustomField> for HttpCustomField {
     impact: "Reduced enterprise configuration time from hours to minutes. Ships as tagged cross-platform binaries, so an implementer runs it without a Rust toolchain.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Done,
 };
@@ -906,6 +914,7 @@ async fn list_models(api_key: &str) -> Result<Vec<Model>> {
     impact: "A learning project that found a bug in the framework it was built on. Reported it to Rig with a proposed fix, argued for a better pattern in the thread, and shipped that pattern in Marvin rather than waiting for upstream.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Done,
 };
@@ -1058,6 +1067,7 @@ loop {
     impact: "Started from a paper and ended with a store you can connect to. Each layer was built to understand why the production engines have it.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: Some(
         "A learning build, not an engine. One lock guards the whole store, every write is fsynced on its own, and compaction rewrites every SSTable at once rather than by level. There are no levels and no compression. Each of those is a later phase in the real engines, and leaving them out kept every layer small enough to get right.",
     ),
@@ -1155,6 +1165,7 @@ const HERON: Project = Project {
     impact: "steller has a production workload, and a bug report it would not have had otherwise.",
     site_url: Some("https://api.scadoshi.dev/stats"),
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Doing,
 };
@@ -1299,6 +1310,7 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
     impact: "The in-memory counterpart to chickadee's on-disk store. Small on purpose, but measured against Redis and run behind heron, which is where its best bugs came from.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: Some(
         "A Redis subset, not a Redis. Strings only, so no lists, hashes or sets, and no transactions or replication. One mutex guards the map and each connection gets its own thread, which is why it wins at low client counts and falls behind Redis past 32. The benchmark shows exactly where.",
     ),
@@ -1392,6 +1404,7 @@ pub fn observe(&mut self, pose: &Pose) -> Option<u32> {
     impact: "ML inference in Rust without Python or cloud dependencies, from webcam frame to rep count.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Done,
 };
@@ -1486,6 +1499,7 @@ pub fn press(&mut self, key: K) -> bool {
     impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types, so each platform's quirks stay behind one interface.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Done,
 };
@@ -1594,6 +1608,7 @@ let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
     impact: "A finished tool with its reasoning written down, including the options that were rejected and why. The design notes are what made the C# rebuild (Sharpmas) a language exercise rather than a redesign.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Done,
 };
@@ -1713,6 +1728,7 @@ public static async Task<Solved> Solve<T>(
     impact: "A cross-language port carried end to end, with both sides public and comparable file by file. The design was fixed going in, so what the repo records is where the two languages actually diverge, and where C# has no good answer at all.",
     site_url: None,
     privacy_path: None,
+    changelog_path: None,
     scope: None,
     status: ProjectStatus::Done,
 };

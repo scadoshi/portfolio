@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 
+mod changelog;
 mod components;
 mod data;
 mod pages;
@@ -12,6 +13,7 @@ use orangui::{
     use_persisted_theme, use_theme_wipe_follow,
 };
 use pages::{
+    changelog::CairnChangelog,
     contribute::Contribute,
     detail::ProjectDetail,
     home::Home,
@@ -35,10 +37,12 @@ pub enum Route {
         Home {},
         #[route("/projects")]
         Projects {},
-        // The App Store listing's privacy policy URL. Two segments, so it
-        // never collides with a section or a project slug.
+        // The App Store listing's privacy policy URL and the release history.
+        // Two segments, so neither collides with a section or a project slug.
         #[route("/projects/cairn/privacy")]
         CairnPrivacy {},
+        #[route("/projects/cairn/changelog")]
+        CairnChangelog {},
         // Before the project route: only the four section names parse, so
         // every other slug falls through to ProjectDetail.
         #[route("/projects/:section")]

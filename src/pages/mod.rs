@@ -1,3 +1,4 @@
+pub mod changelog;
 pub mod contribute;
 pub mod detail;
 pub mod home;

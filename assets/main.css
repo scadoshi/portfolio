@@ -1389,6 +1389,118 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     }
 }
 
+/* === Changelog (cairn) === */
+
+/* zwipe's changelog rules (zwipe-components' magic.css), so the two read
+   the same. */
+.changelog-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.changelog-filter .chip {
+    font-family: inherit;
+}
+
+.changelog-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--panel-gap);
+}
+
+.changelog-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    animation: changelog-card-in 0.35s ease-out backwards;
+}
+
+/* Eases each release card in on mount and when a filter change remounts
+   the visible set. Backwards, not both, so the hover lift still moves it. */
+@keyframes changelog-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (hover: hover) {
+    .changelog-card {
+        transition:
+            border-color 0.4s ease,
+            transform 0.4s ease,
+            box-shadow 0.4s ease;
+    }
+
+    .changelog-card:hover {
+        border-color: var(--accent-primary);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .changelog-card {
+        animation: none;
+    }
+
+    .changelog-card:hover {
+        transform: none;
+    }
+}
+
+.changelog-version-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+
+.changelog-version {
+    font-size: 1.1rem;
+    color: var(--accent-primary);
+    font-weight: 700;
+    margin: 0;
+}
+
+.changelog-date {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.changelog-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.changelog-bullets li {
+    font-size: 0.8rem;
+    color: var(--text-subtle);
+    line-height: 1.7;
+    padding-left: 1rem;
+    position: relative;
+    margin-bottom: 0.35rem;
+}
+
+.changelog-bullets li:last-child {
+    margin-bottom: 0;
+}
+
+.changelog-bullets li::before {
+    content: "\203A";
+    position: absolute;
+    left: 0;
+    color: var(--accent-primary);
+}
+
 /* === Index pages (projects, contribute) === */
 
 .index-page {
