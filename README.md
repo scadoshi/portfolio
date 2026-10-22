@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/logo-dark.png">
+  <img src="docs/logo-light.png" alt="scotty" width="469">
+</picture>
+
 # scottyfermo.com
 
 My portfolio site. What it says about the projects lives on the site itself, so this file stays out of that business (and out of the business of going stale).
