@@ -108,6 +108,12 @@ jobs:
           cargo clippy --locked --target wasm32-unknown-unknown -- -D warnings
           cargo clippy --locked --no-default-features --features server --all-targets -- -D warnings
 
+      - name: Docs
+        # Broken intra-doc links and other rustdoc warnings fail the way clippy's do.
+        run: cargo doc --no-deps --locked
+        env:
+          RUSTDOCFLAGS: -D warnings
+
       - name: Install Dioxus CLI
         # Fetches a prebuilt dx binary instead of compiling dioxus-cli from
         # source (which a `cargo install --force` would do on every run, ~minutes).

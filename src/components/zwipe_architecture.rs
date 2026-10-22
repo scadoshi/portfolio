@@ -4,8 +4,8 @@
 //! Zwipe content, so orangui does not carry it.
 //!
 //! Inline SVG through orangui's diagram pieces, so the boxes take the theme's
-//! colors; the frame and footer are the demo gallery's ([`GalleryFrame`],
-//! [`GalleryFooter`]), restyled for short wide diagrams by `.diagram-carousel` in
+//! colors; the frame and footer are the demo gallery's ([`fn@GalleryFrame`],
+//! [`fn@GalleryFooter`]), restyled for short wide diagrams by `.diagram-carousel` in
 //! orangui's site sheet.
 
 use dioxus::prelude::*;
