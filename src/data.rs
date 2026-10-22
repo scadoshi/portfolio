@@ -1751,10 +1751,11 @@ public static async Task<Solved> Solve<T>(
 
 #[cfg(test)]
 mod tests {
-    use super::{MOVED, Section, all_projects, featured_left, featured_right, moved_to};
     // `static_routes` is a `Routable` method; without the trait in scope the
     // test does not compile.
     use dioxus::prelude::Routable as _;
+
+    use super::{MOVED, Section, all_projects, featured_left, featured_right, moved_to};
 
     /// public/sitemap.xml is hand-maintained, so it drifts. It already has:
     /// cairn landed in 3c17f1c and never made it into the file. Compare it

@@ -1,7 +1,9 @@
 use dioxus::prelude::*;
 use orangui::{BannerStatus, Panel};
 
-use crate::{Route, components::measured::Measured, data::Project};
+use crate::Route;
+use crate::components::measured::Measured;
+use crate::data::Project;
 
 /// The card for `project`, the same on the home page and the index.
 pub fn project_card(project: &'static Project) -> Element {

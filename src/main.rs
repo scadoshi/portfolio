@@ -6,22 +6,18 @@ mod data;
 mod pages;
 mod stats;
 
-use orangui::GridCells;
-
 use orangui::{
-    COMPONENTS_CSS, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS, ThemeConfig,
-    use_persisted_theme, use_theme_wipe_follow,
+    COMPONENTS_CSS, GridCells, NAV_GLIDE_JS, REVEAL_JS, SCROLL_FADE_JS, SITE_CSS, THEMES_CSS,
+    ThemeConfig, use_persisted_theme, use_theme_wipe_follow,
 };
-use pages::{
-    changelog::CairnChangelog,
-    contribute::Contribute,
-    detail::ProjectDetail,
-    home::Home,
-    moved::{OldSideQuest, OldSideQuests},
-    not_found::NotFound,
-    privacy::CairnPrivacy,
-    projects::{Projects, SectionPage},
-};
+use pages::changelog::CairnChangelog;
+use pages::contribute::Contribute;
+use pages::detail::ProjectDetail;
+use pages::home::Home;
+use pages::moved::{OldSideQuest, OldSideQuests};
+use pages::not_found::NotFound;
+use pages::privacy::CairnPrivacy;
+use pages::projects::{Projects, SectionPage};
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 const FAVICON_ICO: Asset = asset!("/assets/favicon/favicon.ico");

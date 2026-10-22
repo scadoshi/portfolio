@@ -1,6 +1,8 @@
 use dioxus::prelude::*;
 
-use crate::{Route, components::page_meta::PageMeta, data, pages::not_found::NotFound};
+use crate::components::page_meta::PageMeta;
+use crate::pages::not_found::NotFound;
+use crate::{Route, data};
 
 /// A page that has moved.
 ///

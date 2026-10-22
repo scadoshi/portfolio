@@ -1,10 +1,9 @@
 use dioxus::prelude::*;
 use orangui::Panel;
 
-use crate::{
-    Route,
-    components::{changelog::Changelog, page_meta::PageMeta},
-};
+use crate::Route;
+use crate::components::changelog::Changelog;
+use crate::components::page_meta::PageMeta;
 
 /// Cairn's release history. Linked from the cairn project page.
 pub const CAIRN_CHANGELOG_PATH: &str = "/projects/cairn/changelog";

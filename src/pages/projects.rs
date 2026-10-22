@@ -1,11 +1,10 @@
 use dioxus::prelude::*;
 use orangui::Panel;
 
-use crate::{
-    Route,
-    components::{page_meta::PageMeta, project_card::project_card},
-    data::Section,
-};
+use crate::Route;
+use crate::components::page_meta::PageMeta;
+use crate::components::project_card::project_card;
+use crate::data::Section;
 
 /// The overview: one short panel per section, naming its projects. The cards
 /// themselves live on each section's own page, so this one stays short.

@@ -1,10 +1,8 @@
 use dioxus::prelude::*;
 use orangui::{ChartTip, Replay, area, curve, use_scroll_to_end, with_separators};
 
-use crate::{
-    components::chart::{Tip, month_name, show},
-    stats::{self, WeekCommits},
-};
+use crate::components::chart::{Tip, month_name, show};
+use crate::stats::{self, WeekCommits};
 
 const WIDTH: f64 = 640.0;
 const HEIGHT: f64 = 220.0;

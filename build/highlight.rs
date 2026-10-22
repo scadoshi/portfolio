@@ -7,7 +7,8 @@
 //! `l-variable-parameter`, ...) that `assets/main.css` maps onto the theme's
 //! `--syntax-*` slots. The tests in `tests/highlight.rs` include this file too.
 
-use lumis::{HtmlLinkedBuilder, languages::Language};
+use lumis::HtmlLinkedBuilder;
+use lumis::languages::Language;
 use syn::visit::Visit;
 
 /// One `Snippet` literal from the data file.

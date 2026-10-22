@@ -13,10 +13,10 @@
 Pushing to `main` triggers the GitHub Pages deploy (`.github/workflows/deploy.yml`, `dx build --release --ssg --force-sequential`). Tests and clippy now gate the deploy: a red check means the site does not update. Formatting is still local discipline, kept identical to orangui's so this crate and the shared UI kit (consumed via git dep) hold the same bar.
 
 ### 1. Format with **nightly**: the one that bites
-`rustfmt.toml` enables `imports_granularity = "Crate"`, an *unstable* option, so **stable `cargo fmt` silently skips it**; code looks formatted locally but drifts from zwipe's style. Always:
+`rustfmt.toml` enables four *unstable* options: `imports_granularity = "Module"` (one `use` line per module), `group_imports = "StdExternalCrate"` (std, then external crates, then this crate, blank line between groups), `hex_literal_case = "Lower"` and `format_macro_matchers = true`. **Stable `cargo fmt` silently skips all of them**; code looks formatted locally but drifts from orangui's style. Always:
 
 ```bash
-cargo +nightly fmt        # NOT `cargo fmt`: stable can't apply the Crate imports rule
+cargo +nightly fmt        # NOT `cargo fmt`: stable can't apply the unstable options
 ```
 
 ### 2. Clippy: warnings are errors

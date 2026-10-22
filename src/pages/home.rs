@@ -1,11 +1,10 @@
 use dioxus::prelude::*;
 use orangui::{Decode, Panel, Replay, StatsStrip};
 
-use crate::{
-    Route,
-    components::{heatmap::Heatmap, page_meta::PageMeta, project_card::project_card},
-    data, stats,
-};
+use crate::components::heatmap::Heatmap;
+use crate::components::page_meta::PageMeta;
+use crate::components::project_card::project_card;
+use crate::{Route, data, stats};
 
 pub(crate) const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
 

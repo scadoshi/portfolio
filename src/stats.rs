@@ -10,10 +10,11 @@
 //! cannot give a complete one, so a build never waits on heron and a visitor never
 //! sees an empty number.
 
+use std::sync::LazyLock;
+
 use dioxus::prelude::*;
 use orangui::with_separators;
 use serde::Deserialize;
-use std::sync::LazyLock;
 
 const SNAPSHOT: &str = include_str!("stats.json");
 

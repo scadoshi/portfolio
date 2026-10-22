@@ -1,9 +1,11 @@
-use dioxus::{document::eval, prelude::*};
+use dioxus::document::eval;
+use dioxus::prelude::*;
 use orangui::{
     BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemeFollow, ThemePicker,
 };
 
-use crate::{Route, data::Section};
+use crate::Route;
+use crate::data::Section;
 
 const LOGO_S: &str = include_str!("../../assets/s.txt");
 

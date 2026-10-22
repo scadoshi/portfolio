@@ -46,9 +46,9 @@ fn year_of_days() -> Vec<HeatCell> {
             let row = i % HEAT_ROWS;
             let column = i / HEAT_ROWS;
             // An integer hash of the index, 0..100.
-            let mut x = u32::try_from(i).unwrap_or(0).wrapping_mul(0x9E37_79B1) ^ 0x5bd1_e995;
+            let mut x = u32::try_from(i).unwrap_or(0).wrapping_mul(0x9e37_79b1) ^ 0x5bd1_e995;
             x ^= x >> 15;
-            x = x.wrapping_mul(0x2C1B_3C6D);
+            x = x.wrapping_mul(0x2c1b_3c6d);
             x ^= x >> 12;
             let noise = x % 100;
             // Weekends run quieter, and the year swells toward the autumn.

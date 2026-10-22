@@ -1,24 +1,19 @@
 use dioxus::prelude::*;
 use orangui::Panel;
 
-use crate::{
-    Route,
-    components::{
-        benchmark::Benchmark,
-        code_block::CodeBlock,
-        commits::Commits,
-        fleet::Fleet,
-        flow::Flow,
-        gallery::ProjectGallery,
-        linked_text::LinkedText,
-        measured::Measured,
-        orangui_showcase::{OranguiShowcase, OrangutanShowcase},
-        page_meta::PageMeta,
-        zwipe_architecture::ZwipeArchitecture,
-    },
-    data,
-    pages::moved::Moved,
-};
+use crate::components::benchmark::Benchmark;
+use crate::components::code_block::CodeBlock;
+use crate::components::commits::Commits;
+use crate::components::fleet::Fleet;
+use crate::components::flow::Flow;
+use crate::components::gallery::ProjectGallery;
+use crate::components::linked_text::LinkedText;
+use crate::components::measured::Measured;
+use crate::components::orangui_showcase::{OranguiShowcase, OrangutanShowcase};
+use crate::components::page_meta::PageMeta;
+use crate::components::zwipe_architecture::ZwipeArchitecture;
+use crate::pages::moved::Moved;
+use crate::{Route, data};
 
 /// Kept as a function rather than inlined so the panel's shape stays readable
 /// next to the rest of the page's sections.

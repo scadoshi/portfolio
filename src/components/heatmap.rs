@@ -1,17 +1,15 @@
+use std::collections::BTreeMap;
+use std::rc::Rc;
+
 use dioxus::prelude::*;
 use orangui::{
     ChartTip, HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, Replay, area, curve, heat_span,
     peak_indices, use_scroll_to_end, with_separators,
 };
-use std::{collections::BTreeMap, rc::Rc};
 
-use crate::{
-    components::{
-        chart::{Tip, month_name, show},
-        commits::{ceiling, ticks},
-    },
-    stats::{self, Day},
-};
+use crate::components::chart::{Tip, month_name, show};
+use crate::components::commits::{ceiling, ticks};
+use crate::stats::{self, Day};
 
 /// Room on the left for the weekday labels and the line's ticks.
 const LEFT: f64 = 34.0;

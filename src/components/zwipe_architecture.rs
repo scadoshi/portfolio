@@ -9,7 +9,6 @@
 //! orangui's site sheet.
 
 use dioxus::prelude::*;
-
 use orangui::{
     DiagramArrow, DiagramDefs, DiagramNode, DiagramTone, GalleryFooter, GalleryFrame, Panel,
 };

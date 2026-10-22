@@ -9,7 +9,6 @@
 //! the phone goes through the site's wipe, as a pick in the nav does, and the
 //! screen's theme class follows the site's.
 
-use super::{navbar::ThemeWipe, orangui_showcase::Source};
 use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use orangui::{
@@ -17,6 +16,9 @@ use orangui::{
     DialogHostView, GridCells, InfoButton, PageHeader, Panel, TOAST_NORMAL, ThemeConfig,
     ThemeSheet, ToastStack, display_theme_name, use_dialog_host,
 };
+
+use super::navbar::ThemeWipe;
+use super::orangui_showcase::Source;
 
 /// The hint the phone's "?" buttons open: a title and a line, as the apps'
 /// settings hints are. Shared by every row through context.
