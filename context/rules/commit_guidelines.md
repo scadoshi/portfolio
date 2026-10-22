@@ -27,6 +27,7 @@ Some code is wasm-only (e.g. `stats::fetch_live`) and the prerender runs under t
 ```bash
 cargo clippy --target wasm32-unknown-unknown -- -D warnings
 cargo clippy --no-default-features --features server --all-targets -- -D warnings
+RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --locked   # rustdoc warnings fail CI's lint job the way clippy's do
 ```
 
 ### 3. Tests
