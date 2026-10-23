@@ -1,1 +1,5210 @@
-{"generated_at":"2026-10-19T22:35:42Z","totals":{"repos":14,"commits":4908,"stars":72,"weekly_commits":[{"week":"2025-10-05","commits":129},{"week":"2025-10-12","commits":97},{"week":"2025-10-19","commits":141},{"week":"2025-10-26","commits":25},{"week":"2025-11-02","commits":14},{"week":"2025-11-09","commits":25},{"week":"2025-11-16","commits":39},{"week":"2025-11-23","commits":47},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":21},{"week":"2025-12-21","commits":57},{"week":"2025-12-28","commits":100},{"week":"2026-01-04","commits":48},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":13},{"week":"2026-01-25","commits":20},{"week":"2026-02-01","commits":13},{"week":"2026-02-08","commits":9},{"week":"2026-02-15","commits":19},{"week":"2026-02-22","commits":5},{"week":"2026-03-01","commits":23},{"week":"2026-03-08","commits":26},{"week":"2026-03-15","commits":48},{"week":"2026-03-22","commits":213},{"week":"2026-03-29","commits":196},{"week":"2026-04-05","commits":68},{"week":"2026-04-12","commits":6},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":3},{"week":"2026-05-03","commits":4},{"week":"2026-05-10","commits":1},{"week":"2026-05-17","commits":32},{"week":"2026-05-24","commits":50},{"week":"2026-05-31","commits":35},{"week":"2026-06-07","commits":183},{"week":"2026-06-14","commits":30},{"week":"2026-06-21","commits":93},{"week":"2026-06-28","commits":136},{"week":"2026-07-05","commits":242},{"week":"2026-07-12","commits":145},{"week":"2026-07-19","commits":66},{"week":"2026-07-26","commits":50},{"week":"2026-08-02","commits":161},{"week":"2026-08-09","commits":106},{"week":"2026-08-16","commits":180},{"week":"2026-08-23","commits":12},{"week":"2026-08-30","commits":34},{"week":"2026-09-06","commits":34},{"week":"2026-09-13","commits":104},{"week":"2026-09-20","commits":237},{"week":"2026-09-27","commits":258}]},"unavailable":[],"repos":[{"repo":"scadoshi/zwipe","commits":3414,"stars":12,"default_branch":"main","pushed_at":"2026-10-19T22:15:16Z","languages":[{"name":"Rust","bytes":3996772},{"name":"CSS","bytes":173803},{"name":"HTML","bytes":78890},{"name":"Shell","bytes":67647},{"name":"JavaScript","bytes":21442},{"name":"Python","bytes":11252},{"name":"PLpgSQL","bytes":4736}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:23:33Z","stale":false,"counts":{"language":"Rust","lines":143648,"tests":803,"clippy_lints":22,"measured_at":"2026-10-19T22:23:35Z"},"weekly_commits":[{"week":"2025-10-05","commits":129},{"week":"2025-10-12","commits":97},{"week":"2025-10-19","commits":141},{"week":"2025-10-26","commits":25},{"week":"2025-11-02","commits":14},{"week":"2025-11-09","commits":5},{"week":"2025-11-16","commits":39},{"week":"2025-11-23","commits":47},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":21},{"week":"2025-12-21","commits":2},{"week":"2025-12-28","commits":99},{"week":"2026-01-04","commits":48},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":13},{"week":"2026-01-25","commits":2},{"week":"2026-02-01","commits":4},{"week":"2026-02-08","commits":9},{"week":"2026-02-15","commits":3},{"week":"2026-02-22","commits":1},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":1},{"week":"2026-03-15","commits":2},{"week":"2026-03-22","commits":207},{"week":"2026-03-29","commits":194},{"week":"2026-04-05","commits":64},{"week":"2026-04-12","commits":1},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":1},{"week":"2026-05-17","commits":2},{"week":"2026-05-24","commits":28},{"week":"2026-05-31","commits":18},{"week":"2026-06-07","commits":177},{"week":"2026-06-14","commits":23},{"week":"2026-06-21","commits":89},{"week":"2026-06-28","commits":135},{"week":"2026-07-05","commits":219},{"week":"2026-07-12","commits":144},{"week":"2026-07-19","commits":63},{"week":"2026-07-26","commits":50},{"week":"2026-08-02","commits":92},{"week":"2026-08-09","commits":71},{"week":"2026-08-16","commits":110},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":32},{"week":"2026-09-06","commits":27},{"week":"2026-09-13","commits":22},{"week":"2026-09-20","commits":135},{"week":"2026-09-27","commits":69}]},{"repo":"scadoshi/halo_action_importer","commits":80,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T16:07:18Z","languages":[{"name":"Rust","bytes":141172},{"name":"TSQL","bytes":1810}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:33:52Z","stale":false,"counts":{"language":"Rust","lines":3762,"tests":24,"clippy_lints":3,"measured_at":"2026-10-19T16:15:21Z"},"weekly_commits":[{"week":"2025-10-04","commits":0},{"week":"2025-10-11","commits":0},{"week":"2025-10-18","commits":0},{"week":"2025-10-25","commits":0},{"week":"2025-11-01","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":53},{"week":"2025-12-28","commits":1},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":17},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":0},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":0},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":3}]},{"repo":"scadoshi/halo_custom_field_builder","commits":40,"stars":4,"default_branch":"main","pushed_at":"2026-10-12T22:25:48Z","languages":[{"name":"Rust","bytes":52373}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:33:56Z","stale":false,"counts":{"language":"Rust","lines":1707,"tests":19,"clippy_lints":3,"measured_at":"2026-10-12T22:34:16Z"},"weekly_commits":[{"week":"2025-10-05","commits":0},{"week":"2025-10-12","commits":0},{"week":"2025-10-19","commits":0},{"week":"2025-10-26","commits":0},{"week":"2025-11-02","commits":0},{"week":"2025-11-09","commits":20},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":2},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":0},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":0},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":4}]},{"repo":"scadoshi/chickadee","commits":94,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T16:07:02Z","languages":[{"name":"Rust","bytes":75252}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:00Z","stale":false,"counts":{"language":"Rust","lines":2198,"tests":99,"clippy_lints":14,"measured_at":"2026-10-19T16:15:21Z"},"weekly_commits":[{"week":"2025-10-04","commits":0},{"week":"2025-10-11","commits":0},{"week":"2025-10-18","commits":0},{"week":"2025-10-25","commits":0},{"week":"2025-11-01","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":18},{"week":"2026-03-08","commits":14},{"week":"2026-03-15","commits":40},{"week":"2026-03-22","commits":1},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":13},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":1}]},{"repo":"scadoshi/steller","commits":83,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T16:07:06Z","languages":[{"name":"Rust","bytes":208114}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:04Z","stale":false,"counts":{"language":"Rust","lines":6102,"tests":242,"clippy_lints":14,"measured_at":"2026-10-19T16:15:22Z"},"weekly_commits":[{"week":"2025-10-05","commits":0},{"week":"2025-10-12","commits":0},{"week":"2025-10-19","commits":0},{"week":"2025-10-26","commits":0},{"week":"2025-11-02","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":0},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":3},{"week":"2026-05-03","commits":4},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":30},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":10},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":2},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":17},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":6}]},{"repo":"scadoshi/marvin","commits":41,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T16:07:14Z","languages":[{"name":"Rust","bytes":55084}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:07Z","stale":false,"counts":{"language":"Rust","lines":1738,"tests":1,"clippy_lints":5,"measured_at":"2026-10-19T16:15:23Z"},"weekly_commits":[{"week":"2025-10-04","commits":0},{"week":"2025-10-11","commits":0},{"week":"2025-10-18","commits":0},{"week":"2025-10-25","commits":0},{"week":"2025-11-01","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":1},{"week":"2026-02-01","commits":9},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":16},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":1},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":1},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":2},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":1},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":1}]},{"repo":"scadoshi/gotcha","commits":20,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T16:08:48Z","languages":[{"name":"Rust","bytes":13179}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:23:39Z","stale":false,"counts":{"language":"Rust","lines":439,"tests":11,"clippy_lints":5,"measured_at":"2026-10-19T16:20:29Z"},"weekly_commits":[{"week":"2025-10-04","commits":0},{"week":"2025-10-11","commits":0},{"week":"2025-10-18","commits":0},{"week":"2025-10-25","commits":0},{"week":"2025-11-01","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":2},{"week":"2026-03-01","commits":5},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":1},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":3},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":1},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":2}]},{"repo":"scadoshi/upsee","commits":12,"stars":4,"default_branch":"main","pushed_at":"2026-10-19T16:08:51Z","languages":[{"name":"Rust","bytes":12531}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:11Z","stale":false,"counts":{"language":"Rust","lines":394,"tests":10,"clippy_lints":5,"measured_at":"2026-10-19T16:15:23Z"},"weekly_commits":[{"week":"2025-10-04","commits":0},{"week":"2025-10-11","commits":0},{"week":"2025-10-18","commits":0},{"week":"2025-10-25","commits":0},{"week":"2025-11-01","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":2},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":1},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":1},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":3}]},{"repo":"scadoshi/cairn","commits":292,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T21:31:49Z","languages":[{"name":"Rust","bytes":324497},{"name":"CSS","bytes":25245},{"name":"Shell","bytes":24256},{"name":"Python","bytes":18464},{"name":"JavaScript","bytes":4796}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:28:43Z","stale":false,"counts":{"language":"Rust","lines":8863,"tests":119,"clippy_lints":12,"measured_at":"2026-10-19T21:40:52Z"},"weekly_commits":[{"week":"2025-10-05","commits":0},{"week":"2025-10-12","commits":0},{"week":"2025-10-19","commits":0},{"week":"2025-10-26","commits":0},{"week":"2025-11-02","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":0},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":9},{"week":"2026-09-20","commits":73},{"week":"2026-09-27","commits":38}]},{"repo":"scadoshi/rustmas","commits":121,"stars":6,"default_branch":"main","pushed_at":"2026-10-19T16:01:23Z","languages":[{"name":"Rust","bytes":78814}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:15Z","stale":false,"counts":{"language":"Rust","lines":2432,"tests":52,"clippy_lints":1,"measured_at":"2026-10-19T16:15:24Z"},"weekly_commits":[{"week":"2025-10-05","commits":0},{"week":"2025-10-12","commits":0},{"week":"2025-10-19","commits":0},{"week":"2025-10-26","commits":0},{"week":"2025-11-02","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":0},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":59},{"week":"2026-08-09","commits":25},{"week":"2026-08-16","commits":13},{"week":"2026-08-23","commits":1},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":12},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":0}]},{"repo":"scadoshi/sharpmas","commits":58,"stars":6,"default_branch":"main","pushed_at":"2026-10-19T00:45:33Z","languages":[{"name":"C#","bytes":92693}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:19Z","stale":false,"counts":{"language":"C#","lines":2666,"tests":58,"clippy_lints":null,"measured_at":"2026-10-19T00:54:32Z"},"weekly_commits":[{"week":"2025-10-05","commits":0},{"week":"2025-10-12","commits":0},{"week":"2025-10-19","commits":0},{"week":"2025-10-26","commits":0},{"week":"2025-11-02","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":0},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":6},{"week":"2026-08-09","commits":9},{"week":"2026-08-16","commits":23},{"week":"2026-08-23","commits":3},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":9},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":0}]},{"repo":"scadoshi/heron","commits":62,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T16:07:10Z","languages":[{"name":"Rust","bytes":234881}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:23Z","stale":false,"counts":{"language":"Rust","lines":8080,"tests":183,"clippy_lints":26,"measured_at":"2026-10-19T16:15:24Z"},"weekly_commits":[{"week":"2025-10-05","commits":0},{"week":"2025-10-12","commits":0},{"week":"2025-10-19","commits":0},{"week":"2025-10-26","commits":0},{"week":"2025-11-02","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":0},{"week":"2026-03-15","commits":0},{"week":"2026-03-22","commits":0},{"week":"2026-03-29","commits":0},{"week":"2026-04-05","commits":0},{"week":"2026-04-12","commits":0},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":0},{"week":"2026-05-31","commits":0},{"week":"2026-06-07","commits":0},{"week":"2026-06-14","commits":0},{"week":"2026-06-21","commits":0},{"week":"2026-06-28","commits":0},{"week":"2026-07-05","commits":0},{"week":"2026-07-12","commits":0},{"week":"2026-07-19","commits":0},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":0},{"week":"2026-08-09","commits":0},{"week":"2026-08-16","commits":0},{"week":"2026-08-23","commits":0},{"week":"2026-08-30","commits":0},{"week":"2026-09-06","commits":0},{"week":"2026-09-13","commits":0},{"week":"2026-09-20","commits":0},{"week":"2026-09-27","commits":45}]},{"repo":"scadoshi/portfolio","commits":522,"stars":5,"default_branch":"main","pushed_at":"2026-10-19T22:04:27Z","languages":[{"name":"Rust","bytes":293195},{"name":"CSS","bytes":46249},{"name":"HTML","bytes":13308},{"name":"Shell","bytes":5945}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:34:27Z","stale":false,"counts":{"language":"Rust","lines":6994,"tests":43,"clippy_lints":5,"measured_at":"2026-10-19T22:18:29Z"},"weekly_commits":[{"week":"2025-10-04","commits":0},{"week":"2025-10-11","commits":0},{"week":"2025-10-18","commits":0},{"week":"2025-10-25","commits":0},{"week":"2025-11-01","commits":0},{"week":"2025-11-09","commits":0},{"week":"2025-11-16","commits":0},{"week":"2025-11-23","commits":0},{"week":"2025-11-30","commits":0},{"week":"2025-12-07","commits":0},{"week":"2025-12-14","commits":0},{"week":"2025-12-21","commits":0},{"week":"2025-12-28","commits":0},{"week":"2026-01-04","commits":0},{"week":"2026-01-11","commits":0},{"week":"2026-01-18","commits":0},{"week":"2026-01-25","commits":0},{"week":"2026-02-01","commits":0},{"week":"2026-02-08","commits":0},{"week":"2026-02-15","commits":0},{"week":"2026-02-22","commits":0},{"week":"2026-03-01","commits":0},{"week":"2026-03-08","commits":11},{"week":"2026-03-15","commits":6},{"week":"2026-03-22","commits":2},{"week":"2026-03-29","commits":2},{"week":"2026-04-05","commits":4},{"week":"2026-04-12","commits":5},{"week":"2026-04-19","commits":0},{"week":"2026-04-26","commits":0},{"week":"2026-05-03","commits":0},{"week":"2026-05-10","commits":0},{"week":"2026-05-17","commits":0},{"week":"2026-05-24","commits":21},{"week":"2026-05-31","commits":7},{"week":"2026-06-07","commits":6},{"week":"2026-06-14","commits":5},{"week":"2026-06-21","commits":4},{"week":"2026-06-28","commits":1},{"week":"2026-07-05","commits":21},{"week":"2026-07-12","commits":1},{"week":"2026-07-19","commits":3},{"week":"2026-07-26","commits":0},{"week":"2026-08-02","commits":4},{"week":"2026-08-09","commits":1},{"week":"2026-08-16","commits":31},{"week":"2026-08-23","commits":8},{"week":"2026-08-30","commits":2},{"week":"2026-09-06","commits":7},{"week":"2026-09-13","commits":19},{"week":"2026-09-20","commits":29},{"week":"2026-09-27","commits":86}]},{"repo":"scadoshi/orangui","commits":69,"stars":0,"default_branch":"main","pushed_at":"2026-10-19T22:15:14Z","languages":[{"name":"CSS","bytes":222552},{"name":"Rust","bytes":178776},{"name":"JavaScript","bytes":15190}],"additions":null,"deletions":null,"fetched_at":"2026-10-19T22:28:47Z","stale":false,"counts":{"language":"Rust","lines":5039,"tests":40,"clippy_lints":22,"measured_at":"2026-10-19T22:28:48Z"},"weekly_commits":null}],"calendar":{"login":"scadoshi","total":5801,"days":[{"date":"2025-10-19","count":24,"level":1},{"date":"2025-10-20","count":18,"level":1},{"date":"2025-10-21","count":35,"level":1},{"date":"2025-10-22","count":36,"level":2},{"date":"2025-10-23","count":10,"level":1},{"date":"2025-10-24","count":0,"level":0},{"date":"2025-10-25","count":19,"level":1},{"date":"2025-10-26","count":9,"level":1},{"date":"2025-10-27","count":5,"level":1},{"date":"2025-10-28","count":0,"level":0},{"date":"2025-10-29","count":0,"level":0},{"date":"2025-10-30","count":7,"level":1},{"date":"2025-10-31","count":0,"level":0},{"date":"2025-11-01","count":4,"level":1},{"date":"2025-11-02","count":6,"level":1},{"date":"2025-11-03","count":0,"level":0},{"date":"2025-11-04","count":7,"level":1},{"date":"2025-11-05","count":1,"level":1},{"date":"2025-11-06","count":0,"level":0},{"date":"2025-11-07","count":0,"level":0},{"date":"2025-11-08","count":0,"level":0},{"date":"2025-11-09","count":5,"level":1},{"date":"2025-11-10","count":3,"level":1},{"date":"2025-11-11","count":24,"level":1},{"date":"2025-11-12","count":2,"level":1},{"date":"2025-11-13","count":6,"level":1},{"date":"2025-11-14","count":4,"level":1},{"date":"2025-11-15","count":0,"level":0},{"date":"2025-11-16","count":5,"level":1},{"date":"2025-11-17","count":1,"level":1},{"date":"2025-11-18","count":12,"level":1},{"date":"2025-11-19","count":8,"level":1},{"date":"2025-11-20","count":13,"level":1},{"date":"2025-11-21","count":21,"level":1},{"date":"2025-11-22","count":3,"level":1},{"date":"2025-11-23","count":12,"level":1},{"date":"2025-11-24","count":10,"level":1},{"date":"2025-11-25","count":17,"level":1},{"date":"2025-11-26","count":10,"level":1},{"date":"2025-11-27","count":2,"level":1},{"date":"2025-11-28","count":0,"level":0},{"date":"2025-11-29","count":1,"level":1},{"date":"2025-11-30","count":11,"level":1},{"date":"2025-12-01","count":14,"level":1},{"date":"2025-12-02","count":5,"level":1},{"date":"2025-12-03","count":17,"level":1},{"date":"2025-12-04","count":2,"level":1},{"date":"2025-12-05","count":0,"level":0},{"date":"2025-12-06","count":5,"level":1},{"date":"2025-12-07","count":5,"level":1},{"date":"2025-12-08","count":3,"level":1},{"date":"2025-12-09","count":10,"level":1},{"date":"2025-12-10","count":1,"level":1},{"date":"2025-12-11","count":6,"level":1},{"date":"2025-12-12","count":3,"level":1},{"date":"2025-12-13","count":1,"level":1},{"date":"2025-12-14","count":6,"level":1},{"date":"2025-12-15","count":3,"level":1},{"date":"2025-12-16","count":8,"level":1},{"date":"2025-12-17","count":5,"level":1},{"date":"2025-12-18","count":0,"level":0},{"date":"2025-12-19","count":21,"level":1},{"date":"2025-12-20","count":1,"level":1},{"date":"2025-12-21","count":0,"level":0},{"date":"2025-12-22","count":2,"level":1},{"date":"2025-12-23","count":23,"level":1},{"date":"2025-12-24","count":3,"level":1},{"date":"2025-12-25","count":10,"level":1},{"date":"2025-12-26","count":6,"level":1},{"date":"2025-12-27","count":17,"level":1},{"date":"2025-12-28","count":0,"level":0},{"date":"2025-12-29","count":15,"level":1},{"date":"2025-12-30","count":16,"level":1},{"date":"2025-12-31","count":38,"level":2},{"date":"2026-01-01","count":26,"level":1},{"date":"2026-01-02","count":74,"level":3},{"date":"2026-01-03","count":30,"level":1},{"date":"2026-01-04","count":55,"level":2},{"date":"2026-01-05","count":12,"level":1},{"date":"2026-01-06","count":20,"level":1},{"date":"2026-01-07","count":6,"level":1},{"date":"2026-01-08","count":30,"level":1},{"date":"2026-01-09","count":7,"level":1},{"date":"2026-01-10","count":10,"level":1},{"date":"2026-01-11","count":4,"level":1},{"date":"2026-01-12","count":2,"level":1},{"date":"2026-01-13","count":6,"level":1},{"date":"2026-01-14","count":3,"level":1},{"date":"2026-01-15","count":4,"level":1},{"date":"2026-01-16","count":13,"level":1},{"date":"2026-01-17","count":2,"level":1},{"date":"2026-01-18","count":0,"level":0},{"date":"2026-01-19","count":0,"level":0},{"date":"2026-01-20","count":24,"level":1},{"date":"2026-01-21","count":4,"level":1},{"date":"2026-01-22","count":3,"level":1},{"date":"2026-01-23","count":0,"level":0},{"date":"2026-01-24","count":0,"level":0},{"date":"2026-01-25","count":0,"level":0},{"date":"2026-01-26","count":8,"level":1},{"date":"2026-01-27","count":15,"level":1},{"date":"2026-01-28","count":0,"level":0},{"date":"2026-01-29","count":5,"level":1},{"date":"2026-01-30","count":2,"level":1},{"date":"2026-01-31","count":9,"level":1},{"date":"2026-02-01","count":0,"level":0},{"date":"2026-02-02","count":0,"level":0},{"date":"2026-02-03","count":1,"level":1},{"date":"2026-02-04","count":2,"level":1},{"date":"2026-02-05","count":23,"level":1},{"date":"2026-02-06","count":0,"level":0},{"date":"2026-02-07","count":0,"level":0},{"date":"2026-02-08","count":0,"level":0},{"date":"2026-02-09","count":0,"level":0},{"date":"2026-02-10","count":6,"level":1},{"date":"2026-02-11","count":4,"level":1},{"date":"2026-02-12","count":0,"level":0},{"date":"2026-02-13","count":1,"level":1},{"date":"2026-02-14","count":2,"level":1},{"date":"2026-02-15","count":0,"level":0},{"date":"2026-02-16","count":8,"level":1},{"date":"2026-02-17","count":13,"level":1},{"date":"2026-02-18","count":1,"level":1},{"date":"2026-02-19","count":4,"level":1},{"date":"2026-02-20","count":3,"level":1},{"date":"2026-02-21","count":3,"level":1},{"date":"2026-02-22","count":0,"level":0},{"date":"2026-02-23","count":0,"level":0},{"date":"2026-02-24","count":0,"level":0},{"date":"2026-02-25","count":1,"level":1},{"date":"2026-02-26","count":4,"level":1},{"date":"2026-02-27","count":8,"level":1},{"date":"2026-02-28","count":0,"level":0},{"date":"2026-03-01","count":0,"level":0},{"date":"2026-03-02","count":3,"level":1},{"date":"2026-03-03","count":2,"level":1},{"date":"2026-03-04","count":7,"level":1},{"date":"2026-03-05","count":4,"level":1},{"date":"2026-03-06","count":6,"level":1},{"date":"2026-03-07","count":2,"level":1},{"date":"2026-03-08","count":4,"level":1},{"date":"2026-03-09","count":9,"level":1},{"date":"2026-03-10","count":9,"level":1},{"date":"2026-03-11","count":1,"level":1},{"date":"2026-03-12","count":2,"level":1},{"date":"2026-03-13","count":3,"level":1},{"date":"2026-03-14","count":0,"level":0},{"date":"2026-03-15","count":17,"level":1},{"date":"2026-03-16","count":5,"level":1},{"date":"2026-03-17","count":10,"level":1},{"date":"2026-03-18","count":1,"level":1},{"date":"2026-03-19","count":7,"level":1},{"date":"2026-03-20","count":7,"level":1},{"date":"2026-03-21","count":1,"level":1},{"date":"2026-03-22","count":12,"level":1},{"date":"2026-03-23","count":16,"level":1},{"date":"2026-03-24","count":24,"level":1},{"date":"2026-03-25","count":26,"level":1},{"date":"2026-03-26","count":21,"level":1},{"date":"2026-03-27","count":42,"level":2},{"date":"2026-03-28","count":76,"level":3},{"date":"2026-03-29","count":42,"level":2},{"date":"2026-03-30","count":20,"level":1},{"date":"2026-03-31","count":17,"level":1},{"date":"2026-04-01","count":14,"level":1},{"date":"2026-04-02","count":45,"level":2},{"date":"2026-04-03","count":2,"level":1},{"date":"2026-04-04","count":58,"level":2},{"date":"2026-04-05","count":34,"level":1},{"date":"2026-04-06","count":4,"level":1},{"date":"2026-04-07","count":2,"level":1},{"date":"2026-04-08","count":11,"level":1},{"date":"2026-04-09","count":0,"level":0},{"date":"2026-04-10","count":10,"level":1},{"date":"2026-04-11","count":11,"level":1},{"date":"2026-04-12","count":6,"level":1},{"date":"2026-04-13","count":0,"level":0},{"date":"2026-04-14","count":0,"level":0},{"date":"2026-04-15","count":0,"level":0},{"date":"2026-04-16","count":0,"level":0},{"date":"2026-04-17","count":0,"level":0},{"date":"2026-04-18","count":0,"level":0},{"date":"2026-04-19","count":0,"level":0},{"date":"2026-04-20","count":0,"level":0},{"date":"2026-04-21","count":0,"level":0},{"date":"2026-04-22","count":0,"level":0},{"date":"2026-04-23","count":0,"level":0},{"date":"2026-04-24","count":0,"level":0},{"date":"2026-04-25","count":0,"level":0},{"date":"2026-04-26","count":0,"level":0},{"date":"2026-04-27","count":4,"level":1},{"date":"2026-04-28","count":0,"level":0},{"date":"2026-04-29","count":0,"level":0},{"date":"2026-04-30","count":0,"level":0},{"date":"2026-05-01","count":2,"level":1},{"date":"2026-05-02","count":1,"level":1},{"date":"2026-05-03","count":0,"level":0},{"date":"2026-05-04","count":0,"level":0},{"date":"2026-05-05","count":0,"level":0},{"date":"2026-05-06","count":0,"level":0},{"date":"2026-05-07","count":2,"level":1},{"date":"2026-05-08","count":2,"level":1},{"date":"2026-05-09","count":0,"level":0},{"date":"2026-05-10","count":0,"level":0},{"date":"2026-05-11","count":0,"level":0},{"date":"2026-05-12","count":0,"level":0},{"date":"2026-05-13","count":1,"level":1},{"date":"2026-05-14","count":0,"level":0},{"date":"2026-05-15","count":0,"level":0},{"date":"2026-05-16","count":0,"level":0},{"date":"2026-05-17","count":0,"level":0},{"date":"2026-05-18","count":8,"level":1},{"date":"2026-05-19","count":1,"level":1},{"date":"2026-05-20","count":5,"level":1},{"date":"2026-05-21","count":0,"level":0},{"date":"2026-05-22","count":8,"level":1},{"date":"2026-05-23","count":11,"level":1},{"date":"2026-05-24","count":24,"level":1},{"date":"2026-05-25","count":20,"level":1},{"date":"2026-05-26","count":4,"level":1},{"date":"2026-05-27","count":0,"level":0},{"date":"2026-05-28","count":5,"level":1},{"date":"2026-05-29","count":1,"level":1},{"date":"2026-05-30","count":0,"level":0},{"date":"2026-05-31","count":4,"level":1},{"date":"2026-06-01","count":12,"level":1},{"date":"2026-06-02","count":5,"level":1},{"date":"2026-06-03","count":1,"level":1},{"date":"2026-06-04","count":4,"level":1},{"date":"2026-06-05","count":0,"level":0},{"date":"2026-06-06","count":15,"level":1},{"date":"2026-06-07","count":41,"level":2},{"date":"2026-06-08","count":14,"level":1},{"date":"2026-06-09","count":41,"level":2},{"date":"2026-06-10","count":34,"level":1},{"date":"2026-06-11","count":84,"level":3},{"date":"2026-06-12","count":16,"level":1},{"date":"2026-06-13","count":35,"level":1},{"date":"2026-06-14","count":21,"level":1},{"date":"2026-06-15","count":0,"level":0},{"date":"2026-06-16","count":2,"level":1},{"date":"2026-06-17","count":3,"level":1},{"date":"2026-06-18","count":14,"level":1},{"date":"2026-06-19","count":24,"level":1},{"date":"2026-06-20","count":0,"level":0},{"date":"2026-06-21","count":0,"level":0},{"date":"2026-06-22","count":35,"level":1},{"date":"2026-06-23","count":39,"level":2},{"date":"2026-06-24","count":4,"level":1},{"date":"2026-06-25","count":65,"level":2},{"date":"2026-06-26","count":37,"level":2},{"date":"2026-06-27","count":6,"level":1},{"date":"2026-06-28","count":71,"level":2},{"date":"2026-06-29","count":60,"level":2},{"date":"2026-06-30","count":64,"level":2},{"date":"2026-07-01","count":10,"level":1},{"date":"2026-07-02","count":71,"level":2},{"date":"2026-07-03","count":12,"level":1},{"date":"2026-07-04","count":0,"level":0},{"date":"2026-07-05","count":18,"level":1},{"date":"2026-07-06","count":23,"level":1},{"date":"2026-07-07","count":63,"level":2},{"date":"2026-07-08","count":62,"level":2},{"date":"2026-07-09","count":62,"level":2},{"date":"2026-07-10","count":28,"level":1},{"date":"2026-07-11","count":206,"level":4},{"date":"2026-07-12","count":154,"level":4},{"date":"2026-07-13","count":46,"level":2},{"date":"2026-07-14","count":32,"level":1},{"date":"2026-07-15","count":32,"level":1},{"date":"2026-07-16","count":22,"level":1},{"date":"2026-07-17","count":4,"level":1},{"date":"2026-07-18","count":0,"level":0},{"date":"2026-07-19","count":0,"level":0},{"date":"2026-07-20","count":38,"level":2},{"date":"2026-07-21","count":31,"level":1},{"date":"2026-07-22","count":26,"level":1},{"date":"2026-07-23","count":10,"level":1},{"date":"2026-07-24","count":16,"level":1},{"date":"2026-07-25","count":8,"level":1},{"date":"2026-07-26","count":0,"level":0},{"date":"2026-07-27","count":12,"level":1},{"date":"2026-07-28","count":14,"level":1},{"date":"2026-07-29","count":34,"level":1},{"date":"2026-07-30","count":34,"level":1},{"date":"2026-07-31","count":6,"level":1},{"date":"2026-08-01","count":0,"level":0},{"date":"2026-08-02","count":0,"level":0},{"date":"2026-08-03","count":4,"level":1},{"date":"2026-08-04","count":73,"level":3},{"date":"2026-08-05","count":51,"level":2},{"date":"2026-08-06","count":85,"level":3},{"date":"2026-08-07","count":42,"level":2},{"date":"2026-08-08","count":0,"level":0},{"date":"2026-08-09","count":0,"level":0},{"date":"2026-08-10","count":35,"level":1},{"date":"2026-08-11","count":32,"level":1},{"date":"2026-08-12","count":41,"level":2},{"date":"2026-08-13","count":42,"level":2},{"date":"2026-08-14","count":24,"level":1},{"date":"2026-08-15","count":11,"level":1},{"date":"2026-08-16","count":0,"level":0},{"date":"2026-08-17","count":162,"level":4},{"date":"2026-08-18","count":40,"level":2},{"date":"2026-08-19","count":10,"level":1},{"date":"2026-08-20","count":8,"level":1},{"date":"2026-08-21","count":9,"level":1},{"date":"2026-08-22","count":0,"level":0},{"date":"2026-08-23","count":4,"level":1},{"date":"2026-08-24","count":0,"level":0},{"date":"2026-08-25","count":0,"level":0},{"date":"2026-08-26","count":0,"level":0},{"date":"2026-08-27","count":0,"level":0},{"date":"2026-08-28","count":8,"level":1},{"date":"2026-08-29","count":0,"level":0},{"date":"2026-08-30","count":0,"level":0},{"date":"2026-08-31","count":0,"level":0},{"date":"2026-09-01","count":23,"level":1},{"date":"2026-09-02","count":6,"level":1},{"date":"2026-09-03","count":0,"level":0},{"date":"2026-09-04","count":2,"level":1},{"date":"2026-09-05","count":3,"level":1},{"date":"2026-09-06","count":18,"level":1},{"date":"2026-09-07","count":15,"level":1},{"date":"2026-09-08","count":3,"level":1},{"date":"2026-09-09","count":0,"level":0},{"date":"2026-09-10","count":0,"level":0},{"date":"2026-09-11","count":0,"level":0},{"date":"2026-09-12","count":0,"level":0},{"date":"2026-09-13","count":47,"level":2},{"date":"2026-09-14","count":10,"level":1},{"date":"2026-09-15","count":0,"level":0},{"date":"2026-09-16","count":0,"level":0},{"date":"2026-09-17","count":8,"level":1},{"date":"2026-09-18","count":0,"level":0},{"date":"2026-09-19","count":53,"level":2},{"date":"2026-09-20","count":35,"level":1},{"date":"2026-09-21","count":45,"level":2},{"date":"2026-09-22","count":81,"level":3},{"date":"2026-09-23","count":54,"level":2},{"date":"2026-09-24","count":27,"level":1},{"date":"2026-09-25","count":1,"level":1},{"date":"2026-09-26","count":0,"level":0},{"date":"2026-09-27","count":0,"level":0},{"date":"2026-09-28","count":21,"level":1},{"date":"2026-09-29","count":25,"level":1},{"date":"2026-09-30","count":36,"level":2},{"date":"2026-10-01","count":83,"level":3},{"date":"2026-10-02","count":88,"level":3},{"date":"2026-10-03","count":30,"level":1},{"date":"2026-10-04","count":0,"level":0},{"date":"2026-10-05","count":30,"level":1},{"date":"2026-10-06","count":34,"level":1},{"date":"2026-10-07","count":142,"level":4},{"date":"2026-10-08","count":104,"level":3},{"date":"2026-10-09","count":69,"level":2},{"date":"2026-10-10","count":39,"level":2},{"date":"2026-10-11","count":11,"level":1},{"date":"2026-10-12","count":50,"level":2},{"date":"2026-10-13","count":116,"level":4},{"date":"2026-10-14","count":19,"level":1},{"date":"2026-10-15","count":2,"level":1},{"date":"2026-10-16","count":48,"level":2},{"date":"2026-10-17","count":0,"level":0},{"date":"2026-10-18","count":44,"level":2},{"date":"2026-10-19","count":126,"level":4}],"fetched_at":"2026-10-19T21:53:50Z","stale":false}}
+{
+  "generated_at": "2026-10-23T21:50:45Z",
+  "totals": {
+    "repos": 14,
+    "commits": 5106,
+    "stars": 72,
+    "weekly_commits": [
+      {
+        "week": "2025-10-05",
+        "commits": 129
+      },
+      {
+        "week": "2025-10-12",
+        "commits": 97
+      },
+      {
+        "week": "2025-10-19",
+        "commits": 141
+      },
+      {
+        "week": "2025-10-26",
+        "commits": 25
+      },
+      {
+        "week": "2025-11-02",
+        "commits": 14
+      },
+      {
+        "week": "2025-11-09",
+        "commits": 25
+      },
+      {
+        "week": "2025-11-16",
+        "commits": 39
+      },
+      {
+        "week": "2025-11-23",
+        "commits": 47
+      },
+      {
+        "week": "2025-11-30",
+        "commits": 0
+      },
+      {
+        "week": "2025-12-07",
+        "commits": 0
+      },
+      {
+        "week": "2025-12-14",
+        "commits": 21
+      },
+      {
+        "week": "2025-12-21",
+        "commits": 57
+      },
+      {
+        "week": "2025-12-28",
+        "commits": 100
+      },
+      {
+        "week": "2026-01-04",
+        "commits": 48
+      },
+      {
+        "week": "2026-01-11",
+        "commits": 0
+      },
+      {
+        "week": "2026-01-18",
+        "commits": 13
+      },
+      {
+        "week": "2026-01-25",
+        "commits": 20
+      },
+      {
+        "week": "2026-02-01",
+        "commits": 13
+      },
+      {
+        "week": "2026-02-08",
+        "commits": 9
+      },
+      {
+        "week": "2026-02-15",
+        "commits": 19
+      },
+      {
+        "week": "2026-02-22",
+        "commits": 5
+      },
+      {
+        "week": "2026-03-01",
+        "commits": 23
+      },
+      {
+        "week": "2026-03-08",
+        "commits": 26
+      },
+      {
+        "week": "2026-03-15",
+        "commits": 48
+      },
+      {
+        "week": "2026-03-22",
+        "commits": 213
+      },
+      {
+        "week": "2026-03-29",
+        "commits": 196
+      },
+      {
+        "week": "2026-04-05",
+        "commits": 68
+      },
+      {
+        "week": "2026-04-12",
+        "commits": 6
+      },
+      {
+        "week": "2026-04-19",
+        "commits": 0
+      },
+      {
+        "week": "2026-04-26",
+        "commits": 3
+      },
+      {
+        "week": "2026-05-03",
+        "commits": 4
+      },
+      {
+        "week": "2026-05-10",
+        "commits": 1
+      },
+      {
+        "week": "2026-05-17",
+        "commits": 32
+      },
+      {
+        "week": "2026-05-24",
+        "commits": 50
+      },
+      {
+        "week": "2026-05-31",
+        "commits": 35
+      },
+      {
+        "week": "2026-06-07",
+        "commits": 183
+      },
+      {
+        "week": "2026-06-14",
+        "commits": 30
+      },
+      {
+        "week": "2026-06-21",
+        "commits": 93
+      },
+      {
+        "week": "2026-06-28",
+        "commits": 136
+      },
+      {
+        "week": "2026-07-05",
+        "commits": 242
+      },
+      {
+        "week": "2026-07-12",
+        "commits": 145
+      },
+      {
+        "week": "2026-07-19",
+        "commits": 66
+      },
+      {
+        "week": "2026-07-26",
+        "commits": 50
+      },
+      {
+        "week": "2026-08-02",
+        "commits": 161
+      },
+      {
+        "week": "2026-08-09",
+        "commits": 106
+      },
+      {
+        "week": "2026-08-16",
+        "commits": 180
+      },
+      {
+        "week": "2026-08-23",
+        "commits": 12
+      },
+      {
+        "week": "2026-08-30",
+        "commits": 34
+      },
+      {
+        "week": "2026-09-06",
+        "commits": 34
+      },
+      {
+        "week": "2026-09-13",
+        "commits": 104
+      },
+      {
+        "week": "2026-09-20",
+        "commits": 237
+      },
+      {
+        "week": "2026-09-27",
+        "commits": 258
+      }
+    ]
+  },
+  "unavailable": [],
+  "repos": [
+    {
+      "repo": "scadoshi/zwipe",
+      "commits": 3520,
+      "stars": 12,
+      "default_branch": "main",
+      "pushed_at": "2026-10-23T21:42:55Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 4140721
+        },
+        {
+          "name": "CSS",
+          "bytes": 174048
+        },
+        {
+          "name": "HTML",
+          "bytes": 87786
+        },
+        {
+          "name": "Shell",
+          "bytes": 69263
+        },
+        {
+          "name": "JavaScript",
+          "bytes": 21442
+        },
+        {
+          "name": "Python",
+          "bytes": 11252
+        },
+        {
+          "name": "PLpgSQL",
+          "bytes": 5050
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:47:38Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 146389,
+        "tests": 860,
+        "clippy_lints": 22,
+        "measured_at": "2026-10-23T21:47:40Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-05",
+          "commits": 129
+        },
+        {
+          "week": "2025-10-12",
+          "commits": 97
+        },
+        {
+          "week": "2025-10-19",
+          "commits": 141
+        },
+        {
+          "week": "2025-10-26",
+          "commits": 25
+        },
+        {
+          "week": "2025-11-02",
+          "commits": 14
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 5
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 39
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 47
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 21
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 2
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 99
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 48
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 13
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 2
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 4
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 9
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 3
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 1
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 1
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 2
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 207
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 194
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 64
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 1
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 1
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 2
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 28
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 18
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 177
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 23
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 89
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 135
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 219
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 144
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 63
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 50
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 92
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 71
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 110
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 32
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 27
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 22
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 135
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 69
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/halo_action_importer",
+      "commits": 82,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T03:16:30Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 141838
+        },
+        {
+          "name": "TSQL",
+          "bytes": 1810
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:02Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 3798,
+        "tests": 24,
+        "clippy_lints": 3,
+        "measured_at": "2026-10-22T03:21:28Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-04",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-11",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-18",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-25",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-01",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 53
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 1
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 17
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 3
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/halo_custom_field_builder",
+      "commits": 42,
+      "stars": 4,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T03:08:30Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 52689
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:06Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 1723,
+        "tests": 19,
+        "clippy_lints": 3,
+        "measured_at": "2026-10-22T03:21:32Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-05",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-12",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-19",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-26",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-02",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 20
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 2
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 4
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/chickadee",
+      "commits": 97,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T04:16:56Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 75516
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:47:44Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 2216,
+        "tests": 99,
+        "clippy_lints": 14,
+        "measured_at": "2026-10-22T04:32:48Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-04",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-11",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-18",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-25",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-01",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 18
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 14
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 40
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 1
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 13
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 1
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/steller",
+      "commits": 87,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T04:16:54Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 208728
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:10Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 6066,
+        "tests": 242,
+        "clippy_lints": 14,
+        "measured_at": "2026-10-22T04:27:12Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-05",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-12",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-19",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-26",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-02",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 3
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 4
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 30
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 10
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 2
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 17
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 6
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/marvin",
+      "commits": 43,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T03:08:00Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 55313
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:14Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 1733,
+        "tests": 1,
+        "clippy_lints": 5,
+        "measured_at": "2026-10-22T03:21:41Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-04",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-11",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-18",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-25",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-01",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 1
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 9
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 16
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 1
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 1
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 2
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 1
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 1
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/gotcha",
+      "commits": 21,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T01:26:34Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 13234
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:47:48Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 445,
+        "tests": 11,
+        "clippy_lints": 5,
+        "measured_at": "2026-10-22T01:36:16Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-04",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-11",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-18",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-25",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-01",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 2
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 5
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 1
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 3
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 1
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 2
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/upsee",
+      "commits": 14,
+      "stars": 4,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T03:13:34Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 12638
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:18Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 395,
+        "tests": 10,
+        "clippy_lints": 5,
+        "measured_at": "2026-10-22T03:21:45Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-04",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-11",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-18",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-25",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-01",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 2
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 1
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 1
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 3
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/cairn",
+      "commits": 320,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-23T19:02:28Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 325936
+        },
+        {
+          "name": "CSS",
+          "bytes": 24446
+        },
+        {
+          "name": "Shell",
+          "bytes": 24256
+        },
+        {
+          "name": "Python",
+          "bytes": 18464
+        },
+        {
+          "name": "JavaScript",
+          "bytes": 4796
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:22Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 8885,
+        "tests": 120,
+        "clippy_lints": 12,
+        "measured_at": "2026-10-23T19:04:37Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-05",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-12",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-19",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-26",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-02",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 9
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 73
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 38
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/rustmas",
+      "commits": 121,
+      "stars": 6,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T17:55:25Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 78814
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:26Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 2432,
+        "tests": 52,
+        "clippy_lints": 1,
+        "measured_at": "2026-10-22T17:57:18Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-05",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-12",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-19",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-26",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-02",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 59
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 25
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 13
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 1
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 12
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 0
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/sharpmas",
+      "commits": 58,
+      "stars": 6,
+      "default_branch": "main",
+      "pushed_at": "2026-10-19T00:45:33Z",
+      "languages": [
+        {
+          "name": "C#",
+          "bytes": 92693
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:30Z",
+      "stale": false,
+      "counts": {
+        "language": "C#",
+        "lines": 2666,
+        "tests": 58,
+        "clippy_lints": null,
+        "measured_at": "2026-10-19T00:54:32Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-05",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-12",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-19",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-26",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-02",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 6
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 9
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 23
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 3
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 9
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 0
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/heron",
+      "commits": 65,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-22T04:17:02Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 236475
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:42:34Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 8034,
+        "tests": 183,
+        "clippy_lints": 26,
+        "measured_at": "2026-10-22T04:27:38Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-05",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-12",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-19",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-26",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-02",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 0
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 0
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 45
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/portfolio",
+      "commits": 545,
+      "stars": 5,
+      "default_branch": "main",
+      "pushed_at": "2026-10-23T18:52:27Z",
+      "languages": [
+        {
+          "name": "Rust",
+          "bytes": 325959
+        },
+        {
+          "name": "CSS",
+          "bytes": 50518
+        },
+        {
+          "name": "HTML",
+          "bytes": 14842
+        },
+        {
+          "name": "Shell",
+          "bytes": 5945
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:47:52Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 7855,
+        "tests": 58,
+        "clippy_lints": 5,
+        "measured_at": "2026-10-23T18:54:07Z"
+      },
+      "weekly_commits": [
+        {
+          "week": "2025-10-04",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-11",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-18",
+          "commits": 0
+        },
+        {
+          "week": "2025-10-25",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-01",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-09",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-16",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-23",
+          "commits": 0
+        },
+        {
+          "week": "2025-11-30",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-07",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-14",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-21",
+          "commits": 0
+        },
+        {
+          "week": "2025-12-28",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-04",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-11",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-18",
+          "commits": 0
+        },
+        {
+          "week": "2026-01-25",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-08",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-15",
+          "commits": 0
+        },
+        {
+          "week": "2026-02-22",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-01",
+          "commits": 0
+        },
+        {
+          "week": "2026-03-08",
+          "commits": 11
+        },
+        {
+          "week": "2026-03-15",
+          "commits": 6
+        },
+        {
+          "week": "2026-03-22",
+          "commits": 2
+        },
+        {
+          "week": "2026-03-29",
+          "commits": 2
+        },
+        {
+          "week": "2026-04-05",
+          "commits": 4
+        },
+        {
+          "week": "2026-04-12",
+          "commits": 5
+        },
+        {
+          "week": "2026-04-19",
+          "commits": 0
+        },
+        {
+          "week": "2026-04-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-03",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-10",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-17",
+          "commits": 0
+        },
+        {
+          "week": "2026-05-24",
+          "commits": 21
+        },
+        {
+          "week": "2026-05-31",
+          "commits": 7
+        },
+        {
+          "week": "2026-06-07",
+          "commits": 6
+        },
+        {
+          "week": "2026-06-14",
+          "commits": 5
+        },
+        {
+          "week": "2026-06-21",
+          "commits": 4
+        },
+        {
+          "week": "2026-06-28",
+          "commits": 1
+        },
+        {
+          "week": "2026-07-05",
+          "commits": 21
+        },
+        {
+          "week": "2026-07-12",
+          "commits": 1
+        },
+        {
+          "week": "2026-07-19",
+          "commits": 3
+        },
+        {
+          "week": "2026-07-26",
+          "commits": 0
+        },
+        {
+          "week": "2026-08-02",
+          "commits": 4
+        },
+        {
+          "week": "2026-08-09",
+          "commits": 1
+        },
+        {
+          "week": "2026-08-16",
+          "commits": 31
+        },
+        {
+          "week": "2026-08-23",
+          "commits": 8
+        },
+        {
+          "week": "2026-08-30",
+          "commits": 2
+        },
+        {
+          "week": "2026-09-06",
+          "commits": 7
+        },
+        {
+          "week": "2026-09-13",
+          "commits": 19
+        },
+        {
+          "week": "2026-09-20",
+          "commits": 29
+        },
+        {
+          "week": "2026-09-27",
+          "commits": 86
+        }
+      ]
+    },
+    {
+      "repo": "scadoshi/orangui",
+      "commits": 91,
+      "stars": 0,
+      "default_branch": "main",
+      "pushed_at": "2026-10-23T18:57:04Z",
+      "languages": [
+        {
+          "name": "CSS",
+          "bytes": 224586
+        },
+        {
+          "name": "Rust",
+          "bytes": 208248
+        },
+        {
+          "name": "JavaScript",
+          "bytes": 21917
+        }
+      ],
+      "additions": null,
+      "deletions": null,
+      "fetched_at": "2026-10-23T21:36:58Z",
+      "stale": false,
+      "counts": {
+        "language": "Rust",
+        "lines": 5860,
+        "tests": 56,
+        "clippy_lints": 22,
+        "measured_at": "2026-10-23T18:59:12Z"
+      },
+      "weekly_commits": null
+    }
+  ],
+  "calendar": {
+    "login": "scadoshi",
+    "total": 5980,
+    "days": [
+      {
+        "date": "2025-10-19",
+        "count": 24,
+        "level": 1
+      },
+      {
+        "date": "2025-10-20",
+        "count": 18,
+        "level": 1
+      },
+      {
+        "date": "2025-10-21",
+        "count": 35,
+        "level": 1
+      },
+      {
+        "date": "2025-10-22",
+        "count": 36,
+        "level": 1
+      },
+      {
+        "date": "2025-10-23",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2025-10-24",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-10-25",
+        "count": 19,
+        "level": 1
+      },
+      {
+        "date": "2025-10-26",
+        "count": 9,
+        "level": 1
+      },
+      {
+        "date": "2025-10-27",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2025-10-28",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-10-29",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-10-30",
+        "count": 7,
+        "level": 1
+      },
+      {
+        "date": "2025-10-31",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-11-01",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2025-11-02",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2025-11-03",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-11-04",
+        "count": 7,
+        "level": 1
+      },
+      {
+        "date": "2025-11-05",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2025-11-06",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-11-07",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-11-08",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-11-09",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2025-11-10",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2025-11-11",
+        "count": 24,
+        "level": 1
+      },
+      {
+        "date": "2025-11-12",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2025-11-13",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2025-11-14",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2025-11-15",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-11-16",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2025-11-17",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2025-11-18",
+        "count": 12,
+        "level": 1
+      },
+      {
+        "date": "2025-11-19",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2025-11-20",
+        "count": 13,
+        "level": 1
+      },
+      {
+        "date": "2025-11-21",
+        "count": 21,
+        "level": 1
+      },
+      {
+        "date": "2025-11-22",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2025-11-23",
+        "count": 12,
+        "level": 1
+      },
+      {
+        "date": "2025-11-24",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2025-11-25",
+        "count": 17,
+        "level": 1
+      },
+      {
+        "date": "2025-11-26",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2025-11-27",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2025-11-28",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-11-29",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2025-11-30",
+        "count": 11,
+        "level": 1
+      },
+      {
+        "date": "2025-12-01",
+        "count": 14,
+        "level": 1
+      },
+      {
+        "date": "2025-12-02",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2025-12-03",
+        "count": 17,
+        "level": 1
+      },
+      {
+        "date": "2025-12-04",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2025-12-05",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-12-06",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2025-12-07",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2025-12-08",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2025-12-09",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2025-12-10",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2025-12-11",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2025-12-12",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2025-12-13",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2025-12-14",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2025-12-15",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2025-12-16",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2025-12-17",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2025-12-18",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-12-19",
+        "count": 21,
+        "level": 1
+      },
+      {
+        "date": "2025-12-20",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2025-12-21",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-12-22",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2025-12-23",
+        "count": 23,
+        "level": 1
+      },
+      {
+        "date": "2025-12-24",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2025-12-25",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2025-12-26",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2025-12-27",
+        "count": 17,
+        "level": 1
+      },
+      {
+        "date": "2025-12-28",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2025-12-29",
+        "count": 15,
+        "level": 1
+      },
+      {
+        "date": "2025-12-30",
+        "count": 16,
+        "level": 1
+      },
+      {
+        "date": "2025-12-31",
+        "count": 38,
+        "level": 1
+      },
+      {
+        "date": "2026-01-01",
+        "count": 26,
+        "level": 1
+      },
+      {
+        "date": "2026-01-02",
+        "count": 74,
+        "level": 2
+      },
+      {
+        "date": "2026-01-03",
+        "count": 30,
+        "level": 1
+      },
+      {
+        "date": "2026-01-04",
+        "count": 55,
+        "level": 2
+      },
+      {
+        "date": "2026-01-05",
+        "count": 12,
+        "level": 1
+      },
+      {
+        "date": "2026-01-06",
+        "count": 20,
+        "level": 1
+      },
+      {
+        "date": "2026-01-07",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-01-08",
+        "count": 30,
+        "level": 1
+      },
+      {
+        "date": "2026-01-09",
+        "count": 7,
+        "level": 1
+      },
+      {
+        "date": "2026-01-10",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2026-01-11",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-01-12",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-01-13",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-01-14",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-01-15",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-01-16",
+        "count": 13,
+        "level": 1
+      },
+      {
+        "date": "2026-01-17",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-01-18",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-01-19",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-01-20",
+        "count": 24,
+        "level": 1
+      },
+      {
+        "date": "2026-01-21",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-01-22",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-01-23",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-01-24",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-01-25",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-01-26",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-01-27",
+        "count": 15,
+        "level": 1
+      },
+      {
+        "date": "2026-01-28",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-01-29",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2026-01-30",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-01-31",
+        "count": 9,
+        "level": 1
+      },
+      {
+        "date": "2026-02-01",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-02",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-03",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-02-04",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-02-05",
+        "count": 23,
+        "level": 1
+      },
+      {
+        "date": "2026-02-06",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-07",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-08",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-09",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-10",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-02-11",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-02-12",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-13",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-02-14",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-02-15",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-16",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-02-17",
+        "count": 13,
+        "level": 1
+      },
+      {
+        "date": "2026-02-18",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-02-19",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-02-20",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-02-21",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-02-22",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-23",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-24",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-02-25",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-02-26",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-02-27",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-02-28",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-03-01",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-03-02",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-03-03",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-03-04",
+        "count": 7,
+        "level": 1
+      },
+      {
+        "date": "2026-03-05",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-03-06",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-03-07",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-03-08",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-03-09",
+        "count": 9,
+        "level": 1
+      },
+      {
+        "date": "2026-03-10",
+        "count": 9,
+        "level": 1
+      },
+      {
+        "date": "2026-03-11",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-03-12",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-03-13",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-03-14",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-03-15",
+        "count": 17,
+        "level": 1
+      },
+      {
+        "date": "2026-03-16",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2026-03-17",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2026-03-18",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-03-19",
+        "count": 7,
+        "level": 1
+      },
+      {
+        "date": "2026-03-20",
+        "count": 7,
+        "level": 1
+      },
+      {
+        "date": "2026-03-21",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-03-22",
+        "count": 12,
+        "level": 1
+      },
+      {
+        "date": "2026-03-23",
+        "count": 16,
+        "level": 1
+      },
+      {
+        "date": "2026-03-24",
+        "count": 24,
+        "level": 1
+      },
+      {
+        "date": "2026-03-25",
+        "count": 26,
+        "level": 1
+      },
+      {
+        "date": "2026-03-26",
+        "count": 21,
+        "level": 1
+      },
+      {
+        "date": "2026-03-27",
+        "count": 42,
+        "level": 2
+      },
+      {
+        "date": "2026-03-28",
+        "count": 76,
+        "level": 2
+      },
+      {
+        "date": "2026-03-29",
+        "count": 42,
+        "level": 2
+      },
+      {
+        "date": "2026-03-30",
+        "count": 20,
+        "level": 1
+      },
+      {
+        "date": "2026-03-31",
+        "count": 17,
+        "level": 1
+      },
+      {
+        "date": "2026-04-01",
+        "count": 14,
+        "level": 1
+      },
+      {
+        "date": "2026-04-02",
+        "count": 45,
+        "level": 2
+      },
+      {
+        "date": "2026-04-03",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-04-04",
+        "count": 58,
+        "level": 2
+      },
+      {
+        "date": "2026-04-05",
+        "count": 34,
+        "level": 1
+      },
+      {
+        "date": "2026-04-06",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-04-07",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-04-08",
+        "count": 11,
+        "level": 1
+      },
+      {
+        "date": "2026-04-09",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-10",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2026-04-11",
+        "count": 11,
+        "level": 1
+      },
+      {
+        "date": "2026-04-12",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-04-13",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-14",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-15",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-16",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-17",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-18",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-19",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-20",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-21",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-22",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-23",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-24",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-25",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-26",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-27",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-04-28",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-29",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-04-30",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-01",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-05-02",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-05-03",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-04",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-05",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-06",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-07",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-05-08",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-05-09",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-10",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-11",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-12",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-13",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-05-14",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-15",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-16",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-17",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-18",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-05-19",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-05-20",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2026-05-21",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-22",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-05-23",
+        "count": 11,
+        "level": 1
+      },
+      {
+        "date": "2026-05-24",
+        "count": 24,
+        "level": 1
+      },
+      {
+        "date": "2026-05-25",
+        "count": 20,
+        "level": 1
+      },
+      {
+        "date": "2026-05-26",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-05-27",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-28",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2026-05-29",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-05-30",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-05-31",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-06-01",
+        "count": 12,
+        "level": 1
+      },
+      {
+        "date": "2026-06-02",
+        "count": 5,
+        "level": 1
+      },
+      {
+        "date": "2026-06-03",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-06-04",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-06-05",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-06-06",
+        "count": 15,
+        "level": 1
+      },
+      {
+        "date": "2026-06-07",
+        "count": 41,
+        "level": 2
+      },
+      {
+        "date": "2026-06-08",
+        "count": 14,
+        "level": 1
+      },
+      {
+        "date": "2026-06-09",
+        "count": 41,
+        "level": 2
+      },
+      {
+        "date": "2026-06-10",
+        "count": 34,
+        "level": 1
+      },
+      {
+        "date": "2026-06-11",
+        "count": 84,
+        "level": 3
+      },
+      {
+        "date": "2026-06-12",
+        "count": 16,
+        "level": 1
+      },
+      {
+        "date": "2026-06-13",
+        "count": 35,
+        "level": 1
+      },
+      {
+        "date": "2026-06-14",
+        "count": 21,
+        "level": 1
+      },
+      {
+        "date": "2026-06-15",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-06-16",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-06-17",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-06-18",
+        "count": 14,
+        "level": 1
+      },
+      {
+        "date": "2026-06-19",
+        "count": 24,
+        "level": 1
+      },
+      {
+        "date": "2026-06-20",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-06-21",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-06-22",
+        "count": 35,
+        "level": 1
+      },
+      {
+        "date": "2026-06-23",
+        "count": 39,
+        "level": 1
+      },
+      {
+        "date": "2026-06-24",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-06-25",
+        "count": 65,
+        "level": 2
+      },
+      {
+        "date": "2026-06-26",
+        "count": 37,
+        "level": 1
+      },
+      {
+        "date": "2026-06-27",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-06-28",
+        "count": 71,
+        "level": 2
+      },
+      {
+        "date": "2026-06-29",
+        "count": 60,
+        "level": 2
+      },
+      {
+        "date": "2026-06-30",
+        "count": 64,
+        "level": 2
+      },
+      {
+        "date": "2026-07-01",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2026-07-02",
+        "count": 71,
+        "level": 2
+      },
+      {
+        "date": "2026-07-03",
+        "count": 12,
+        "level": 1
+      },
+      {
+        "date": "2026-07-04",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-07-05",
+        "count": 18,
+        "level": 1
+      },
+      {
+        "date": "2026-07-06",
+        "count": 23,
+        "level": 1
+      },
+      {
+        "date": "2026-07-07",
+        "count": 63,
+        "level": 2
+      },
+      {
+        "date": "2026-07-08",
+        "count": 62,
+        "level": 2
+      },
+      {
+        "date": "2026-07-09",
+        "count": 62,
+        "level": 2
+      },
+      {
+        "date": "2026-07-10",
+        "count": 28,
+        "level": 1
+      },
+      {
+        "date": "2026-07-11",
+        "count": 206,
+        "level": 4
+      },
+      {
+        "date": "2026-07-12",
+        "count": 154,
+        "level": 4
+      },
+      {
+        "date": "2026-07-13",
+        "count": 46,
+        "level": 2
+      },
+      {
+        "date": "2026-07-14",
+        "count": 32,
+        "level": 1
+      },
+      {
+        "date": "2026-07-15",
+        "count": 32,
+        "level": 1
+      },
+      {
+        "date": "2026-07-16",
+        "count": 22,
+        "level": 1
+      },
+      {
+        "date": "2026-07-17",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-07-18",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-07-19",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-07-20",
+        "count": 38,
+        "level": 1
+      },
+      {
+        "date": "2026-07-21",
+        "count": 31,
+        "level": 1
+      },
+      {
+        "date": "2026-07-22",
+        "count": 26,
+        "level": 1
+      },
+      {
+        "date": "2026-07-23",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2026-07-24",
+        "count": 16,
+        "level": 1
+      },
+      {
+        "date": "2026-07-25",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-07-26",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-07-27",
+        "count": 12,
+        "level": 1
+      },
+      {
+        "date": "2026-07-28",
+        "count": 14,
+        "level": 1
+      },
+      {
+        "date": "2026-07-29",
+        "count": 34,
+        "level": 1
+      },
+      {
+        "date": "2026-07-30",
+        "count": 34,
+        "level": 1
+      },
+      {
+        "date": "2026-07-31",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-08-01",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-02",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-03",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-08-04",
+        "count": 73,
+        "level": 2
+      },
+      {
+        "date": "2026-08-05",
+        "count": 51,
+        "level": 2
+      },
+      {
+        "date": "2026-08-06",
+        "count": 85,
+        "level": 3
+      },
+      {
+        "date": "2026-08-07",
+        "count": 42,
+        "level": 2
+      },
+      {
+        "date": "2026-08-08",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-09",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-10",
+        "count": 35,
+        "level": 1
+      },
+      {
+        "date": "2026-08-11",
+        "count": 32,
+        "level": 1
+      },
+      {
+        "date": "2026-08-12",
+        "count": 41,
+        "level": 2
+      },
+      {
+        "date": "2026-08-13",
+        "count": 42,
+        "level": 2
+      },
+      {
+        "date": "2026-08-14",
+        "count": 24,
+        "level": 1
+      },
+      {
+        "date": "2026-08-15",
+        "count": 11,
+        "level": 1
+      },
+      {
+        "date": "2026-08-16",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-17",
+        "count": 162,
+        "level": 4
+      },
+      {
+        "date": "2026-08-18",
+        "count": 40,
+        "level": 2
+      },
+      {
+        "date": "2026-08-19",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2026-08-20",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-08-21",
+        "count": 9,
+        "level": 1
+      },
+      {
+        "date": "2026-08-22",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-23",
+        "count": 4,
+        "level": 1
+      },
+      {
+        "date": "2026-08-24",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-25",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-26",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-27",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-28",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-08-29",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-30",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-08-31",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-01",
+        "count": 23,
+        "level": 1
+      },
+      {
+        "date": "2026-09-02",
+        "count": 6,
+        "level": 1
+      },
+      {
+        "date": "2026-09-03",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-04",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-09-05",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-09-06",
+        "count": 18,
+        "level": 1
+      },
+      {
+        "date": "2026-09-07",
+        "count": 15,
+        "level": 1
+      },
+      {
+        "date": "2026-09-08",
+        "count": 3,
+        "level": 1
+      },
+      {
+        "date": "2026-09-09",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-10",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-11",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-12",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-13",
+        "count": 47,
+        "level": 2
+      },
+      {
+        "date": "2026-09-14",
+        "count": 10,
+        "level": 1
+      },
+      {
+        "date": "2026-09-15",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-16",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-17",
+        "count": 8,
+        "level": 1
+      },
+      {
+        "date": "2026-09-18",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-19",
+        "count": 53,
+        "level": 2
+      },
+      {
+        "date": "2026-09-20",
+        "count": 35,
+        "level": 1
+      },
+      {
+        "date": "2026-09-21",
+        "count": 45,
+        "level": 2
+      },
+      {
+        "date": "2026-09-22",
+        "count": 81,
+        "level": 3
+      },
+      {
+        "date": "2026-09-23",
+        "count": 54,
+        "level": 2
+      },
+      {
+        "date": "2026-09-24",
+        "count": 27,
+        "level": 1
+      },
+      {
+        "date": "2026-09-25",
+        "count": 1,
+        "level": 1
+      },
+      {
+        "date": "2026-09-26",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-27",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-09-28",
+        "count": 21,
+        "level": 1
+      },
+      {
+        "date": "2026-09-29",
+        "count": 25,
+        "level": 1
+      },
+      {
+        "date": "2026-09-30",
+        "count": 36,
+        "level": 1
+      },
+      {
+        "date": "2026-10-01",
+        "count": 83,
+        "level": 3
+      },
+      {
+        "date": "2026-10-02",
+        "count": 88,
+        "level": 3
+      },
+      {
+        "date": "2026-10-03",
+        "count": 30,
+        "level": 1
+      },
+      {
+        "date": "2026-10-04",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-10-05",
+        "count": 30,
+        "level": 1
+      },
+      {
+        "date": "2026-10-06",
+        "count": 34,
+        "level": 1
+      },
+      {
+        "date": "2026-10-07",
+        "count": 142,
+        "level": 4
+      },
+      {
+        "date": "2026-10-08",
+        "count": 104,
+        "level": 3
+      },
+      {
+        "date": "2026-10-09",
+        "count": 51,
+        "level": 2
+      },
+      {
+        "date": "2026-10-10",
+        "count": 39,
+        "level": 1
+      },
+      {
+        "date": "2026-10-11",
+        "count": 11,
+        "level": 1
+      },
+      {
+        "date": "2026-10-12",
+        "count": 50,
+        "level": 2
+      },
+      {
+        "date": "2026-10-13",
+        "count": 116,
+        "level": 3
+      },
+      {
+        "date": "2026-10-14",
+        "count": 19,
+        "level": 1
+      },
+      {
+        "date": "2026-10-15",
+        "count": 2,
+        "level": 1
+      },
+      {
+        "date": "2026-10-16",
+        "count": 48,
+        "level": 2
+      },
+      {
+        "date": "2026-10-17",
+        "count": 0,
+        "level": 0
+      },
+      {
+        "date": "2026-10-18",
+        "count": 44,
+        "level": 2
+      },
+      {
+        "date": "2026-10-19",
+        "count": 157,
+        "level": 4
+      },
+      {
+        "date": "2026-10-20",
+        "count": 37,
+        "level": 1
+      },
+      {
+        "date": "2026-10-21",
+        "count": 26,
+        "level": 1
+      },
+      {
+        "date": "2026-10-22",
+        "count": 70,
+        "level": 2
+      },
+      {
+        "date": "2026-10-23",
+        "count": 33,
+        "level": 1
+      }
+    ],
+    "fetched_at": "2026-10-23T21:00:08Z",
+    "stale": false
+  }
+}
