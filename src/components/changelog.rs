@@ -1,60 +1,62 @@
 use dioxus::prelude::*;
+use orangui::Chip;
 
-use crate::changelog::{RELEASES, UPCOMING};
+use crate::changelog::{Date, RELEASES, UPCOMING};
 
-/// The `major.minor` of a version string, e.g. "1.3.1" -> "1.3".
-fn major_minor(version: &str) -> &str {
-    version.rsplit_once('.').map_or(version, |(head, _)| head)
-}
-
-/// Cairn's release history: a major.minor chip filter over a newest-first
-/// list of versions, each with its date and notes. A port of zwipe's
+/// Cairn's release history: a month chip filter over a newest-first list of
+/// versions, each with its date and notes. The cards are a port of zwipe's
 /// `components::Changelog`, so the two read the same. Defaults to the latest
-/// release's line; "All" shows everything.
+/// release's month; "All" shows everything. Upcoming versions have no date
+/// and sit with the newest month.
 #[component]
 pub fn Changelog() -> Element {
-    // major.minor keys in display order (newest first), deduped.
-    let mut minors: Vec<&'static str> = Vec::new();
+    // The newest month, which upcoming versions are filed under.
+    let newest = RELEASES.first().and_then(|r| r.date).map(Date::month_start);
+    let month_of = move |date: Option<Date>| date.map_or(newest, |d| Some(d.month_start()));
+
+    // Months in display order (newest first), deduped.
+    let mut months: Vec<Date> = Vec::new();
     for release in UPCOMING.iter().chain(RELEASES) {
-        let key = major_minor(release.version);
-        if !minors.contains(&key) {
-            minors.push(key);
+        if let Some(month) = month_of(release.date)
+            && !months.contains(&month)
+        {
+            months.push(month);
         }
     }
 
-    // None = "All". Starts on the latest released line, not the upcoming
-    // ones.
-    let mut selected = use_signal(|| RELEASES.first().map(|r| major_minor(r.version)));
+    // None = "All".
+    let mut selected = use_signal(|| newest);
     // In each card's key so a filter change remounts the visible cards,
     // replaying their ease-in.
-    let filter_key = selected().unwrap_or("all");
+    let filter_key = selected().map_or_else(|| "all".to_string(), Date::month_label);
     // Upcoming entries come first with an "Upcoming" badge; the first
     // released entry after them is the "Latest".
     let upcoming_count = UPCOMING.len();
 
     rsx! {
         div { class: "changelog-filter",
-            button {
-                class: if selected().is_none() { "chip selected" } else { "chip" },
+            Chip {
+                selected: selected().is_none(),
                 onclick: move |_| selected.set(None),
                 "All"
             }
-            for key in minors {
-                button {
-                    class: if selected() == Some(key) { "chip selected" } else { "chip" },
-                    onclick: move |_| selected.set(Some(key)),
-                    "{key}"
+            for month in months {
+                Chip {
+                    key: "{month.month_label()}",
+                    selected: selected() == Some(month),
+                    onclick: move |_| selected.set(Some(month)),
+                    "{month.month_label()}"
                 }
             }
         }
         div { class: "changelog-list",
             for (i, release) in UPCOMING.iter().chain(RELEASES).enumerate() {
-                if selected().is_none_or(|key| key == major_minor(release.version)) {
+                if selected().is_none() || selected() == month_of(release.date) {
                     div { key: "{filter_key}-{release.version}", class: "changelog-card",
                         div { class: "changelog-version-row",
                             h2 { class: "changelog-version", "{release.version}" }
-                            if !release.date.is_empty() {
-                                span { class: "changelog-date", "{release.date}" }
+                            if let Some(date) = release.date {
+                                span { class: "changelog-date", "{date}" }
                             }
                             if i < upcoming_count {
                                 span { class: "status-tag status-doing", "Upcoming" }

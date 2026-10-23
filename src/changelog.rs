@@ -6,16 +6,86 @@
 //! same sitting, in [`UPCOMING`] under the next version, reworded to zwipe's
 //! changelog rules, which the tests below hold. At cut time, when cairn's
 //! Unreleased entries move under a dated version heading, the version moves
-//! to the top of [`RELEASES`] with that date and becomes the "Latest".
+//! to the top of [`RELEASES`] with that day as a [`Date`] and becomes the
+//! "Latest". The page groups releases by the month of that date.
 
-/// One version and its notes. Dates are the cut date, the same as the
-/// version's heading in cairn's changelog; newest first.
+use std::fmt;
+
+/// A calendar day. Fields run year, month, day, so the derived ordering is
+/// chronological. Built with [`Date::new`], which rejects an impossible day
+/// at compile time when used in a const.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Date {
+    year: u16,
+    month: u8,
+    day: u8,
+}
+
+impl Date {
+    /// The day `year`-`month`-`day`. Panics, which in a const is a compile
+    /// error, when the month is not 1 to 12 or the day is not in that month.
+    pub const fn new(year: u16, month: u8, day: u8) -> Self {
+        assert!(month >= 1 && month <= 12, "month out of range");
+        assert!(
+            day >= 1 && day <= days_in_month(year, month),
+            "day out of range"
+        );
+        Self { year, month, day }
+    }
+
+    /// The first of this date's month, the key the page groups releases by.
+    pub const fn month_start(self) -> Self {
+        Self { day: 1, ..self }
+    }
+
+    /// The month and year, e.g. `"Oct 2026"`. The label of a month chip.
+    pub fn month_label(self) -> String {
+        format!("{} {}", month_abbr(self.month), self.year)
+    }
+}
+
+/// Formats as `"Oct 21, 2026"`, the release date shown on each card.
+impl fmt::Display for Date {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {}, {}", month_abbr(self.month), self.day, self.year)
+    }
+}
+
+const fn month_abbr(month: u8) -> &'static str {
+    match month {
+        1 => "Jan",
+        2 => "Feb",
+        3 => "Mar",
+        4 => "Apr",
+        5 => "May",
+        6 => "Jun",
+        7 => "Jul",
+        8 => "Aug",
+        9 => "Sep",
+        10 => "Oct",
+        11 => "Nov",
+        _ => "Dec",
+    }
+}
+
+const fn days_in_month(year: u16, month: u8) -> u8 {
+    match month {
+        2 if year.is_multiple_of(4) && (!year.is_multiple_of(100) || year.is_multiple_of(400)) => {
+            29
+        }
+        2 => 28,
+        4 | 6 | 9 | 11 => 30,
+        _ => 31,
+    }
+}
+
+/// One version and its notes.
 pub struct Release {
     /// Semantic version string, e.g. `"1.1.0"`.
     pub version: &'static str,
-    /// Human-readable release date, e.g. `"Oct 20, 2026"`. Empty while
-    /// upcoming.
-    pub date: &'static str,
+    /// The cut date, the same as the version's heading in cairn's changelog.
+    /// `None` while upcoming.
+    pub date: Option<Date>,
     /// User-facing release notes, one phrase per entry.
     pub entries: &'static [&'static str],
 }
@@ -24,11 +94,11 @@ pub struct Release {
 /// top with an "Upcoming" badge instead of "Latest".
 pub const UPCOMING: &[Release] = &[];
 
-/// Shipped releases, newest first.
+/// Shipped releases, newest first by date.
 pub const RELEASES: &[Release] = &[
     Release {
         version: "1.1.1",
-        date: "Oct 21, 2026",
+        date: Some(Date::new(2026, 10, 21)),
         entries: &[
             "Flexoki theme replaces Visual Studio, whose users move to VS Code",
             "Synthwave '84's colors match the original theme",
@@ -36,7 +106,7 @@ pub const RELEASES: &[Release] = &[
     },
     Release {
         version: "1.1.0",
-        date: "Oct 21, 2026",
+        date: Some(Date::new(2026, 10, 21)),
         entries: &[
             "Four Monokai Pro themes: Pro, Machine, Octagon and Spectrum, each in dark and light",
             "Editor defaults as themes: Darcula, Xcode, Visual Studio, Eclipse and Neovim, each in dark and light",
@@ -55,7 +125,7 @@ pub const RELEASES: &[Release] = &[
     },
     Release {
         version: "1.0.0",
-        date: "Oct 20, 2026",
+        date: Some(Date::new(2026, 10, 20)),
         entries: &[
             "Counters that keep a lifetime total, with a breakdown by year",
             "Goals per day, week or year, with pace: what today still owes, ahead or behind, and the projected year end",
@@ -122,7 +192,27 @@ mod tests {
     /// Only shipped releases carry a date, and every one of them does.
     #[test]
     fn only_releases_are_dated() {
-        assert!(UPCOMING.iter().all(|r| r.date.is_empty()));
-        assert!(RELEASES.iter().all(|r| !r.date.is_empty()));
+        assert!(UPCOMING.iter().all(|r| r.date.is_none()));
+        assert!(RELEASES.iter().all(|r| r.date.is_some()));
+    }
+
+    /// The page reads top to bottom as newest to oldest, and the first
+    /// release is the "Latest", so the order is held here rather than by eye.
+    #[test]
+    fn releases_are_newest_first_by_date() {
+        let dates: Vec<_> = RELEASES.iter().filter_map(|r| r.date).collect();
+        assert!(
+            dates.windows(2).all(|pair| pair[0] >= pair[1]),
+            "{dates:#?}"
+        );
+    }
+
+    #[test]
+    fn dates_read_the_way_the_page_shows_them() {
+        let date = Date::new(2026, 10, 21);
+        assert_eq!(date.to_string(), "Oct 21, 2026");
+        assert_eq!(date.month_label(), "Oct 2026");
+        assert_eq!(date.month_start(), Date::new(2026, 10, 1));
+        assert_eq!(Date::new(2024, 2, 29).to_string(), "Feb 29, 2024");
     }
 }
