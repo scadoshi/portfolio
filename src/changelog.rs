@@ -7,7 +7,10 @@
 //! changelog rules, which the tests below hold. At cut time, when cairn's
 //! Unreleased entries move under a dated version heading, the version moves
 //! to the top of [`RELEASES`] with that day as a [`Date`] and becomes the
-//! "Latest". The page groups releases by the month of that date.
+//! "Latest". A release's date is the day App Store Connect shows it "Ready
+//! for Distribution", when it went live, and matches its heading in cairn's
+//! changelog. The page files each release under the year and month of that
+//! date (see `components::changelog`).
 
 use std::fmt;
 
@@ -33,14 +36,19 @@ impl Date {
         Self { year, month, day }
     }
 
-    /// The first of this date's month, the key the page groups releases by.
+    /// The first of this date's month, the key the page files releases under.
     pub const fn month_start(self) -> Self {
         Self { day: 1, ..self }
     }
 
-    /// The month and year, e.g. `"Oct 2026"`. The label of a month chip.
-    pub fn month_label(self) -> String {
-        format!("{} {}", month_abbr(self.month), self.year)
+    /// The year, e.g. `2026`.
+    pub const fn year(self) -> u16 {
+        self.year
+    }
+
+    /// The month alone, e.g. `"Oct"`. A month chip's label.
+    pub const fn month_name(self) -> &'static str {
+        month_abbr(self.month)
     }
 }
 
@@ -83,8 +91,9 @@ const fn days_in_month(year: u16, month: u8) -> u8 {
 pub struct Release {
     /// Semantic version string, e.g. `"1.1.0"`.
     pub version: &'static str,
-    /// The cut date, the same as the version's heading in cairn's changelog.
-    /// `None` while upcoming.
+    /// The day App Store Connect showed the version "Ready for
+    /// Distribution", the same as its heading in cairn's changelog. `None`
+    /// while upcoming.
     pub date: Option<Date>,
     /// User-facing release notes, one phrase per entry.
     pub entries: &'static [&'static str],
@@ -211,7 +220,7 @@ mod tests {
     fn dates_read_the_way_the_page_shows_them() {
         let date = Date::new(2026, 10, 21);
         assert_eq!(date.to_string(), "Oct 21, 2026");
-        assert_eq!(date.month_label(), "Oct 2026");
+        assert_eq!(date.month_name(), "Oct");
         assert_eq!(date.month_start(), Date::new(2026, 10, 1));
         assert_eq!(Date::new(2024, 2, 29).to_string(), "Feb 29, 2024");
     }
