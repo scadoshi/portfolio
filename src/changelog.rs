@@ -101,7 +101,11 @@ pub struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub const UPCOMING: &[Release] = &[];
+pub const UPCOMING: &[Release] = &[Release {
+    version: "1.1.2",
+    date: None,
+    entries: &["The changelog's version chips group patches under their minor version"],
+}];
 
 /// Shipped releases, newest first by date.
 pub const RELEASES: &[Release] = &[

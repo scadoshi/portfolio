@@ -1,11 +1,12 @@
 //! Cairn's changelog page: a drill-down of chips over the release cards.
 //!
 //! Row one is Latest and one chip per year. Picking a year opens a row of its
-//! months, and picking a month a row of its versions. Each pick shows the
-//! cards under it: a whole year, a month, or one version. Latest, the
-//! default, shows the upcoming version, if any, and the newest release.
-//! Every card's id is its [`anchor`], so `/projects/cairn/changelog#v1-0-0`
-//! opens on that release with its year, month and version picked.
+//! months, and picking a month a row of the minor versions filed in it, e.g.
+//! `1.1`. Each pick shows the cards under it: a whole year, a month, or every
+//! patch of one minor in that month. Latest, the default, shows the upcoming
+//! version, if any, and the newest release. Every card's id is its
+//! [`anchor`], so `/projects/cairn/changelog#v1-0-0` opens on that release's
+//! year, month and minor and scrolls to its card.
 
 use dioxus::prelude::*;
 use orangui::Chip;
@@ -13,7 +14,7 @@ use orangui::Chip;
 use crate::changelog::{Date, RELEASES, Release, UPCOMING};
 
 /// The chip picked last, the deepest level of the drill-down. The levels
-/// above it follow from it (see [`Log::path`]).
+/// above it follow from it (see [`Selection::path`]).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Selection {
     /// The upcoming version and the newest release.
@@ -22,8 +23,53 @@ pub enum Selection {
     Year(u16),
     /// Every release in a month, given as its first day.
     Month(Date),
-    /// One release.
-    Version(&'static str),
+    /// Every release of a minor version, e.g. `"1.1"`, filed in a month.
+    /// The month is part of the pick because a minor can span months.
+    Minor {
+        /// The month, given as its first day.
+        month: Date,
+        /// The minor version, major and minor only.
+        minor: &'static str,
+    },
+}
+
+impl Selection {
+    /// The chips this selection lights: its own and every level above it.
+    pub fn path(self) -> Path {
+        match self {
+            Self::Latest => Path::default(),
+            Self::Year(year) => Path {
+                year: Some(year),
+                ..Path::default()
+            },
+            Self::Month(month) => Path {
+                year: Some(month.year()),
+                month: Some(month),
+                minor: None,
+            },
+            Self::Minor { month, minor } => Path {
+                year: Some(month.year()),
+                month: Some(month),
+                minor: Some(minor),
+            },
+        }
+    }
+
+    /// One level up: minor to its month, month to its year, year to Latest.
+    pub fn parent(self) -> Self {
+        match self {
+            Self::Latest | Self::Year(_) => Self::Latest,
+            Self::Month(month) => Self::Year(month.year()),
+            Self::Minor { month, .. } => Self::Month(month),
+        }
+    }
+
+    /// The selection after a tap on `chip`. A chip above the current pick
+    /// selects its level and clears the rows below it; tapping the chip
+    /// already picked steps back up one level.
+    pub fn tap(self, chip: Self) -> Self {
+        if chip == self { self.parent() } else { chip }
+    }
 }
 
 /// The chips a selection lights, one per level. Empty under Latest.
@@ -33,8 +79,8 @@ pub struct Path {
     pub year: Option<u16>,
     /// The month chip lit, if any.
     pub month: Option<Date>,
-    /// The version chip lit, if any.
-    pub version: Option<&'static str>,
+    /// The minor version chip lit, if any.
+    pub minor: Option<&'static str>,
 }
 
 /// A product's changelog, upcoming versions and shipped releases, both
@@ -57,10 +103,6 @@ impl Log {
     /// Upcoming versions, then shipped releases: the page's order.
     fn all(self) -> impl Iterator<Item = &'static Release> {
         self.upcoming.iter().chain(self.releases)
-    }
-
-    fn find(self, version: &str) -> Option<&'static Release> {
-        self.all().find(|release| release.version == version)
     }
 
     /// Whether `version` is an upcoming one, which gets the Upcoming badge.
@@ -114,58 +156,17 @@ impl Log {
             .collect()
     }
 
-    /// The versions filed under `month`, newest first. Row three.
-    pub fn versions(self, month: Date) -> Vec<&'static str> {
-        self.all()
-            .filter(|release| self.month_of(release) == Some(month))
-            .map(|release| release.version)
-            .collect()
-    }
-
-    /// The chips `selection` lights: its own and every level above it.
-    pub fn path(self, selection: Selection) -> Path {
-        match selection {
-            Selection::Latest => Path::default(),
-            Selection::Year(year) => Path {
-                year: Some(year),
-                ..Path::default()
-            },
-            Selection::Month(month) => Path {
-                year: Some(month.year()),
-                month: Some(month),
-                version: None,
-            },
-            Selection::Version(version) => {
-                let month = self.find(version).and_then(|r| self.month_of(r));
-                Path {
-                    year: month.map(Date::year),
-                    month,
-                    version: Some(version),
-                }
+    /// The minor versions of the releases filed under `month`, newest first.
+    /// Row three.
+    pub fn minors(self, month: Date) -> Vec<&'static str> {
+        let mut minors = Vec::new();
+        for release in self.all() {
+            let minor = minor_of(release.version);
+            if self.month_of(release) == Some(month) && !minors.contains(&minor) {
+                minors.push(minor);
             }
         }
-    }
-
-    /// One level up from `selection`: version to its month, month to its
-    /// year, year to Latest.
-    pub fn parent(self, selection: Selection) -> Selection {
-        let path = self.path(selection);
-        match selection {
-            Selection::Latest | Selection::Year(_) => Selection::Latest,
-            Selection::Month(month) => Selection::Year(month.year()),
-            Selection::Version(_) => path.month.map_or(Selection::Latest, Selection::Month),
-        }
-    }
-
-    /// The selection after a tap on `chip`. A chip above the current pick
-    /// selects its level and clears the rows below it; tapping the chip
-    /// already picked steps back up one level.
-    pub fn tap(self, current: Selection, chip: Selection) -> Selection {
-        if chip == current {
-            self.parent(current)
-        } else {
-            chip
-        }
+        minors
     }
 
     /// The releases `selection` shows, in page order.
@@ -177,20 +178,40 @@ impl Log {
                 }
                 Selection::Year(year) => self.month_of(release).map(Date::year) == Some(year),
                 Selection::Month(month) => self.month_of(release) == Some(month),
-                Selection::Version(version) => release.version == version,
+                Selection::Minor { month, minor } => {
+                    self.month_of(release) == Some(month) && minor_of(release.version) == minor
+                }
             })
             .collect()
     }
 
     /// The selection a link to `fragment` opens on, with or without its
-    /// leading `#`: the release whose [`anchor`] it is. `None` when no
-    /// release has that anchor, so the page stays on Latest.
+    /// leading `#`: the month and minor of the release whose [`anchor`] it
+    /// is. `None` when no release has that anchor, so the page stays on
+    /// Latest. An upcoming version with no shipped release to file it under
+    /// opens on Latest, which shows it.
     pub fn for_anchor(self, fragment: &str) -> Option<Selection> {
         let fragment = fragment.strip_prefix('#').unwrap_or(fragment);
-        self.all()
-            .find(|release| anchor(release.version) == fragment)
-            .map(|release| Selection::Version(release.version))
+        let release = self
+            .all()
+            .find(|release| anchor(release.version) == fragment)?;
+        Some(
+            self.month_of(release)
+                .map_or(Selection::Latest, |month| Selection::Minor {
+                    month,
+                    minor: minor_of(release.version),
+                }),
+        )
     }
+}
+
+/// The major and minor of `version`, e.g. `"1.1"` for 1.1.2. A version with
+/// fewer than three parts is its own minor.
+fn minor_of(version: &'static str) -> &'static str {
+    version
+        .match_indices('.')
+        .nth(1)
+        .map_or(version, |(end, _)| &version[..end])
 }
 
 /// A release card's id and the fragment that links to it: `v` and the
@@ -239,8 +260,8 @@ pub fn Changelog() -> Element {
     });
 
     let selection = selected();
-    let path = log.path(selection);
-    let mut tap = move |chip: Selection| selected.set(log.tap(selected(), chip));
+    let path = selection.path();
+    let mut tap = move |chip: Selection| selected.set(selected().tap(chip));
     // In each card's key so a selection change remounts the visible cards,
     // replaying their ease-in.
     let selection_key = format!("{selection:?}");
@@ -276,12 +297,12 @@ pub fn Changelog() -> Element {
             }
             if let Some(month) = path.month {
                 div { class: "changelog-filter",
-                    for version in log.versions(month) {
+                    for minor in log.minors(month) {
                         Chip {
-                            key: "{version}",
-                            selected: path.version == Some(version),
-                            onclick: move |_| tap(Selection::Version(version)),
-                            "{version}"
+                            key: "{minor}",
+                            selected: path.minor == Some(minor),
+                            onclick: move |_| tap(Selection::Minor { month, minor }),
+                            "{minor}"
                         }
                     }
                 }
@@ -326,13 +347,21 @@ mod tests {
     use super::*;
 
     const OCT: Date = Date::new(2026, 10, 1);
+    const NOV: Date = Date::new(2026, 11, 1);
+    const DEC: Date = Date::new(2026, 12, 1);
+    const JAN: Date = Date::new(2027, 1, 1);
 
     fn versions(releases: &[&Release]) -> Vec<&'static str> {
         releases.iter().map(|r| r.version).collect()
     }
 
+    const fn minor(month: Date, minor: &'static str) -> Selection {
+        Selection::Minor { month, minor }
+    }
+
     /// Releases across a new year, with an upcoming version: 2.1.0 is
-    /// upcoming, 2.0.0 shipped in January 2027, the rest in late 2026.
+    /// upcoming, 2.0.0 shipped in January 2027, the rest in late 2026, with
+    /// 1.3 patched once in December and 1.1 spanning November and December.
     const TWO_YEARS: Log = Log::new(
         &[Release {
             version: "2.1.0",
@@ -346,6 +375,11 @@ mod tests {
                 entries: &["Something new"],
             },
             Release {
+                version: "1.3.1",
+                date: Some(Date::new(2026, 12, 30)),
+                entries: &["Something fixed"],
+            },
+            Release {
                 version: "1.3.0",
                 date: Some(Date::new(2026, 12, 28)),
                 entries: &["Something old"],
@@ -354,6 +388,11 @@ mod tests {
                 version: "1.2.0",
                 date: Some(Date::new(2026, 12, 2)),
                 entries: &["Something older"],
+            },
+            Release {
+                version: "1.1.1",
+                date: Some(Date::new(2026, 12, 1)),
+                entries: &["Something patched"],
             },
             Release {
                 version: "1.1.0",
@@ -373,7 +412,7 @@ mod tests {
             versions(&TWO_YEARS.shown(Selection::Latest)),
             ["2.1.0", "2.0.0"]
         );
-        assert_eq!(TWO_YEARS.path(Selection::Latest), Path::default());
+        assert_eq!(Selection::Latest.path(), Path::default());
     }
 
     /// The year row shows even when every release is in one year.
@@ -381,90 +420,91 @@ mod tests {
     fn one_year_still_gets_a_year_chip() {
         assert_eq!(Log::CAIRN.years(), [2026]);
         assert_eq!(Log::CAIRN.months(2026), [OCT]);
-        assert_eq!(Log::CAIRN.versions(OCT), ["1.1.1", "1.1.0", "1.0.0"]);
+        assert_eq!(Log::CAIRN.minors(OCT), ["1.1", "1.0"]);
         assert_eq!(
             versions(&Log::CAIRN.shown(Selection::Year(2026))),
-            ["1.1.1", "1.1.0", "1.0.0"]
+            ["1.1.2", "1.1.1", "1.1.0", "1.0.0"]
         );
+    }
+
+    #[test]
+    fn minors_are_major_and_minor_only() {
+        assert_eq!(minor_of("1.1.2"), "1.1");
+        assert_eq!(minor_of("10.0.12"), "10.0");
+        assert_eq!(minor_of("2.0"), "2.0");
+        assert_eq!(minor_of("3"), "3");
     }
 
     #[test]
     fn each_level_narrows_the_cards() {
         let log = TWO_YEARS;
-        let dec = Date::new(2026, 12, 1);
-        let jan = Date::new(2027, 1, 1);
         assert_eq!(log.years(), [2027, 2026]);
-        assert_eq!(log.months(2026), [dec, Date::new(2026, 11, 1)]);
-        assert_eq!(log.months(2027), [jan]);
+        assert_eq!(log.months(2026), [DEC, NOV]);
+        assert_eq!(log.months(2027), [JAN]);
         // The upcoming version files under the newest month.
-        assert_eq!(log.versions(jan), ["2.1.0", "2.0.0"]);
-        assert_eq!(log.versions(dec), ["1.3.0", "1.2.0"]);
+        assert_eq!(log.minors(JAN), ["2.1", "2.0"]);
+        assert_eq!(log.minors(DEC), ["1.3", "1.2", "1.1"]);
+        assert_eq!(log.minors(NOV), ["1.1"]);
 
         assert_eq!(
             versions(&log.shown(Selection::Year(2026))),
-            ["1.3.0", "1.2.0", "1.1.0"]
+            ["1.3.1", "1.3.0", "1.2.0", "1.1.1", "1.1.0"]
         );
         assert_eq!(
-            versions(&log.shown(Selection::Month(dec))),
-            ["1.3.0", "1.2.0"]
-        );
-        assert_eq!(versions(&log.shown(Selection::Version("1.2.0"))), ["1.2.0"]);
-        assert_eq!(
-            log.path(Selection::Version("1.2.0")),
-            Path {
-                year: Some(2026),
-                month: Some(dec),
-                version: Some("1.2.0"),
-            }
+            versions(&log.shown(Selection::Month(DEC))),
+            ["1.3.1", "1.3.0", "1.2.0", "1.1.1"]
         );
         assert_eq!(
-            log.path(Selection::Month(jan)),
+            Selection::Month(JAN).path(),
             Path {
                 year: Some(2027),
-                month: Some(jan),
-                version: None,
+                month: Some(JAN),
+                minor: None,
+            }
+        );
+    }
+
+    #[test]
+    fn a_minor_shows_its_patches_in_that_month() {
+        let log = TWO_YEARS;
+        assert_eq!(versions(&log.shown(minor(DEC, "1.3"))), ["1.3.1", "1.3.0"]);
+        assert_eq!(versions(&log.shown(minor(DEC, "1.2"))), ["1.2.0"]);
+        // A minor that spans months shows only the month picked.
+        assert_eq!(versions(&log.shown(minor(DEC, "1.1"))), ["1.1.1"]);
+        assert_eq!(versions(&log.shown(minor(NOV, "1.1"))), ["1.1.0"]);
+        assert_eq!(
+            minor(DEC, "1.3").path(),
+            Path {
+                year: Some(2026),
+                month: Some(DEC),
+                minor: Some("1.3"),
             }
         );
     }
 
     #[test]
     fn a_higher_chip_clears_the_levels_below() {
-        let log = TWO_YEARS;
-        let dec = Date::new(2026, 12, 1);
-        let picked = Selection::Version("1.2.0");
-        assert_eq!(
-            log.tap(picked, Selection::Month(dec)),
-            Selection::Month(dec)
-        );
-        assert_eq!(
-            log.tap(picked, Selection::Year(2026)),
-            Selection::Year(2026)
-        );
-        assert_eq!(
-            log.tap(picked, Selection::Year(2027)),
-            Selection::Year(2027)
-        );
-        assert_eq!(log.tap(picked, Selection::Latest), Selection::Latest);
+        let picked = minor(DEC, "1.3");
+        assert_eq!(picked.tap(Selection::Month(DEC)), Selection::Month(DEC));
+        assert_eq!(picked.tap(Selection::Year(2026)), Selection::Year(2026));
+        assert_eq!(picked.tap(Selection::Year(2027)), Selection::Year(2027));
+        assert_eq!(picked.tap(Selection::Latest), Selection::Latest);
+        assert_eq!(picked.tap(minor(DEC, "1.2")), minor(DEC, "1.2"));
     }
 
     #[test]
     fn tapping_the_picked_chip_steps_up_one_level() {
-        let log = TWO_YEARS;
-        let dec = Date::new(2026, 12, 1);
-        let version = Selection::Version("1.2.0");
-        assert_eq!(log.tap(version, version), Selection::Month(dec));
+        let picked = minor(DEC, "1.3");
+        assert_eq!(picked.tap(picked), Selection::Month(DEC));
         assert_eq!(
-            log.tap(Selection::Month(dec), Selection::Month(dec)),
+            Selection::Month(DEC).tap(Selection::Month(DEC)),
             Selection::Year(2026)
         );
         assert_eq!(
-            log.tap(Selection::Year(2026), Selection::Year(2026)),
+            Selection::Year(2026).tap(Selection::Year(2026)),
             Selection::Latest
         );
-        assert_eq!(
-            log.tap(Selection::Latest, Selection::Latest),
-            Selection::Latest
-        );
+        assert_eq!(Selection::Latest.tap(Selection::Latest), Selection::Latest);
     }
 
     #[test]
@@ -474,29 +514,29 @@ mod tests {
     }
 
     #[test]
-    fn an_anchor_picks_its_year_month_and_version() {
+    fn an_anchor_picks_its_year_month_and_minor() {
         let picked = Log::CAIRN.for_anchor("#v1-0-0");
-        assert_eq!(picked, Some(Selection::Version("1.0.0")));
+        assert_eq!(picked, Some(minor(OCT, "1.0")));
         assert_eq!(
-            Log::CAIRN.path(Selection::Version("1.0.0")),
+            minor(OCT, "1.0").path(),
             Path {
                 year: Some(2026),
                 month: Some(OCT),
-                version: Some("1.0.0"),
+                minor: Some("1.0"),
             }
         );
-        assert_eq!(
-            Log::CAIRN.for_anchor("v1-1-1"),
-            Some(Selection::Version("1.1.1"))
-        );
-        assert_eq!(
-            TWO_YEARS.path(TWO_YEARS.for_anchor("#v2-1-0").unwrap_or(Selection::Latest)),
-            Path {
-                year: Some(2027),
-                month: Some(Date::new(2027, 1, 1)),
-                version: Some("2.1.0"),
-            }
-        );
+        assert_eq!(Log::CAIRN.for_anchor("v1-1-1"), Some(minor(OCT, "1.1")));
+        assert_eq!(TWO_YEARS.for_anchor("#v2-1-0"), Some(minor(JAN, "2.1")));
+        // The anchored card is among those its selection shows.
+        for release in TWO_YEARS.all() {
+            let picked = TWO_YEARS.for_anchor(&anchor(release.version));
+            let shown = picked.map(|selection| versions(&TWO_YEARS.shown(selection)));
+            assert!(
+                shown.is_some_and(|shown| shown.contains(&release.version)),
+                "{}",
+                release.version
+            );
+        }
     }
 
     #[test]
@@ -504,5 +544,20 @@ mod tests {
         for fragment in ["", "#", "#v9-9-9", "#1.0.0", "#top"] {
             assert_eq!(Log::CAIRN.for_anchor(fragment), None, "{fragment}");
         }
+    }
+
+    /// An upcoming version with no shipped release opens on Latest.
+    #[test]
+    fn an_upcoming_anchor_without_releases_opens_on_latest() {
+        const FIRST: Log = Log::new(
+            &[Release {
+                version: "0.1.0",
+                date: None,
+                entries: &["Something first"],
+            }],
+            &[],
+        );
+        assert_eq!(FIRST.for_anchor("#v0-1-0"), Some(Selection::Latest));
+        assert_eq!(versions(&FIRST.shown(Selection::Latest)), ["0.1.0"]);
     }
 }
