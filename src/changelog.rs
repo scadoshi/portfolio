@@ -104,7 +104,10 @@ pub struct Release {
 pub const UPCOMING: &[Release] = &[Release {
     version: "1.1.2",
     date: None,
-    entries: &["The changelog's version chips group patches under their minor version"],
+    entries: &[
+        "The changelog's version chips group patches under their minor version",
+        "A quote that turns while the app stays open types out in full with its tags",
+    ],
 }];
 
 /// Shipped releases, newest first by date.
