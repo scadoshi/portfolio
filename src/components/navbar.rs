@@ -14,7 +14,7 @@ const LOGO_S: &str = include_str!("../../assets/s.txt");
 /// it across the page; `shown` is what a picker shows as current meanwhile;
 /// `follow` is the same wipe for a theme sheet that waits on it.
 #[derive(Clone, Copy)]
-pub struct ThemeWipe {
+pub(crate) struct ThemeWipe {
     pub picked: Signal<ThemeConfig>,
     pub shown: Signal<ThemeConfig>,
     pub follow: ThemeFollow,

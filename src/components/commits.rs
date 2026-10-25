@@ -23,7 +23,7 @@ fn px(n: u64) -> f64 {
 
 /// The top of a y axis: the largest month, rounded up to a round number so
 /// the ticks read cleanly.
-pub fn ceiling(max: u32) -> u32 {
+pub(crate) fn ceiling(max: u32) -> u32 {
     let step = match max {
         0..=20 => 5,
         21..=50 => 10,
@@ -37,7 +37,7 @@ pub fn ceiling(max: u32) -> u32 {
 
 /// The y ticks for a ceiling: the baseline, the top, and the midpoint when it
 /// is a round number too. 1,250 gets no 625.
-pub fn ticks(top: u32) -> Vec<u32> {
+pub(crate) fn ticks(top: u32) -> Vec<u32> {
     let mid = top / 2;
     if top <= 100 || mid.is_multiple_of(50) {
         vec![0, mid, top]

@@ -298,30 +298,30 @@ impl std::fmt::Display for UnknownSection {
 
 /// The home page's cards for the left column, under About, picked by hand
 /// from any section, in this order.
-pub fn featured_left() -> &'static [Project] {
+pub(crate) fn featured_left() -> &'static [Project] {
     &[ZWIPE, CHICKADEE]
 }
 
 /// The home page's cards for the right column, above How I Use AI. Steller and
 /// heron sit together; they are one story.
-pub fn featured_right() -> &'static [Project] {
+pub(crate) fn featured_right() -> &'static [Project] {
     &[STELLER, HERON]
 }
 
 /// Every project on the site, section by section.
-pub fn all_projects() -> impl Iterator<Item = &'static Project> {
+pub(crate) fn all_projects() -> impl Iterator<Item = &'static Project> {
     Section::ALL.into_iter().flat_map(Section::projects)
 }
 
 /// The section a project sits on.
-pub fn section_of(slug: &str) -> Option<Section> {
+pub(crate) fn section_of(slug: &str) -> Option<Section> {
     Section::ALL
         .into_iter()
         .find(|section| section.projects().iter().any(|p| p.slug == slug))
 }
 
 /// An address that used to hold a page, and where that page is.
-pub struct Moved {
+pub(crate) struct Moved {
     pub from: &'static str,
     pub to: &'static str,
 }
@@ -332,7 +332,7 @@ const fn moved(from: &'static str, to: &'static str) -> Moved {
 
 /// Every address that has moved. Each `from` is prerendered as a page that sends
 /// the visitor on to `to`, since GitHub Pages cannot answer with a redirect.
-pub const MOVED: &[Moved] = &[
+pub(crate) const MOVED: &[Moved] = &[
     // Renames.
     moved("/side-quests/diprotodon", "/projects/steller"),
     moved("/side-quests/nighthawk", "/projects/chickadee"),
@@ -358,14 +358,14 @@ pub const MOVED: &[Moved] = &[
 ];
 
 /// Where the page at `path` went, if it moved.
-pub fn moved_to(path: &str) -> Option<&'static str> {
+pub(crate) fn moved_to(path: &str) -> Option<&'static str> {
     MOVED
         .iter()
         .find(|moved| moved.from == path)
         .map(|moved| moved.to)
 }
 
-pub fn find_project(slug: &str) -> Option<&'static Project> {
+pub(crate) fn find_project(slug: &str) -> Option<&'static Project> {
     all_projects().find(|p| p.slug == slug)
 }
 

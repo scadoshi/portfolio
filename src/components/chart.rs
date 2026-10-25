@@ -3,18 +3,18 @@ use dioxus::prelude::*;
 /// What a chart's hover chip says and where it sits, as percentages of the
 /// chart's width and height so it follows the chart at any size.
 #[derive(Clone, PartialEq)]
-pub struct Tip {
+pub(crate) struct Tip {
     pub text: String,
     pub left: f64,
     pub top: f64,
 }
 
-pub fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
+pub(crate) fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f64) {
     tip.set(Some(Tip { text, left, top }));
 }
 
 /// `Jan` for `01`, the month of a `YYYY-MM-DD` date.
-pub fn month_name(month: &str) -> Option<&'static str> {
+pub(crate) fn month_name(month: &str) -> Option<&'static str> {
     Some(match month {
         "01" => "Jan",
         "02" => "Feb",

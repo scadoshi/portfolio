@@ -20,7 +20,7 @@ const SNAPSHOT: &str = include_str!("stats.json");
 
 /// Commits in one week.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct WeekCommits {
+pub(crate) struct WeekCommits {
     /// The Sunday the week starts on, `YYYY-MM-DD`.
     pub week: String,
     pub commits: u32,
@@ -28,7 +28,7 @@ pub struct WeekCommits {
 
 /// Sums across every repository in the snapshot.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct Totals {
+pub(crate) struct Totals {
     pub repos: u32,
     pub commits: u64,
     pub stars: u64,
@@ -41,7 +41,7 @@ pub struct Totals {
 /// What heron counted in a repository's source. `language` is the name as heron
 /// prints it, `Rust` or `C#`.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct Counts {
+pub(crate) struct Counts {
     pub language: String,
     /// Lines in every source file, blanks and comments included.
     pub lines: u64,
@@ -56,7 +56,7 @@ pub struct Counts {
 impl Counts {
     /// Chips for a card: `6,102 lines of Rust`, `245 tests`, `13 clippy lints`. A
     /// count of zero is left out.
-    pub fn chips(&self) -> Vec<String> {
+    pub(crate) fn chips(&self) -> Vec<String> {
         let mut chips = vec![format!(
             "{} lines of {}",
             with_separators(self.lines),
@@ -76,7 +76,7 @@ impl Counts {
 
 /// What heron reports for one repository. Only the fields the site shows.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct RepoStats {
+pub(crate) struct RepoStats {
     /// `owner/name`.
     pub repo: String,
     /// Commits reachable from the default branch.
@@ -91,7 +91,7 @@ pub struct RepoStats {
 
 /// One day of the contribution calendar.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct Day {
+pub(crate) struct Day {
     /// `YYYY-MM-DD`.
     pub date: String,
     pub count: u32,
@@ -102,7 +102,7 @@ pub struct Day {
 /// A year of contributions on GitHub across every repository, as the profile
 /// page draws it.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct Calendar {
+pub(crate) struct Calendar {
     pub login: String,
     pub total: u32,
     /// Oldest first, without gaps.
@@ -111,7 +111,7 @@ pub struct Calendar {
 
 /// The body of heron's `GET /stats`.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct Snapshot {
+pub(crate) struct Snapshot {
     /// RFC 3339 in UTC.
     pub generated_at: String,
     pub totals: Totals,
@@ -143,11 +143,11 @@ static BAKED: LazyLock<Option<Snapshot>> = LazyLock::new(|| serde_json::from_str
 
 /// Heron's answer after the page loaded, shared through context. `None` until it
 /// arrives, and forever if it never does.
-pub type Live = Signal<Option<Snapshot>>;
+pub(crate) type Live = Signal<Option<Snapshot>>;
 
 /// Which source a number came from.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Source {
+pub(crate) enum Source {
     /// From heron, just now.
     Live,
     /// From the build, on this day.
@@ -155,7 +155,7 @@ pub enum Source {
 }
 
 /// The live snapshot when there is one, else the baked one.
-pub fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
+pub(crate) fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
     if let Some(snapshot) = live {
         return Some((snapshot, Source::Live));
     }
@@ -165,19 +165,19 @@ pub fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
 }
 
 /// Chips for a card, when the repository is in the current snapshot.
-pub fn chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>> {
+pub(crate) fn chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>> {
     let (snapshot, _) = current(live)?;
     snapshot.repo(repo_url).map(RepoStats::chips)
 }
 
 /// The totals and where they came from.
-pub fn totals(live: Option<&Snapshot>) -> Option<(Totals, Source)> {
+pub(crate) fn totals(live: Option<&Snapshot>) -> Option<(Totals, Source)> {
     current(live).map(|(snapshot, source)| (snapshot.totals.clone(), source))
 }
 
 /// Commits per week across every repository, oldest first, and where they came
 /// from. `None` when the current snapshot has none.
-pub fn weekly_commits(live: Option<&Snapshot>) -> Option<(&[WeekCommits], Source)> {
+pub(crate) fn weekly_commits(live: Option<&Snapshot>) -> Option<(&[WeekCommits], Source)> {
     let (snapshot, source) = current(live)?;
     if snapshot.totals.weekly_commits.is_empty() {
         return None;
@@ -187,7 +187,7 @@ pub fn weekly_commits(live: Option<&Snapshot>) -> Option<(&[WeekCommits], Source
 
 /// The contribution calendar and where it came from, when the current snapshot
 /// has one.
-pub fn calendar(live: Option<&Snapshot>) -> Option<(&Calendar, Source)> {
+pub(crate) fn calendar(live: Option<&Snapshot>) -> Option<(&Calendar, Source)> {
     let (snapshot, source) = current(live)?;
     snapshot
         .calendar
@@ -197,7 +197,7 @@ pub fn calendar(live: Option<&Snapshot>) -> Option<(&Calendar, Source)> {
 
 /// Line, test and lint chips for a card, when the current snapshot has measured
 /// the repository.
-pub fn count_chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>> {
+pub(crate) fn count_chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<String>> {
     current(live)
         .and_then(|(snapshot, _)| snapshot.repo(repo_url))
         .and_then(|stats| stats.counts.as_ref())
@@ -206,7 +206,7 @@ pub fn count_chips_for(live: Option<&Snapshot>, repo_url: &str) -> Option<Vec<St
 
 /// Asks heron for the live numbers. `None` on any failure.
 #[cfg(target_arch = "wasm32")]
-pub async fn fetch_live() -> Option<Snapshot> {
+pub(crate) async fn fetch_live() -> Option<Snapshot> {
     let response = gloo_net::http::Request::get("https://api.scadoshi.dev/stats")
         .send()
         .await
@@ -219,13 +219,13 @@ pub async fn fetch_live() -> Option<Snapshot> {
 
 /// Prerendering has no page to update, so there is nothing to ask for.
 #[cfg(not(target_arch = "wasm32"))]
-pub fn fetch_live() -> impl std::future::Future<Output = Option<Snapshot>> {
+pub(crate) fn fetch_live() -> impl std::future::Future<Output = Option<Snapshot>> {
     std::future::ready(None)
 }
 
 impl RepoStats {
     /// Chips for a card: `2,968 commits` and `pushed 2026-09-29`.
-    pub fn chips(&self) -> Vec<String> {
+    pub(crate) fn chips(&self) -> Vec<String> {
         let mut chips = vec![format!(
             "{} {}",
             with_separators(self.commits),

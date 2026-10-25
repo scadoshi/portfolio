@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 include!(concat!(env!("OUT_DIR"), "/highlighted.rs"));
 
 /// The highlighted HTML build.rs made for a snippet's trimmed code.
-pub fn highlighted(code: &str) -> Option<&'static str> {
+pub(crate) fn highlighted(code: &str) -> Option<&'static str> {
     HIGHLIGHTED
         .iter()
         .find(|(source, _)| *source == code)

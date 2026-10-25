@@ -12,14 +12,14 @@ use lumis::languages::Language;
 use syn::visit::Visit;
 
 /// One `Snippet` literal from the data file.
-pub struct Snippet {
+pub(crate) struct Snippet {
     pub lang: String,
     pub code: String,
 }
 
 /// Every `Snippet { .. }` struct literal in `source` that has a string `lang`
 /// and a string `code`, in file order.
-pub fn snippets(source: &str) -> syn::Result<Vec<Snippet>> {
+pub(crate) fn snippets(source: &str) -> syn::Result<Vec<Snippet>> {
     struct Finder(Vec<Snippet>);
 
     impl<'ast> Visit<'ast> for Finder {
@@ -52,7 +52,7 @@ pub fn snippets(source: &str) -> syn::Result<Vec<Snippet>> {
 }
 
 /// The tree-sitter grammar for a snippet's `lang`.
-pub fn language(lang: &str) -> Option<Language> {
+pub(crate) fn language(lang: &str) -> Option<Language> {
     match lang {
         "rust" => Some(Language::Rust),
         "csharp" => Some(Language::CSharp),
@@ -61,7 +61,7 @@ pub fn language(lang: &str) -> Option<Language> {
 }
 
 /// The highlighted HTML that goes inside the snippet's `<code>` element.
-pub fn highlight(lang: &str, code: &str) -> Result<String, String> {
+pub(crate) fn highlight(lang: &str, code: &str) -> Result<String, String> {
     let language = language(lang).ok_or_else(|| format!("no grammar for lang {lang:?}"))?;
     let formatter = HtmlLinkedBuilder::new()
         .language(language)

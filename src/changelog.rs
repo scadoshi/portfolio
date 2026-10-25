@@ -18,7 +18,7 @@ use std::fmt;
 /// chronological. Built with [`Date::new`], which rejects an impossible day
 /// at compile time when used in a const.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Date {
+pub(crate) struct Date {
     year: u16,
     month: u8,
     day: u8,
@@ -27,7 +27,7 @@ pub struct Date {
 impl Date {
     /// The day `year`-`month`-`day`. Panics, which in a const is a compile
     /// error, when the month is not 1 to 12 or the day is not in that month.
-    pub const fn new(year: u16, month: u8, day: u8) -> Self {
+    pub(crate) const fn new(year: u16, month: u8, day: u8) -> Self {
         assert!(month >= 1 && month <= 12, "month out of range");
         assert!(
             day >= 1 && day <= days_in_month(year, month),
@@ -37,17 +37,17 @@ impl Date {
     }
 
     /// The first of this date's month, the key the page files releases under.
-    pub const fn month_start(self) -> Self {
+    pub(crate) const fn month_start(self) -> Self {
         Self { day: 1, ..self }
     }
 
     /// The year, e.g. `2026`.
-    pub const fn year(self) -> u16 {
+    pub(crate) const fn year(self) -> u16 {
         self.year
     }
 
     /// The month alone, e.g. `"Oct"`. A month chip's label.
-    pub const fn month_name(self) -> &'static str {
+    pub(crate) const fn month_name(self) -> &'static str {
         month_abbr(self.month)
     }
 }
@@ -88,7 +88,7 @@ const fn days_in_month(year: u16, month: u8) -> u8 {
 }
 
 /// One version and its notes.
-pub struct Release {
+pub(crate) struct Release {
     /// Semantic version string, e.g. `"1.1.0"`.
     pub version: &'static str,
     /// The day App Store Connect showed the version "Ready for
@@ -101,7 +101,7 @@ pub struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub const UPCOMING: &[Release] = &[Release {
+pub(crate) const UPCOMING: &[Release] = &[Release {
     version: "1.1.2",
     date: None,
     entries: &[
@@ -111,7 +111,7 @@ pub const UPCOMING: &[Release] = &[Release {
 }];
 
 /// Shipped releases, newest first by date.
-pub const RELEASES: &[Release] = &[
+pub(crate) const RELEASES: &[Release] = &[
     Release {
         version: "1.1.1",
         date: Some(Date::new(2026, 10, 21)),

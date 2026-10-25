@@ -6,7 +6,7 @@ use crate::components::measured::Measured;
 use crate::data::Project;
 
 /// The card for `project`, the same on the home page and the index.
-pub fn project_card(project: &'static Project) -> Element {
+pub(crate) fn project_card(project: &'static Project) -> Element {
     rsx! {
         ProjectCard {
             key: "{project.slug}",

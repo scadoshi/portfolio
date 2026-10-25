@@ -4,7 +4,7 @@ use orangui::Panel;
 use crate::components::page_meta::PageMeta;
 
 /// Where the App Store listing points. Linked from the cairn project page.
-pub const CAIRN_PRIVACY_PATH: &str = "/projects/cairn/privacy";
+pub(crate) const CAIRN_PRIVACY_PATH: &str = "/projects/cairn/privacy";
 
 #[component]
 pub fn CairnPrivacy() -> Element {

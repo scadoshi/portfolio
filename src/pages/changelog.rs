@@ -6,10 +6,11 @@ use crate::components::changelog::Changelog;
 use crate::components::page_meta::PageMeta;
 
 /// Cairn's release history. Linked from the cairn project page.
-pub const CAIRN_CHANGELOG_PATH: &str = "/projects/cairn/changelog";
+pub(crate) const CAIRN_CHANGELOG_PATH: &str = "/projects/cairn/changelog";
 
 /// Cairn's store listing. Linked here and from the cairn page.
-pub const CAIRN_APP_STORE_URL: &str = "https://apps.apple.com/us/app/cairn-counter/id6824349629";
+pub(crate) const CAIRN_APP_STORE_URL: &str =
+    "https://apps.apple.com/us/app/cairn-counter/id6824349629";
 
 #[component]
 pub fn CairnChangelog() -> Element {

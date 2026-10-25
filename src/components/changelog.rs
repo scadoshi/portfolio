@@ -16,7 +16,7 @@ use crate::changelog::{Date, RELEASES, Release, UPCOMING};
 /// The chip picked last, the deepest level of the drill-down. The levels
 /// above it follow from it (see [`Selection::path`]).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Selection {
+pub(crate) enum Selection {
     /// The upcoming version and the newest release.
     Latest,
     /// Every release in a year.
@@ -35,7 +35,7 @@ pub enum Selection {
 
 impl Selection {
     /// The chips this selection lights: its own and every level above it.
-    pub fn path(self) -> Path {
+    pub(crate) fn path(self) -> Path {
         match self {
             Self::Latest => Path::default(),
             Self::Year(year) => Path {
@@ -56,7 +56,7 @@ impl Selection {
     }
 
     /// One level up: minor to its month, month to its year, year to Latest.
-    pub fn parent(self) -> Self {
+    pub(crate) fn parent(self) -> Self {
         match self {
             Self::Latest | Self::Year(_) => Self::Latest,
             Self::Month(month) => Self::Year(month.year()),
@@ -67,14 +67,14 @@ impl Selection {
     /// The selection after a tap on `chip`. A chip above the current pick
     /// selects its level and clears the rows below it; tapping the chip
     /// already picked steps back up one level.
-    pub fn tap(self, chip: Self) -> Self {
+    pub(crate) fn tap(self, chip: Self) -> Self {
         if chip == self { self.parent() } else { chip }
     }
 }
 
 /// The chips a selection lights, one per level. Empty under Latest.
 #[derive(Debug, Default, PartialEq, Eq)]
-pub struct Path {
+pub(crate) struct Path {
     /// The year chip lit, if any.
     pub year: Option<u16>,
     /// The month chip lit, if any.
@@ -86,17 +86,17 @@ pub struct Path {
 /// A product's changelog, upcoming versions and shipped releases, both
 /// newest first, and the drill-down over them.
 #[derive(Clone, Copy)]
-pub struct Log {
+pub(crate) struct Log {
     upcoming: &'static [Release],
     releases: &'static [Release],
 }
 
 impl Log {
     /// Cairn's changelog, from `crate::changelog`.
-    pub const CAIRN: Self = Self::new(UPCOMING, RELEASES);
+    pub(crate) const CAIRN: Self = Self::new(UPCOMING, RELEASES);
 
     /// A changelog over these upcoming versions and shipped releases.
-    pub const fn new(upcoming: &'static [Release], releases: &'static [Release]) -> Self {
+    pub(crate) const fn new(upcoming: &'static [Release], releases: &'static [Release]) -> Self {
         Self { upcoming, releases }
     }
 
@@ -106,7 +106,7 @@ impl Log {
     }
 
     /// Whether `version` is an upcoming one, which gets the Upcoming badge.
-    pub fn is_upcoming(self, version: &str) -> bool {
+    pub(crate) fn is_upcoming(self, version: &str) -> bool {
         self.upcoming
             .iter()
             .any(|release| release.version == version)
@@ -114,7 +114,7 @@ impl Log {
 
     /// Whether `version` is the newest shipped release, which gets the
     /// Latest badge.
-    pub fn is_latest(self, version: &str) -> bool {
+    pub(crate) fn is_latest(self, version: &str) -> bool {
         self.releases
             .first()
             .is_some_and(|release| release.version == version)
@@ -142,14 +142,14 @@ impl Log {
     }
 
     /// The years with a release, newest first. Row one, after Latest.
-    pub fn years(self) -> Vec<u16> {
+    pub(crate) fn years(self) -> Vec<u16> {
         let mut years: Vec<u16> = self.months_all().into_iter().map(Date::year).collect();
         years.dedup();
         years
     }
 
     /// The months of `year` with a release, newest first. Row two.
-    pub fn months(self, year: u16) -> Vec<Date> {
+    pub(crate) fn months(self, year: u16) -> Vec<Date> {
         self.months_all()
             .into_iter()
             .filter(|month| month.year() == year)
@@ -158,7 +158,7 @@ impl Log {
 
     /// The minor versions of the releases filed under `month`, newest first.
     /// Row three.
-    pub fn minors(self, month: Date) -> Vec<&'static str> {
+    pub(crate) fn minors(self, month: Date) -> Vec<&'static str> {
         let mut minors = Vec::new();
         for release in self.all() {
             let minor = minor_of(release.version);
@@ -170,7 +170,7 @@ impl Log {
     }
 
     /// The releases `selection` shows, in page order.
-    pub fn shown(self, selection: Selection) -> Vec<&'static Release> {
+    pub(crate) fn shown(self, selection: Selection) -> Vec<&'static Release> {
         self.all()
             .filter(|release| match selection {
                 Selection::Latest => {
@@ -190,7 +190,7 @@ impl Log {
     /// is. `None` when no release has that anchor, so the page stays on
     /// Latest. An upcoming version with no shipped release to file it under
     /// opens on Latest, which shows it.
-    pub fn for_anchor(self, fragment: &str) -> Option<Selection> {
+    pub(crate) fn for_anchor(self, fragment: &str) -> Option<Selection> {
         let fragment = fragment.strip_prefix('#').unwrap_or(fragment);
         let release = self
             .all()
@@ -216,7 +216,7 @@ fn minor_of(version: &'static str) -> &'static str {
 
 /// A release card's id and the fragment that links to it: `v` and the
 /// version with its dots as dashes, e.g. `"v1-1-0"` for 1.1.0.
-pub fn anchor(version: &str) -> String {
+pub(crate) fn anchor(version: &str) -> String {
     format!("v{}", version.replace('.', "-"))
 }
 
