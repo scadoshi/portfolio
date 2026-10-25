@@ -1,3 +1,6 @@
+//! scottyfermo.com: the portfolio site, prerendered to static pages for
+//! GitHub Pages and hydrated in the browser.
+
 use dioxus::prelude::*;
 
 mod changelog;
@@ -25,7 +28,14 @@ const FAVICON_16: Asset = asset!("/assets/favicon/favicon-16x16.png");
 const FAVICON_32: Asset = asset!("/assets/favicon/favicon-32x32.png");
 const APPLE_TOUCH_ICON: Asset = asset!("/assets/favicon/apple-touch-icon.png");
 
+/// Every page on the site, by address. The order matters: the router tries
+/// routes top to bottom, so a fixed path sits above the parameter that would
+/// also match it.
 #[derive(Debug, Clone, Routable, PartialEq)]
+#[expect(
+    missing_docs,
+    reason = "each variant's #[route] path says what it is, and each field is that path's parameter"
+)]
 #[rustfmt::skip]
 pub enum Route {
     #[layout(NavbarLayout)]
@@ -82,10 +92,10 @@ fn main() {
         .launch(App);
 }
 
-// Nothing here awaits, but `#[server]` only accepts an async fn: it wraps the
-// body in a future and calls it across the network boundary. Removing `async`
-// to satisfy clippy stops it compiling.
-#[allow(clippy::unused_async)]
+#[expect(
+    clippy::unused_async,
+    reason = "#[server] only accepts an async fn: it wraps the body in a future and calls it across the network boundary"
+)]
 #[server(endpoint = "static_routes")]
 async fn static_routes() -> ServerFnResult<Vec<String>> {
     // A moved static route (the old side-quest index) arrives with the MOVED

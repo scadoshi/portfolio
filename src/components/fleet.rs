@@ -32,7 +32,11 @@ impl Metric {
 }
 
 /// A count as a chart coordinate. Counts are far below 2^52, so nothing is lost.
-#[allow(clippy::cast_precision_loss)]
+#[expect(
+    clippy::as_conversions,
+    clippy::cast_precision_loss,
+    reason = "counts sit far below 2^53, so the float is exact; std has no From<u64> for f64"
+)]
 fn px(n: u64) -> f64 {
     n as f64
 }

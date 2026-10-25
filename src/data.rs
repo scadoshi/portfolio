@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Project {
     pub name: &'static str,
     pub slug: &'static str,
@@ -34,14 +35,13 @@ pub struct Project {
 
 use dioxus::prelude::*;
 
-#[derive(Clone, Copy, PartialEq)]
-#[allow(dead_code)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum MediaKind {
     Image,
     Video,
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct MediaItem {
     pub src: Asset,
     pub alt: &'static str,
@@ -49,7 +49,7 @@ pub struct MediaItem {
     pub kind: MediaKind,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum ProjectStatus {
     Done,
     Doing,
@@ -72,6 +72,7 @@ impl ProjectStatus {
     }
 }
 
+#[derive(Debug)]
 pub struct Snippet {
     pub title: &'static str,
     /// The tree-sitter grammar build.rs highlights the code with, "rust" or

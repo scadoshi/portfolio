@@ -16,7 +16,11 @@ const DOTS_AFTER_MS: usize = 250;
 const DOT_STAGGER_MS: usize = 70;
 
 /// A count as a coordinate. Weeks and commit counts are small, nothing is lost.
-#[allow(clippy::cast_precision_loss)]
+#[expect(
+    clippy::as_conversions,
+    clippy::cast_precision_loss,
+    reason = "weeks and commit counts sit far below 2^53, so the float is exact; std has no From<u64> for f64"
+)]
 fn px(n: u64) -> f64 {
     n as f64
 }
