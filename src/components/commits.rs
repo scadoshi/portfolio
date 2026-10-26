@@ -36,7 +36,7 @@ pub(crate) fn ceiling(max: u32) -> u32 {
         251..=600 => 100,
         _ => 250,
     };
-    max.div_ceil(step).max(1) * step
+    max.div_ceil(step).max(1).saturating_mul(step)
 }
 
 /// The y ticks for a ceiling: the baseline, the top, and the midpoint when it

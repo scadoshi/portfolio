@@ -53,8 +53,11 @@ fn year_of_days() -> Vec<HeatCell> {
             let noise = x % 100;
             // Weekends run quieter, and the year swells toward the autumn.
             let weekday = if row == 0 || row == 6 { 0 } else { 15 };
-            let season = u32::try_from(column * 20 / WEEKS).unwrap_or(0);
-            (noise + weekday + season).saturating_sub(30)
+            let season = u32::try_from(column.saturating_mul(20) / WEEKS).unwrap_or(0);
+            noise
+                .saturating_add(weekday)
+                .saturating_add(season)
+                .saturating_sub(30)
         })
         .collect();
 
@@ -733,7 +736,7 @@ fn px(n: u32) -> f64 {
 fn ChartShowcase() -> Element {
     let mut tip = use_signal(|| None::<(String, f64, f64)>);
     let replay = use_signal(|| 0u32);
-    let last = u32::try_from(MONTHS.len() - 1).unwrap_or(1);
+    let last = u32::try_from(MONTHS.len().saturating_sub(1)).unwrap_or(1);
     let span_x = CHART_W - CHART_LEFT - CHART_RIGHT;
     let span_y = CHART_H - CHART_TOP - CHART_BOTTOM;
     let baseline = CHART_H - CHART_BOTTOM;
@@ -878,7 +881,7 @@ fn HeatShowcase() -> Element {
             };
             let day = WEEKDAYS.get(cell.row).copied().unwrap_or("");
             let busy = BUSY.get(usize::from(cell.level)).copied().unwrap_or("");
-            let text = format!("Week {}, {day}: {busy}", cell.column + 1);
+            let text = format!("Week {}, {day}: {busy}", cell.column.saturating_add(1));
             let left = (hit.x + HEAT_CELL / 2.0) / width * 100.0;
             let top = hit.y / height * 100.0;
             tip.set(Some((text, left, top)));

@@ -36,11 +36,16 @@ const DOT_STAGGER_MS: usize = 70;
 const FULL_MONTH: usize = 28;
 
 /// Days since 1970-01-01 for a `YYYY-MM-DD` date, or `None` when it does not
-/// parse. Howard Hinnant's days-from-civil, which needs no calendar crate.
+/// parse or its year is outside 0 to 9999. Howard Hinnant's days-from-civil,
+/// which needs no calendar crate.
+#[expect(
+    clippy::arithmetic_side_effects,
+    reason = "the year is held to 0..=9999 and the month and day to their calendar ranges, so every product stays far inside i64"
+)]
 fn days_from_civil(date: &str) -> Option<i64> {
     let mut parts = date.split('-').map(|part| part.parse::<i64>().ok());
     let (y, m, d) = (parts.next()??, parts.next()??, parts.next()??);
-    if !(1..=12).contains(&m) || !(1..=31).contains(&d) {
+    if !(0..=9999).contains(&y) || !(1..=12).contains(&m) || !(1..=31).contains(&d) {
         return None;
     }
     let y = if m <= 2 { y - 1 } else { y };
@@ -54,7 +59,7 @@ fn days_from_civil(date: &str) -> Option<i64> {
 
 /// 0 for Sunday through 6 for Saturday. 1970-01-01 was a Thursday.
 fn weekday(days: i64) -> i64 {
-    (days + 4).rem_euclid(7)
+    days.saturating_add(4).rem_euclid(7)
 }
 
 /// One cell of the grid.
@@ -100,7 +105,7 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
     let Some(first) = days.first().and_then(|day| days_from_civil(&day.date)) else {
         return (Vec::new(), Vec::new(), Vec::new());
     };
-    let first_sunday = first - weekday(first);
+    let first_sunday = first.saturating_sub(weekday(first));
     let mut cells = Vec::with_capacity(days.len());
     let mut months: Vec<Month> = Vec::new();
     let mut by_month: BTreeMap<&str, Series> = BTreeMap::new();
@@ -109,7 +114,7 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
         let Some(serial) = days_from_civil(&day.date) else {
             continue;
         };
-        let column = usize::try_from((serial - first_sunday) / 7).unwrap_or(0);
+        let column = usize::try_from(serial.saturating_sub(first_sunday) / 7).unwrap_or(0);
         let row = usize::try_from(weekday(serial)).unwrap_or(0);
         let key = day.date.get(..7).unwrap_or("");
         let month = day.date.get(5..7).unwrap_or("");
@@ -126,12 +131,12 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
         });
         series.last_column = column;
         series.total = series.total.saturating_add(day.count);
-        series.days += 1;
+        series.days = series.days.saturating_add(1);
         if row == 0 && Some(month) != last_month {
             if let Some(name) = month_name(month) {
                 if months
                     .last()
-                    .is_some_and(|previous| column < previous.column + LABEL_SPAN)
+                    .is_some_and(|previous| column < previous.column.saturating_add(LABEL_SPAN))
                 {
                     months.pop();
                 }
@@ -196,7 +201,7 @@ fn to_the_edges(
             .map_or(0.0, |next| (next.1 - from.1) / (next.0 - from.0));
         (x, (from.1 + slope * (x - from.0)).clamp(top, bottom))
     };
-    let mut drawn = Vec::with_capacity(points.len() + 2);
+    let mut drawn = Vec::with_capacity(points.len().saturating_add(2));
     drawn.push(carry(first, points.get(1), left));
     drawn.extend_from_slice(points);
     drawn.push(carry(
@@ -213,8 +218,9 @@ fn line_points(series: &[Series], top: u32) -> Vec<(f64, f64)> {
     series
         .iter()
         .map(|month| {
-            let x =
-                LEFT + heat_span(month.first_column + month.last_column) / 2.0 + HEAT_CELL / 2.0;
+            let x = LEFT
+                + heat_span(month.first_column.saturating_add(month.last_column)) / 2.0
+                + HEAT_CELL / 2.0;
             let y = LINE_BOTTOM - LINE_HEIGHT * f64::from(month.total) / f64::from(top.max(1));
             (x, y)
         })
@@ -237,7 +243,7 @@ pub fn Heatmap() -> Element {
     let peaks = peaks(&calendar.days);
     let replay = use_context::<Replay>().0;
     let run = replay();
-    let Some(columns) = cells.iter().map(|cell| cell.column + 1).max() else {
+    let Some(columns) = cells.iter().map(|cell| cell.column.saturating_add(1)).max() else {
         return rsx! {};
     };
     let width = LEFT + heat_span(columns);
@@ -426,6 +432,14 @@ mod tests {
         assert_eq!(days_from_civil("2024-02-29"), Some(19_782));
         assert_eq!(days_from_civil("2026-13-01"), None);
         assert_eq!(days_from_civil("soon"), None);
+    }
+
+    #[test]
+    fn a_year_outside_the_calendar_is_no_date() {
+        assert_eq!(days_from_civil("9999-12-31"), Some(2_932_896));
+        assert_eq!(days_from_civil("10000-01-01"), None);
+        assert_eq!(days_from_civil("99999999999999999-01-01"), None);
+        assert_eq!(days_from_civil("-1-01-01"), None);
     }
 
     #[test]

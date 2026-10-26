@@ -118,7 +118,7 @@ const DOT_STAGGER_MS: usize = 90;
 /// Client counts are powers of two, so they sit evenly on a log axis: one slot
 /// per row.
 fn x_at(index: usize) -> f64 {
-    let slots = f64::from(u8::try_from(ROWS.len() - 1).unwrap_or(u8::MAX));
+    let slots = f64::from(u8::try_from(ROWS.len().saturating_sub(1)).unwrap_or(u8::MAX));
     let i = f64::from(u8::try_from(index).unwrap_or(u8::MAX));
     LEFT + (WIDTH - LEFT - RIGHT) * i / slots
 }
