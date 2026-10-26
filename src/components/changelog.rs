@@ -211,7 +211,8 @@ fn minor_of(version: &'static str) -> &'static str {
     version
         .match_indices('.')
         .nth(1)
-        .map_or(version, |(end, _)| &version[..end])
+        .and_then(|(end, _)| version.get(..end))
+        .unwrap_or(version)
 }
 
 /// A release card's id and the fragment that links to it: `v` and the

@@ -1,6 +1,11 @@
 //! The build-time highlighter: which snippets it finds in `src/data.rs`, what
 //! it tags them with, and that every tag it emits is styled.
 
+#![expect(
+    clippy::expect_used,
+    reason = "a test: a snippet that fails to highlight fails it"
+)]
+
 #[path = "../build/highlight.rs"]
 mod highlight;
 

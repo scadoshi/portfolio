@@ -50,7 +50,12 @@ pub fn Navbar() -> Element {
     // instead: whichever opened last closes the rest.
     let mut last_opened = use_signal(|| None::<usize>);
     use_effect(move || {
-        let opened: Vec<usize> = (0..menus.len()).filter(|&i| menus[i]()).collect();
+        let opened: Vec<usize> = menus
+            .iter()
+            .enumerate()
+            .filter(|(_, menu)| menu())
+            .map(|(i, _)| i)
+            .collect();
         let previous = *last_opened.peek();
         if let Some(&newest) = opened.iter().find(|&&i| Some(i) != previous) {
             for (i, mut menu) in menus.into_iter().enumerate() {

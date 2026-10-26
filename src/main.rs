@@ -69,27 +69,33 @@ pub enum Route {
         NotFound { segments: Vec<String> },
 }
 
-fn main() {
+#[cfg_attr(
+    not(feature = "server"),
+    expect(
+        clippy::unnecessary_wraps,
+        reason = "only the server build has a step that can fail"
+    )
+)]
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // The prerendered pages go in `public` beside the exe. Without the exe's
+    // directory there is nowhere to write them, so the build stops with why.
+    #[cfg(feature = "server")]
+    let public = std::env::current_exe()
+        .map_err(|e| format!("current exe path unavailable: {e}"))?
+        .parent()
+        .ok_or("current exe has no parent directory")?
+        .join("public");
     dioxus::LaunchBuilder::new()
         .with_cfg(server_only! {
             dioxus::server::ServeConfig::builder()
                 .incremental(
                     dioxus::server::IncrementalRendererConfig::new()
-                        // Both of these are fatal and unrecoverable: without
-                        // the exe's directory there is nowhere to write the
-                        // prerendered pages, so panicking with a real message
-                        // beats a bare unwrap in a build log.
-                        .static_dir(
-                            std::env::current_exe()
-                                .expect("current exe path unavailable")
-                                .parent()
-                                .expect("current exe has no parent directory")
-                                .join("public"),
-                        )
+                        .static_dir(public)
                         .clear_cache(false),
                 )
         })
         .launch(App);
+    Ok(())
 }
 
 #[expect(

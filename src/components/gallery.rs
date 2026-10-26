@@ -11,7 +11,9 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
 
     let index = use_signal(|| 0usize);
     let total = items.len();
-    let current = &items[index()];
+    let Some(current) = items.get(index()) else {
+        return rsx! {};
+    };
 
     // The caption/counter footer goes through Panel's `actions` slot so it
     // pins to the bottom edge: `.panel-card` is a flex column and

@@ -74,12 +74,14 @@ pub(crate) fn highlight(lang: &str, code: &str) -> Result<String, String> {
 /// The lines inside lumis's `<pre><code>` wrapper, each unwrapped from its
 /// `l-line` span. The block's `white-space: pre` breaks the lines.
 fn inner_lines(html: &str) -> String {
-    let start = html
-        .find("<code")
-        .and_then(|i| html[i..].find('>').map(|j| i + j + 1))
-        .unwrap_or(0);
-    let end = html.rfind("</code>").unwrap_or(html.len());
-    html[start..end]
+    let after_open = html
+        .split_once("<code")
+        .and_then(|(_, rest)| rest.split_once('>'))
+        .map_or(html, |(_, inner)| inner);
+    let inner = after_open
+        .rsplit_once("</code>")
+        .map_or(after_open, |(inner, _)| inner);
+    inner
         .split('\n')
         .map(|line| match line.strip_prefix("<span class=\"l-line\"") {
             Some(rest) => {
@@ -99,24 +101,33 @@ fn inner_lines(html: &str) -> String {
 fn macros_as_macros(html: &str) -> String {
     let mut out = String::with_capacity(html.len());
     let mut rest = html;
-    while let Some(i) = rest.find("<span class=\"") {
-        out.push_str(&rest[..i]);
-        rest = &rest[i..];
-        let tag_end = rest.find('>').map_or(rest.len(), |j| j + 1);
-        let text_end = rest[tag_end..]
+    while let Some((before, span)) = rest
+        .find("<span class=\"")
+        .and_then(|i| rest.split_at_checked(i))
+    {
+        out.push_str(before);
+        // The opening tag up to its `>`; a tag that never closes is all that is left.
+        let (open, after_tag) = match span.split_once('>') {
+            Some((open, after)) => (Some(open), after),
+            None => (None, ""),
+        };
+        let (text, tail) = after_tag
             .find('<')
-            .map_or(rest.len(), |j| tag_end + j);
-        let text = &rest[tag_end..text_end];
+            .and_then(|j| after_tag.split_at_checked(j))
+            .unwrap_or((after_tag, ""));
         let is_macro = text.strip_suffix('!').is_some_and(|name| {
             !name.is_empty() && name.chars().all(|c| c.is_alphanumeric() || c == '_')
         });
         if is_macro {
             out.push_str("<span class=\"l-function-macro\">");
+        } else if let Some(open) = open {
+            out.push_str(open);
+            out.push('>');
         } else {
-            out.push_str(&rest[..tag_end]);
+            out.push_str(span);
         }
         out.push_str(text);
-        rest = &rest[text_end..];
+        rest = tail;
     }
     out.push_str(rest);
     out

@@ -31,65 +31,67 @@ fn split_urls(text: &str) -> Vec<TextPart> {
     let mut plain_start = 0;
     let mut i = 0;
 
-    while i < text.len() {
-        let rest = &text[i..];
-
-        if let Some(after_bracket) = rest.strip_prefix('[')
-            && let Some(close_bracket) = after_bracket.find(']')
-        {
-            let after_label = &after_bracket[close_bracket + 1..];
-            if after_label.starts_with("(https://")
-                && let Some(close_paren) = after_label.find(')')
-            {
-                let label = &after_bracket[..close_bracket];
-                let href = &after_label[1..close_paren];
-                if i > plain_start {
-                    parts.push(TextPart::Plain(text[plain_start..i].to_string()));
-                }
-                parts.push(TextPart::Url {
-                    href: href.to_string(),
-                    label: label.to_string(),
-                });
-                i += 1 + close_bracket + 1 + close_paren + 1;
-                plain_start = i;
-                continue;
-            }
-        }
-
-        if rest.starts_with("https://") {
-            // Stop at whitespace or punctuation that can't be part of the URL.
-            let end = rest
-                .find(|c: char| {
-                    c.is_whitespace() || matches!(c, ')' | '>' | ']' | ';' | ',' | '"' | '\'')
-                })
-                .unwrap_or(rest.len());
-            // Strip a trailing '.' so "site.com." doesn't include the sentence period
-            let end = if end > 0 && rest.as_bytes()[end - 1] == b'.' {
-                end - 1
-            } else {
-                end
-            };
-            if i > plain_start {
-                parts.push(TextPart::Plain(text[plain_start..i].to_string()));
-            }
-            let url = rest[..end].to_string();
-            parts.push(TextPart::Url {
-                href: url.clone(),
-                label: url,
-            });
-            i += end;
+    while let Some(rest) = text.get(i..).filter(|rest| !rest.is_empty()) {
+        let found = markdown_link(rest).or_else(|| {
+            bare_url(rest).map(|url| {
+                let part = TextPart::Url {
+                    href: url.to_string(),
+                    label: url.to_string(),
+                };
+                (part, url.len())
+            })
+        });
+        if let Some((part, used)) = found {
+            push_plain(&mut parts, text, plain_start, i);
+            parts.push(part);
+            i = i.saturating_add(used);
             plain_start = i;
             continue;
         }
-
-        i += text[i..].chars().next().map_or(1, char::len_utf8);
+        i = i.saturating_add(rest.chars().next().map_or(1, char::len_utf8));
     }
 
-    if plain_start < text.len() {
-        parts.push(TextPart::Plain(text[plain_start..].to_string()));
+    if let Some(tail) = text.get(plain_start..).filter(|tail| !tail.is_empty()) {
+        parts.push(TextPart::Plain(tail.to_string()));
     }
 
     parts
+}
+
+/// A `[label](https://...)` link at the start of `rest`, with how many bytes it
+/// spans.
+fn markdown_link(rest: &str) -> Option<(TextPart, usize)> {
+    let (label, after_label) = rest.strip_prefix('[')?.split_once(']')?;
+    let body = after_label.strip_prefix('(')?;
+    if !body.starts_with("https://") {
+        return None;
+    }
+    let (href, tail) = body.split_once(')')?;
+    let part = TextPart::Url {
+        href: href.to_string(),
+        label: label.to_string(),
+    };
+    Some((part, rest.len().saturating_sub(tail.len())))
+}
+
+/// A bare `https://` URL at the start of `rest`, up to whitespace or punctuation
+/// that can't be part of it, without a sentence's trailing period.
+fn bare_url(rest: &str) -> Option<&str> {
+    if !rest.starts_with("https://") {
+        return None;
+    }
+    let end = rest
+        .find(|c: char| c.is_whitespace() || matches!(c, ')' | '>' | ']' | ';' | ',' | '"' | '\''))
+        .unwrap_or(rest.len());
+    let url = rest.get(..end)?;
+    Some(url.strip_suffix('.').unwrap_or(url))
+}
+
+/// Pushes the plain text between `start` and `end`, if there is any.
+fn push_plain(parts: &mut Vec<TextPart>, text: &str, start: usize, end: usize) {
+    if let Some(plain) = text.get(start..end).filter(|plain| !plain.is_empty()) {
+        parts.push(TextPart::Plain(plain.to_string()));
+    }
 }
 
 #[cfg(test)]

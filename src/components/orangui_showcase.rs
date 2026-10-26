@@ -59,8 +59,8 @@ fn year_of_days() -> Vec<HeatCell> {
         .collect();
 
     let mut ranked: Vec<usize> = (0..scores.len()).collect();
-    ranked.sort_by_key(|&i| std::cmp::Reverse(scores[i]));
-    let peaks = &ranked[..PEAKS];
+    ranked.sort_by_key(|&i| std::cmp::Reverse(scores.get(i).copied()));
+    let peaks = ranked.get(..PEAKS).unwrap_or(&ranked);
 
     scores
         .iter()
@@ -348,7 +348,12 @@ fn DropdownShowcase() -> Element {
     // One menu at a time, as in the nav: whichever opened last closes the rest.
     let mut last_opened = use_signal(|| None::<usize>);
     use_effect(move || {
-        let opened: Vec<usize> = (0..menus.len()).filter(|&i| menus[i]()).collect();
+        let opened: Vec<usize> = menus
+            .iter()
+            .enumerate()
+            .filter(|(_, menu)| menu())
+            .map(|(i, _)| i)
+            .collect();
         let previous = *last_opened.peek();
         if let Some(&newest) = opened.iter().find(|&&i| Some(i) != previous) {
             for (i, mut menu) in menus.into_iter().enumerate() {

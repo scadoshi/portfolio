@@ -291,7 +291,9 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                 Button {
                     variant: ButtonVariant::Action,
                     onclick: move |_| {
-                        let (text, kind) = TOASTS[fired() % TOASTS.len()];
+                        let Some(&(text, kind)) = TOASTS.get(fired() % TOASTS.len()) else {
+                            return;
+                        };
                         let options = ToastOptions::new().duration(TOAST_NORMAL);
                         match kind {
                             Kind::Success => toasts.success(text.to_string(), options),
