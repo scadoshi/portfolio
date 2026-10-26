@@ -33,13 +33,13 @@ pub fn CodeBlock(title: String, code: String, description: String, lang: String)
 
 #[cfg(test)]
 mod tests {
-    use super::highlighted;
-    use crate::data::all_projects;
+    use super::*;
+    use crate::data;
 
     #[test]
     fn every_snippet_on_the_site_is_highlighted() {
         let mut missing = Vec::new();
-        for project in all_projects() {
+        for project in data::all_projects() {
             for snippet in project.snippets {
                 if highlighted(snippet.code.trim()).is_none() {
                     missing.push(format!("{} / {}", project.slug, snippet.title));

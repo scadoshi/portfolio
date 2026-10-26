@@ -13,7 +13,6 @@
 use std::sync::LazyLock;
 
 use dioxus::prelude::*;
-use orangui::with_separators;
 use serde::Deserialize;
 
 const SNAPSHOT: &str = include_str!("stats.json");
@@ -59,16 +58,16 @@ impl Counts {
     pub(crate) fn chips(&self) -> Vec<String> {
         let mut chips = vec![format!(
             "{} lines of {}",
-            with_separators(self.lines),
+            orangui::with_separators(self.lines),
             self.language
         )];
         if self.tests > 0 {
             let unit = if self.tests == 1 { "test" } else { "tests" };
-            chips.push(format!("{} {unit}", with_separators(self.tests)));
+            chips.push(format!("{} {unit}", orangui::with_separators(self.tests)));
         }
         if let Some(lints) = self.clippy_lints.filter(|lints| *lints > 0) {
             let unit = if lints == 1 { "lint" } else { "lints" };
-            chips.push(format!("{} clippy {unit}", with_separators(lints)));
+            chips.push(format!("{} clippy {unit}", orangui::with_separators(lints)));
         }
         chips
     }
@@ -228,7 +227,7 @@ impl RepoStats {
     pub(crate) fn chips(&self) -> Vec<String> {
         let mut chips = vec![format!(
             "{} {}",
-            with_separators(self.commits),
+            orangui::with_separators(self.commits),
             if self.commits == 1 {
                 "commit"
             } else {
@@ -246,7 +245,7 @@ impl RepoStats {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::data::all_projects;
+    use crate::data;
 
     fn baked() -> &'static Snapshot {
         BAKED.as_ref().expect("snapshot parses")
@@ -262,7 +261,7 @@ mod tests {
     /// heron. Until it is, its card has no numbers, and this says which one.
     #[test]
     fn every_project_on_the_site_is_in_the_snapshot() {
-        let missing: Vec<&str> = all_projects()
+        let missing: Vec<&str> = data::all_projects()
             .filter(|project| baked().repo(project.repo_url).is_none())
             .map(|project| project.repo_url)
             .collect();
@@ -386,7 +385,7 @@ mod tests {
     /// workflow only bakes an answer in which every repository is measured.
     #[test]
     fn every_project_on_the_site_is_measured_in_the_snapshot() {
-        let unmeasured: Vec<&str> = all_projects()
+        let unmeasured: Vec<&str> = data::all_projects()
             .filter(|project| {
                 baked()
                     .repo(project.repo_url)
@@ -448,7 +447,7 @@ mod tests {
                 })
         };
         let mut typed = Vec::new();
-        for project in all_projects() {
+        for project in data::all_projects() {
             let fields = [
                 ("headline", project.headline),
                 ("summary", project.summary),

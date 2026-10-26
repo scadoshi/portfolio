@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use orangui::{Chip, Replay, with_separators};
+use orangui::{Chip, Replay};
 
 use crate::stats;
 
@@ -158,7 +158,7 @@ pub fn Fleet() -> Element {
                                     x: "0",
                                     y: "{BAR_HEIGHT - 3.0}",
                                     style: "transform: translateX({LABEL_WIDTH + width + 6.0}px); animation-delay: {i * ROW_STAGGER_MS + VALUE_AFTER_MS}ms",
-                                    "{with_separators(*value)}"
+                                    "{orangui::with_separators(*value)}"
                                 }
                             }
                         }

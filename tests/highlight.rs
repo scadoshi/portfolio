@@ -9,8 +9,6 @@
 #[path = "../build/highlight.rs"]
 mod highlight;
 
-use highlight::{highlight, snippets};
-
 const DATA: &str = include_str!("../src/data.rs");
 const CSS: &str = include_str!("../assets/main.css");
 
@@ -19,7 +17,7 @@ const CSS: &str = include_str!("../assets/main.css");
 const PLAIN: [&str; 3] = ["l-variable", "l-module", "l-namespace"];
 
 fn rust(code: &str) -> String {
-    highlight("rust", code).expect("rust highlights")
+    highlight::highlight("rust", code).expect("rust highlights")
 }
 
 /// The text the reader sees: tags dropped, entities decoded.
@@ -52,7 +50,7 @@ fn classes(html: &str) -> Vec<String> {
 
 #[test]
 fn finds_every_snippet_in_the_data_file() {
-    let found = snippets(DATA).expect("data.rs parses");
+    let found = highlight::snippets(DATA).expect("data.rs parses");
     let literals = DATA.matches("Snippet {").count() - DATA.matches("pub struct Snippet {").count();
     assert_eq!(found.len(), literals);
     assert!(found.iter().all(|s| !s.code.trim().is_empty()));
@@ -65,7 +63,7 @@ fn reads_raw_strings_and_skips_other_structs() {
         const B: Other = Other { lang: "rust", code: "not a snippet" };
         const C: &[Snippet] = &[Snippet { title: "c", lang: "csharp", code: "var x = 1;", description: "" }];
     "##;
-    let found = snippets(source).expect("parses");
+    let found = highlight::snippets(source).expect("parses");
     let codes: Vec<&str> = found.iter().map(|s| s.code.as_str()).collect();
     assert_eq!(codes, ["let s = \"quoted\";", "var x = 1;"]);
     assert_eq!(found[1].lang, "csharp");
@@ -115,7 +113,7 @@ fn every_macro_gets_the_macro_class() {
 
 #[test]
 fn highlights_csharp() {
-    let html = highlight(
+    let html = highlight::highlight(
         "csharp",
         "public async Task<int> Run(string name) { return await Foo.Bar(name); }",
     )
@@ -136,7 +134,7 @@ fn highlights_csharp() {
 
 #[test]
 fn an_unknown_language_is_an_error() {
-    assert!(highlight("cobol", "DISPLAY 'HI'.").is_err());
+    assert!(highlight::highlight("cobol", "DISPLAY 'HI'.").is_err());
 }
 
 #[test]
@@ -151,9 +149,9 @@ fn leaves_no_wrapper_markup() {
 
 #[test]
 fn every_snippet_reads_back_exactly_as_written() {
-    for s in snippets(DATA).expect("data.rs parses") {
+    for s in highlight::snippets(DATA).expect("data.rs parses") {
         let code = s.code.trim();
-        let html = highlight(&s.lang, code).expect("highlights");
+        let html = highlight::highlight(&s.lang, code).expect("highlights");
         assert_eq!(
             visible_text(&html),
             code,
@@ -166,8 +164,8 @@ fn every_snippet_reads_back_exactly_as_written() {
 #[test]
 fn every_class_the_snippets_use_is_styled() {
     let mut unstyled = Vec::new();
-    for s in snippets(DATA).expect("data.rs parses") {
-        let html = highlight(&s.lang, s.code.trim()).expect("highlights");
+    for s in highlight::snippets(DATA).expect("data.rs parses") {
+        let html = highlight::highlight(&s.lang, s.code.trim()).expect("highlights");
         for class in classes(&html) {
             let styled = CSS.contains(&format!(".code-content .{class},"))
                 || CSS.contains(&format!(".code-content .{class} {{"));

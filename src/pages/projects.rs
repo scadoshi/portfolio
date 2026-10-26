@@ -3,7 +3,7 @@ use orangui::Panel;
 
 use crate::Route;
 use crate::components::page_meta::PageMeta;
-use crate::components::project_card::project_card;
+use crate::components::project_card;
 use crate::data::Section;
 
 /// The overview: one short panel per section, naming its projects. The cards
@@ -86,7 +86,7 @@ pub fn SectionPage(section: Section) -> Element {
             }
             div { class: "projects-grid",
                 for project in section.projects() {
-                    {project_card(project)}
+                    {project_card::project_card(project)}
                 }
             }
         }

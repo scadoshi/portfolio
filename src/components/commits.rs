@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use orangui::{ChartTip, Replay, area, curve, use_scroll_to_end, with_separators};
+use orangui::{ChartTip, Replay, use_scroll_to_end};
 
-use crate::components::chart::{Tip, month_name, show};
+use crate::components::chart::{self, Tip};
 use crate::stats::{self, WeekCommits};
 
 const WIDTH: f64 = 640.0;
@@ -76,7 +76,7 @@ fn by_month(weeks: &[WeekCommits]) -> Vec<Month> {
                 key: key.to_string(),
                 label: format!(
                     "{} {}",
-                    month_name(week.week.get(5..7).unwrap_or("")).unwrap_or(""),
+                    chart::month_name(week.week.get(5..7).unwrap_or("")).unwrap_or(""),
                     week.week.get(..4).unwrap_or("")
                 ),
                 commits: week.commits,
@@ -114,7 +114,7 @@ fn points(months: &[Month], top: u32, frame: Frame) -> Vec<(f64, f64)> {
 
 /// The line through `points` and the area under it down to `baseline`.
 fn paths(points: &[(f64, f64)], baseline: f64) -> (String, String) {
-    (curve(points), area(points, baseline))
+    (orangui::curve(points), orangui::area(points, baseline))
 }
 
 const TOTAL_FRAME: Frame = Frame {
@@ -148,11 +148,11 @@ pub fn Commits() -> Element {
     let caption = match source {
         stats::Source::Live => format!(
             "{} commits in the last year, only the repositories heron measures",
-            with_separators(total)
+            orangui::with_separators(total)
         ),
         stats::Source::AsOf(day) => format!(
             "{} commits in the year to {day}, only the repositories heron measures",
-            with_separators(total)
+            orangui::with_separators(total)
         ),
     };
 
@@ -217,8 +217,8 @@ pub fn Commits() -> Element {
                                     y: "{TOP}",
                                     width: "{slot}",
                                     height: "{HEIGHT - TOP - BOTTOM}",
-                                    onmouseenter: move |_| show(tip, enter.clone(), left, top_pct),
-                                    onclick: move |_| show(tip, tap.clone(), left, top_pct),
+                                    onmouseenter: move |_| chart::show(tip, enter.clone(), left, top_pct),
+                                    onclick: move |_| chart::show(tip, tap.clone(), left, top_pct),
                                 }
                                 circle {
                                     class: "commits-dot",

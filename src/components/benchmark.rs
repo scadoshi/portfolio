@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use orangui::{ChartTip, Chip, Replay, curve, with_separators};
+use orangui::{ChartTip, Chip, Replay};
 
-use crate::components::chart::{Tip, show};
+use crate::components::chart::{self, Tip};
 
 /// One row of steller's `BENCHMARKS.md`: `redis-benchmark` at a client count,
 /// requests per second for steller and for Redis 8.10, median of three runs on
@@ -215,8 +215,8 @@ pub fn Benchmark() -> Element {
                 // The two series, with a dot on every measured point. pathLength
                 // 1 so one dash animation draws either curve; the dots pop in
                 // behind the pen on their own delays.
-                path { class: "chart-line bench-steller", d: "{curve(&steller)}", path_length: "1" }
-                path { class: "chart-line bench-redis", d: "{curve(&redis)}", path_length: "1" }
+                path { class: "chart-line bench-steller", d: "{orangui::curve(&steller)}", path_length: "1" }
+                path { class: "chart-line bench-redis", d: "{orangui::curve(&redis)}", path_length: "1" }
                 for (i, (x, y)) in steller.iter().enumerate() {
                     circle {
                         key: "s{i}",
@@ -245,8 +245,8 @@ pub fn Benchmark() -> Element {
                         let text = format!(
                             "{} clients: steller {}, Redis {}",
                             row.clients,
-                            with_separators(u64::from(ours)),
-                            with_separators(u64::from(theirs))
+                            orangui::with_separators(u64::from(ours)),
+                            orangui::with_separators(u64::from(theirs))
                         );
                         let enter = text.clone();
                         let tap = text;
@@ -262,8 +262,8 @@ pub fn Benchmark() -> Element {
                                 y: "{TOP}",
                                 width: "{slot}",
                                 height: "{HEIGHT - TOP - BOTTOM}",
-                                onmouseenter: move |_| show(tip, enter.clone(), left, top),
-                                onclick: move |_| show(tip, tap.clone(), left, top),
+                                onmouseenter: move |_| chart::show(tip, enter.clone(), left, top),
+                                onclick: move |_| chart::show(tip, tap.clone(), left, top),
                             }
                         }
                     }

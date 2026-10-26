@@ -1,4 +1,4 @@
-use dioxus::document::eval;
+use dioxus::document;
 use dioxus::prelude::*;
 use orangui::{
     BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemeFollow, ThemePicker,
@@ -86,7 +86,7 @@ pub fn Navbar() -> Element {
                         // On the home page this runs the entrance again.
                         replay += 1;
                         spawn(async {
-                            let _ = eval(BRAND_RESET_JS).await;
+                            let _ = document::eval(BRAND_RESET_JS).await;
                         });
                     },
                     pre {
@@ -99,9 +99,8 @@ pub fn Navbar() -> Element {
             },
             links: rsx! {
                 // Built from data so the dropdowns cannot drift from the
-                // cards, the sitemap and the routes SSG renders. The
-                // diprotodon/nighthawk rename is the kind of change that
-                // used to leave a list like this pointing at a dead slug.
+                // cards, the sitemap and the routes SSG renders. A list kept
+                // by hand points at a dead slug after a rename.
                 for (section, mut menu) in Section::ALL.into_iter().zip(section_open) {
                     li { key: "{section.slug()}",
                         NavDropdown {

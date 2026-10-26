@@ -3,7 +3,7 @@ use orangui::{Decode, Panel, Replay, StatsStrip};
 
 use crate::components::heatmap::Heatmap;
 use crate::components::page_meta::PageMeta;
-use crate::components::project_card::project_card;
+use crate::components::project_card;
 use crate::{Route, data, stats};
 
 pub(crate) const LOGO_ASCII: &str = include_str!("../../assets/scotty.txt");
@@ -122,14 +122,14 @@ pub fn Home() -> Element {
                 // (main.css).
                 div { class: "band-featured",
                     for project in data::featured_left() {
-                        {project_card(project)}
+                        {project_card::project_card(project)}
                     }
                 }
             }
             div { class: "band-col band-main",
                 h2 { class: "sr-only", "Featured Projects" }
                 for project in data::featured_right() {
-                    {project_card(project)}
+                    {project_card::project_card(project)}
                 }
                 Panel {
                     title: "How I Use AI",

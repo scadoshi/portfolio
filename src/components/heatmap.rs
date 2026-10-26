@@ -7,8 +7,8 @@ use orangui::{
     peak_indices, use_scroll_to_end, with_separators,
 };
 
-use crate::components::chart::{Tip, month_name, show};
-use crate::components::commits::{ceiling, ticks};
+use crate::components::chart::{self, Tip};
+use crate::components::commits;
 use crate::stats::{self, Day};
 
 /// Room on the left for the weekday labels and the line's ticks.
@@ -121,7 +121,7 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
         let series = by_month.entry(key).or_insert_with(|| Series {
             label: format!(
                 "{} {}",
-                month_name(month).unwrap_or(""),
+                chart::month_name(month).unwrap_or(""),
                 day.date.get(..4).unwrap_or("")
             ),
             first_column: column,
@@ -133,7 +133,7 @@ fn layout(days: &[Day]) -> (Vec<Cell>, Vec<Month>, Vec<Series>) {
         series.total = series.total.saturating_add(day.count);
         series.days = series.days.saturating_add(1);
         if row == 0 && Some(month) != last_month {
-            if let Some(name) = month_name(month) {
+            if let Some(name) = chart::month_name(month) {
                 if months
                     .last()
                     .is_some_and(|previous| column < previous.column.saturating_add(LABEL_SPAN))
@@ -248,15 +248,15 @@ pub fn Heatmap() -> Element {
     };
     let width = LEFT + heat_span(columns);
     let height = TOP + heat_span(HEAT_ROWS);
-    let top = ceiling(series.iter().map(|month| month.total).max().unwrap_or(0));
-    let ticks = ticks(top);
+    let top = commits::ceiling(series.iter().map(|month| month.total).max().unwrap_or(0));
+    let ticks = commits::ticks(top);
     let line_points = line_points(&series, top);
     let drawn = to_the_edges(&line_points, LEFT, width, LINE_TOP, LINE_BOTTOM);
     let (line, area) = (curve(&drawn), area(&drawn, LINE_BOTTOM));
     let last = series.len().saturating_sub(1);
     // A chip anchored at an SVG point, as percentages of the grid.
     let tip_at = move |text: String, x: f64, y: f64| {
-        show(tip, text, x / width * 100.0, y / height * 100.0);
+        chart::show(tip, text, x / width * 100.0, y / height * 100.0);
     };
     // What each cell's chip says, by the cell's index, for both handlers.
     let texts: Rc<[String]> = cells
