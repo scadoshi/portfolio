@@ -30,6 +30,8 @@ cargo clippy --no-default-features --features server --all-targets -- -D warning
 RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --locked   # rustdoc warnings fail CI's lint job the way clippy's do
 ```
 
+Lint levels live in `Cargo.toml` `[lints]`: the [scadoshi-rust](https://github.com/scadoshi/scadoshi-rust) set. Nothing panics outside tests (`unwrap`, `expect`, `panic`, indexing and string slicing are denied), a suppression is `#[expect(lint, reason = "...")]` rather than `#[allow]`, arithmetic is overflow-safe, and an `as` cast carries an `#[expect]` saying why it is exact. `clippy.toml` allows panics inside tests. Clippy's test exemptions don't reach the helpers in `tests/` or the build script, so a test file opens with a `#![expect(..)]` naming what it may do, and `build.rs` returns its errors.
+
 ### 3. Tests
 ```bash
 cargo test
