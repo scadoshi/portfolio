@@ -172,12 +172,14 @@ pub fn at_hour(hours: i64) -> Option<&'static Quote> {
 /// while breaking every install that already had data.
 #[test]
 fn opens_a_database_left_at_every_older_version() {
-    let ladder = [SCHEMA_V1, SCHEMA_V2, SCHEMA_V3, SCHEMA_V4, SCHEMA_V5];
+    let ladder = [SCHEMA_V1, SCHEMA_V2, SCHEMA_V3, SCHEMA_V4, SCHEMA_V5, SCHEMA_V6, SCHEMA_V7];
     for version in 1..=SCHEMA_VERSION {
-        let path = aged_db(&dir, version, &ladder[..version as usize]);
-        let s = SqliteStore::open(&path)
+        let steps = &ladder[..usize::try_from(version).unwrap()];
+        let s = SqliteStore::open(&aged_db(&dir, version, steps))
             .unwrap_or_else(|e| panic!("v{version} database would not open: {e}"));
-        assert_eq!(s.list_counters().unwrap().len(), 1, "v{version} lost data");
+        let list = s.list_counters()
+            .unwrap_or_else(|e| panic!("v{version} database would not read: {e}"));
+        assert_eq!(list.len(), 1, "v{version} lost the existing counter");
     }
 }"#,
             description: "Found by mutation testing rather than by reading. Two one-character changes to the migration ladder passed all 64 tests while breaking every existing install, because nothing ever opened a database that already had a version.",
@@ -1049,17 +1051,16 @@ impl<R: Read + Seek> BloomFilterReader for R {
 // cursor, and each pass takes the globally smallest key across all of them.
 loop {
     sstables.retain(|(entry, _)| entry.is_some());
-    if sstables.is_empty() { break; }
+    let Some(min) = /* smallest key across all active cursors */ else { break };
 
-    let min = /* smallest key across all active cursors */;
-
-    for (entry, sstable) in sstables.iter_mut() {
-        let is_participant = entry.as_ref().unwrap().key() == min;
+    for (entry, sstable) in &mut sstables {
+        let Some(entry_ref) = entry.as_ref() else { continue };
+        let is_participant = entry_ref.key() == min;
         // Newest file wins: seen_keys means a later version already landed.
         if is_participant && !seen_keys.contains(min.as_str()) {
             seen_keys.insert(min.clone());
-            if let Entry::Set { .. } = entry.as_ref().unwrap() {
-                memtable.process(entry.as_ref().unwrap().clone())?;
+            if let Entry::Set { .. } = entry_ref {
+                memtable.process(entry_ref.clone())?;
             }
             // A tombstone is marked seen and dropped. It has done its job.
         }
@@ -1133,16 +1134,22 @@ const HERON: Project = Project {
         Snippet {
             title: "Three caches, one type",
             lang: "rust",
-            code: r"let (stats_service, health_service, counts_service) = match config.cache_backend {
-    CacheBackend::Memory => {
-        services(github, tarball, MemoryCache::new(), settings, counts_settings)
-    }
+            code: r"let Services { stats, health, counts, calendar } = match config.cache_backend {
+    CacheBackend::Memory => services(
+        github,
+        tarball,
+        MemoryCache::new(),
+        settings,
+        counts_settings,
+        calendar_settings,
+    ),
     CacheBackend::Steller(address) => services(
         github,
         tarball,
         StellerCache::new(address)?,
         settings,
         counts_settings,
+        calendar_settings,
     ),
     CacheBackend::Layered(address) => services(
         github,
@@ -1150,9 +1157,10 @@ const HERON: Project = Project {
         LayeredCache::new(StellerCache::new(address)?, MemoryCache::new(), retain),
         settings,
         counts_settings,
+        calendar_settings,
     ),
 };",
-            description: "Each arm builds services of a different type and hands back the same three Arc<dyn Erased…Service>. The backend is an environment variable.",
+            description: "Each arm builds the four services over a different cache type and hands back the same struct of Arc<dyn Erased…Service>. The backend is an environment variable.",
         },
         Snippet {
             title: "When to measure again",
@@ -1314,11 +1322,11 @@ pub fn publish(&self, message: Vec<u8>, channel: &[u8]) -> Result<u32, ChannelsE
         },
     ],
     obstacles: &[
-        "Self-deadlock on the TTL read path. get_expires_at held the mutex guard and then called self.remove() on the expired branch. std mutexes are not reentrant, so the thread hung forever. Guards live to the end of scope, not the end of the statement",
+        "Self-deadlock on the TTL read path. The expiry lookup held the mutex guard and then called self.remove() on the expired branch. std mutexes are not reentrant, so the thread hung forever. Guards live to the end of scope, not the end of the statement",
         "A read-before-parse bug in the frame loop. TCP coalesces writes, so one read can deliver two frames; reading first meant the second sat in the buffer unseen until EOF. Parse first, read only on Incomplete",
         "The server could not restart after the first benchmark run. Compaction truncated the log through a second, non-append handle before draining the old BufWriter, so up to 8 KiB of pending bytes landed at a stale offset in an empty file and the OS filled the gap with zeros: 8,992,628 NULs, then 7,372 bytes of real frames. Replay read byte 0 and refused, correctly. It only fires past 8 KiB of writes between snapshots, so no manual session could have hit it. Fixed, with a regression test that fails on the old body",
     ],
-    progress: "Done through M6: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. Benchmarked against Redis 8 in September 2026; the first run found a compaction bug and a 49ms accept stall, both fixed. In production behind heron since 2026-09-29, which found a framing bug on its first day, fixed the next.",
+    progress: "Done through M6: RESP, TTLs, snapshot and AOF persistence, graceful shutdown, pub/sub, and SET options on millisecond deadlines. Benchmarked against Redis 8 in September 2026; the first run found a compaction bug and a 49ms accept stall, both fixed. In production behind heron since 2026-09-29, which found a framing bug on its first day, fixed the next. A code review in October found four more: PING with a message came back unframed, the log was not flushed before a write returned, snapshots were not synced to disk, and PERSIST could revive an expired key.",
     impact: "The in-memory counterpart to chickadee's on-disk store. Small on purpose, but measured against Redis and run behind heron, which is where its best bugs came from.",
     site_url: None,
     store_url: None,
