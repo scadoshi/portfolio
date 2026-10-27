@@ -63,19 +63,19 @@ pub fn Home() -> Element {
                                     Link {
                                         class: "tag tag-p1",
                                         to: Route::ProjectDetail { slug: "heron".to_string() },
-                                        "counted by heron"
+                                        "Counted by heron"
                                     }
                                     Link {
                                         class: "tag tag-p1",
                                         to: Route::ProjectDetail { slug: "steller".to_string() },
-                                        "cached in steller"
+                                        "Cached in steller"
                                     }
                                     // Keyed on its text, so the live chip arrives with the
                                     // ease rather than the as-of chip changing its words.
                                     {
                                         let label = match source {
-                                            stats::Source::Live => "live".to_string(),
-                                            stats::Source::AsOf(day) => format!("as of {day}"),
+                                            stats::Source::Live => "Live".to_string(),
+                                            stats::Source::AsOf(day) => format!("As of {day}"),
                                         };
                                         rsx! { span { key: "{label}", class: "tag tag-p1 chip-in", "{label}" } }
                                     }
