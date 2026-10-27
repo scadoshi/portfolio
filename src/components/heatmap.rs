@@ -301,17 +301,17 @@ pub fn Heatmap() -> Element {
         })
         .collect();
     let total = contributions(calendar.total);
-    let (caption, span) = match source {
-        stats::Source::Live => (
-            format!("{total} in the last year across all of GitHub"),
-            "Last year".to_string(),
-        ),
-        stats::Source::AsOf(day) => (
-            format!("{total} in the year to {day} across all of GitHub"),
-            format!("To {day}"),
-        ),
+    let caption = match &source {
+        stats::Source::Live => format!("{total} in the last year across all of GitHub"),
+        stats::Source::AsOf(day) => format!("{total} in the year to {day} across all of GitHub"),
     };
-    let rest = vec![total, span, "All of GitHub".to_string()];
+    // The last tag is the stats strip's own source tag, word for word.
+    let rest = vec![
+        total,
+        "Last year".to_string(),
+        "All of GitHub".to_string(),
+        source.label(),
+    ];
 
     rsx! {
         // Rises into view with the panels (REVEAL_JS), which also holds its

@@ -73,10 +73,7 @@ pub fn Home() -> Element {
                                     // Keyed on its text, so the live chip arrives with the
                                     // ease rather than the as-of chip changing its words.
                                     {
-                                        let label = match source {
-                                            stats::Source::Live => "Live".to_string(),
-                                            stats::Source::AsOf(day) => format!("As of {day}"),
-                                        };
+                                        let label = source.label();
                                         rsx! { span { key: "{label}", class: "tag tag-p1 chip-in", "{label}" } }
                                     }
                                 },

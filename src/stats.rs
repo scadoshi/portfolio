@@ -153,6 +153,18 @@ pub(crate) enum Source {
     AsOf(String),
 }
 
+impl Source {
+    /// The tag naming it wherever a number shows: `Live`, or `As of` and the
+    /// build's day.
+    #[must_use]
+    pub(crate) fn label(&self) -> String {
+        match self {
+            Self::Live => "Live".to_string(),
+            Self::AsOf(day) => format!("As of {day}"),
+        }
+    }
+}
+
 /// The live snapshot when there is one, else the baked one.
 pub(crate) fn current(live: Option<&Snapshot>) -> Option<(&Snapshot, Source)> {
     if let Some(snapshot) = live {
@@ -244,6 +256,16 @@ impl RepoStats {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn a_source_reads_the_same_wherever_it_shows() {
+        assert_eq!(Source::Live.label(), "Live");
+        assert_eq!(
+            Source::AsOf("2026-10-27".to_string()).label(),
+            "As of 2026-10-27"
+        );
+    }
+
     use super::*;
     use crate::data;
 
