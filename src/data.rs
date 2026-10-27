@@ -1370,32 +1370,37 @@ const UPSEE: Project = Project {
         Snippet {
             title: "Inference Pipeline",
             lang: "rust",
-            code: r"// Load and optimize MoveNet ONNX model
+            code: r"// Load and optimize the MoveNet ONNX model
 let model = tract_onnx::onnx()
     .model_for_path(MODEL_PATH)?
     .into_optimized()?
     .into_runnable()?;
 
-// Per frame: crop, resize, normalize, infer
-let mut image = camera.frame()?.decode_image::<RgbFormat>()?;
-let resized = resize(image.square().inner(), 192, 192, FilterType::Triangle);
+// Per frame: crop to the centered square, resize to 192x192
+let (x, y, side) = domain::square_bounds(frame.width(), frame.height());
+let square = imageops::crop_imm(frame, x, y, side, side).to_image();
+let resized = imageops::resize(&square, 192, 192, FilterType::Triangle);
 
-// Build [1, 3, 192, 192] NCHW tensor, normalized 0-1
-let tensor: Tensor = Array4::from_shape_fn(
-    (1, 3, 192, 192),
-    |(_, c, y, x)| resized[(x as _, y as _)][c] as f32 / 255.0
-).into();
+// The pixels arrive 192x192x3; MoveNet wants 1x3x192x192, scaled 0-1
+let pixels = Array3::from_shape_vec((192, 192, 3), resized.into_raw())?;
+let tensor: Tensor = pixels
+    .permuted_axes([2, 0, 1])
+    .insert_axis(Axis(0))
+    .mapv(|value| f32::from(value) / 255.0)
+    .as_standard_layout()
+    .into_owned()
+    .into();
 
-// Run inference. Output: [1, 1, 17, 3] (17 keypoints × y,x,confidence)
-let result = model.run(tvec!(tensor.into()))?;",
-            description: "Three lines to load the model, then per-frame: crop to square, resize, normalize into a tensor, and run inference. tract handles the ONNX graph execution.",
+// Output: [1, 1, 17, 3], 17 keypoints of (y, x, confidence)
+let output = model.run(tvec!(tensor.into()))?;",
+            description: "Three calls load the model. Each frame is cropped square, resized, and its raw pixels reshaped into the channels-first tensor MoveNet expects, with no casts or indexing.",
         },
         Snippet {
             title: "Hysteresis State Machine",
             lang: "rust",
             code: r"/// Feeds one frame's pose. Returns the new total when this frame
 /// completes a rep. A frame under the confidence floor changes nothing.
-pub fn observe(&mut self, pose: &Pose) -> Option<u32> {
+pub(crate) fn observe(&mut self, pose: &Pose) -> Option<u32> {
     if pose.confidence() < self.thresholds.min_confidence {
         return None;
     }
@@ -1403,7 +1408,7 @@ pub fn observe(&mut self, pose: &Pose) -> Option<u32> {
     match self.phase {
         Phase::Down if hang < self.thresholds.up => {
             self.phase = Phase::Up;
-            self.reps += 1;
+            self.reps = self.reps.saturating_add(1);
             Some(self.reps)
         }
         Phase::Up if hang > self.thresholds.down => {
