@@ -1892,12 +1892,6 @@ rect.fleet-bar {
     }
 }
 
-.heatmap-caption {
-    margin: 0.75rem 0 0;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-}
-
 /* === Heron: commits week by week === */
 
 /* The same draw, fade and pop as the home chart, with the delays per dot

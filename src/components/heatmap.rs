@@ -3,8 +3,8 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 use orangui::{
-    ChartTip, HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, Replay, area, curve, heat_span,
-    peak_indices, use_scroll_to_end, with_separators,
+    ChartTip, HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, HeatReadout, Replay, area, curve, heat_span,
+    peak_indices, use_heat_pick, use_scroll_to_end, with_separators,
 };
 
 use crate::components::chart::{self, Tip};
@@ -60,6 +60,26 @@ fn days_from_civil(date: &str) -> Option<i64> {
 /// 0 for Sunday through 6 for Saturday. 1970-01-01 was a Thursday.
 fn weekday(days: i64) -> i64 {
     days.saturating_add(4).rem_euclid(7)
+}
+
+/// `1 contribution`, `4,321 contributions`.
+fn contributions(count: u32) -> String {
+    if count == 1 {
+        "1 contribution".to_string()
+    } else {
+        format!("{} contributions", with_separators(u64::from(count)))
+    }
+}
+
+/// `Jun 10, 2026` for `2026-06-10`, or the date as given when it does not
+/// parse.
+fn short_date(date: &str) -> String {
+    let month = date.get(5..7).and_then(chart::month_name);
+    let day = date.get(8..10).and_then(|day| day.parse::<u8>().ok());
+    match (month, day, date.get(..4)) {
+        (Some(month), Some(day), Some(year)) => format!("{month} {day}, {year}"),
+        _ => date.to_string(),
+    }
 }
 
 /// One cell of the grid.
@@ -229,11 +249,13 @@ fn line_points(series: &[Series], top: u32) -> Vec<(f64, f64)> {
 
 /// The last year of contributions on GitHub as the profile's grid, drawn from
 /// the same snapshot the numbers above it use. Renders nothing without one.
-/// Hovering (or tapping) a cell or a month label shows its count in a chip.
+/// Hovering a cell or a month shows its count in a floating chip; on a touch
+/// or narrow screen a tap puts its tags in the readout under the grid instead.
 #[component]
 pub fn Heatmap() -> Element {
     let live = use_context::<stats::Live>();
     let mut tip: Signal<Option<Tip>> = use_signal(|| None);
+    let pick = use_heat_pick();
     use_scroll_to_end();
     let live = live.read();
     let Some((calendar, source)) = stats::calendar(live.as_ref()) else {
@@ -258,10 +280,15 @@ pub fn Heatmap() -> Element {
     let tip_at = move |text: String, x: f64, y: f64| {
         chart::show(tip, text, x / width * 100.0, y / height * 100.0);
     };
-    // What each cell's chip says, by the cell's index, for both handlers.
+    // What each cell's chip and readout say, by the cell's index, for both
+    // handlers.
     let texts: Rc<[String]> = cells
         .iter()
         .map(|cell| format!("{} on {}", cell.count, cell.date))
+        .collect();
+    let tags: Rc<[Vec<String>]> = cells
+        .iter()
+        .map(|cell| vec![contributions(cell.count), short_date(&cell.date)])
         .collect();
     let grid: Vec<orangui::HeatCell> = cells
         .iter()
@@ -273,16 +300,18 @@ pub fn Heatmap() -> Element {
             key: cell.date.clone(),
         })
         .collect();
-    let caption = match source {
-        stats::Source::Live => format!(
-            "{} contributions in the last year across all of GitHub",
-            with_separators(u64::from(calendar.total))
+    let total = contributions(calendar.total);
+    let (caption, span) = match source {
+        stats::Source::Live => (
+            format!("{total} in the last year across all of GitHub"),
+            "Last year".to_string(),
         ),
-        stats::Source::AsOf(day) => format!(
-            "{} contributions in the year to {day} across all of GitHub",
-            with_separators(u64::from(calendar.total))
+        stats::Source::AsOf(day) => (
+            format!("{total} in the year to {day} across all of GitHub"),
+            format!("To {day}"),
         ),
     };
+    let rest = vec![total, span, "All of GitHub".to_string()];
 
     rsx! {
         // Rises into view with the panels (REVEAL_JS), which also holds its
@@ -319,10 +348,16 @@ pub fn Heatmap() -> Element {
                 path { class: "commits-line chart-line", d: "{line}", path_length: "1" }
                 for (i, ((x, y), month)) in line_points.iter().zip(&series).enumerate() {
                     {
-                        let text = if i == last {
-                            format!("{} in {} so far", with_separators(u64::from(month.total)), month.label)
+                        let (text, picked) = if i == last {
+                            (
+                                format!("{} in {} so far", with_separators(u64::from(month.total)), month.label),
+                                vec![contributions(month.total), month.label.clone(), "So far".to_string()],
+                            )
                         } else {
-                            format!("{} in {}", with_separators(u64::from(month.total)), month.label)
+                            (
+                                format!("{} in {}", with_separators(u64::from(month.total)), month.label),
+                                vec![contributions(month.total), month.label.clone()],
+                            )
                         };
                         let enter = text.clone();
                         let tap = text;
@@ -338,7 +373,10 @@ pub fn Heatmap() -> Element {
                                     width: "{hit_width}",
                                     height: "{LINE_HEIGHT}",
                                     onmouseenter: move |_| tip_at(enter.clone(), cx, cy),
-                                    onclick: move |_| tip_at(tap.clone(), cx, cy),
+                                    onclick: move |_| {
+                                        tip_at(tap.clone(), cx, cy);
+                                        pick.show(picked.clone());
+                                    },
                                 }
                                 circle {
                                     class: "commits-dot",
@@ -355,6 +393,8 @@ pub fn Heatmap() -> Element {
                     {
                         let x = LEFT + heat_span(month.column);
                         let text = format!("{} in {}", with_separators(u64::from(month.total)), month.name);
+                        let year = month.key.get(..4).unwrap_or("");
+                        let picked = vec![contributions(month.total), format!("{} {year}", month.name)];
                         let enter = text.clone();
                         let tap = text;
                         rsx! {
@@ -364,7 +404,10 @@ pub fn Heatmap() -> Element {
                                 x: "{x}",
                                 y: "{TOP - 5.0}",
                                 onmouseenter: move |_| tip_at(enter.clone(), x, TOP - 5.0),
-                                onclick: move |_| tip_at(tap.clone(), x, TOP - 5.0),
+                                onclick: move |_| {
+                                    tip_at(tap.clone(), x, TOP - 5.0);
+                                    pick.show(picked.clone());
+                                },
                                 "{month.name}"
                             }
                         }
@@ -380,7 +423,7 @@ pub fn Heatmap() -> Element {
                     }
                 }
                 {
-                    let (enter, tap) = (Rc::clone(&texts), Rc::clone(&texts));
+                    let (enter, tap, tags) = (Rc::clone(&texts), Rc::clone(&texts), Rc::clone(&tags));
                     rsx! {
                         HeatGrid {
                             cells: grid.clone(),
@@ -395,6 +438,9 @@ pub fn Heatmap() -> Element {
                                 if let Some(text) = tap.get(hit.index) {
                                     tip_at(text.clone(), hit.x + HEAT_CELL / 2.0, hit.y);
                                 }
+                                if let Some(tags) = tags.get(hit.index) {
+                                    pick.show(tags.clone());
+                                }
                             },
                         }
                     }
@@ -402,11 +448,11 @@ pub fn Heatmap() -> Element {
             }
             }
             if let Some(tip) = tip() {
-                ChartTip { text: tip.text, left: tip.left, top: tip.top, class: "tag tag-p1" }
+                ChartTip { text: tip.text, left: tip.left, top: tip.top, class: "tag tag-p1 heat-float" }
             }
             }
             }
-            p { class: "heatmap-caption", "{caption}" }
+            HeatReadout { rest, pick }
         }
     }
 }
@@ -537,6 +583,15 @@ mod tests {
         ];
         assert_eq!(peaks(&days), ["2026-09-06", "2026-09-05"]);
         assert_eq!(peaks(&[day("2026-09-01", 0)]), [""; 0]);
+    }
+
+    #[test]
+    fn readout_tags_count_and_date_the_way_they_read() {
+        assert_eq!(contributions(1), "1 contribution");
+        assert_eq!(contributions(0), "0 contributions");
+        assert_eq!(contributions(4321), "4,321 contributions");
+        assert_eq!(short_date("2026-06-10"), "Jun 10, 2026");
+        assert_eq!(short_date("soon"), "soon");
     }
 
     #[test]

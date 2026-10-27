@@ -8,10 +8,10 @@ use gloo_timers::future::TimeoutFuture;
 use orangui::{
     APP_CSS, ActionButton, AlertDialog, Banner, BannerStatus, Button, ButtonVariant, ChartTip,
     Chip, DiagramArrow, DiagramDefs, DiagramNode, DiagramTone, DialogAction, DialogHostView,
-    GalleryFooter, GalleryFrame, HEAT_CELL, HEAT_ROWS, HeatCell, HeatGrid, HeatHit, HintBullet,
-    HintBullets, HintKey, HintLine, InfoButton, NavDropdown, Panel, PasswordInput, Replay,
-    StatsStrip, TOAST_CSS, ThemeConfig, area, curve, display_theme_name, heat_span,
-    use_dialog_host, use_overlay_back_stack,
+    GalleryFooter, GalleryFrame, HEAT_CELL, HEAT_ROWS, HeatCell, HeatGrid, HeatHit, HeatReadout,
+    HintBullet, HintBullets, HintKey, HintLine, InfoButton, NavDropdown, Panel, PasswordInput,
+    Replay, StatsStrip, TOAST_CSS, ThemeConfig, area, curve, display_theme_name, heat_span,
+    use_dialog_host, use_heat_pick, use_overlay_back_stack,
 };
 
 use super::orangui_phone::OranguiPhone;
@@ -517,7 +517,7 @@ fn HintShowcase() -> Element {
             title: "InfoButton and HintKey",
             actions: rsx! {
                 Source { path: "src/hint.rs" }
-                Source { path: "assets/components.css#L1945-L1985" }
+                Source { path: "assets/components.css#L2003-L2044" }
             },
             p { class: "kit-use",
                 "Inline help. Tap the ? for a hint; HintKey draws the button it's talking about."
@@ -860,8 +860,8 @@ fn DiagramShowcase() -> Element {
     }
 }
 
-/// How each heat level reads in the chip, quietest first.
-const BUSY: [&str; 5] = ["nothing", "a little", "some", "a lot", "flat out"];
+/// How each heat level reads in the chip and the readout, quietest first.
+const BUSY: [&str; 5] = ["Nothing", "A little", "Some", "A lot", "Flat out"];
 
 /// The weekday of a heat grid row, Sunday first.
 const WEEKDAYS: [&str; 7] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -870,34 +870,46 @@ const WEEKDAYS: [&str; 7] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 fn HeatShowcase() -> Element {
     let cells = use_hook(year_of_days);
     let mut tip = use_signal(|| None::<(String, f64, f64)>);
+    let pick = use_heat_pick();
     let replay = use_signal(|| 0u32);
     let width = heat_span(WEEKS);
     let height = heat_span(HEAT_ROWS);
-    let place = {
+    let mut place = {
         let cells = cells.clone();
         move |hit: HeatHit| {
-            let Some(cell) = cells.get(hit.index) else {
-                return;
-            };
+            let cell = cells.get(hit.index)?;
             let day = WEEKDAYS.get(cell.row).copied().unwrap_or("");
             let busy = BUSY.get(usize::from(cell.level)).copied().unwrap_or("");
-            let text = format!("Week {}, {day}: {busy}", cell.column.saturating_add(1));
+            let week = format!("Week {}", cell.column.saturating_add(1));
+            let text = format!("{week}, {day}: {}", busy.to_lowercase());
             let left = (hit.x + HEAT_CELL / 2.0) / width * 100.0;
             let top = hit.y / height * 100.0;
             tip.set(Some((text, left, top)));
+            Some(vec![week, day.to_string(), busy.to_string()])
         }
     };
-    let tap = place.clone();
+    let enter = place.clone();
+    let tap = move |hit: HeatHit| {
+        if let Some(tags) = place(hit) {
+            pick.show(tags);
+        }
+    };
+    let rest = vec![
+        "A made-up year".to_string(),
+        format!("{WEEKS} weeks"),
+        format!("{PEAKS} peaks"),
+    ];
     rsx! {
         Panel {
-            title: "HeatGrid",
+            title: "HeatGrid and HeatReadout",
             actions: rsx! {
                 ReplayButton { replay }
                 Source { path: "src/heat_grid.rs" }
-                Source { path: "assets/components.css#L1593-L1688" }
+                Source { path: "src/heat_readout.rs" }
+                Source { path: "assets/components.css#L1602-L1743" }
             },
             p { class: "kit-use",
-                "A year, one cell a day, darker when busier. The three busiest days glow."
+                "A year, one cell a day, darker when busier. The three busiest days glow. The tags underneath sum it up; on a phone, a tapped day's tags take their place for a few seconds."
             }
             div { class: "chart-scroll scroll-fade-x kit-heat",
                 div { class: "kit-heat-plot", onmouseleave: move |_| tip.set(None),
@@ -914,16 +926,22 @@ fn HeatShowcase() -> Element {
                             cells: cells.clone(),
                             left: 0.0,
                             top: 0.0,
-                            on_enter: place.clone(),
+                            on_enter: {
+                                let mut enter = enter.clone();
+                                move |hit| {
+                                    enter(hit);
+                                }
+                            },
                             on_tap: tap.clone(),
                         }
                     }
                     }
                     if let Some((text, left, top)) = tip() {
-                        ChartTip { text, left, top, class: "tag tag-p5" }
+                        ChartTip { text, left, top, class: "tag tag-p5 heat-float" }
                     }
                 }
             }
+            HeatReadout { rest, pick }
         }
     }
 }
