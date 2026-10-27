@@ -848,78 +848,91 @@ const MARVIN: Project = Project {
     ],
     approach: &[
         "Found a live bug in [Rig](https://github.com/0xPlaygrounds/rig): hardcoded model constants had gone stale and were 404ing the API. Filed [issue #1370](https://github.com/0xPlaygrounds/rig/issues/1370) with a stopgap PR, and argued in the thread that constants pinned to someone else's source of truth are the wrong primitive. Marvin fetches the model list at runtime instead",
-        "Each slash command is a trait impl routed through an enum. It started as one file and grew module boundaries as it earned them",
+        "Each slash command is a method on Chat in its own file, routed through one ChatInput enum. It started as one file and grew module boundaries as it earned them",
         "schemars derives the JSON schema for each tool from the Rust types, so the definitions cannot drift from the code",
     ],
     snippets: &[
         Snippet {
             title: "Tool Architecture",
             lang: "rust",
-            code: r"// Each tool uses schemars for automatic JSON Schema generation
-#[derive(JsonSchema, Deserialize)]
-struct SearchArgs {
-    query: String,
-    topic: Option<String>,
-    search_depth: Option<String>,
-    max_results: Option<u32>,
+            code: r#"#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+pub(crate) struct SearchArgs {
+    #[schemars(description = "The search query to execute")]
+    pub query: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schemars(description = "Search category")]
+    pub topic: Option<Topic>,
+    // ...16 more optional Tavily parameters
 }
 
-// Tools share HTTP client via Arc
-impl Tool for SearchWeb {
-    async fn call(&self, args: SearchArgs) -> Result<String, ToolError> {
-        self.client.search(args).await  // Arc<TavilyClient>
+impl Tool for Search {
+    const NAME: &'static str = "search_web";
+    type Args = SearchArgs;
+    type Output = Value;
+    type Error = ToolError;
+
+    async fn definition(&self, _prompt: String) -> ToolDefinition {
+        ToolDefinition {
+            name: Self::NAME.to_string(),
+            description: "Search the web for current information using Tavily API".to_string(),
+            parameters: schema_for!(SearchArgs).into(),
+        }
     }
-}",
-            description: "schemars derives JSON Schema from Rust types at compile time. No manual schema writing, no drift between types and definitions. Arc sharing keeps a single HTTP client across all 4 web tools.",
+
+    async fn call(&self, args: Self::Args) -> Result<Self::Output, Self::Error> {
+        self.client.request(SEARCH_PATH, args, "Search").await
+    }
+}"#,
+            description: "schemars derives each tool's JSON Schema from its Rust type, so the definition can't drift from the code. All four web tools share one Arc<TavilyClient> and one request method that checks the status before it parses the body.",
         },
         Snippet {
             title: "Command Dispatch",
             lang: "rust",
-            code: r"// Every line of input parses into a ChatInput variant, then the runner
-// matches it to a command module. Adding a command is a variant and an arm.
-enum ChatInput {
-    Message(String),
-    Model(String),
-    Compact,
-    Exit,
-    // ...one variant per slash command
-}
-
-match ChatInput::parse(&read_line()?) {
-    ChatInput::Message(text) => chat.stream(text).await?,
-    ChatInput::Model(name)   => commands::model::run(&mut chat, &name).await?,
-    ChatInput::Compact       => commands::compact::run(&mut chat).await?,
-    ChatInput::Exit          => break,
-    // ...
+            code: r"// Every line parses into a ChatInput. Commands match case-insensitively;
+// a message goes to the model as typed.
+match chat.input() {
+    ChatInput::ClearContext => chat.clear_context(),
+    ChatInput::SwitchModel => chat.switch_model(&mut std::io::stdin().lock()),
+    ChatInput::CompactContext => chat.compact_context().await?,
+    ChatInput::ExitProcess => {
+        chat.exit_process()?;
+        break;
+    }
+    ChatInput::SendMessage(message) => {
+        let message = message.to_owned();
+        chat.clear_input();
+        chat.stream(Message::user(message)).await;
+    }
+    // ...one arm per slash command
 }",
-            description: "Adding a command is a two-step change: a new ChatInput variant and a new module. No conditionals in the loop, no flag-string soup. The 220-line main.rs grew into this; the architecture earned its complexity.",
+            description: "Adding a command is a variant, a line in the parser, and a method on Chat in its own file under user_commands/. /model reads from any BufRead, so its tests feed it lines instead of a terminal.",
         },
         Snippet {
             title: "Dynamic Model Discovery",
             lang: "rust",
-            code: r#"// Hardcoded model constants in Rig were 404ing on Anthropic's API.
-// Fix: fetch the live model list at startup instead of trusting constants.
-async fn list_models(api_key: &str) -> Result<Vec<Model>> {
-    let resp = http
-        .get("https://api.anthropic.com/v1/models")
-        .header("x-api-key", api_key)
+            code: r#"pub(crate) async fn fetch_models(base_url: &str, api_key: &str) -> anyhow::Result<Vec<ModelInfo>> {
+    let response = Client::new()
+        .get(format!("{base_url}/v1/models?limit={MODELS_PAGE_LIMIT}"))
         .header("anthropic-version", "2023-06-01")
+        .header("X-Api-Key", api_key)
         .send()
-        .await?
-        .error_for_status()?;
-    Ok(resp.json::<ModelList>().await?.data)
-}
-
-// /model with no argument lists what's actually available right now.
-// /model <id> switches mid-chat. No release required when Anthropic
-// ships a new model.
-"#,
-            description: "Rig's hardcoded constants drift the moment Anthropic ships a model; that's the bug behind issue #1370. Marvin sidesteps the whole class of problem by asking Anthropic what exists, right now, at startup. /model with no argument is whatever Claude shipped this week.",
+        .await?;
+    let status = response.status();
+    if !status.is_success() {
+        let body = response.text().await?;
+        anyhow::bail!("listing models failed with {status}: {body}");
+    }
+    let body = response.json::<serde_json::Value>().await?;
+    let models_response: ModelsResponse = serde_json::from_value(body)?;
+    Ok(models_response.data)
+}"#,
+            description: "Rig's hardcoded constants drift the moment Anthropic ships a model; that's the bug behind issue #1370. Marvin asks Anthropic what exists at startup and numbers the list, and /model picks from the same list mid-chat.",
         },
     ],
     obstacles: &[
         "Streaming output appeared in chunks until it turned out print!() without a newline needs a manual flush()",
         "Tavily rejects null for optional fields, which serde sends by default. #[serde(skip_serializing_if)] fixed it",
+        "A later audit found every message reaching the model twice: Marvin added it to the history, then Rig appended it again. A local test server that records the real request now pins it, along with a full tool round trip",
     ],
     progress: "Active. Streaming, tools, persistence, and context management all working. Roadmap: RAG with local files, persistent memory, MCP server integration.",
     impact: "A learning project that found a bug in the framework it was built on. Reported it to Rig with a proposed fix, argued for a better pattern in the thread, and shipped that pattern in Marvin rather than waiting for upstream.",

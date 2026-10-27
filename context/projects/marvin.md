@@ -20,7 +20,7 @@ An interactive CLI chatbot built on the Rig framework (Rust AI framework) with C
 - 4 Tavily web tools (search, extract, crawl, sitemap) sharing an Arc<TavilyClient>
 - Context management: /compact replaces history with AI-generated summary to stay within context limits
 - Chat persistence: /save writes to JSON, /import loads previous sessions, auto-incrementing session IDs
-- Trait-based command pattern: each slash command is a trait impl on Chat, routed via ChatInput enum
+- Command pattern: each slash command is a method on Chat in its own file, routed via the ChatInput enum
 - Contributed back to Rig framework (fixed deprecated model constants, opened PR)
 
 ## Key Technical Highlights
