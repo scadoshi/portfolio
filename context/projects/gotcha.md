@@ -10,16 +10,17 @@ Learning Project: Systems Programming
 
 ## What It Is
 
-A physical security tool that grabs all keyboard and mouse input (making the desktop unresponsive), then captures a timestamped webcam photo whenever someone tries to interact. Press a secret key to unlock. Works on macOS and Linux with completely different I/O strategies per platform.
+A physical security tool that grabs all keyboard and mouse input (making the desktop unresponsive), then captures a timestamped webcam photo whenever someone tries to interact. Type the secret to unlock: `test`, or whatever `--password` names. Works on macOS and Linux with completely different I/O strategies per platform.
 
 ## What It Proves
 
 - Cross-platform systems programming with conditional compilation (cfg(target_os))
 - Platform-specific dependencies in Cargo.toml via [target.'cfg(...)'.dependencies]
 - Linux: raw evdev device enumeration, capability-based filtering (keyboard vs mouse heuristics), nix::poll for multiplexed I/O across multiple grabbed devices, proper ungrab lifecycle
-- macOS: rdev callback-based grab via Accessibility API
+- macOS: a Core Graphics event tap at the HID level, on its own thread and run loop, answering `Drop` for every keyboard and mouse event (needs Accessibility approval)
 - Real bug discovery and workaround: rdev on Linux grabs ALL evdev devices (including Bluetooth/network controllers, causing disconnects), so dropped down to raw evdev with selective grabbing
-- Interior mutability pattern: Rc<Mutex<Gotcha>> for sharing state across event callbacks
+- Threads with a channel: the tap only sends a message per input, and the camera shoots on the main thread, so a slow frame never stalls input
+- Fixing a dependency: rdev's macOS grab stopped blocking input (it rewrote the event's type instead of returning null), and the camera bindings crashed on cameras with several formats at one resolution, fixed in a vendored copy
 - Debounce logic: max 1 capture per second, a tested `Shutter` timed with `std::time::Instant`
 
 ## Key Technical Highlights
@@ -36,10 +37,10 @@ Capability-based heuristics instead of name matching. Works with any hardware.
 ### Platform Divergence
 | Concern | macOS | Linux |
 |---------|-------|-------|
-| Grab mechanism | rdev::grab (Accessibility API) | evdev device.grab() per device |
-| Event loop | Callback-based (returns None to swallow) | nix::poll across file descriptors |
+| Grab mechanism | CGEventTap answering Drop (Accessibility API) | evdev device.grab() per device |
+| Event loop | CFRunLoop on the tap's own thread | nix::poll across file descriptors |
 | Permissions | Accessibility API approval | input group membership |
-| Shutdown | process::exit(0) (no clean stop API) | device.ungrab() on all devices |
+| Shutdown | stop the run loop | device.ungrab() on all devices |
 
 ## What I Learned
 
@@ -51,7 +52,7 @@ Capability-based heuristics instead of name matching. Works with any hardware.
 
 ## Status
 
-Working on both platforms. Next: configurable secret key sequence, configurable debounce interval.
+Working on both platforms, tested on two Macs. The secret is set with `--password` or `--pw`. Next: configurable debounce interval.
 
 ## Repo
 

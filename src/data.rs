@@ -1429,16 +1429,16 @@ const GOTCHA: Project = Project {
     headline: "A desk lock for macOS and Linux: it takes over the keyboard and mouse and photographs anyone who touches them.",
     category: "Systems Programming",
     repo_url: "https://github.com/scadoshi/gotcha",
-    summary: "Locks the keyboard and mouse, takes a webcam photo of anyone who touches them, and unlocks only with a secret key sequence.",
+    summary: "Locks the keyboard and mouse, takes a webcam photo of anyone who touches them, and unlocks only when the secret is typed: test, or whatever --password names.",
     card_bullets: &[
         "Linux: raw evdev with nix::poll for selective device grabbing",
-        "macOS: rdev with Accessibility API callbacks",
+        "macOS: a Core Graphics event tap that drops every keyboard and mouse event",
         "The secret matcher and the shutter are pure and tested; the platforms feed them",
         "One binary, two platforms",
     ],
     impact_metric: "2 platforms, one binary",
     objective: "A desk lock that takes over the keyboard and mouse, photographs anyone who touches them, and unlocks only with a secret key sequence. Same goal on macOS and Linux, through two very different ways of reading input.",
-    tags: &["evdev", "rdev"],
+    tags: &["evdev", "core-graphics"],
     media: &[MediaItem {
         src: asset!("/assets/projects/gotcha/demo.mp4"),
         alt: "Keyboard and mouse input triggering intruder captures",
@@ -1447,7 +1447,7 @@ const GOTCHA: Project = Project {
     }],
     approach: &[
         "cfg(target_os) switches between platform modules, with the platform-only dependencies scoped in Cargo.toml so neither target pulls the other's crates",
-        "Linux enumerates /dev/input/event*, filters by capability, grabs each device and polls with nix::poll. macOS goes through rdev and Accessibility callbacks, returning None to swallow the event",
+        "Linux enumerates /dev/input/event*, filters by capability, grabs each device and polls with nix::poll. macOS installs a Core Graphics event tap on its own thread and run loop and answers Drop for every keyboard and mouse event, while the camera shoots on the main thread",
         "The decisions live in domain.rs: Unlock matches key presses against a secret sequence, Shutter allows one shot per second, file_name stamps the photo. Each takes the key or the time as an argument, so the tests never touch a device or a camera",
     ],
     snippets: &[
@@ -1458,10 +1458,10 @@ const GOTCHA: Project = Project {
 //
 // | Concern        | macOS                     | Linux                      |
 // |----------------|---------------------------|----------------------------|
-// | Grab mechanism | rdev::grab (Accessibility)| evdev device.grab() each   |
-// | Event loop     | Callback-based            | nix::poll across FDs       |
+// | Grab mechanism | CGEventTap, drops events  | evdev device.grab() each   |
+// | Event loop     | CFRunLoop on its thread   | nix::poll across FDs       |
 // | Permissions    | Accessibility API approval| input group membership     |
-// | Shutdown       | process::exit(0)          | device.ungrab() on all     |
+// | Shutdown       | stop the run loop         | device.ungrab() on all     |
 //
 // Capability-based heuristics for device identification:
 // is_probably_keyboard() = EV_REPEAT + KEY_A + KEY_ENTER + KEY_SPACE
@@ -1507,10 +1507,11 @@ pub fn press(&mut self, key: K) -> bool {
     ],
     obstacles: &[
         "rdev grabs every evdev device on Linux, including Bluetooth controllers and network adapters, which disconnects them. Only visible at runtime. Dropped to raw evdev and grab by capability instead",
-        "rdev::grab on macOS has no clean stop. The loop blocks forever with nothing to break it, so the secret key calls process::exit(0) and macOS gets no graceful shutdown",
+        "rdev stopped blocking input on macOS: it drops an event by rewriting its type and passing it on, which current macOS ignores. Replaced it with a Core Graphics event tap that returns null, the documented way, and stops its run loop on unlock",
+        "The camera library crashed the process on a Mac whose camera offers several formats at one resolution, pairing one format with another's frame rate. Vendored the macOS bindings with a two-line fix",
     ],
-    progress: "Working on both macOS and Linux. Grabs input, takes timestamped photos, unlocks with a secret key sequence. Clean ungrab on Linux, forced exit on macOS. The decisions are in a domain module with tests; the platforms only own the devices.",
-    impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll) when higher-level libraries don't fit. Custom traits on third-party types, so each platform's quirks stay behind one interface.",
+    progress: "Working on both macOS and Linux, tested on two Macs. Grabs input, takes timestamped photos, and unlocks when the secret is typed (test, or --password). Both platforms release cleanly. The decisions are in a domain module with tests; the platforms only own the devices.",
+    impact: "Systems-level programming across platforms. Drops to raw OS interfaces (evdev, nix::poll, Core Graphics event taps) when higher-level libraries don't fit, and patches a dependency when its bug is the problem. Custom traits on third-party types, so each platform's quirks stay behind one interface.",
     site_url: None,
     store_url: None,
     privacy_path: None,
