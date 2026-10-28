@@ -101,11 +101,18 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[Release {
-    version: "1.1.3",
-    date: None,
-    entries: &["Settings names the theme's mode Dark or Light, capitalized"],
-}];
+pub(crate) const UPCOMING: &[Release] = &[
+    Release {
+        version: "1.1.4",
+        date: None,
+        entries: &["The header's ! links to this changelog"],
+    },
+    Release {
+        version: "1.1.3",
+        date: None,
+        entries: &["Settings names the theme's mode Dark or Light, capitalized"],
+    },
+];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
