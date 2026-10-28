@@ -173,7 +173,7 @@ pub fn Benchmark() -> Element {
                 class: "bench-chart",
                 view_box: "0 0 {WIDTH} {HEIGHT}",
                 role: "img",
-                "aria-label": "{chosen.label()} throughput by client count, steller against Redis 8, one to 256 clients",
+                "aria-label": "{chosen.label()} throughput by client count, Steller against Redis 8, one to 256 clients",
                 // Grid and axes.
                 for tick in ticks {
                     g { key: "y{tick}",
@@ -243,7 +243,7 @@ pub fn Benchmark() -> Element {
                     {
                         let (ours, theirs) = chosen.of(row);
                         let text = format!(
-                            "{} clients: steller {}, Redis {}",
+                            "{} clients: Steller {}, Redis {}",
                             row.clients,
                             orangui::with_separators(u64::from(ours)),
                             orangui::with_separators(u64::from(theirs))
@@ -276,11 +276,11 @@ pub fn Benchmark() -> Element {
             }
             }
             div { class: "bench-legend",
-                span { class: "bench-key bench-steller", "steller" }
+                span { class: "bench-key bench-steller", "Steller" }
                 span { class: "bench-key bench-redis", "Redis 8.10" }
             }
             p { class: "bench-caption",
-                "redis-benchmark, median of three runs, same laptop, Redis with persistence off, single-threaded client. The low end is wake-up latency, not processing: pipelined, steller does 509k SET per second on one connection. Above 32 clients every session queues on one mutex. "
+                "redis-benchmark, median of three runs, same laptop, Redis with persistence off, single-threaded client. The low end is wake-up latency, not processing: pipelined, Steller does 509k SET per second on one connection. Above 32 clients every session queues on one mutex. "
                 a { href: "https://github.com/scadoshi/steller/blob/2d3afda/BENCHMARKS.md", "BENCHMARKS.md" }
                 " has the latencies and the caveats; these are its numbers from 2026-09-19."
             }

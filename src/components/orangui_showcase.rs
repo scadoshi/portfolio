@@ -669,9 +669,9 @@ fn DecodeShowcase() -> Element {
 
 /// The gallery's slides: a host of the kit and what it is.
 const SLIDES: [(&str, &str); 3] = [
-    ("zwipe", "The app and zwipe.net"),
-    ("portfolio", "This site"),
-    ("cairn", "A counter app"),
+    ("Zwipe", "The app and zwipe.net"),
+    ("Portfolio", "This site"),
+    ("Cairn", "A counter app"),
 ];
 
 #[component]
@@ -698,7 +698,7 @@ fn GalleryShowcase() -> Element {
             GalleryFooter {
                 index: index(),
                 total,
-                caption: "The three hosts that run orangui".to_string(),
+                caption: "The three hosts that run Orangui".to_string(),
             }
         }
     }
@@ -845,12 +845,12 @@ fn DiagramShowcase() -> Element {
                     class: "diagram",
                     view_box: "0 0 520 200",
                     role: "img",
-                    "aria-label": "zwipe, portfolio and cairn each pin a commit of orangui",
+                    "aria-label": "Zwipe, Portfolio and Cairn each pin a commit of Orangui",
                     DiagramDefs {}
-                    DiagramNode { x: 10.0, y: 74.0, title: "orangui", sub: "the kit", tone: DiagramTone::Primary }
-                    DiagramNode { x: 360.0, y: 4.0, title: "zwipe", sub: "app and site", tone: DiagramTone::Secondary }
-                    DiagramNode { x: 360.0, y: 74.0, title: "portfolio", sub: "this site", tone: DiagramTone::Tertiary }
-                    DiagramNode { x: 360.0, y: 144.0, title: "cairn", sub: "counter app", tone: DiagramTone::Success }
+                    DiagramNode { x: 10.0, y: 74.0, title: "Orangui", sub: "the kit", tone: DiagramTone::Primary }
+                    DiagramNode { x: 360.0, y: 4.0, title: "Zwipe", sub: "app and site", tone: DiagramTone::Secondary }
+                    DiagramNode { x: 360.0, y: 74.0, title: "Portfolio", sub: "this site", tone: DiagramTone::Tertiary }
+                    DiagramNode { x: 360.0, y: 144.0, title: "Cairn", sub: "counter app", tone: DiagramTone::Success }
                     DiagramArrow { x1: 358.0, y1: 30.0, x2: 162.0, y2: 92.0 }
                     DiagramArrow { x1: 358.0, y1: 100.0, x2: 162.0, y2: 100.0, label: "pins a commit" }
                     DiagramArrow { x1: 358.0, y1: 170.0, x2: 162.0, y2: 108.0 }

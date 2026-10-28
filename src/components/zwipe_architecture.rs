@@ -15,7 +15,7 @@ use orangui::{
 
 /// The caption under each slide, in slide order.
 const CAPTIONS: [&str; 2] = [
-    "Six crates in one workspace over orangui, the UI kit I built for all my apps: both apps share one typed client, one core and the Magic UI, and the server shares the core",
+    "Six crates in one workspace over Orangui, the UI kit I built for all my apps: both apps share one typed client, one core and the Magic UI, and the server shares the core",
     "Two clients, one server: the app and the site call the same API, and the card catalog syncs from Scryfall nightly",
 ];
 

@@ -28,8 +28,8 @@ pub fn Footer() -> Element {
                     "This site"
                 }
                 " is Rust, compiled to WebAssembly with Dioxus. Its numbers come live from "
-                a { href: "https://github.com/scadoshi/heron", "heron" }
-                ", counted from each repository after every push, with heron's last answer built in as a fallback."
+                a { href: "https://github.com/scadoshi/heron", "Heron" }
+                ", counted from each repository after every push, with Heron's last answer built in as a fallback."
             }
         }
     }

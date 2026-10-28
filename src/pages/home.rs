@@ -63,12 +63,12 @@ pub fn Home() -> Element {
                                     Link {
                                         class: "tag tag-p1",
                                         to: Route::ProjectDetail { slug: "heron".to_string() },
-                                        "Counted by heron"
+                                        "Counted by Heron"
                                     }
                                     Link {
                                         class: "tag tag-p1",
                                         to: Route::ProjectDetail { slug: "steller".to_string() },
-                                        "Cached in steller"
+                                        "Cached in Steller"
                                     }
                                     // Keyed on its text, so the live chip arrives with the
                                     // ease rather than the as-of chip changing its words.

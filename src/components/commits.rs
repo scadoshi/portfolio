@@ -147,11 +147,11 @@ pub fn Commits() -> Element {
     let last = months.len().saturating_sub(1);
     let caption = match source {
         stats::Source::Live => format!(
-            "{} commits in the last year, only the repositories heron measures",
+            "{} commits in the last year, only the repositories Heron measures",
             orangui::with_separators(total)
         ),
         stats::Source::AsOf(day) => format!(
-            "{} commits in the year to {day}, only the repositories heron measures",
+            "{} commits in the year to {day}, only the repositories Heron measures",
             orangui::with_separators(total)
         ),
     };
