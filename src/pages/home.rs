@@ -131,13 +131,13 @@ pub fn Home() -> Element {
                 Panel {
                     title: "How I Use AI",
                     p { class: "card-summary",
-                        "Slow on purpose while learning. Fast once I understand it."
+                        "Slow on purpose while learning. The pace picks up as I learn and build agent harnesses that produce strong code. The net gain is the freedom to choose what I study deeply, while still shipping good work."
                     }
                     ul { class: "card-bullets",
-                        li { "Learning projects I write by hand; the reps are the point" }
-                        li { "Once I can explain every line, AI speeds up the iteration and refactoring" }
-                        li { "AI moves faster than I can take in every detail, so I use the time it saves to study what I care about" }
-                        li { "I read and test all of it, and all of it is open source" }
+                        li { "Handwrite learning projects. The reps are the point" }
+                        li { "Otherwise, I design the structure and agents write the code inside it" }
+                        li { "That's more than I could review line by line, so strict tests and lints decide what ships, the same way every time" }
+                        li { "All of it is open source. Read it; criticism is welcome" }
                     }
                 }
             }
