@@ -1559,7 +1559,7 @@ const RUSTMAS: Project = Project {
         "An invalid year or day can't be constructed, so it can't reach the website",
         "Checks each answer against an independent solver before submitting, since a wrong answer costs a cooldown",
     ],
-    impact_metric: "Never spends a submission on an unchecked answer",
+    impact_metric: "Never submits an answer the solver rejected",
     objective: "Build the tooling around Advent of Code rather than just the puzzles: fetch an input, run a day, and know whether the answer is right before spending a submission. Wrong answers to adventofcode.com cost an escalating cooldown, so the tool checks every answer against an independent solver (https://github.com/fornwall/advent-of-code) first and only sends what that solver agrees with.",
     tags: &["cli", "http"],
     media: &[
@@ -1606,8 +1606,8 @@ const RUSTMAS: Project = Project {
             code: r"// One arm per day. Returns the solver rather than calling it.
 fn solver_for(year: i32, day: i32) -> Option<Solver> {
     Some(match (year, day) {
-        (2015, 1) => solve::<year_2015::day_01::Puzzle>,
-        (2016, 1) => solve::<year_2016::day_01::Puzzle>,
+        (2015, 1) => solve::run_day::<year_2015::day_01::Puzzle>,
+        (2016, 1) => solve::run_day::<year_2016::day_01::Puzzle>,
         _ => return None,
     })
 }
@@ -1625,12 +1625,11 @@ pub trait Solution: Sized {
         Snippet {
             title: "Merging the Two Verdicts",
             lang: "rust",
-            code: r#"// AOC's word supersedes the solver's, so a starred part reads as
-// starred rather than repeating that the solver agreed.
+            code: r#"// AOC's word supersedes the solver's.
 let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
     (_, Some(AocVerdict::Correct)) => "new star".to_string(),
     (_, Some(AocVerdict::AlreadySolved)) => "starred".to_string(),
-    (Some(v), Some(s)) => format!("{}, {}", v, s),
+    (Some(v), Some(s)) => format!("{v}, {s}"),
     (Some(v), None) => v.to_string(),
     (None, Some(s)) => s.to_string(),
     (None, None) => String::new(),
@@ -1646,7 +1645,7 @@ let notes: String = match (&self.solver_verdict, &self.aoc_verdict) {
         "Swapping the session cookie silently invalidated every cached input. 2015 day 1 answered 280 one day and 138 the next, and only the changed answers gave it away. Inputs now carry a SHA-256 of the cookie that fetched them",
         "A local cache of confirmed answers was designed in detail and then dropped. The argument for it was that AOC grades each part exactly once, so a cache looked like the only durable record. The site is stateful and reports AlreadySolved, so the fact called irreplaceable was always one request away",
     ],
-    progress: "Feature complete. fetch, solve, --validate and --submit all work against both services, and both service contracts are recorded in context/references.md from live probing rather than guesswork. Day one of every year except 2019 is solved. Next are the day twos.",
+    progress: "Feature complete. fetch, solve, --validate and --submit all work against both services, and both service contracts are recorded in context/references.md from live probing rather than guesswork. 44 days are solved across 2015 to 2025, and every answer re-validates after a full style pass.",
     impact: "A finished tool with its reasoning written down, including the options that were rejected and why. The design notes are what made the C# rebuild (Sharpmas) a language exercise rather than a redesign.",
     site_url: None,
     store_url: None,
