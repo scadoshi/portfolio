@@ -101,20 +101,21 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[Release {
-    version: "1.1.2",
-    date: None,
-    entries: &[
-        "The changelog's version chips group patches under their minor version",
-        "A quote that turns while the app stays open types out in full with its tags",
-        "The heatmap's total and logged days sit under it as tags, and on the phone a tapped day's count and date replace them for a few seconds",
-        "A counter's lifetime number sits in a box, matching the tiles under it",
-        "A counter made today reads lifetime, without a since date",
-    ],
-}];
+pub(crate) const UPCOMING: &[Release] = &[];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
+    Release {
+        version: "1.1.2",
+        date: Some(Date::new(2026, 10, 27)),
+        entries: &[
+            "The changelog's version chips group patches under their minor version",
+            "A quote that turns while the app stays open types out in full with its tags",
+            "The heatmap's total and logged days sit under it as tags, and on the phone a tapped day's count and date replace them for a few seconds",
+            "A counter's lifetime number sits in a box, matching the tiles under it",
+            "A counter made today reads lifetime, without a since date",
+        ],
+    },
     Release {
         version: "1.1.1",
         date: Some(Date::new(2026, 10, 21)),
