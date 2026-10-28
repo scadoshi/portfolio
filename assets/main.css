@@ -399,7 +399,8 @@ a.panel-action:visited {
     /* zite's .page column width. */
     max-width: 74rem;
     margin: 0 auto;
-    padding: 0 1.5rem 3rem;
+    /* The same 1rem off the footer as the nav's margin leaves at the top. */
+    padding: 0 1.5rem 1rem;
     /* Third beat of the home entrance: wordmark (0s), hero card (0.15s),
        then the band. */
     animation: content-enter 0.5s ease-out 0.3s backwards;
@@ -619,7 +620,7 @@ a.panel-action:visited {
 .project-detail {
     max-width: 74rem;
     margin: 0 auto;
-    padding: 0 1.5rem 2.5rem;
+    padding: 0 1.5rem 1rem;
     display: flex;
     flex-direction: column;
     gap: var(--panel-gap);
@@ -1529,7 +1530,7 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
 .index-page {
     max-width: 74rem;
     margin: 0 auto;
-    padding: 0 1.5rem 2.5rem;
+    padding: 0 1.5rem 1rem;
     display: flex;
     flex-direction: column;
     gap: var(--panel-gap);
