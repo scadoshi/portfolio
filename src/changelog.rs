@@ -107,15 +107,15 @@ pub(crate) const UPCOMING: &[Release] = &[
         date: None,
         entries: &["The header's ! links to this changelog"],
     },
-    Release {
-        version: "1.1.3",
-        date: None,
-        entries: &["Settings names the theme's mode Dark or Light, capitalized"],
-    },
 ];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
+    Release {
+        version: "1.1.3",
+        date: Some(Date::new(2026, 10, 28)),
+        entries: &["Settings names the theme's mode Dark or Light, capitalized"],
+    },
     Release {
         version: "1.1.2",
         date: Some(Date::new(2026, 10, 28)),
