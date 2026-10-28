@@ -101,15 +101,17 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[
-    Release {
-        version: "1.1.3",
-        date: None,
-        entries: &["Settings names the theme's mode Dark or Light, capitalized"],
-    },
+pub(crate) const UPCOMING: &[Release] = &[Release {
+    version: "1.1.3",
+    date: None,
+    entries: &["Settings names the theme's mode Dark or Light, capitalized"],
+}];
+
+/// Shipped releases, newest first by date.
+pub(crate) const RELEASES: &[Release] = &[
     Release {
         version: "1.1.2",
-        date: None,
+        date: Some(Date::new(2026, 10, 28)),
         entries: &[
             "The changelog's version chips group patches under their minor version",
             "A quote that turns while the app stays open types out in full with its tags",
@@ -118,10 +120,6 @@ pub(crate) const UPCOMING: &[Release] = &[
             "A counter made today reads lifetime, without a since date",
         ],
     },
-];
-
-/// Shipped releases, newest first by date.
-pub(crate) const RELEASES: &[Release] = &[
     Release {
         version: "1.1.1",
         date: Some(Date::new(2026, 10, 21)),
