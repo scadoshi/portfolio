@@ -2,7 +2,7 @@
 
 ## Headline
 
-The Rust UI kit under zwipe, cairn and this site, with 50 color themes.
+The Rust UI kit under Zwipe, Cairn and this site, with 50 color themes.
 
 ## Category
 
@@ -10,19 +10,19 @@ UI Kit
 
 ## What It Is
 
-The generic half of zwipe's `zwipe-components`, split into its own crate on 2026-10-12: themes, panels, nav, chips, the entrance effects, the heat grid and the chart helpers. MIT, at github.com/scadoshi/orangui. Its hosts are zwipe (the app and zwipe.net), this site and cairn, each pinning a commit in its lockfile.
+The generic half of Zwipe's `zwipe-components`, split into its own crate on 2026-10-12: themes, panels, nav, chips, the entrance effects, the heat grid and the chart helpers. MIT, at github.com/scadoshi/orangui. Its hosts are Zwipe (the app and zwipe.net), this site and Cairn, each pinning a commit in its lockfile.
 
-Before the split, this site and cairn took the components from zwipe's repo, so a shared style fix meant pushing zwipe, which deploys zwipe, and then re-pinning. One corner radius took five rounds of that. orangui has no deploy of its own.
+Before the split, this site and Cairn took the components from Zwipe's repo, so a shared style fix meant pushing Zwipe, which deploys Zwipe, and then re-pinning. One corner radius took five rounds of that. Orangui has no deploy of its own.
 
-The theme model (`ThemeConfig`, `ALLOWED_THEMES`) moved in with it, so nothing in the crate knows zwipe. zwipe's server still validates a saved theme against its own copy of the list, and a test on zwipe's side keeps the two equal.
+The theme model (`ThemeConfig`, `ALLOWED_THEMES`) moved in with it, so nothing in the crate knows Zwipe. Zwipe's server still validates a saved theme against its own copy of the list, and a test on Zwipe's side keeps the two equal.
 
-The name is orangutan, a call sign of mine, plus GUI. The old orangui repository, the Tampermonkey scripts that give Teams and Outlook zwipe's look, is `tamper-orangui` now.
+The name is orangutan, a call sign of mine, plus GUI. The old orangui repository, the Tampermonkey scripts that give Teams and Outlook Zwipe's look, is `tamper-orangui` now.
 
-How this site inlines the CSS, and why a shared fix lands in orangui first, is under "Where things live" in `../overview.md`.
+How this site inlines the CSS, and why a shared fix lands in Orangui first, is under "Where things live" in `../overview.md`.
 
 ## Where the detail is
 
-orangui keeps its own notes: `~/Developer/orangui/context/`, starting at `README.md`. The color rules are in `development/styling.md`, and the host switch in `plans/host_migration.md`. Nothing here repeats them.
+Orangui keeps its own notes: `~/Developer/orangui/context/`, starting at `README.md`. The color rules are in `development/styling.md`, and the host switch in `plans/host_migration.md`. Nothing here repeats them.
 
 ## What the entry on the site leaves out, on purpose
 
@@ -30,7 +30,7 @@ The cascade order, the CSS variable names, OKLab and the color-vision themes, th
 
 ## Status
 
-Doing. CI green. Split out on 2026-10-12; this site, zwipe and cairn all run on it as of 2026-10-13. On 2026-10-12 three pages of this site matched pixel for pixel before and after, apart from a playing video.
+Doing. CI green. Split out on 2026-10-12; this site, Zwipe and Cairn all run on it as of 2026-10-13. On 2026-10-12 three pages of this site matched pixel for pixel before and after, apart from a playing video.
 
 ## Repo
 

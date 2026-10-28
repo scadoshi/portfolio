@@ -33,7 +33,7 @@ The bug this design was supposed to prevent still happened once: `ExpireAt` held
 
 `redis-benchmark`, SET throughput, median of three runs, against real Redis 8 on the same laptop:
 
-| clients | steller | Redis 8 |
+| clients | Steller | Redis 8 |
 | ---: | ---: | ---: |
 | 1 | 52,743 | 15,380 |
 | 16 | 153,374 | 88,496 |
@@ -49,9 +49,9 @@ Under ~32 clients a thread blocked in `read()` wakes faster than an event-loop i
 
 ## Status
 
-Done, and in production since 2026-09-29 as the cache behind heron. It shuts down cleanly on SIGTERM and runs under systemd with a memory cap.
+Done, and in production since 2026-09-29 as the cache behind Heron. It shuts down cleanly on SIGTERM and runs under systemd with a memory cap.
 
-Its first production bug was found by heron on its first day: a command that reached steller in more than one read was rejected as malformed, since `parse_bulk_string` answered `MissingTerminator` where `Incomplete` would have made the session read more. Fixed at 8dfbcf1 and verified on the box with a PING sent in three pieces. The write-up is in heron's `context/architecture/decisions.md`.
+Its first production bug was found by Heron on its first day: a command that reached Steller in more than one read was rejected as malformed, since `parse_bulk_string` answered `MissingTerminator` where `Incomplete` would have made the session read more. Fixed at 8dfbcf1 and verified on the box with a PING sent in three pieces. The write-up is in Heron's `context/architecture/decisions.md`.
 
 ## Repo
 
