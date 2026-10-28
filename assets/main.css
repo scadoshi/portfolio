@@ -580,6 +580,13 @@ a.panel-action:visited {
     margin-top: 1rem;
 }
 
+/* The live or as-of chip stretches to the buttons' height beside it, with
+   its label centered in that height. */
+.stats-source .tag {
+    display: inline-flex;
+    align-items: center;
+}
+
 /* On a phone the hero panel's inner width is about 295px, and two chips at
    the desktop size come to about 320px, so every chip took its own row.
    Tighter chips and gap put two on the first row. */
