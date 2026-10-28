@@ -108,7 +108,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "The changelog's version chips group patches under their minor version",
         "A quote that turns while the app stays open types out in full with its tags",
         "The heatmap's total and logged days sit under it as tags, and on the phone a tapped day's count and date replace them for a few seconds",
-        "A counter's lifetime number sits in a box like the tiles under it",
+        "A counter's lifetime number sits in a box, matching the tiles under it",
     ],
 }];
 
