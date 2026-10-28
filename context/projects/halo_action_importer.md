@@ -14,12 +14,12 @@ A CLI tool for bulk importing actions into Halo ITSM from CSV and Excel files. B
 
 ## What It Proves
 
-- Production-grade error recovery: infinite retry on network/timeout failures, automatic token refresh on 401s
+- Error recovery per failure mode: one token refresh on a 401, three report tries a minute apart, posts never resent (their batch goes to retry.csv)
 - Ticket-grouped retry logic: when a batch fails due to missing tickets, splits by ticket_id and retries each group independently, which maximizes successful imports while minimizing API calls
 - Incremental caching with file locking (fs2): tracks fetched report IDs and imported action IDs, survives process restarts
 - Structured output per run: log/YYYY-MM-DD_HH-MM-SS/ directory with full.log, retry.csv (failed actions for re-import), and summary.json
 - Parallel execution: split input files across directories and run multiple instances
-- CLI with practical flags: --batch-size, --only-parse (validation mode), --only-cache, --input-path
+- CLI with practical flags: --batch-size, --only-parse (validation mode), --sync-from-halo, --fresh, --input-path
 
 ## Key Technical Highlights
 
@@ -28,11 +28,11 @@ Started with basic retry, hit batch failures where some tickets didn't exist. Fi
 
 ### Resilience Pattern
 ```
-401 Unauthorized  → refresh token, retry immediately
-504 Gateway Timeout → retry immediately (no delay)
-Network error     → retry immediately
-Missing ticket    → mark ticket as missing, skip future actions for it
-Deserialization   → skip row, continue processing
+401 Unauthorized       → refresh the token once, try again
+504 or drop, report    → try again a minute later, three tries
+504 or drop, post      → never resent; the batch goes to retry.csv
+Missing ticket (404)   → skip its actions for the rest of the run
+Row that will not parse → count it failed, write it to unparsed.csv
 ```
 
 ### Cache Architecture

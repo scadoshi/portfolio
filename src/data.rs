@@ -592,7 +592,7 @@ const HALO_ACTION_IMPORTER: Project = Project {
     summary: "CLI for bulk importing actions into the Halo Software suite from CSV and Excel.",
     card_bullets: &[
         "Runs unattended for hours against an unreliable API, handling various failures",
-        "Per-failure-mode retry: 401 refresh, 504/network retry, missing-ticket permanent skip",
+        "Per-failure handling: one token refresh on a 401, bounded report retries, posts never sent twice",
         "Two-tier cache survives restarts and concurrent writes via fs2 file locks",
     ],
     impact_metric: "Weeks of manual work, automated.",
@@ -621,7 +621,7 @@ const HALO_ACTION_IMPORTER: Project = Project {
         },
     ],
     approach: &[
-        "Recovery is per failure mode rather than blanket retry. A 401 refreshes the token, a 504 retries immediately, a missing ticket is skipped for the rest of the run, and a bad row is skipped without taking the batch with it",
+        "Recovery is per failure mode rather than blanket retry. A 401 refreshes the token once. A report that times out is tried again a minute later, up to three times. A post is never resent, since Halo may have stored it anyway, so its batch goes to retry.csv. A missing ticket is skipped for the rest of the run, and a bad row is set aside without taking the batch with it",
         "When a batch fails, actions are regrouped by ticket and retried per group. That salvages the most imports and names exactly which tickets do not exist",
         "Deduplication moved from a Halo report, to a split across resources, to a local cache of roughly 8M existing action IDs pulled straight from the database. Each stage was the previous one falling over",
     ],
@@ -630,12 +630,12 @@ const HALO_ACTION_IMPORTER: Project = Project {
             title: "Resilience Pattern",
             lang: "rust",
             code: r"// Every failure mode has a specific recovery strategy
-401 Unauthorized    → refresh token, retry immediately
-504 Gateway Timeout → retry immediately (no delay)
-Network error       → retry immediately
-Missing ticket      → mark ticket as missing, skip future actions
-Deserialization     → skip row, continue processing",
-            description: "No blanket retry-with-backoff. Each failure mode gets the recovery strategy that actually makes sense for it.",
+401 Unauthorized       → refresh the token once, try again
+504 or drop, report    → try again a minute later, three tries
+504 or drop, post      → never resent; the batch goes to retry.csv
+Missing ticket (404)   → skip its actions for the rest of the run
+Row that will not parse → count it failed, write it to unparsed.csv",
+            description: "No blanket retry. Each failure mode gets the recovery that fits it, and nothing is posted twice.",
         },
         Snippet {
             title: "Retry Strategy Evolution",
@@ -677,7 +677,7 @@ fn retry_by_ticket_group(batch: Vec<Action>) -> Result<Stats> {
 // v3: Manual cache from direct database query (current)
 //     Query Halo DB for all ~8M existing action IDs
 //     Store locally, merge with per-run imported IDs
-//     --only-cache flag skips report fetching entirely
+//     The cache is the default; --sync-from-halo refreshes it
 fn read_cached_ids() -> CacheData {
     let mut action_ids = HashSet::new();
     // JSON cache: resource-grouped existing IDs
@@ -692,7 +692,7 @@ fn read_cached_ids() -> CacheData {
         "Binary search was the wrong abstraction for batch failures. Too many API calls for what ticket-grouped retry does more simply",
     ],
     progress: "Used in production for client data migrations.",
-    impact: "Cut client migrations from weeks to days. Runs unattended for hours against millions of records, recovering on its own from expired logins, timeouts, dropped connections and missing tickets.",
+    impact: "Cut client migrations from weeks to days. Runs unattended for hours against millions of records, recovering on its own from expired logins, report timeouts and missing tickets, and setting aside anything it cannot safely resend.",
     site_url: None,
     store_url: None,
     privacy_path: None,
