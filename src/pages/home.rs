@@ -136,6 +136,7 @@ pub fn Home() -> Element {
                     ul { class: "card-bullets",
                         li { "Learning projects I write by hand; the reps are the point" }
                         li { "Once I can explain every line, AI speeds up the iteration and refactoring" }
+                        li { "AI moves faster than I can take in every detail, so I use the time it saves to study what I care about" }
                         li { "I read and test all of it, and all of it is open source" }
                     }
                 }
