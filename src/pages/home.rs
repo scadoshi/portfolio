@@ -58,15 +58,16 @@ pub fn Home() -> Element {
                                     (Some(u64::from(totals.repos)), "Repos"),
                                     (Some(totals.stars), "Stars"),
                                 ],
-                                // Where the numbers come from, as chips under the strip.
+                                // Where the numbers come from, under the strip: buttons to
+                                // the two projects, then the live or as-of chip.
                                 source: rsx! {
                                     Link {
-                                        class: "tag tag-p1",
+                                        class: "panel-action",
                                         to: Route::ProjectDetail { slug: "heron".to_string() },
                                         "Counted by Heron"
                                     }
                                     Link {
-                                        class: "tag tag-p1",
+                                        class: "panel-action",
                                         to: Route::ProjectDetail { slug: "steller".to_string() },
                                         "Cached in Steller"
                                     }

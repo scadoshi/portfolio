@@ -580,20 +580,6 @@ a.panel-action:visited {
     margin-top: 1rem;
 }
 
-.stats-source a.tag {
-    text-decoration: none;
-    transition:
-        transform 0.15s ease,
-        border-color 0.15s ease;
-}
-
-@media (hover: hover) {
-    .stats-source a.tag:hover {
-        transform: translateY(-2px) scale(1.04);
-        filter: brightness(1.15);
-    }
-}
-
 /* On a phone the hero panel's inner width is about 295px, and two chips at
    the desktop size come to about 320px, so every chip took its own row.
    Tighter chips and gap put two on the first row. */
@@ -601,7 +587,8 @@ a.panel-action:visited {
     .stats-source {
         gap: 0.35rem;
     }
-    .stats-source .tag {
+    .stats-source .tag,
+    .stats-source .panel-action {
         padding: 0.2rem 0.5rem;
         font-size: 0.72rem;
         letter-spacing: 0;
