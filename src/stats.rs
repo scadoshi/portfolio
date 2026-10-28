@@ -160,7 +160,7 @@ impl Source {
     pub(crate) fn label(&self) -> String {
         match self {
             Self::Live => "Live".to_string(),
-            Self::AsOf(day) => format!("As of {day}"),
+            Self::AsOf(day) => format!("as of {day}"),
         }
     }
 }
@@ -262,7 +262,7 @@ mod tests {
         assert_eq!(Source::Live.label(), "Live");
         assert_eq!(
             Source::AsOf("2026-10-27".to_string()).label(),
-            "As of 2026-10-27"
+            "as of 2026-10-27"
         );
     }
 
