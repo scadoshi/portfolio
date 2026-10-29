@@ -107,7 +107,7 @@ pub(crate) const UPCOMING: &[Release] = &[];
 pub(crate) const RELEASES: &[Release] = &[
     Release {
         version: "1.1.4",
-        date: Some(Date::new(2026, 10, 28)),
+        date: Some(Date::new(2026, 10, 29)),
         entries: &["The header's ! links to this changelog"],
     },
     Release {
