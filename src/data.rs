@@ -732,7 +732,7 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
     ],
     approach: &[
         "Name, Label and FieldType validate at construction, so a malformed field is rejected before anything reaches the API",
-        "OAuth tokens cache behind an Arc<Mutex> with a 30-second expiry buffer, which closes the window where a token passes the check and expires before the call",
+        "The OAuth token is cached and checked before every request, with a 30-second expiry buffer, so a long run or a pause in debug mode renews it rather than failing with a 401",
         "Import mode runs straight through; debug mode walks field by field with process, skip or quit, which is what made it usable against real client data",
     ],
     snippets: &[
@@ -748,11 +748,11 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
 //
 // domain/
 //   models/        CustomField, Name, Label, FieldType (8 variants)
-//   import_result  Per-field success/failure tracking with timestamps
+//   import_result  Per-field success and failure tracking
 //   logging        Dual output (terminal + file), auto-cleanup
 //
 // outbound/
-//   auth/client    OAuth 2.0 with token caching (Arc<Mutex<Option<AuthToken>>>)
+//   auth/client    OAuth 2.0, the token cached and renewed before each request
 //   auth/token     Expiry check with 30-second buffer
 //   field_client   API calls with rate limiting
 //   http_custom_field  Domain-to-API type mapping via From impl",
