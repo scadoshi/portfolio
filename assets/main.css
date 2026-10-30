@@ -62,13 +62,21 @@
    can count and decode, so the logo and the numbers stay out of sight and
    the chart's animations stay on their first frame in between, and the
    whole entrance runs as one once the app is up. Without script neither
-   class lands and the prerendered page shows settled. */
+   class lands and the prerendered page shows settled. While the splash
+   covers the page the chart holds too, until splash.js marks the fade,
+   the moment the SplashGate lets the figures roll, so the grid sweeps in
+   as the overlay leaves rather than underneath it. */
 
 html.js:not(.hydrated) .heat-grid .commits-line,
 html.js:not(.hydrated) .heat-grid .commits-area,
 html.js:not(.hydrated) .heat-grid .commits-dot,
 html.js:not(.hydrated) .heat-cell,
-html.js:not(.hydrated) .heat-halo {
+html.js:not(.hydrated) .heat-halo,
+html.js:not(.splash-skip):not(.splash-fading) .heat-grid .commits-line,
+html.js:not(.splash-skip):not(.splash-fading) .heat-grid .commits-area,
+html.js:not(.splash-skip):not(.splash-fading) .heat-grid .commits-dot,
+html.js:not(.splash-skip):not(.splash-fading) .heat-cell,
+html.js:not(.splash-skip):not(.splash-fading) .heat-halo {
     animation-play-state: paused;
 }
 
