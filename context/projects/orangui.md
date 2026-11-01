@@ -26,7 +26,7 @@ Orangui keeps its own notes: `~/Developer/orangui/context/`, starting at `README
 
 ## What the entry on the site leaves out, on purpose
 
-The cascade order, the CSS variable names, OKLab and the color-vision themes, the theme wipe's mechanics, and the `status_uses` scanner. They are real and they are in the repo. The entry keeps one snippet, the theme model with its stylesheet test, since it shows the idea in the fewest lines. The page runs the kit itself (`src/components/orangui_demo.rs`) rather than showing pictures of it, so it takes the visitor's theme.
+The cascade order, the CSS variable names, OKLab and the color-vision themes, the theme wipe's mechanics, and the `status_uses` scanner. They are real and they are in the repo. The entry keeps one snippet, the theme model with its stylesheet test, since it shows the idea in the fewest lines. The page runs the kit itself (`src/components/orangui_showcase.rs`) rather than showing pictures of it, so it takes the visitor's theme.
 
 ## Status
 
