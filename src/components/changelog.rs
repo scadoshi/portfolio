@@ -421,10 +421,13 @@ mod tests {
     fn one_year_still_gets_a_year_chip() {
         assert_eq!(Log::CAIRN.years(), [2026]);
         assert_eq!(Log::CAIRN.months(2026), [OCT]);
-        assert_eq!(Log::CAIRN.minors(OCT), ["1.1", "1.0"]);
-        assert_eq!(
-            versions(&Log::CAIRN.shown(Selection::Year(2026))),
-            ["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0", "1.0.0"]
+        // The upcoming version files under the newest month, ahead of these.
+        let minors = Log::CAIRN.minors(OCT);
+        assert!(minors.ends_with(&["1.1", "1.0"]), "minors {minors:?}");
+        let shown = versions(&Log::CAIRN.shown(Selection::Year(2026)));
+        assert!(
+            shown.ends_with(&["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0", "1.0.0"]),
+            "shown {shown:?}"
         );
     }
 
