@@ -101,7 +101,19 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[];
+pub(crate) const UPCOMING: &[Release] = &[Release {
+    version: "1.3.0",
+    date: None,
+    entries: &[
+        "The header is the shared nav bar with a menu behind a hamburger and a back arrow on every screen but Home",
+        "The header slides away as you scroll down and comes back as you scroll up",
+        "Config is now Settings",
+        "The bottom footers are gone; Create floats as a plus at the bottom right of Home",
+        "A counter's Edit is a floating pencil and Delete sits in a Danger zone panel",
+        "Step buttons sit inside their counter's card and panel",
+        "Sheets close with an x or a drag down and save from a checkmark at their bottom right",
+    ],
+}];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
