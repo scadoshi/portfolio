@@ -30,7 +30,7 @@ src/
                      not_found
 assets/              CSS, favicons, per-project media, the two ascii logos
 public/              copied to the site root verbatim: sitemap, robots, og image, fonts, highlight.js
-context/             this, the commit rules, per-project notes, marketing
+context/             this, the commit rules, the Dioxus 0.7 cheatsheet (development/dioxus.md), per-project notes, marketing
 ```
 
 The shared UI comes from [orangui](https://github.com/scadoshi/orangui), the Dioxus UI kit lifted out of zwipe's `zwipe-components`: themes, `Panel`, `Banner`, `NavBar`, `ThemePicker`, `PageMeta`, and the site kit it shares with zite (the stored theme through `use_persisted_theme`, the hero's `StatsStrip`, the gallery's `GalleryFrame` and `GalleryFooter`, the scroll reveal and nav glide scripts, `with_separators`, and the chart helpers `curve`, `area`, `tip_anchor` and `peak_indices`).
