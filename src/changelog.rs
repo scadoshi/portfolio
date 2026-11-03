@@ -114,6 +114,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Sheets close with an x or a drag down and save from a checkmark at their bottom right",
         "Light themes keep every chip and toast readable, and the page fills to the bottom edge",
         "A counter opened from a scrolled Home arrives with its header shown",
+        "Home and Settings are icons in the menu's footer, beside the !; the menu is just that band",
     ],
 }];
 
