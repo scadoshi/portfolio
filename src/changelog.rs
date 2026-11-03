@@ -112,6 +112,8 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "A counter's Edit is a floating pencil and Delete sits in a Danger zone panel",
         "Step buttons sit inside their counter's card and panel, with a pencil to edit",
         "Sheets close with an x or a drag down and save from a checkmark at their bottom right",
+        "Light themes keep every chip and toast readable, and the page fills to the bottom edge",
+        "A counter opened from a scrolled Home arrives with its header shown",
     ],
 }];
 
