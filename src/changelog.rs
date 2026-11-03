@@ -110,7 +110,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Config is now Settings",
         "The bottom footers are gone; Create floats as a plus at the bottom right of Home",
         "A counter's Edit is a floating pencil and Delete sits in a Danger zone panel",
-        "Step buttons sit inside their counter's card and panel",
+        "Step buttons sit inside their counter's card and panel, with a pencil to edit",
         "Sheets close with an x or a drag down and save from a checkmark at their bottom right",
     ],
 }];
