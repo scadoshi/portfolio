@@ -1,4 +1,5 @@
-//! Cairn's changelog page: a drill-down of chips over the release cards.
+//! Cairn's changelog page: a drill-down of chips, in the page's Changelog
+//! panel, over the release cards.
 //!
 //! Row one is Latest and one chip per year. Picking a year opens a row of its
 //! months, and picking a month a row of the minor versions filed in it, e.g.
@@ -236,15 +237,12 @@ if (id) {
 }
 ";
 
-/// Cairn's release history: the chip drill-down over newest-first release
-/// cards, each with its date and notes. The cards are a port of zwipe's
-/// `components::Changelog`, so the two read the same.
-#[component]
-pub fn Changelog() -> Element {
+/// The chip the page starts on, and the one the URL fragment picks once the
+/// client has read it. Prerendered on Latest, so the first client render
+/// matches; the fragment is only visible to the browser and is applied after
+/// mount, when the card it names is scrolled into view.
+pub(crate) fn use_selection() -> Signal<Selection> {
     let log = Log::CAIRN;
-
-    // Prerendered on Latest, so the first client render matches; the
-    // fragment is only visible to the browser and is applied after mount.
     let mut selected = use_signal(|| Selection::Latest);
     use_effect(move || {
         spawn(async move {
@@ -259,13 +257,17 @@ pub fn Changelog() -> Element {
             let _ = scroll.send(id.unwrap_or_default());
         });
     });
+    selected
+}
 
+/// The chip drill-down: Latest and the years, then the picked year's months,
+/// then the picked month's minors. Closes the page's Changelog panel.
+#[component]
+pub fn ChangelogChips(selected: Signal<Selection>) -> Element {
+    let log = Log::CAIRN;
     let selection = selected();
     let path = selection.path();
     let mut tap = move |chip: Selection| selected.set(selected().tap(chip));
-    // In each card's key so a selection change remounts the visible cards,
-    // replaying their ease-in.
-    let selection_key = format!("{selection:?}");
 
     rsx! {
         div { class: "changelog-chips",
@@ -309,6 +311,21 @@ pub fn Changelog() -> Element {
                 }
             }
         }
+    }
+}
+
+/// The newest-first release cards the selection shows, each with its date
+/// and notes. A port of zwipe's `components::ChangelogReleases`, so the two
+/// read the same.
+#[component]
+pub fn ChangelogCards(selected: Signal<Selection>) -> Element {
+    let log = Log::CAIRN;
+    let selection = selected();
+    // In each card's key so a selection change remounts the visible cards,
+    // replaying their ease-in.
+    let selection_key = format!("{selection:?}");
+
+    rsx! {
         div { class: "changelog-list",
             for release in log.shown(selection) {
                 div {

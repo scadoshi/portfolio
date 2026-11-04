@@ -192,14 +192,6 @@ pub fn Navbar() -> Element {
                         }
                     }
                 }
-                li {
-                    Link {
-                        to: Route::Contribute {},
-                        class: "nav-link",
-                        onclick: move |_| open.set(false),
-                        "Contribute"
-                    }
-                }
                 // Outbound CTAs as icon pills in palette slot 5. Hidden in
                 // the collapsed panel on mobile, where the persistent copies
                 // below cover them.

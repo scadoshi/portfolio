@@ -1,5 +1,7 @@
 use dioxus::prelude::*;
 
+use crate::Route;
+
 #[component]
 pub fn Footer() -> Element {
     rsx! {
@@ -20,6 +22,8 @@ pub fn Footer() -> Element {
                     href: "mailto:scottyfermo@hotmail.com",
                     "Email" span { class: "ext", "\u{2197}" }
                 }
+                " | "
+                Link { to: Route::Contribute {}, "Contribute" }
             }
             p { class: "site-footer-note",
                 a {

@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use orangui::Panel;
 
 use crate::Route;
-use crate::components::changelog::Changelog;
+use crate::components::changelog::{ChangelogCards, ChangelogChips, use_selection};
 use crate::components::page_meta::PageMeta;
 
 /// Cairn's release history. Linked from the cairn project page.
@@ -14,6 +14,8 @@ pub(crate) const CAIRN_APP_STORE_URL: &str =
 
 #[component]
 pub fn CairnChangelog() -> Element {
+    let selected = use_selection();
+
     rsx! {
         PageMeta {
             title: "Cairn changelog",
@@ -37,8 +39,9 @@ pub fn CairnChangelog() -> Element {
                     }
                 },
                 p { class: "card-summary", "Every release, newest first." }
+                ChangelogChips { selected }
             }
-            Changelog {}
+            ChangelogCards { selected }
         }
     }
 }
