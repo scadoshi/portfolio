@@ -1104,6 +1104,52 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     }
 }
 
+/* The theme sheet is the header's descendant, so without a layer of its own
+   it would be captured inside the header's and clipped to the bar. It gets
+   its own, over the header's, and wipes with the page: the sheet sits on the
+   bottom edge of the viewport, so a clip measured in viewport units from its
+   bottom runs level with the page's edge coming down, and one measured from
+   its own top runs level with the edge coming up. */
+.theme-picker-sheet .bottom-sheet {
+    view-transition-name: theme-sheet;
+}
+
+::view-transition-group(theme-sheet) {
+    z-index: 3;
+    animation: none;
+}
+
+::view-transition-old(theme-sheet) {
+    animation: none;
+}
+
+::view-transition-new(theme-sheet) {
+    mix-blend-mode: normal;
+    animation: sheet-wipe-down 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html[data-wipe="left"]::view-transition-new(theme-sheet) {
+    animation-name: sheet-wipe-up;
+}
+
+@keyframes sheet-wipe-down {
+    from {
+        clip-path: inset(0 0 100vh 0);
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes sheet-wipe-up {
+    from {
+        clip-path: inset(100% 0 0 0);
+    }
+    to {
+        clip-path: inset(calc(100% - 100vh) 0 0 0);
+    }
+}
+
 @keyframes nav-wipe-down {
     from {
         clip-path: inset(0 0 100% 0);
