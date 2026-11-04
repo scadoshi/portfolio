@@ -1,11 +1,12 @@
 use dioxus::document;
 use dioxus::prelude::*;
 use orangui::{
-    BRAND_RESET_JS, Decode, NavBar, NavDropdown, Replay, ThemeConfig, ThemeFollow, ThemePicker,
+    BRAND_RESET_JS, Decode, NavBar, NavCtaIcon, NavDropdown, Replay, ThemeConfig, ThemeFollow,
+    ThemePicker,
 };
 
 use crate::Route;
-use crate::components::cta::{CTAS, CtaIcon};
+use crate::components::cta::CTAS;
 use crate::data::Section;
 
 const LOGO_S: &str = include_str!("../../assets/s.txt");
@@ -21,6 +22,7 @@ pub(crate) struct ThemeWipe {
     pub follow: ThemeFollow,
 }
 
+/// The site's top bar: brand, section menus, the icon pills and the theme picker.
 #[component]
 pub fn Navbar() -> Element {
     let ThemeWipe {
@@ -136,7 +138,12 @@ pub fn Navbar() -> Element {
                 // below cover them.
                 for cta in CTAS {
                     li { key: "{cta.label}", class: "nav-cta-item",
-                        CtaIcon { cta, onclick: move |_| open.set(false) }
+                        NavCtaIcon {
+                            href: cta.href,
+                            label: cta.label,
+                            path: cta.path,
+                            onclick: move |_| open.set(false),
+                        }
                     }
                 }
             },
@@ -144,7 +151,12 @@ pub fn Navbar() -> Element {
             // hiding inside the collapsed panel (same trick as zite).
             persistent: rsx! {
                 for cta in CTAS {
-                    CtaIcon { key: "{cta.label}", cta }
+                    NavCtaIcon {
+                        key: "{cta.label}",
+                        href: cta.href,
+                        label: cta.label,
+                        path: cta.path,
+                    }
                 }
             },
             trailing: rsx! {

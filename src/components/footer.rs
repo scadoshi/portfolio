@@ -1,12 +1,14 @@
-//! The site footer: the copyright line, then the calls to action as chips,
-//! the four icon pills and Contribute, and the note on how the site is
-//! built, whose links stay links.
+//! The site footer: the copyright line, then the calls to action as pills,
+//! the icon pills and Contribute, and the note on how the site is built,
+//! whose links stay links.
 
 use dioxus::prelude::*;
+use orangui::NavCtaIcon;
 
 use crate::Route;
-use crate::components::cta::{CTAS, CtaIcon};
+use crate::components::cta::CTAS;
 
+/// The site footer, drawn under every page.
 #[component]
 pub fn Footer() -> Element {
     rsx! {
@@ -14,7 +16,12 @@ pub fn Footer() -> Element {
             p { class: "footer-copy", "\u{00a9} 2026 Scotty Fermo" }
             div { class: "footer-links",
                 for cta in CTAS {
-                    CtaIcon { key: "{cta.label}", cta }
+                    NavCtaIcon {
+                        key: "{cta.label}",
+                        href: cta.href,
+                        label: cta.label,
+                        path: cta.path,
+                    }
                 }
                 Link { to: Route::Contribute {}, class: "nav-cta", "Contribute" }
             }

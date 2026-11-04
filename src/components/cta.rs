@@ -2,13 +2,12 @@
 //! pills: the kit's `nav-cta-icon` with the mark inside and the name as the
 //! link's label and tooltip. The nav bar and the footer draw the same list.
 
-use dioxus::prelude::*;
-
 /// An outbound link the nav and the footer show as an icon pill.
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub(crate) struct Cta {
     /// The link's accessible name and tooltip.
     pub label: &'static str,
+    /// Where the pill goes; an `https` page or a `mailto`.
     pub href: &'static str,
     /// A filled 24-unit icon path, drawn in the pill's color.
     pub path: &'static str,
@@ -50,26 +49,3 @@ const LINKEDIN: &str = "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.
 
 /// A closed envelope: the flap, then the body under the fold.
 const ENVELOPE: &str = "M2 5h20v2.4l-10 6.3L2 7.4zM2 9.8l10 6.3 10-6.3V19H2z";
-
-/// One CTA as the kit's icon pill: the SVG inside, the label as its name.
-#[component]
-pub(crate) fn CtaIcon(cta: Cta, onclick: Option<EventHandler<MouseEvent>>) -> Element {
-    rsx! {
-        a {
-            class: "nav-cta nav-cta-icon",
-            href: cta.href,
-            "aria-label": cta.label,
-            title: cta.label,
-            onclick: move |event| {
-                if let Some(handler) = &onclick {
-                    handler.call(event);
-                }
-            },
-            svg {
-                view_box: "0 0 24 24",
-                "aria-hidden": "true",
-                path { d: cta.path }
-            }
-        }
-    }
-}
