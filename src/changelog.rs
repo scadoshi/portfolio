@@ -121,6 +121,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "The ! no longer links the changelog, and Settings no longer shows the version",
         "The menu lists your counters; tap one to open it",
         "The menu's footer has a palette for the theme and a sun or moon for Dark/Light",
+        "Closing a dialog opened from the main menu leaves the menu open",
     ],
 }];
 
