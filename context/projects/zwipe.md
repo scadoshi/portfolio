@@ -10,7 +10,7 @@ Full-Stack Application
 
 ## What It Is
 
-A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Six Rust crates in a workspace, centered on an Axum REST API (zerver) and a Dioxus cross-platform app (zwiper) targeting web, iOS, Android, and desktop from a single codebase.
+A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Seven Rust crates in a workspace, centered on an Axum REST API (zerver) and a Dioxus cross-platform app (zwiper) targeting web, iOS, Android, and desktop from a single codebase.
 
 ## What It Proves
 
