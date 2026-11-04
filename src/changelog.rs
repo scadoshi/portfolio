@@ -115,6 +115,12 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Light themes keep every chip and toast readable, and the page fills to the bottom edge",
         "A counter opened from a scrolled Home arrives with its header shown",
         "Home and Settings are icons in the menu's footer, beside the !; the menu is just that band",
+        "The quote panel is titled Featured quote, with the next-quote timer beside the title and only the author and source under the quote",
+        "The counter form outlines the field an error belongs to and puts the message under it",
+        "An i in the menu's footer opens About, with the version and a link to this changelog",
+        "The ! no longer links the changelog, and Settings no longer shows the version",
+        "The menu lists your counters; tap one to open it",
+        "The menu's footer has the theme and Dark/Light switch, as the website's menu does",
     ],
 }];
 
