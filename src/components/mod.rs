@@ -3,6 +3,7 @@ pub(crate) mod changelog;
 pub(crate) mod chart;
 pub(crate) mod code_block;
 pub(crate) mod commits;
+pub(crate) mod cta;
 pub(crate) mod fleet;
 pub(crate) mod flow;
 pub(crate) mod footer;

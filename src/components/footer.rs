@@ -1,29 +1,22 @@
+//! The site footer: the copyright line, then the calls to action as chips,
+//! the three icon pills and Contribute, and the note on how the site is
+//! built, whose links stay links.
+
 use dioxus::prelude::*;
 
 use crate::Route;
+use crate::components::cta::{CTAS, CtaIcon};
 
 #[component]
 pub fn Footer() -> Element {
     rsx! {
         footer { class: "site-footer",
-            p { class: "footer-copy",
-                "\u{00a9} 2026 Scotty Fermo | "
-                a {
-                    href: "https://github.com/scadoshi",
-                    "GitHub" span { class: "ext", "\u{2197}" }
+            p { class: "footer-copy", "\u{00a9} 2026 Scotty Fermo" }
+            div { class: "footer-links",
+                for cta in CTAS {
+                    CtaIcon { key: "{cta.label}", cta }
                 }
-                " | "
-                a {
-                    href: "https://www.linkedin.com/in/scotty-fermo-41a35b141/",
-                    "LinkedIn" span { class: "ext", "\u{2197}" }
-                }
-                " | "
-                a {
-                    href: "mailto:scottyfermo@hotmail.com",
-                    "Email" span { class: "ext", "\u{2197}" }
-                }
-                " | "
-                Link { to: Route::Contribute {}, "Contribute" }
+                Link { to: Route::Contribute {}, class: "nav-cta", "Contribute" }
             }
             p { class: "site-footer-note",
                 a {

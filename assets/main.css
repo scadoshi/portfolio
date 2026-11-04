@@ -1604,10 +1604,14 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     margin: 0;
 }
 
-.footer-copy a,
-.footer-copy a:visited {
-    color: var(--palette-1);
-    text-decoration: underline;
+/* The calls to action under the copyright: the nav's icon pills and a
+   Contribute pill, centered in one row. */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0 1rem;
 }
 
 .footer-built-repo,
