@@ -13,32 +13,48 @@ use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use orangui::{
     ActionBar, AlertDialog, BottomSheet, Button, ButtonVariant, Chip, DarkModeButton, DialogAction,
-    DialogHostView, GridCells, InfoButton, PageHeader, Panel, TOAST_NORMAL, ThemeConfig,
-    ThemeSheet, ToastStack, display_theme_name, use_dialog_host,
+    DialogHostView, GridCells, HintKey, InfoButton, ModeIcon, PageHeader, Panel, TOAST_NORMAL,
+    ThemeConfig, ThemeSheet, ToastStack, display_theme_name, use_dialog_host,
 };
 
 use super::navbar::ThemeWipe;
 use super::orangui_showcase::Source;
 
-/// The hint the phone's "?" buttons open: a title and a line, as the apps'
+/// The hint the phone's "?" buttons open: a title and a body, as the apps'
 /// settings hints are. Shared by every row through context.
 #[derive(Clone, Copy)]
 struct PhoneHint {
     open: Signal<bool>,
-    which: Signal<(&'static str, &'static str)>,
+    which: Signal<(&'static str, Element)>,
 }
 
 impl PhoneHint {
-    fn show(mut self, title: &'static str, body: &'static str) {
+    fn show(mut self, title: &'static str, body: Element) {
         self.which.set((title, body));
         self.open.set(true);
     }
 }
 
-const THEME_HINT: (&str, &str) = (
-    "Theme",
-    "Picks the colors. Change opens every theme; the sun or moon flips light and dark.",
-);
+/// The Theme row's hint. Its controls are drawn as the keys they are, the
+/// mode button as its icon and word, never the icon described in words.
+fn theme_hint() -> (&'static str, Element) {
+    let body = rsx! {
+        "Picks the colors. "
+        HintKey { "Change" }
+        " opens every theme; "
+        HintKey {
+            ModeIcon { dark: false }
+            " Light"
+        }
+        " and "
+        HintKey {
+            ModeIcon { dark: true }
+            " Dark"
+        }
+        " flip the mode."
+    };
+    ("Theme", body)
+}
 
 /// Sets the phone's `--phone-scale` to its viewport's width over the 414
 /// points of an iPhone 11 Pro Max, the size the app lays out at, and keeps it
@@ -175,7 +191,7 @@ fn Phone() -> Element {
     use_context_provider(|| host);
     let hint = PhoneHint {
         open: use_signal(|| false),
-        which: use_signal(|| THEME_HINT),
+        which: use_signal(theme_hint),
     };
     use_context_provider(|| hint);
     let class = site.read().css_class();
@@ -235,7 +251,12 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                         div { class: "settings-row",
                             span { class: "row-label-with-hint",
                                 span { class: "settings-row-label", "Theme" }
-                                InfoButton { onclick: move |_| hint.show(THEME_HINT.0, THEME_HINT.1) }
+                                InfoButton {
+                                    onclick: move |_| {
+                                        let (title, body) = theme_hint();
+                                        hint.show(title, body);
+                                    },
+                                }
                             }
                             div { class: "settings-row-value",
                                 span { "{name}" }
@@ -243,7 +264,7 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                                 Button {
                                     variant: ButtonVariant::Action,
                                     onclick: move |_| {
-                                        hint.which.clone().set(THEME_HINT);
+                                        hint.which.clone().set(theme_hint());
                                         themes_open.set(true);
                                     },
                                     "Change"
@@ -336,7 +357,7 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
             open: hint.open,
             title: (hint.which)().0.to_string(),
             actions: vec![DialogAction::Dismiss("Got it".to_string())],
-            p { class: "phone-hint-body", "{(hint.which)().1}" }
+            p { class: "phone-hint-body", {(hint.which)().1} }
         }
     }
 }
@@ -353,13 +374,13 @@ fn CycleRow(label: &'static str, hint: &'static str, options: &'static [&'static
         div { class: "settings-row",
             span { class: "row-label-with-hint",
                 span { class: "settings-row-label", "{label}" }
-                InfoButton { onclick: move |_| phone_hint.show(label, hint) }
+                InfoButton { onclick: move |_| phone_hint.show(label, rsx! { "{hint}" }) }
             }
             div { class: "settings-row-value",
                 Button {
                     variant: ButtonVariant::Action,
                     onclick: move |_| {
-                        let next = (at() + 1) % options.len().max(1);
+                        let next = at().wrapping_add(1).checked_rem(options.len()).unwrap_or(0);
                         at.set(next);
                         let value = options.get(next).copied().unwrap_or_default();
                         toasts.success(

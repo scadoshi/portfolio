@@ -129,7 +129,7 @@ const CAIRN: Project = Project {
         MediaItem {
             src: asset!("/assets/projects/cairn/04-config.jpeg"),
             alt: "Config screen showing theme, mark, dark mode, date format, day and week start, and rest days",
-            caption: Some("Every setting explains itself behind the question mark beside it"),
+            caption: Some("Every setting explains itself from the ? beside it"),
             kind: MediaKind::Image,
         },
     ],
