@@ -115,7 +115,8 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "The quote panel is titled Featured quote, with the countdown to the next quote beside the title and only the author and source under the quote",
         "The counter form outlines the field an error belongs to and puts the message under it",
         "Light themes keep every chip and toast readable, and the page fills to the bottom edge",
-        "Hints show an icon button as the icon itself in its own squircle instead of naming it in words, and Home before any counter reads Nothing counted yet with the + to start one",
+        "Hints show an icon button as the icon itself, in the button's own squircle, instead of naming it in words",
+        "Home before any counter reads Nothing counted yet, with the button that starts one",
         "Settings' Theme row puts the palette on its Change button, as the Dark button carries the moon",
     ],
 }];

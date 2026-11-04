@@ -12,6 +12,7 @@ pub(crate) const CAIRN_CHANGELOG_PATH: &str = "/projects/cairn/changelog";
 pub(crate) const CAIRN_APP_STORE_URL: &str =
     "https://apps.apple.com/us/app/cairn-counter/id6824349629";
 
+/// Cairn's changelog page: the store link, the chip filter and the release cards.
 #[component]
 pub fn CairnChangelog() -> Element {
     let selected = use_selection();

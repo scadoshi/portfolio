@@ -20,24 +20,32 @@ use orangui::{
 use super::navbar::ThemeWipe;
 use super::orangui_showcase::Source;
 
+/// A hint's title and body, as the apps' settings hints have them.
+type Hint = (&'static str, Element);
+
 /// The hint the phone's "?" buttons open: a title and a body, as the apps'
 /// settings hints are. Shared by every row through context.
 #[derive(Clone, Copy)]
 struct PhoneHint {
     open: Signal<bool>,
-    which: Signal<(&'static str, Element)>,
+    which: Signal<Hint>,
 }
 
 impl PhoneHint {
-    fn show(mut self, title: &'static str, body: Element) {
-        self.which.set((title, body));
+    /// Makes `hint` the one the next "?" opens, without opening it.
+    fn prime(mut self, hint: Hint) {
+        self.which.set(hint);
+    }
+
+    fn show(mut self, hint: Hint) {
+        self.prime(hint);
         self.open.set(true);
     }
 }
 
 /// The Theme row's hint. Its controls are drawn as the keys they are, the
 /// mode button as its icon and word, never the icon described in words.
-fn theme_hint() -> (&'static str, Element) {
+fn theme_hint() -> Hint {
     let body = rsx! {
         "Picks the colors. "
         HintKey { "Change" }
@@ -251,12 +259,7 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                         div { class: "settings-row",
                             span { class: "row-label-with-hint",
                                 span { class: "settings-row-label", "Theme" }
-                                InfoButton {
-                                    onclick: move |_| {
-                                        let (title, body) = theme_hint();
-                                        hint.show(title, body);
-                                    },
-                                }
+                                InfoButton { onclick: move |_| hint.show(theme_hint()) }
                             }
                             div { class: "settings-row-value",
                                 span { "{name}" }
@@ -264,7 +267,8 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                                 Button {
                                     variant: ButtonVariant::Action,
                                     onclick: move |_| {
-                                        hint.which.clone().set(theme_hint());
+                                        // The sheet's own "?" opens the Theme hint.
+                                        hint.prime(theme_hint());
                                         themes_open.set(true);
                                     },
                                     "Change"
@@ -374,12 +378,13 @@ fn CycleRow(label: &'static str, hint: &'static str, options: &'static [&'static
         div { class: "settings-row",
             span { class: "row-label-with-hint",
                 span { class: "settings-row-label", "{label}" }
-                InfoButton { onclick: move |_| phone_hint.show(label, rsx! { "{hint}" }) }
+                InfoButton { onclick: move |_| phone_hint.show((label, rsx! { "{hint}" })) }
             }
             div { class: "settings-row-value",
                 Button {
                     variant: ButtonVariant::Action,
                     onclick: move |_| {
+                        // Wraps to the first option; 0 when there are none.
                         let next = at().wrapping_add(1).checked_rem(options.len()).unwrap_or(0);
                         at.set(next);
                         let value = options.get(next).copied().unwrap_or_default();

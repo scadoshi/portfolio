@@ -1114,6 +1114,7 @@ html[data-wipe="left"]::view-transition-new(site-nav) {
     view-transition-name: theme-sheet;
 }
 
+/* Layer order: site-nav 2, sheet-dim 3, theme-sheet 4. */
 ::view-transition-group(theme-sheet) {
     z-index: 4;
     animation: none;
@@ -1132,12 +1133,9 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     animation-name: sheet-wipe-up;
 }
 
-/* The sheet's dim is the header's descendant too, so inside the header's
-   layer it would be clipped to the bar and the page under the sheet would
-   show undimmed while the wipe runs. It gets a still layer of its own over
-   the page and the header, under the sheet, as it covers both when the
-   sheet is open: the old and new dims are the same shade, so nothing moves
-   there and everything under the sheet stays dimmed edge to edge. */
+/* The sheet's dim is a header descendant that covers the whole page, so it
+   gets its own still layer between the header and the sheet instead of being
+   clipped to the bar. Old and new dims are the same shade, so nothing moves. */
 .theme-picker-sheet .sheet-backdrop {
     view-transition-name: sheet-dim;
 }

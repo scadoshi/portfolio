@@ -1,12 +1,11 @@
-//! The portfolio's copy of Zwipe's architecture diagram: a two-slide carousel
-//! in a panel, how the seven crates and orangui import each other, then how the
-//! running pieces talk. zite keeps its own copy in `components`; the diagram is
-//! Zwipe content, so orangui does not carry it.
+//! Zwipe's architecture as a two-slide carousel in a panel: how the seven
+//! crates and orangui import each other, then how the running pieces talk.
+//! A copy of zwipe's `components::architecture`, which zite shows; change both.
 //!
 //! Inline SVG through orangui's diagram pieces, so the boxes take the theme's
 //! colors; the frame and footer are the demo gallery's ([`fn@GalleryFrame`],
-//! [`fn@GalleryFooter`]), restyled for short wide diagrams by `.diagram-carousel` in
-//! orangui's site sheet.
+//! [`fn@GalleryFooter`]), restyled for short wide diagrams by `.diagram-carousel`
+//! in orangui's site sheet.
 
 use dioxus::prelude::*;
 use orangui::{
@@ -15,7 +14,7 @@ use orangui::{
 
 /// The caption under each slide, in slide order.
 const CAPTIONS: [&str; 2] = [
-    "Seven crates in one workspace over Orangui, the UI kit I built for all my apps: both apps share one typed client, one core, the screen logic any client can draw, web, desktop or terminal included, and the Magic UI, and the server shares the core",
+    "Seven crates in one workspace over orangui, the UI kit I built for all my apps: both apps share one typed client, one core, the screen logic any client can draw, web, desktop or terminal included, and the Magic UI, and the server shares the core",
     "Two clients, one server: the app and the site call the same API, and the card catalog syncs from Scryfall nightly",
 ];
 
@@ -83,7 +82,7 @@ fn Crates() -> Element {
     }
 }
 
-/// The running system: both clients call the server, which keeps `PostgreSQL`
+/// The running system: both clients call the server, which keeps PostgreSQL
 /// and pulls the catalog from Scryfall.
 #[component]
 fn Infrastructure() -> Element {

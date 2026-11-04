@@ -15,4 +15,4 @@ allow-panic-in-tests = true
 allow-indexing-slicing-in-tests = true
 
 # Product names docs may leave unquoted.
-doc-valid-idents = ["LinkedIn", ".."]
+doc-valid-idents = ["LinkedIn", "PostgreSQL", ".."]

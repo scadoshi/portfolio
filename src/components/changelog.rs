@@ -261,7 +261,8 @@ pub(crate) fn use_selection() -> Signal<Selection> {
 }
 
 /// The chip drill-down: Latest and the years, then the picked year's months,
-/// then the picked month's minors. Closes the page's Changelog panel.
+/// then the picked month's minors. The last thing in the page's Changelog
+/// panel, above the cards.
 #[component]
 pub fn ChangelogChips(selected: Signal<Selection>) -> Element {
     let log = Log::CAIRN;
