@@ -1,5 +1,5 @@
 //! The site footer: the copyright line, then the calls to action as chips,
-//! the three icon pills and Contribute, and the note on how the site is
+//! the four icon pills and Contribute, and the note on how the site is
 //! built, whose links stay links.
 
 use dioxus::prelude::*;
