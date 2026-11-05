@@ -355,7 +355,6 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
             on_save: move |_| {
                 toasts.success("Theme saved".to_string(), ToastOptions::new().duration(TOAST_NORMAL));
             },
-            on_unchanged: |()| {},
         }
         AlertDialog {
             open: hint.open,

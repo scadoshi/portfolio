@@ -110,6 +110,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Config is now Settings; the ! no longer links the changelog, and Settings no longer shows the version",
         "The bottom footers are gone; Create floats as a plus at the bottom right of Home",
         "A counter's Edit is a floating pencil and Delete sits in a Danger zone panel",
+        "The Themes sheet saves a theme as you tap it and stays open, with no checkmark",
         "Step buttons sit inside their counter's card and panel, with a pencil to edit",
         "Sheets close with an x or a drag down and save from a checkmark at their bottom right; Goal animation's Test is a play button beside it",
         "The quote panel is titled Featured quote, with the countdown to the next quote beside the title and only the author and source under the quote",
