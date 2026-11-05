@@ -285,20 +285,9 @@ a.panel-action:visited {
 }
 
 
-/* The theme menu is the exception: its rows carry color dots, which make it
-   wide enough to run off the right edge from the last pill but one. It hangs
-   from its pill's right edge instead. Above the hamburger breakpoint only, so
-   the crate's in-panel placement still applies below it. */
-@media (width > 60rem) {
-    .theme-picker .nav-dropdown-content {
-        left: auto;
-        right: 0;
-    }
-}
-
 /* === Theme Picker === */
 
-/* The theme picker (switcher, dropdown, mode toggle) comes from
+/* The theme picker (switcher, sheet, mode toggle) comes from
    orangui: rules ship in its components.css, inlined in <head>
    after this stylesheet. */
 
