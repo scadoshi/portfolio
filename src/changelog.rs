@@ -112,6 +112,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "A counter's Edit is a floating pencil and Delete sits in a Danger zone panel",
         "The Themes sheet saves a theme as you tap it and stays open, with no checkmark",
         "The menu keeps a little room under its last counter above the footer",
+        "The menu's counters scroll with no scrollbar showing",
         "Step buttons sit inside their counter's card and panel, with a pencil to edit",
         "Sheets close with an x or a drag down and save from a checkmark at their bottom right; Goal animation's Test is a play button beside it",
         "The quote panel is titled Featured quote, with the countdown to the next quote beside the title and only the author and source under the quote",
