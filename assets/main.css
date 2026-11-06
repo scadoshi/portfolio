@@ -1124,7 +1124,9 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
 
 /* The sheet's dim is a header descendant that covers the whole page, so it
    gets its own still layer between the header and the sheet instead of being
-   clipped to the bar. Old and new dims are the same shade, so nothing moves. */
+   clipped to the bar. Old and new dims are the same shade, so only the new
+   one draws: with no cross-fade, the two stacked would darken the page for
+   the length of the sweep. */
 .theme-picker-sheet .sheet-backdrop {
     view-transition-name: sheet-dim;
 }
@@ -1134,7 +1136,10 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     animation: none;
 }
 
-::view-transition-old(sheet-dim),
+::view-transition-old(sheet-dim) {
+    display: none;
+}
+
 ::view-transition-new(sheet-dim) {
     animation: none;
     mix-blend-mode: normal;
