@@ -101,36 +101,37 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[Release {
-    version: "1.3.0",
-    date: None,
-    entries: &[
-        "The header is the shared nav bar: the title and its ? in the middle, a hamburger on the right, a back arrow on the left on every screen but Home; it slides away as you scroll down and back as you scroll up",
-        "The hamburger opens a menu that lists your counters, tap one to open it, with a footer of icons: Home, Settings, an i with the version and a link to this changelog, a palette for the theme and a sun or moon for Dark/Light, with the ! at the left end",
-        "Config is now Settings",
-        "The ! no longer links the changelog",
-        "Settings no longer shows the version",
-        "The bottom footers are gone; Create floats as a plus at the bottom right of Home",
-        "A counter's Edit is a floating pencil and Delete sits in a Danger zone panel",
-        "The Themes sheet saves a theme as you tap it and stays open, with no checkmark",
-        "The menu keeps a little room under its last counter above the footer",
-        "The menu's counters scroll with no scrollbar showing",
-        "Step buttons sit inside their counter's card and panel, with a pencil to edit",
-        "Sheets close with an x or a drag down and save from a checkmark at their bottom right",
-        "Goal animation's Test is a play button beside the checkmark",
-        "The quote panel is titled Featured quote, with the countdown to the next quote beside the title and only the author and source under the quote",
-        "The counter form outlines the field an error belongs to and puts the message under it",
-        "Light themes keep every chip and toast readable, and the page fills to the bottom edge",
-        "Hints show an icon button as the icon itself, in the button's own squircle, instead of naming it in words",
-        "Home before any counter reads Create a counter with the button that starts one",
-        "Settings' Theme row puts the palette on its Change button, as the Dark button carries the moon",
-        "The Themes sheet groups its themes under chips",
-        "The menu and the sheets drop the grid of squares behind their contents",
-    ],
-}];
+pub(crate) const UPCOMING: &[Release] = &[];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
+    Release {
+        version: "1.3.0",
+        date: Some(Date::new(2026, 11, 5)),
+        entries: &[
+            "The header is the shared nav bar: the title and its ? in the middle, a hamburger on the right, a back arrow on the left on every screen but Home; it slides away as you scroll down, its title and buttons fading into it, and back as you scroll up",
+            "The hamburger opens a menu that lists your counters, tap one to open it, with a footer of icons: Home, Settings, an i with the version and a link to this changelog, a palette for the theme and a sun or moon for Dark/Light, with the ! at the left end",
+            "Config is now Settings",
+            "The ! no longer links the changelog",
+            "Settings no longer shows the version",
+            "The bottom footers are gone; Create floats as a plus at the bottom right of Home",
+            "A counter's Edit is a floating pencil and Delete sits in a Danger zone panel",
+            "The Themes sheet saves a theme as you tap it and stays open, with no checkmark",
+            "The menu keeps a little room under its last counter above the footer",
+            "The menu's counters scroll with no scrollbar showing",
+            "Step buttons sit inside their counter's card and panel, with a pencil to edit",
+            "Sheets close with an x or a drag down and save from a checkmark at their bottom right",
+            "Goal animation's Test is a play button beside the checkmark",
+            "The quote panel is titled Featured quote, with the countdown to the next quote beside the title and only the author and source under the quote",
+            "The counter form outlines the field an error belongs to and puts the message under it",
+            "Light themes keep every chip and toast readable, and the page fills to the bottom edge",
+            "Hints show an icon button as the icon itself, in the button's own squircle, instead of naming it in words",
+            "Home before any counter reads Create a counter with the button that starts one",
+            "Settings' Theme row puts the palette on its Change button, as the Dark button carries the moon",
+            "The Themes sheet groups its themes under chips",
+            "The menu and the sheets drop the grid of squares behind their contents",
+        ],
+    },
     Release {
         version: "1.2.0",
         date: Some(Date::new(2026, 11, 1)),
