@@ -240,12 +240,12 @@ impl Section {
 
     pub fn blurb(self) -> &'static str {
         match self {
-            Self::Products => "Finished products: one on both app stores, one I open every day.",
+            Self::Products => "Shipped products: one on both app stores, one I open every day.",
             Self::Systems => {
                 "Learning builds of the layers under a backend: a key-value store on disk, one in memory, and a live service built on the in-memory one."
             }
             Self::Tooling => {
-                "Tools that remove a chore. The UI kit my apps and this site share, data migrations for Halo Software clients, and the plumbing around Advent of Code in two languages."
+                "Tools that remove a chore: the UI kit my apps and this site share, data migrations for Halo Software clients, and Advent of Code plumbing in two languages."
             }
             Self::Experiments => {
                 "Short projects in a domain I wanted to understand: an AI agent, pose estimation, raw input devices."
@@ -337,34 +337,34 @@ const fn moved(from: &'static str, to: &'static str) -> Moved {
 /// the visitor on to `to`, since GitHub Pages cannot answer with a redirect.
 pub(crate) const MOVED: &[Moved] = &[
     // Renames.
-    moved("/side-quests/diprotodon", "/projects/steller"),
-    moved("/side-quests/nighthawk", "/projects/chickadee"),
+    moved("/side-quests/diprotodon/", "/projects/steller/"),
+    moved("/side-quests/nighthawk/", "/projects/chickadee/"),
     // Side quests folded into the sections, October 2026.
-    moved("/side-quests", "/projects"),
-    moved("/side-quests/cairn", "/projects/cairn"),
-    moved("/side-quests/chickadee", "/projects/chickadee"),
-    moved("/side-quests/gotcha", "/projects/gotcha"),
+    moved("/side-quests/", "/projects/"),
+    moved("/side-quests/cairn/", "/projects/cairn/"),
+    moved("/side-quests/chickadee/", "/projects/chickadee/"),
+    moved("/side-quests/gotcha/", "/projects/gotcha/"),
     moved(
-        "/side-quests/halo-action-importer",
-        "/projects/halo-action-importer",
+        "/side-quests/halo-action-importer/",
+        "/projects/halo-action-importer/",
     ),
     moved(
-        "/side-quests/halo-custom-field-builder",
-        "/projects/halo-custom-field-builder",
+        "/side-quests/halo-custom-field-builder/",
+        "/projects/halo-custom-field-builder/",
     ),
-    moved("/side-quests/heron", "/projects/heron"),
-    moved("/side-quests/marvin", "/projects/marvin"),
-    moved("/side-quests/rustmas", "/projects/rustmas"),
-    moved("/side-quests/sharpmas", "/projects/sharpmas"),
-    moved("/side-quests/steller", "/projects/steller"),
-    moved("/side-quests/upsee", "/projects/upsee"),
+    moved("/side-quests/heron/", "/projects/heron/"),
+    moved("/side-quests/marvin/", "/projects/marvin/"),
+    moved("/side-quests/rustmas/", "/projects/rustmas/"),
+    moved("/side-quests/sharpmas/", "/projects/sharpmas/"),
+    moved("/side-quests/steller/", "/projects/steller/"),
+    moved("/side-quests/upsee/", "/projects/upsee/"),
 ];
 
 /// Where the page at `path` went, if it moved.
 pub(crate) fn moved_to(path: &str) -> Option<&'static str> {
     MOVED
         .iter()
-        .find(|moved| moved.from == path)
+        .find(|moved| moved.from.trim_end_matches('/') == path.trim_end_matches('/'))
         .map(|moved| moved.to)
 }
 
@@ -1787,6 +1787,20 @@ mod tests {
     /// `/404` is the one route SSG renders that belongs nowhere near here: it
     /// is prerendered for deploy.yml to ship as 404.html, and it carries
     /// noindex. `static_routes()` in main.rs appends it, this does not.
+    /// A section's blurb and a project's headline are their pages' meta
+    /// descriptions, which a search result cuts off past 160 characters.
+    #[test]
+    fn every_meta_description_fits_a_search_result() {
+        let descriptions = Section::ALL
+            .map(Section::blurb)
+            .into_iter()
+            .chain(all_projects().map(|p| p.headline));
+        for description in descriptions {
+            let length = description.chars().count();
+            assert!(length < 160, "{length} characters: {description}");
+        }
+    }
+
     #[test]
     fn sitemap_lists_every_prerendered_route() {
         let sitemap = include_str!("../public/sitemap.xml");
@@ -1808,8 +1822,8 @@ mod tests {
             .iter()
             .map(ToString::to_string)
             .filter(|path| moved_to(path).is_none())
-            .chain(Section::ALL.map(|s| format!("/projects/{s}")))
-            .chain(all_projects().map(|p| format!("/projects/{}", p.slug)))
+            .chain(Section::ALL.map(|s| format!("/projects/{s}/")))
+            .chain(all_projects().map(|p| format!("/projects/{}/", p.slug)))
             .collect()
     }
 

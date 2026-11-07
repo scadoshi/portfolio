@@ -49,7 +49,12 @@ pub fn Home() -> Element {
                     // sentence under both.
                     div { class: "hero-head",
                         for run in [replay] {
-                            h1 { key: "logo{run}", class: "logo", "aria-label": "Scotty Fermo", Decode { text: LOGO_ASCII } }
+                            // The name for crawlers and screen readers, which would
+                            // otherwise read the block glyphs.
+                            h1 { key: "logo{run}", class: "logo",
+                                span { class: "sr-only", "Scotty Fermo" }
+                                span { "aria-hidden": "true", Decode { text: LOGO_ASCII } }
+                            }
                         }
                         if let Some((totals, source)) = totals.as_ref() {
                             StatsStrip {

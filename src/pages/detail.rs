@@ -273,5 +273,5 @@ pub fn ProjectDetail(slug: String) -> Element {
             }
         };
     };
-    detail_view(project, format!("/projects/{}", project.slug))
+    detail_view(project, format!("/projects/{}/", project.slug))
 }

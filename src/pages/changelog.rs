@@ -6,7 +6,7 @@ use crate::components::changelog::{ChangelogCards, ChangelogChips, use_selection
 use crate::components::page_meta::PageMeta;
 
 /// Cairn's release history. Linked from the cairn project page.
-pub(crate) const CAIRN_CHANGELOG_PATH: &str = "/projects/cairn/changelog";
+pub(crate) const CAIRN_CHANGELOG_PATH: &str = "/projects/cairn/changelog/";
 
 /// Cairn's store listing. Linked here and from the cairn page.
 pub(crate) const CAIRN_APP_STORE_URL: &str =

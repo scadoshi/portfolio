@@ -22,6 +22,10 @@ pub(crate) struct ThemeWipe {
     pub follow: ThemeFollow,
 }
 
+/// Sends `true` on every Escape, for the nav to close its open menu.
+const ESCAPE_JS: &str =
+    "document.addEventListener('keydown', (e) => { if (e.key === 'Escape') dioxus.send(true); });";
+
 /// The site's top bar: brand, section menus, the icon pills and the theme picker.
 #[component]
 pub fn Navbar() -> Element {
@@ -70,6 +74,19 @@ pub fn Navbar() -> Element {
         } else if opened.is_empty() && previous.is_some() {
             last_opened.set(None);
         }
+    });
+    // Escape closes whichever menu is open.
+    use_effect(move || {
+        spawn(async move {
+            let mut keys = document::eval(ESCAPE_JS);
+            while keys.recv::<bool>().await.is_ok() {
+                for mut menu in menus {
+                    if *menu.peek() {
+                        menu.set(false);
+                    }
+                }
+            }
+        });
     });
     let mut replay = use_context::<Replay>().0;
     let mut hovering = use_signal(|| false);
