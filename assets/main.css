@@ -2156,3 +2156,26 @@ html.js:not(.splash-skip).splash-over .splash {
 .splash-mark .logo {
     margin: 0;
 }
+
+/* ---- Touch targets ----
+
+   On a touch screen every control answers a tap 44px across, however
+   small it draws: a box centered on it, at least 44px each way, takes the
+   tap without changing how it looks (the nav's icons and hamburger, the
+   menu toggles, the theme controls, linked tags, chips and buttons).
+   `:where` keeps a control that sets its own position where it is. */
+@media (pointer: coarse) {
+    :where(button, [role="button"], .chip, a.tag, a.nav-cta, a.panel-action, a.nav-brand) {
+        position: relative;
+    }
+
+    :is(button, [role="button"], .chip, a.tag, a.nav-cta, a.panel-action, a.nav-brand)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: max(100%, 44px);
+        height: max(100%, 44px);
+        transform: translate(-50%, -50%);
+    }
+}
