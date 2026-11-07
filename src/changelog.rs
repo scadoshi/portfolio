@@ -107,6 +107,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     entries: &[
         "Home and a counter's screen move to the new day at the rollover hour and pick up today's figures when you come back to the app",
         "A tap after the day turns counts on the new day, so a minus no longer takes from yesterday's figure",
+        "Cairn opens on Android, keeping its counters in the app's own storage",
     ],
 }];
 
