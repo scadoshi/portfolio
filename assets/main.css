@@ -1900,8 +1900,44 @@ rect.fleet-bar {
     margin-inline: auto;
 }
 
-.heatmap .chart-plot {
+/* The heatmap's row: the axis strip and the plot, a tenth narrower than the
+   panel as one figure, never narrower than 44rem. The strip is
+   `--axis-share` of the row (set inline), the plot the rest, so both draw
+   at one scale and the labels line up with the rows they name. */
+.heatmap .chart-row {
+    display: flex;
+    width: 90%;
     min-width: 44rem;
+    margin-inline: auto;
+}
+
+.heatmap .chart-row > .chart-plot {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+}
+
+/* The strip stays at the left while the plot scrolls under it, on the
+   panel's own color so the plot is hidden behind it. */
+.chart-axis {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    flex: none;
+    display: block;
+    width: calc(100% * var(--axis-share));
+    height: auto;
+    background-color: var(--bg-primary);
+    font-family: inherit;
+}
+
+/* The scroller's left fade starts where the strip ends, so the plot fades
+   in beside the labels instead of the labels fading. */
+.axis-scroll.scroll-fade-x {
+    --axis-width: calc(max(90%, 44rem) * var(--axis-share));
+    -webkit-mask-image: linear-gradient(to right, #000 var(--axis-width), transparent var(--axis-width), #000 calc(var(--axis-width) + var(--fade-left)), #000 calc(100% - var(--fade-right)), transparent);
+    mask-image: linear-gradient(to right, #000 var(--axis-width), transparent var(--axis-width), #000 calc(var(--axis-width) + var(--fade-left)), #000 calc(100% - var(--fade-right)), transparent);
 }
 
 /* Room inside the scroll box for a halo that hangs past the last column or

@@ -75,11 +75,14 @@ pub fn Navbar() -> Element {
             last_opened.set(None);
         }
     });
-    // Escape closes whichever menu is open.
+    // Escape closes whichever menu is open, the phone menu included.
     use_effect(move || {
         spawn(async move {
             let mut keys = document::eval(ESCAPE_JS);
             while keys.recv::<bool>().await.is_ok() {
+                if *open.peek() {
+                    open.set(false);
+                }
                 for mut menu in menus {
                     if *menu.peek() {
                         menu.set(false);
