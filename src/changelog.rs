@@ -117,6 +117,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "On Android the keyboard no longer covers a sheet's checkmark",
         "A best's date or month stays on one line",
         "Export says 1 file when it writes one and no longer leaves a log file beside your counters",
+        "Each Settings row keeps its name, value and buttons on one line on a phone",
     ],
 }];
 
