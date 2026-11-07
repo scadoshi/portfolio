@@ -1137,11 +1137,16 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
 
 /* From the kit's drawer width the sheet is a drawer along the right edge,
    and the page sweeps across rather than down, so the sheet's layer sweeps
-   across with it. Its clip is measured from the viewport's left edge through
-   the drawer's place (the kit's: 1rem in from the right, min(24rem, 100vw -
-   2rem) wide), so its edge runs level with the page's. */
+   across with it. The clip is a polygon whose edge is placed from the
+   viewport's left through the drawer's place (the kit's: 1rem in from the
+   right, `--drawer-w` wide), so it runs level with the page's edge at every
+   frame. A polygon, not an inset: its points may lie outside the drawer's
+   box, where an inset larger than the box is shrunk to fit it, which an
+   engine animating the clip on its compositor reads as a start at the
+   drawer's own edge. The far corners overhang 1rem for the shadow. */
 @media (min-width: 60rem) {
     ::view-transition-new(theme-sheet) {
+        --drawer-w: min(24rem, 100vw - 2rem);
         animation-name: drawer-wipe;
     }
 
@@ -1152,19 +1157,19 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
 
 @keyframes drawer-wipe {
     from {
-        clip-path: inset(0 calc(100vw - 1rem) 0 0);
+        clip-path: polygon(-1rem -1rem, calc(var(--drawer-w) + 1rem - 100vw) -1rem, calc(var(--drawer-w) + 1rem - 100vw) calc(100% + 1rem), -1rem calc(100% + 1rem));
     }
     to {
-        clip-path: inset(0 -1rem 0 0);
+        clip-path: polygon(-1rem -1rem, calc(var(--drawer-w) + 1rem) -1rem, calc(var(--drawer-w) + 1rem) calc(100% + 1rem), -1rem calc(100% + 1rem));
     }
 }
 
 @keyframes drawer-wipe-left {
     from {
-        clip-path: inset(0 0 0 calc(min(24rem, 100vw - 2rem) + 1rem));
+        clip-path: polygon(calc(var(--drawer-w) + 1rem) -1rem, calc(100% + 1rem) -1rem, calc(100% + 1rem) calc(100% + 1rem), calc(var(--drawer-w) + 1rem) calc(100% + 1rem));
     }
     to {
-        clip-path: inset(0 0 0 calc(min(24rem, 100vw - 2rem) + 1rem - 100vw));
+        clip-path: polygon(calc(var(--drawer-w) + 1rem - 100vw) -1rem, calc(100% + 1rem) -1rem, calc(100% + 1rem) calc(100% + 1rem), calc(var(--drawer-w) + 1rem - 100vw) calc(100% + 1rem));
     }
 }
 
