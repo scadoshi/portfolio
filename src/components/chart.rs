@@ -13,6 +13,38 @@ pub(crate) fn show(mut tip: Signal<Option<Tip>>, text: String, left: f64, top: f
     tip.set(Some(Tip { text, left, top }));
 }
 
+/// Opens every `.axis-scroll` chart wider than its box on its newest columns.
+/// A month label the pinned axis cuts through is moved on under the axis,
+/// with that much room added at the far end, so the newest week stays in
+/// view and no label shows by half at the edge.
+const SCROLL_TO_LATEST_JS: &str = r"
+setTimeout(() => {
+    for (const box of document.querySelectorAll('.axis-scroll')) {
+        const row = box.querySelector('.chart-row');
+        const axis = box.querySelector('.chart-axis');
+        if (!row || !axis) continue;
+        row.style.paddingRight = '';
+        box.scrollLeft = box.scrollWidth;
+        if (box.scrollWidth <= box.clientWidth) continue;
+        const edge = axis.getBoundingClientRect().right;
+        const cut = Array.from(box.querySelectorAll('.heatmap-month'))
+            .map((label) => label.getBoundingClientRect())
+            .find((r) => r.left < edge && r.right > edge);
+        if (!cut) continue;
+        row.style.paddingRight = Math.ceil(cut.right - edge) + 2 + 'px';
+        box.scrollLeft = box.scrollWidth;
+    }
+}, 60);
+";
+
+/// Opens the page's pinned-axis charts on their newest columns, a beat after
+/// mount so the boxes have been laid out.
+pub(crate) fn use_scroll_to_latest() {
+    use_effect(|| {
+        document::eval(SCROLL_TO_LATEST_JS);
+    });
+}
+
 /// `Jan` for `01`, the month of a `YYYY-MM-DD` date.
 pub(crate) fn month_name(month: &str) -> Option<&'static str> {
     Some(match month {

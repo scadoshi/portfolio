@@ -4,7 +4,7 @@ use std::rc::Rc;
 use dioxus::prelude::*;
 use orangui::{
     ChartTip, HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, HeatReadout, Replay, area, curve, heat_span,
-    peak_indices, use_heat_pick, use_scroll_to_end, with_separators,
+    peak_indices, use_heat_pick, with_separators,
 };
 
 use crate::components::chart::{self, Tip};
@@ -256,7 +256,7 @@ pub fn Heatmap() -> Element {
     let live = use_context::<stats::Live>();
     let mut tip: Signal<Option<Tip>> = use_signal(|| None);
     let pick = use_heat_pick();
-    use_scroll_to_end();
+    chart::use_scroll_to_latest();
     let live = live.read();
     let Some((calendar, source)) = stats::calendar(live.as_ref()) else {
         return rsx! {};
@@ -276,9 +276,15 @@ pub fn Heatmap() -> Element {
     let drawn = to_the_edges(&line_points, LEFT, width, LINE_TOP, LINE_BOTTOM);
     let (line, area) = (curve(&drawn), area(&drawn, LINE_BOTTOM));
     let last = series.len().saturating_sub(1);
-    // A chip anchored at an SVG point, as percentages of the grid.
+    // A chip anchored at an SVG point, as percentages of the plot, which
+    // starts where the axis strip ends.
     let tip_at = move |text: String, x: f64, y: f64| {
-        chart::show(tip, text, x / width * 100.0, y / height * 100.0);
+        chart::show(
+            tip,
+            text,
+            (x - LEFT) / (width - LEFT) * 100.0,
+            y / height * 100.0,
+        );
     };
     // What each cell's chip and readout say, by the cell's index, for both
     // handlers.
@@ -317,9 +323,37 @@ pub fn Heatmap() -> Element {
         // Rises into view with the panels (REVEAL_JS), which also holds its
         // cells' animation until then.
         div { class: "heatmap", "data-reveal": "true",
-            // The chip is placed by percentages of the grid, so it lives in a
-            // wrapper that holds only the grid.
-            div { class: "chart-scroll scroll-end scroll-fade-x",
+            // The line's counts and the weekdays sit in their own strip, pinned
+            // at the left while the plot scrolls under it. The strip is the
+            // plot's left margin, so the two share one scale.
+            div {
+                class: "chart-scroll axis-scroll scroll-fade-x",
+                style: "--axis-share: {LEFT / width}",
+            div { class: "chart-row",
+            svg {
+                class: "chart-axis",
+                view_box: "0 0 {LEFT} {height}",
+                "aria-hidden": "true",
+                for tick in ticks.iter().copied() {
+                    {
+                        let y = LINE_BOTTOM - LINE_HEIGHT * f64::from(tick) / f64::from(top.max(1));
+                        rsx! {
+                            text { key: "t{tick}", class: "heat-label", x: "{LEFT - 5.0}", y: "{y + 3.0}", text_anchor: "end", "{with_separators(u64::from(tick))}" }
+                        }
+                    }
+                }
+                for (row, name) in [(1usize, "Mon"), (3, "Wed"), (5, "Fri")] {
+                    text {
+                        key: "d{row}",
+                        class: "heat-label",
+                        x: "0",
+                        y: "{TOP + heat_span(row) + HEAT_CELL - 2.0}",
+                        "{name}"
+                    }
+                }
+            }
+            // The chip is placed by percentages of the plot, so it lives in a
+            // wrapper that holds only the plot.
             div { class: "chart-plot", onmouseleave: move |_| tip.set(None),
             // Keyed on the replay count: a new key is a new SVG, and every
             // animation below starts over.
@@ -327,7 +361,7 @@ pub fn Heatmap() -> Element {
             svg {
                 key: "run{run}",
                 class: "heat-grid",
-                view_box: "0 0 {width} {height}",
+                view_box: "{LEFT} 0 {width - LEFT} {height}",
                 role: "img",
                 "aria-label": "{caption}",
                 // The month line, on the grid's own columns so a peak sits
@@ -336,10 +370,7 @@ pub fn Heatmap() -> Element {
                     {
                         let y = LINE_BOTTOM - LINE_HEIGHT * f64::from(tick) / f64::from(top.max(1));
                         rsx! {
-                            g { key: "t{tick}",
-                                line { class: "commits-grid", x1: "{LEFT}", y1: "{y}", x2: "{width}", y2: "{y}" }
-                                text { class: "heat-label", x: "{LEFT - 5.0}", y: "{y + 3.0}", text_anchor: "end", "{with_separators(u64::from(tick))}" }
-                            }
+                            line { key: "t{tick}", class: "commits-grid", x1: "{LEFT}", y1: "{y}", x2: "{width}", y2: "{y}" }
                         }
                     }
                 }
@@ -413,15 +444,6 @@ pub fn Heatmap() -> Element {
                         }
                     }
                 }
-                for (row, name) in [(1usize, "Mon"), (3, "Wed"), (5, "Fri")] {
-                    text {
-                        key: "d{row}",
-                        class: "heat-label",
-                        x: "0",
-                        y: "{TOP + heat_span(row) + HEAT_CELL - 2.0}",
-                        "{name}"
-                    }
-                }
                 {
                     let (enter, tap, tags) = (Rc::clone(&texts), Rc::clone(&texts), Rc::clone(&tags));
                     rsx! {
@@ -449,6 +471,7 @@ pub fn Heatmap() -> Element {
             }
             if let Some(tip) = tip() {
                 ChartTip { text: tip.text, left: tip.left, top: tip.top, class: "tag tag-p1 heat-float" }
+            }
             }
             }
             }
