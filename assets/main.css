@@ -116,9 +116,11 @@ html {
     /* The scrollbar's room stays reserved on a page too short to scroll, so
        the layout holds still between pages. */
     scrollbar-gutter: stable;
-    /* The window's bar is thin; html sits above the theme class, so its
-       colors come from color-scheme rather than the theme. */
+    /* The window's bar is thin, its thumb the theme's border color as the
+       inner scrollers' are. html sits above the theme class, so the
+       wrapper's color is copied onto it as --root-scrollbar-thumb. */
     scrollbar-width: thin;
+    scrollbar-color: var(--root-scrollbar-thumb, var(--border-secondary)) transparent;
 }
 
 /* Every scroller inside the page: a thin bar, the thumb in the theme's
@@ -306,8 +308,12 @@ a.panel-action:visited {
 
 /* === Content === */
 
+/* A long word or a bare URL breaks where it would run past the page, so a
+   phone never scrolls sideways. Code keeps its lines and scrolls in its own
+   box. */
 .content {
     flex: 1;
+    overflow-wrap: anywhere;
 }
 
 /* === Hero === */
