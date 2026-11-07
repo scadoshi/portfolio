@@ -109,6 +109,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "A tap after the day turns counts on the new day, so a minus no longer takes from yesterday's figure",
         "Cairn opens on Android, keeping its counters in the app's own storage",
         "Settings has a Backup row that saves every counter, its settings and every tap in one file and imports it back, asking before it replaces a counter you already have",
+        "When iOS closes Cairn's page in the background to free memory, Cairn draws itself again when you come back instead of showing a frozen screen",
     ],
 }];
 
