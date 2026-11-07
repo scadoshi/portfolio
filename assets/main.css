@@ -1135,6 +1135,39 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     animation-name: sheet-wipe-up;
 }
 
+/* From the kit's drawer width the sheet is a drawer along the right edge,
+   and the page sweeps across rather than down, so the sheet's layer sweeps
+   across with it. Its clip is measured from the viewport's left edge through
+   the drawer's place (the kit's: 1rem in from the right, min(24rem, 100vw -
+   2rem) wide), so its edge runs level with the page's. */
+@media (min-width: 60rem) {
+    ::view-transition-new(theme-sheet) {
+        animation-name: drawer-wipe;
+    }
+
+    html[data-wipe="left"]::view-transition-new(theme-sheet) {
+        animation-name: drawer-wipe-left;
+    }
+}
+
+@keyframes drawer-wipe {
+    from {
+        clip-path: inset(0 calc(100vw - 1rem) 0 0);
+    }
+    to {
+        clip-path: inset(0 -1rem 0 0);
+    }
+}
+
+@keyframes drawer-wipe-left {
+    from {
+        clip-path: inset(0 0 0 calc(min(24rem, 100vw - 2rem) + 1rem));
+    }
+    to {
+        clip-path: inset(0 0 0 calc(min(24rem, 100vw - 2rem) + 1rem - 100vw));
+    }
+}
+
 /* The sheet's dim is a header descendant that covers the whole page, so it
    gets its own still layer between the header and the sheet instead of being
    clipped to the bar. Old and new dims are the same shade, so only the new
