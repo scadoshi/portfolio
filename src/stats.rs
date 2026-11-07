@@ -154,15 +154,31 @@ pub(crate) enum Source {
 }
 
 impl Source {
-    /// The tag naming it wherever a number shows: `Live`, or `As of` and the
-    /// build's day.
+    /// The tag naming it wherever a number shows: `Live`, or "as of" the
+    /// build's day, as `as of Oct 27`.
     #[must_use]
     pub(crate) fn label(&self) -> String {
         match self {
             Self::Live => "Live".to_string(),
-            Self::AsOf(day) => format!("as of {day}"),
+            Self::AsOf(day) => format!("as of {}", short_day(day).unwrap_or_else(|| day.clone())),
         }
     }
+}
+
+/// The months' short names, January first.
+const MONTHS: [&str; 12] = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+/// A `YYYY-MM-DD` day as its month's short name and the day of the month,
+/// as `Oct 27`; `None` when `iso` is not such a day.
+fn short_day(iso: &str) -> Option<String> {
+    let mut parts = iso.splitn(3, '-');
+    let (_, month, day) = (parts.next()?, parts.next()?, parts.next()?);
+    let month: usize = month.parse().ok()?;
+    let day: u8 = day.parse().ok()?;
+    let name = MONTHS.get(month.checked_sub(1)?)?;
+    (1..=31).contains(&day).then(|| format!("{name} {day}"))
 }
 
 /// The live snapshot when there is one, else the baked one.
@@ -262,8 +278,18 @@ mod tests {
         assert_eq!(Source::Live.label(), "Live");
         assert_eq!(
             Source::AsOf("2026-10-27".to_string()).label(),
-            "as of 2026-10-27"
+            "as of Oct 27"
         );
+    }
+
+    #[test]
+    fn a_day_reads_as_its_month_and_day_and_anything_else_as_itself() {
+        assert_eq!(short_day("2026-01-05").as_deref(), Some("Jan 5"));
+        assert_eq!(short_day("2026-11-07").as_deref(), Some("Nov 7"));
+        assert_eq!(short_day("2026-13-01"), None);
+        assert_eq!(short_day("2026-00-10"), None);
+        assert_eq!(short_day("soon"), None);
+        assert_eq!(Source::AsOf("soon".to_string()).label(), "as of soon");
     }
 
     use super::*;
