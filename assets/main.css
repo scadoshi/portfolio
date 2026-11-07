@@ -111,8 +111,21 @@ html {
        dead at its vertical boundaries. */
     overscroll-behavior-y: none;
     /* Native browser chrome (scrollbars, form controls) renders dark to
-       match the dark-by-default themes; no custom scrollbar styling. */
+       match the dark-by-default themes. */
     color-scheme: dark;
+    /* The scrollbar's room stays reserved on a page too short to scroll, so
+       the layout holds still between pages. */
+    scrollbar-gutter: stable;
+    /* The window's bar is thin; html sits above the theme class, so its
+       colors come from color-scheme rather than the theme. */
+    scrollbar-width: thin;
+}
+
+/* Every scroller inside the page: a thin bar, the thumb in the theme's
+   border color, as on app.zwipe.net. */
+.theme-wrapper * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-secondary) transparent;
 }
 
 /* Light themes flip the native chrome to light. The viewport scrollbar is
