@@ -41,27 +41,27 @@ pub enum Route {
     #[layout(NavbarLayout)]
         #[route("/")]
         Home {},
-        #[route("/projects")]
+        #[route("/projects/")]
         Projects {},
         // The App Store listing's privacy policy URL and the release history.
         // Two segments, so neither collides with a section or a project slug.
-        #[route("/projects/cairn/privacy")]
+        #[route("/projects/cairn/privacy/")]
         CairnPrivacy {},
-        #[route("/projects/cairn/changelog")]
+        #[route("/projects/cairn/changelog/")]
         CairnChangelog {},
         // Before the project route: only the four section names parse, so
         // every other slug falls through to ProjectDetail.
-        #[route("/projects/:section")]
+        #[route("/projects/:section/")]
         SectionPage { section: data::Section },
-        #[route("/projects/:slug")]
+        #[route("/projects/:slug/")]
         ProjectDetail { slug: String },
-        #[route("/contribute")]
+        #[route("/contribute/")]
         Contribute {},
         // Side quests were folded into the sections. These addresses only
         // ever render the redirect to where each page went (data::MOVED).
-        #[route("/side-quests")]
+        #[route("/side-quests/")]
         OldSideQuests {},
-        #[route("/side-quests/:slug")]
+        #[route("/side-quests/:slug/")]
         OldSideQuest { slug: String },
         // GitHub Pages serves 404.html (a copy of the app shell, made in
         // deploy.yml) for unknown paths, and the router lands here.
@@ -112,10 +112,10 @@ async fn static_routes() -> ServerFnResult<Vec<String>> {
         .filter(|path| data::moved_to(path).is_none())
         .collect();
     for section in data::Section::ALL {
-        routes.push(format!("/projects/{section}"));
+        routes.push(format!("/projects/{section}/"));
     }
     for p in data::all_projects() {
-        routes.push(format!("/projects/{}", p.slug));
+        routes.push(format!("/projects/{}/", p.slug));
     }
     for moved in data::MOVED {
         routes.push(moved.from.to_string());

@@ -14,7 +14,7 @@ pub fn Contribute() -> Element {
         PageMeta {
             title: "Contribute",
             description: "Support continued open-source Rust development from Scotty Fermo via Stripe, Buy Me a Coffee, or GitHub Sponsors.",
-            path: "/contribute",
+            path: "/contribute/",
         }
         div { class: "index-page content-enter",
             Panel {

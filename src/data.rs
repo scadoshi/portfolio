@@ -337,34 +337,34 @@ const fn moved(from: &'static str, to: &'static str) -> Moved {
 /// the visitor on to `to`, since GitHub Pages cannot answer with a redirect.
 pub(crate) const MOVED: &[Moved] = &[
     // Renames.
-    moved("/side-quests/diprotodon", "/projects/steller"),
-    moved("/side-quests/nighthawk", "/projects/chickadee"),
+    moved("/side-quests/diprotodon/", "/projects/steller/"),
+    moved("/side-quests/nighthawk/", "/projects/chickadee/"),
     // Side quests folded into the sections, October 2026.
-    moved("/side-quests", "/projects"),
-    moved("/side-quests/cairn", "/projects/cairn"),
-    moved("/side-quests/chickadee", "/projects/chickadee"),
-    moved("/side-quests/gotcha", "/projects/gotcha"),
+    moved("/side-quests/", "/projects/"),
+    moved("/side-quests/cairn/", "/projects/cairn/"),
+    moved("/side-quests/chickadee/", "/projects/chickadee/"),
+    moved("/side-quests/gotcha/", "/projects/gotcha/"),
     moved(
-        "/side-quests/halo-action-importer",
-        "/projects/halo-action-importer",
+        "/side-quests/halo-action-importer/",
+        "/projects/halo-action-importer/",
     ),
     moved(
-        "/side-quests/halo-custom-field-builder",
-        "/projects/halo-custom-field-builder",
+        "/side-quests/halo-custom-field-builder/",
+        "/projects/halo-custom-field-builder/",
     ),
-    moved("/side-quests/heron", "/projects/heron"),
-    moved("/side-quests/marvin", "/projects/marvin"),
-    moved("/side-quests/rustmas", "/projects/rustmas"),
-    moved("/side-quests/sharpmas", "/projects/sharpmas"),
-    moved("/side-quests/steller", "/projects/steller"),
-    moved("/side-quests/upsee", "/projects/upsee"),
+    moved("/side-quests/heron/", "/projects/heron/"),
+    moved("/side-quests/marvin/", "/projects/marvin/"),
+    moved("/side-quests/rustmas/", "/projects/rustmas/"),
+    moved("/side-quests/sharpmas/", "/projects/sharpmas/"),
+    moved("/side-quests/steller/", "/projects/steller/"),
+    moved("/side-quests/upsee/", "/projects/upsee/"),
 ];
 
 /// Where the page at `path` went, if it moved.
 pub(crate) fn moved_to(path: &str) -> Option<&'static str> {
     MOVED
         .iter()
-        .find(|moved| moved.from == path)
+        .find(|moved| moved.from.trim_end_matches('/') == path.trim_end_matches('/'))
         .map(|moved| moved.to)
 }
 
@@ -1808,8 +1808,8 @@ mod tests {
             .iter()
             .map(ToString::to_string)
             .filter(|path| moved_to(path).is_none())
-            .chain(Section::ALL.map(|s| format!("/projects/{s}")))
-            .chain(all_projects().map(|p| format!("/projects/{}", p.slug)))
+            .chain(Section::ALL.map(|s| format!("/projects/{s}/")))
+            .chain(all_projects().map(|p| format!("/projects/{}/", p.slug)))
             .collect()
     }
 

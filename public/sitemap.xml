@@ -11,107 +11,107 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects</loc>
+    <loc>https://scottyfermo.com/projects/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/products</loc>
+    <loc>https://scottyfermo.com/projects/products/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/systems</loc>
+    <loc>https://scottyfermo.com/projects/systems/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/tooling</loc>
+    <loc>https://scottyfermo.com/projects/tooling/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/experiments</loc>
+    <loc>https://scottyfermo.com/projects/experiments/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/zwipe</loc>
+    <loc>https://scottyfermo.com/projects/zwipe/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/cairn</loc>
+    <loc>https://scottyfermo.com/projects/cairn/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/cairn/privacy</loc>
+    <loc>https://scottyfermo.com/projects/cairn/privacy/</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/cairn/changelog</loc>
+    <loc>https://scottyfermo.com/projects/cairn/changelog/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/steller</loc>
+    <loc>https://scottyfermo.com/projects/steller/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/chickadee</loc>
+    <loc>https://scottyfermo.com/projects/chickadee/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/heron</loc>
+    <loc>https://scottyfermo.com/projects/heron/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/orangui</loc>
+    <loc>https://scottyfermo.com/projects/orangui/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/halo-action-importer</loc>
+    <loc>https://scottyfermo.com/projects/halo-action-importer/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/halo-custom-field-builder</loc>
+    <loc>https://scottyfermo.com/projects/halo-custom-field-builder/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/rustmas</loc>
+    <loc>https://scottyfermo.com/projects/rustmas/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/sharpmas</loc>
+    <loc>https://scottyfermo.com/projects/sharpmas/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/marvin</loc>
+    <loc>https://scottyfermo.com/projects/marvin/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/upsee</loc>
+    <loc>https://scottyfermo.com/projects/upsee/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/projects/gotcha</loc>
+    <loc>https://scottyfermo.com/projects/gotcha/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://scottyfermo.com/contribute</loc>
+    <loc>https://scottyfermo.com/contribute/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

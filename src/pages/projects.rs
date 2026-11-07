@@ -14,7 +14,7 @@ pub fn Projects() -> Element {
         PageMeta {
             title: "Projects",
             description: "Every project, in four sections: finished products, learning builds of backend systems, work tooling, and experiments.",
-            path: "/projects",
+            path: "/projects/",
         }
         div { class: "index-page content-enter",
             Panel {
@@ -63,7 +63,7 @@ pub fn SectionPage(section: Section) -> Element {
         PageMeta {
             title: section.name().to_string(),
             description: section.blurb().to_string(),
-            path: "/projects/{section}",
+            path: "/projects/{section}/",
         }
         div { class: "index-page content-enter",
             Panel {
