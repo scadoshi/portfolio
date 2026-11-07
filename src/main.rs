@@ -199,6 +199,10 @@ fn App() -> Element {
     }
 }
 
+/// Copies the theme wrapper's border color onto html as
+/// `--root-scrollbar-thumb`, the window scrollbar's thumb.
+const ROOT_SCROLLBAR_JS: &str = "requestAnimationFrame(() => { const wrapper = document.querySelector('.theme-wrapper'); if (!wrapper) return; document.documentElement.style.setProperty('--root-scrollbar-thumb', getComputedStyle(wrapper).getPropertyValue('--border-secondary').trim()); })";
+
 #[component]
 fn NavbarLayout() -> Element {
     let theme = use_context::<Signal<ThemeConfig>>();
@@ -211,6 +215,12 @@ fn NavbarLayout() -> Element {
     // Core's css_class() is just "theme-{name}-{mode}"; the wrapper class
     // carries this site's fixed-grid background layer.
     let css_class = theme.read().css_class();
+    // The window's scrollbar is painted at html, above the wrapper, so the
+    // theme's border color is copied up to it on every theme change.
+    use_effect(move || {
+        let _theme = theme.read();
+        document::eval(ROOT_SCROLLBAR_JS);
+    });
     // The opening, on the first landing on the home page in a session.
     // index.html decides before first paint and marks the document
     // `splash-skip` otherwise, which hides the prerendered overlay; the app
