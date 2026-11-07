@@ -110,6 +110,13 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Cairn opens on Android, keeping its counters in the app's own storage",
         "Settings has a Backup row that saves every counter, its settings and every tap in one file and imports it back, asking before it replaces a counter you already have",
         "When iOS closes Cairn's page in the background to free memory, Cairn draws itself again when you come back instead of showing a frozen screen",
+        "Every theme, light and dark, draws its titles, labels, buttons and errors clearly enough to read",
+        "On a phone, small buttons answer a tap that lands just outside them",
+        "Toasts appear at the bottom left instead of over the header",
+        "A plain tap, a theme pick, the dark toggle and a Settings change no longer raise a toast",
+        "On Android the keyboard no longer covers a sheet's checkmark",
+        "A best's date or month stays on one line",
+        "Export says 1 file when it writes one and no longer leaves a log file beside your counters",
     ],
 }];
 
