@@ -1,6 +1,6 @@
-//! The site footer: the copyright line, then the calls to action as pills,
-//! the icon pills and Contribute, and the note on how the site is built,
-//! whose links stay links.
+//! The site footer: the copyright and the calls to action (the icon pills
+//! and Contribute) in one centered row, as zwipe.net's footer has them, then
+//! the note on how the site is built, whose links stay links.
 
 use dioxus::prelude::*;
 use orangui::NavCtaIcon;
@@ -13,8 +13,9 @@ use crate::components::cta::CTAS;
 pub fn Footer() -> Element {
     rsx! {
         footer { class: "site-footer",
-            p { class: "footer-copy", "\u{00a9} 2026 Scotty Fermo" }
-            div { class: "footer-links",
+            div { class: "footer-row",
+                p { class: "footer-copy", "\u{00a9} 2026 Scotty Fermo" }
+                div { class: "footer-links",
                 for cta in CTAS {
                     NavCtaIcon {
                         key: "{cta.label}",
@@ -24,6 +25,7 @@ pub fn Footer() -> Element {
                     }
                 }
                 Link { to: Route::Contribute {}, class: "nav-cta", "Contribute" }
+                }
             }
             p { class: "site-footer-note",
                 a {
