@@ -240,12 +240,12 @@ impl Section {
 
     pub fn blurb(self) -> &'static str {
         match self {
-            Self::Products => "Finished products: one on both app stores, one I open every day.",
+            Self::Products => "Shipped products: one on both app stores, one I open every day.",
             Self::Systems => {
                 "Learning builds of the layers under a backend: a key-value store on disk, one in memory, and a live service built on the in-memory one."
             }
             Self::Tooling => {
-                "Tools that remove a chore. The UI kit my apps and this site share, data migrations for Halo Software clients, and the plumbing around Advent of Code in two languages."
+                "Tools that remove a chore: the UI kit my apps and this site share, data migrations for Halo Software clients, and Advent of Code plumbing in two languages."
             }
             Self::Experiments => {
                 "Short projects in a domain I wanted to understand: an AI agent, pose estimation, raw input devices."
@@ -1787,6 +1787,20 @@ mod tests {
     /// `/404` is the one route SSG renders that belongs nowhere near here: it
     /// is prerendered for deploy.yml to ship as 404.html, and it carries
     /// noindex. `static_routes()` in main.rs appends it, this does not.
+    /// A section's blurb and a project's headline are their pages' meta
+    /// descriptions, which a search result cuts off past 160 characters.
+    #[test]
+    fn every_meta_description_fits_a_search_result() {
+        let descriptions = Section::ALL
+            .map(Section::blurb)
+            .into_iter()
+            .chain(all_projects().map(|p| p.headline));
+        for description in descriptions {
+            let length = description.chars().count();
+            assert!(length < 160, "{length} characters: {description}");
+        }
+    }
+
     #[test]
     fn sitemap_lists_every_prerendered_route() {
         let sitemap = include_str!("../public/sitemap.xml");

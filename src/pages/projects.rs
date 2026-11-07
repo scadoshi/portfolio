@@ -13,7 +13,7 @@ pub fn Projects() -> Element {
     rsx! {
         PageMeta {
             title: "Projects",
-            description: "Every project, in four sections: finished products, learning builds of backend systems, work tooling, and experiments.",
+            description: "Every project, in four sections: shipped products, learning builds of backend systems, work tooling, and experiments.",
             path: "/projects/",
         }
         div { class: "index-page content-enter",
@@ -22,7 +22,7 @@ pub fn Projects() -> Element {
                 // Page hero, so the title is this page's h1 (see detail.rs).
                 title_h1: true,
                 p { class: "card-summary",
-                    "Everything worth reading about, in four sections: what I've shipped, how I learn, and what I've built for work."
+                    "Everything worth reading about, in four sections: Products, Systems, Tooling, and Experiments."
                 }
             }
             div { class: "projects-grid",
