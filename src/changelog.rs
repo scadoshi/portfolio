@@ -7,8 +7,8 @@
 //! changelog rules, which the tests below hold. At cut time, when cairn's
 //! Unreleased entries move under a dated version heading, the version moves
 //! to the top of [`RELEASES`] with that day as a [`Date`] and becomes the
-//! "Latest". A release's date is the day App Store Connect shows it "Ready
-//! for Distribution", when it went live, and matches its heading in cairn's
+//! "Latest". A release's date is the day its build was cut and submitted,
+//! never moved to the day it went live, and matches its heading in cairn's
 //! changelog. The page files each release under the year and month of that
 //! date (see `components::changelog`).
 
@@ -91,8 +91,8 @@ const fn days_in_month(year: u16, month: u8) -> u8 {
 pub(crate) struct Release {
     /// Semantic version string, e.g. `"1.1.0"`.
     pub version: &'static str,
-    /// The day App Store Connect showed the version "Ready for
-    /// Distribution", the same as its heading in cairn's changelog. `None`
+    /// The day its build was cut and submitted, the same as its heading in
+    /// cairn's changelog. `None`
     /// while upcoming.
     pub date: Option<Date>,
     /// User-facing release notes, one phrase per entry.
