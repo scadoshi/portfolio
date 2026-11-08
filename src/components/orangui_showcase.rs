@@ -84,12 +84,10 @@ fn year_of_days() -> Vec<HeatCell> {
         .collect()
 }
 
-/// A link to a file in orangui's repository, named by the file. `path` may
-/// carry a `#L..` anchor to a stylesheet section.
+/// A link to a file in orangui's repository, named by the file.
 #[component]
 pub(super) fn Source(path: &'static str) -> Element {
-    let file = path.split('#').next().unwrap_or(path);
-    let name = file.rsplit('/').next().unwrap_or(file);
+    let name = path.rsplit('/').next().unwrap_or(path);
     rsx! {
         a { class: "panel-action", href: "{REPO}/{path}",
             "{name}"
@@ -202,7 +200,7 @@ fn ButtonShowcase() -> Element {
             status_label: pressed().unwrap_or("None yet").to_string(),
             actions: rsx! {
                 Source { path: "src/button.rs" }
-                Source { path: "assets/components.css#L171-L247" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use", "One button in three sizes, picked by where it sits." }
             div { class: "kit-buttons",
@@ -265,7 +263,7 @@ fn ChipShowcase() -> Element {
             title: "Chip and tag",
             actions: rsx! {
                 Source { path: "src/chip.rs" }
-                Source { path: "assets/components.css#L54-L170" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use",
                 "Chips toggle filters. Tags just label things, in a palette color or an outcome color like pass or fail."
@@ -328,7 +326,7 @@ fn BannerShowcase(banners: Signal<Vec<u32>>) -> Element {
                     "Raise a banner"
                 }
                 Source { path: "src/banner.rs" }
-                Source { path: "assets/components.css#L1047-L1238" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use",
                 "For news like a release. It counts down and leaves on its own, or you close it."
@@ -375,7 +373,7 @@ fn DropdownShowcase() -> Element {
             title: "NavDropdown",
             actions: rsx! {
                 Source { path: "src/nav_dropdown.rs" }
-                Source { path: "assets/components.css#L820-L1046" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use",
                 "A menu behind a nav pill, like the ones up top. Open one, then another, to see how they hand off."
@@ -449,7 +447,7 @@ fn DialogShowcase() -> Element {
                     "Create something"
                 }
                 Source { path: "src/alert_dialog.rs" }
-                Source { path: "assets/app.css#L233-L439" }
+                Source { path: "assets/app.css" }
             },
             p { class: "kit-use",
                 "A question you have to answer before doing anything else."
@@ -493,7 +491,7 @@ fn PasswordShowcase() -> Element {
             title: "PasswordInput",
             actions: rsx! {
                 Source { path: "src/password_input.rs" }
-                Source { path: "assets/components.css#L1359-L1390" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use",
                 "A password field with Show, so you can check what you typed."
@@ -517,7 +515,7 @@ fn HintShowcase() -> Element {
             title: "InfoButton and HintKey",
             actions: rsx! {
                 Source { path: "src/hint.rs" }
-                Source { path: "assets/components.css#L2003-L2044" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use",
                 "Inline help. Tap the ? for a hint; HintKey draws the button it's talking about."
@@ -684,7 +682,7 @@ fn GalleryShowcase() -> Element {
             title: "GalleryFrame",
             actions: rsx! {
                 Source { path: "src/gallery.rs" }
-                Source { path: "assets/site.css#L40-L119" }
+                Source { path: "assets/site.css" }
             },
             p { class: "kit-use",
                 "One item at a time, with arrows and a counter. This site's demo videos use it."
@@ -835,7 +833,7 @@ fn DiagramShowcase() -> Element {
             title: "Diagram",
             actions: rsx! {
                 Source { path: "src/diagram.rs" }
-                Source { path: "assets/components.css#L1391-L1479" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use",
                 "Boxes and arrows drawn as SVG, so the text is real text and the colors follow the theme."
@@ -906,7 +904,7 @@ fn HeatShowcase() -> Element {
                 ReplayButton { replay }
                 Source { path: "src/heat_grid.rs" }
                 Source { path: "src/heat_readout.rs" }
-                Source { path: "assets/components.css#L1602-L1743" }
+                Source { path: "assets/components.css" }
             },
             p { class: "kit-use",
                 "A year, one cell a day, darker when busier. The three busiest days glow. The tags underneath sum it up; on a phone, a tapped day's tags take their place for a few seconds."
@@ -943,5 +941,28 @@ fn HeatShowcase() -> Element {
             }
             HeatReadout { rest, pick }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    /// Every `Source { path: "..." }` path on the kit's page.
+    fn source_paths() -> Vec<&'static str> {
+        include_str!("orangui_showcase.rs")
+            .split("path: \"")
+            .skip(1)
+            .filter_map(|rest| rest.split('"').next())
+            .collect()
+    }
+
+    #[test]
+    fn source_links_point_to_whole_files() {
+        let paths = source_paths();
+        assert!(!paths.is_empty(), "found no source links");
+        let anchored: Vec<&str> = paths.into_iter().filter(|p| p.contains('#')).collect();
+        assert!(
+            anchored.is_empty(),
+            "source links with anchors: {anchored:?}"
+        );
     }
 }
