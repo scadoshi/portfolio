@@ -10,7 +10,7 @@
 //! year, month and minor and scrolls to its card.
 
 use dioxus::prelude::*;
-use orangui::{Chip, CollapseAll, CollapseBody, CollapseCaret, use_collapse_set};
+use orangui::{Chip, CollapseAll, CollapseBody, CollapseHeader, CollapseSet};
 
 use crate::changelog::{Date, RELEASES, Release, UPCOMING};
 
@@ -315,45 +315,52 @@ pub fn ChangelogChips(selected: Signal<Selection>) -> Element {
     }
 }
 
+/// The Collapse all icon for the cards, at the right end of the page's
+/// Changelog title. `set` is the one [`ChangelogCards`] draws with; it
+/// covers every release the selection shows.
+#[component]
+pub fn ChangelogCollapseAll(selected: Signal<Selection>, set: CollapseSet) -> Element {
+    let keys: Vec<String> = Log::CAIRN
+        .shown(selected())
+        .iter()
+        .map(|release| release.version.to_owned())
+        .collect();
+    rsx! {
+        if !keys.is_empty() {
+            CollapseAll { set, keys }
+        }
+    }
+}
+
 /// The newest-first release cards the selection shows, each with its date
 /// and notes. A port of zwipe's `components::ChangelogReleases`, so the two
-/// read the same.
+/// read the same. A click anywhere on a card's header opens or shuts it;
+/// `collapse` is the set [`ChangelogCollapseAll`] shares.
 #[component]
-pub fn ChangelogCards(selected: Signal<Selection>) -> Element {
+pub fn ChangelogCards(selected: Signal<Selection>, collapse: CollapseSet) -> Element {
     let log = Log::CAIRN;
     let selection = selected();
     // In each card's key so a selection change remounts the visible cards,
     // replaying their ease-in.
     let selection_key = format!("{selection:?}");
-    // Every version starts open; a caret or Collapse all shuts them.
-    let collapse = use_collapse_set();
-    let versions: Vec<String> = log
-        .shown(selection)
-        .iter()
-        .map(|release| release.version.to_owned())
-        .collect();
 
     rsx! {
-        if !versions.is_empty() {
-            div { class: "changelog-collapse-row",
-                CollapseAll { set: collapse, keys: versions }
-            }
-        }
         div { class: "changelog-list",
             for release in log.shown(selection) {
                 div {
                     key: "{selection_key}-{release.version}",
                     id: anchor(release.version),
                     class: "changelog-card",
-                    div { class: "changelog-version-row",
-                        CollapseCaret {
-                            set: collapse,
-                            section: release.version.to_owned(),
-                            label: release.version.to_owned(),
-                        }
+                    CollapseHeader {
+                        set: collapse,
+                        section: release.version.to_owned(),
+                        label: release.version.to_owned(),
+                        class: "changelog-version-row",
                         h2 { class: "changelog-version",
                             a {
                                 href: "#{anchor(release.version)}",
+                                // Following the link leaves the card as it is.
+                                onclick: |event: MouseEvent| event.stop_propagation(),
                                 title: "Link to {release.version}",
                                 "{release.version}"
                             }
