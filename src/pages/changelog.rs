@@ -1,8 +1,10 @@
 use dioxus::prelude::*;
-use orangui::Panel;
+use orangui::{Panel, use_collapse_set};
 
 use crate::Route;
-use crate::components::changelog::{ChangelogCards, ChangelogChips, use_selection};
+use crate::components::changelog::{
+    ChangelogCards, ChangelogChips, ChangelogCollapseAll, use_selection,
+};
 use crate::components::page_meta::PageMeta;
 
 /// Cairn's release history. Linked from the cairn project page.
@@ -16,6 +18,8 @@ pub(crate) const CAIRN_APP_STORE_URL: &str =
 #[component]
 pub fn CairnChangelog() -> Element {
     let selected = use_selection();
+    // Every release starts open; a header or Collapse all shuts them.
+    let collapse = use_collapse_set();
 
     rsx! {
         PageMeta {
@@ -29,6 +33,9 @@ pub fn CairnChangelog() -> Element {
                 title: "Changelog",
                 // Page hero, so the title is this page's h1 (see detail.rs).
                 title_h1: true,
+                title_end: rsx! {
+                    ChangelogCollapseAll { selected, set: collapse }
+                },
                 actions: rsx! {
                     a { href: CAIRN_APP_STORE_URL, class: "panel-action",
                         "App Store" span { class: "ext", "\u{2197}" }
@@ -42,7 +49,7 @@ pub fn CairnChangelog() -> Element {
                 p { class: "card-summary", "Every release, newest first." }
                 ChangelogChips { selected }
             }
-            ChangelogCards { selected }
+            ChangelogCards { selected, collapse }
         }
     }
 }

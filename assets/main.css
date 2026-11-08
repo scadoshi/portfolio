@@ -1623,17 +1623,6 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     padding-top: 0.75rem;
 }
 
-/* Collapse all, at the right end over the releases. */
-.changelog-collapse-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 0.75rem;
-}
-
-.changelog-collapse-row .collapse-all {
-    font-family: inherit;
-}
-
 .changelog-version {
     font-size: 1.1rem;
     color: var(--accent-primary);
