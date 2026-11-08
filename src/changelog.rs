@@ -101,28 +101,29 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[Release {
-    version: "1.3.1",
-    date: None,
-    entries: &[
-        "Home and a counter's screen move to the new day at the rollover hour and pick up today's figures when you come back to the app",
-        "A tap after the day turns counts on the new day, so a minus no longer takes from yesterday's figure",
-        "Cairn opens on Android, keeping its counters in the app's own storage",
-        "Settings has a Backup row that saves every counter, its settings and every tap in one file and imports it back, asking before it replaces a counter you already have",
-        "When iOS closes Cairn's page in the background to free memory, Cairn draws itself again when you come back instead of showing a frozen screen",
-        "Every theme, light and dark, draws its titles, labels, buttons and errors clearly enough to read",
-        "On a phone, small buttons answer a tap that lands just outside them",
-        "Toasts appear at the bottom left instead of over the header",
-        "A plain tap, a theme pick, the dark toggle and a Settings change no longer raise a toast",
-        "On Android the keyboard no longer covers a sheet's checkmark",
-        "A best's date or month stays on one line",
-        "Export says 1 file when it writes one and no longer leaves a log file beside your counters",
-        "Each Settings row keeps its name, value and buttons on one line on a phone",
-    ],
-}];
+pub(crate) const UPCOMING: &[Release] = &[];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
+    Release {
+        version: "1.4.0",
+        date: Some(Date::new(2026, 11, 8)),
+        entries: &[
+            "Home and a counter's screen move to the new day at the rollover hour and pick up today's figures when you come back to the app",
+            "A tap after the day turns counts on the new day, so a minus no longer takes from yesterday's figure",
+            "Cairn opens on Android, keeping its counters in the app's own storage",
+            "Settings has a Backup row that saves every counter, its settings and every tap in one file and imports it back, asking before it replaces a counter you already have",
+            "When iOS closes Cairn's page in the background to free memory, Cairn draws itself again when you come back instead of showing a frozen screen",
+            "Every theme, light and dark, draws its titles, labels, buttons and errors clearly enough to read",
+            "On a phone, small buttons answer a tap that lands just outside them",
+            "Toasts appear at the bottom left instead of over the header",
+            "A plain tap, a theme pick, the dark toggle and a Settings change no longer raise a toast",
+            "On Android the keyboard no longer covers a sheet's checkmark",
+            "A best's date or month stays on one line",
+            "Export says 1 file when it writes one and no longer leaves a log file beside your counters",
+            "Each Settings row keeps its name, value and buttons on one line on a phone",
+        ],
+    },
     Release {
         version: "1.3.0",
         date: Some(Date::new(2026, 11, 5)),
