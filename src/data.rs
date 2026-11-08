@@ -101,36 +101,22 @@ const CAIRN: Project = Project {
     tags: &["dioxus", "hexagonal"],
     media: &[
         MediaItem {
-            src: asset!("/assets/projects/cairn/00-demo.mp4"),
-            alt: "Logging reps across three counters, opening one, and changing a setting",
-            caption: Some(
-                "A minute of ordinary use: tap, watch the goal tag close, open a counter",
-            ),
+            src: asset!("/assets/projects/cairn/1_home.mp4"),
+            alt: "Tapping +5 and +10 on the pull-ups counter until its goal tag reads goal met",
+            caption: Some("Tap to count, in fives or tens"),
             kind: MediaKind::Video,
         },
         MediaItem {
-            src: asset!("/assets/projects/cairn/01-home.jpeg"),
-            alt: "Cairn home screen: the mark, today's totals across every counter, a quote, and the first counter card",
-            caption: Some("One screen. Today across every counter, then the counters themselves"),
-            kind: MediaKind::Image,
+            src: asset!("/assets/projects/cairn/2_create.mp4"),
+            alt: "Creating a burpees counter and setting its goal to 50 a day",
+            caption: Some("Make a counter with a daily goal"),
+            kind: MediaKind::Video,
         },
         MediaItem {
-            src: asset!("/assets/projects/cairn/02-counters.jpeg"),
-            alt: "Three counter cards with goal tags counting down, and a +10 toast over the last one",
-            caption: Some("Every counter, each with what today still owes. A tap logs and says so"),
-            kind: MediaKind::Image,
-        },
-        MediaItem {
-            src: asset!("/assets/projects/cairn/03-counter.jpeg"),
-            alt: "One counter: goal pace figures and a 60-day chart with a 7-day average",
-            caption: Some("Pace against a 200-a-day goal, and 60 days with the 7-day average"),
-            kind: MediaKind::Image,
-        },
-        MediaItem {
-            src: asset!("/assets/projects/cairn/04-config.jpeg"),
-            alt: "Config screen showing theme, mark, dark mode, date format, day and week start, and rest days",
-            caption: Some("Every setting explains itself from the ? beside it"),
-            kind: MediaKind::Image,
+            src: asset!("/assets/projects/cairn/3_details.mp4"),
+            alt: "One counter's page: a year heatmap, totals and projection, goal pace, a 60-day trend and bests",
+            caption: Some("A year of one counter, from the heatmap down to its bests"),
+            kind: MediaKind::Video,
         },
     ],
     approach: &[
