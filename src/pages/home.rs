@@ -69,7 +69,7 @@ pub fn Home() -> Element {
                                     Link {
                                         class: "panel-action",
                                         to: Route::ProjectDetail { slug: "heron".to_string() },
-                                        "Counted by Heron"
+                                        "Showcased repos, counted by Heron"
                                     }
                                     Link {
                                         class: "panel-action",
