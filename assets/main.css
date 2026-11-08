@@ -308,9 +308,8 @@ a.panel-action:visited {
 
 /* === Content === */
 
-/* A long word or a bare URL breaks where it would run past the page, so a
-   phone never scrolls sideways. Code keeps its lines and scrolls in its own
-   box. */
+/* Off screen until Tab reaches it; Enter moves focus to main, which
+   takes focus without a ring. */
 .skip-link {
     position: absolute;
     top: 0.5rem;
@@ -334,6 +333,9 @@ a.panel-action:visited {
     outline: none;
 }
 
+/* A long word or a bare URL breaks where it would run past the page, so a
+   phone never scrolls sideways. Code keeps its lines and scrolls in its own
+   box. */
 .content {
     flex: 1;
     overflow-wrap: anywhere;
