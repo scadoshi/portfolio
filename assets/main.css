@@ -1608,7 +1608,30 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     display: flex;
     align-items: center;
     gap: 0.6rem;
+}
+
+/* The caret leads the version, sized to the heading. */
+.changelog-version-row .collapse-caret {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: -0.25rem;
+}
+
+/* The space under the version row is the notes' own, so a shut card closes
+   up to its header. */
+.changelog-card .changelog-bullets {
+    padding-top: 0.75rem;
+}
+
+/* Collapse all, at the right end over the releases. */
+.changelog-collapse-row {
+    display: flex;
+    justify-content: flex-end;
     margin-bottom: 0.75rem;
+}
+
+.changelog-collapse-row .collapse-all {
+    font-family: inherit;
 }
 
 .changelog-version {
