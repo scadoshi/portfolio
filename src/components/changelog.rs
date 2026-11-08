@@ -10,7 +10,7 @@
 //! year, month and minor and scrolls to its card.
 
 use dioxus::prelude::*;
-use orangui::Chip;
+use orangui::{Chip, CollapseAll, CollapseBody, CollapseCaret, use_collapse_set};
 
 use crate::changelog::{Date, RELEASES, Release, UPCOMING};
 
@@ -325,8 +325,20 @@ pub fn ChangelogCards(selected: Signal<Selection>) -> Element {
     // In each card's key so a selection change remounts the visible cards,
     // replaying their ease-in.
     let selection_key = format!("{selection:?}");
+    // Every version starts open; a caret or Collapse all shuts them.
+    let collapse = use_collapse_set();
+    let versions: Vec<String> = log
+        .shown(selection)
+        .iter()
+        .map(|release| release.version.to_owned())
+        .collect();
 
     rsx! {
+        if !versions.is_empty() {
+            div { class: "changelog-collapse-row",
+                CollapseAll { set: collapse, keys: versions }
+            }
+        }
         div { class: "changelog-list",
             for release in log.shown(selection) {
                 div {
@@ -334,6 +346,11 @@ pub fn ChangelogCards(selected: Signal<Selection>) -> Element {
                     id: anchor(release.version),
                     class: "changelog-card",
                     div { class: "changelog-version-row",
+                        CollapseCaret {
+                            set: collapse,
+                            section: release.version.to_owned(),
+                            label: release.version.to_owned(),
+                        }
                         h2 { class: "changelog-version",
                             a {
                                 href: "#{anchor(release.version)}",
@@ -350,9 +367,11 @@ pub fn ChangelogCards(selected: Signal<Selection>) -> Element {
                             span { class: "status-tag status-done", "Latest" }
                         }
                     }
-                    ul { class: "changelog-bullets",
-                        for entry in release.entries {
-                            li { "{entry}" }
+                    CollapseBody { set: collapse, section: release.version.to_owned(),
+                        ul { class: "changelog-bullets",
+                            for entry in release.entries {
+                                li { "{entry}" }
+                            }
                         }
                     }
                 }
