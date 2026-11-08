@@ -308,6 +308,31 @@ a.panel-action:visited {
 
 /* === Content === */
 
+/* Off screen until Tab reaches it; Enter moves focus to main, which
+   takes focus without a ring. */
+.skip-link {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 1000;
+    padding: 0.5rem 0.9rem;
+    border: 2px solid var(--accent-primary);
+    border-radius: 0.5rem;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-200%);
+}
+
+.skip-link:focus {
+    transform: none;
+}
+
+.content:focus {
+    outline: none;
+}
+
 /* A long word or a bare URL breaks where it would run past the page, so a
    phone never scrolls sideways. Code keeps its lines and scrolls in its own
    box. */

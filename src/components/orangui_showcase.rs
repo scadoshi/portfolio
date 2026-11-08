@@ -585,7 +585,7 @@ fn PaletteShowcase() -> Element {
             title: "Theme palette",
             actions: rsx! {
                 Source { path: "assets/themes.css" }
-                Source { path: "src/theme.rs" }
+                Source { path: "orangui-core/src/theme.rs" }
             },
             p { class: "kit-use",
                 "Six slots in every theme, for color that means nothing: tags, chart lines, chips. Cool and warm take turns."
@@ -756,7 +756,7 @@ fn ChartShowcase() -> Element {
             title: "ChartTip",
             actions: rsx! {
                 ReplayButton { replay }
-                Source { path: "src/chart_math.rs" }
+                Source { path: "orangui-core/src/chart_math.rs" }
                 Source { path: "src/chart_tip.rs" }
             },
             p { class: "kit-use",

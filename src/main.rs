@@ -241,12 +241,14 @@ fn NavbarLayout() -> Element {
     });
     rsx! {
         div { class: "theme-wrapper {css_class}",
+            // Hidden until focused: the first Tab stop, past the nav.
+            a { class: "skip-link", href: "#content", "Skip to content" }
             components::navbar::Navbar {}
             // Still: drawn in place on first paint. The splash's own field
             // rains in over it, the same seeded cells, so when the overlay
             // fades the backdrop is already there and nothing rains twice.
             GridCells { still: true }
-            main { class: "content",
+            main { id: "content", class: "content", tabindex: "-1",
                 Outlet::<Route> {}
             }
             components::footer::Footer {}
