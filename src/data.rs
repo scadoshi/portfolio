@@ -398,6 +398,12 @@ const ZWIPE: Project = Project {
             caption: Some("Your swipes and searches over the year, and the cards you skip most"),
             kind: MediaKind::Video,
         },
+        MediaItem {
+            src: asset!("/assets/projects/zwipe/5_deck.mp4"),
+            alt: "A deck's Cards page: the commander and MVPs in a strip up top, then the cards grouped by type",
+            caption: Some("Your deck: commander and MVPs up top, every card a tap away"),
+            kind: MediaKind::Video,
+        },
     ],
     approach: &[
         "One Rust codebase compiles to native iOS and Android through Dioxus. No JS bridge, no separate frontend repo",
