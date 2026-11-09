@@ -106,6 +106,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     date: None,
     entries: &[
         "Opening another counter from the menu shows its figures right away instead of the last counter's",
+        "On a counter's screen the menu lights only that counter, not Home as well",
     ],
 }];
 
