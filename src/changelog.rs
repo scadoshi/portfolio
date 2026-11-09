@@ -107,6 +107,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     entries: &[
         "Opening another counter from the menu shows its figures right away instead of the last counter's",
         "On a counter's screen the menu lights only that counter, not Home as well",
+        "Past a counter's goal, its Goal card reads 0 remaining and 0 needed per day, marked goal met, instead of negative figures",
     ],
 }];
 
