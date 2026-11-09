@@ -108,6 +108,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Opening another counter from the menu shows its figures right away instead of the last counter's",
         "On a counter's screen the menu lights only that counter, not Home as well",
         "Past a counter's goal, its Goal card counts how far past (+494 past goal) and needed per day reads goal met, instead of negative figures",
+        "After Save marks a field in the counter form, its message goes as soon as the field is right, instead of waiting for the next Save",
     ],
 }];
 
