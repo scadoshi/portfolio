@@ -101,7 +101,13 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[];
+pub(crate) const UPCOMING: &[Release] = &[Release {
+    version: "1.4.1",
+    date: None,
+    entries: &[
+        "Opening another counter from the menu shows its figures right away instead of the last counter's",
+    ],
+}];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
