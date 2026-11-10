@@ -10,7 +10,7 @@
 //! year, month and minor and scrolls to its card.
 
 use dioxus::prelude::*;
-use orangui::{Chip, CollapseAll, CollapseBody, CollapseHeader, CollapseSet};
+use orangui::{BannerStatus, Chip, CollapseAll, CollapseSet, ReleaseCard, ReleaseTag};
 
 use crate::changelog::{Date, RELEASES, Release, UPCOMING};
 
@@ -222,13 +222,29 @@ pub(crate) fn anchor(version: &str) -> String {
     format!("v{}", version.replace('.', "-"))
 }
 
+/// The pill at the right end of `version`'s card: Upcoming in amber, Latest
+/// in green, none for an older release.
+fn release_tag(log: Log, version: &str) -> Option<ReleaseTag> {
+    let (status, label) = if log.is_upcoming(version) {
+        (BannerStatus::Doing, "Upcoming")
+    } else if log.is_latest(version) {
+        (BannerStatus::Done, "Latest")
+    } else {
+        return None;
+    };
+    Some(ReleaseTag {
+        status,
+        label: label.to_owned(),
+    })
+}
+
 /// Sets the sticky nav's height as the cards' scroll margin, so a jump to a
 /// card stops below the nav, then scrolls to the card whose id `dioxus.recv`
 /// gives, if any, once the selection has rendered it.
 const SCROLL_JS: &str = r"
 const nav = document.querySelector('.nav-wrapper');
 const offset = (nav ? nav.getBoundingClientRect().height : 0) + 16;
-document.documentElement.style.setProperty('--changelog-scroll-margin', offset + 'px');
+document.documentElement.style.setProperty('--release-card-scroll-margin', offset + 'px');
 const id = await dioxus.recv();
 if (id) {
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -333,8 +349,8 @@ pub fn ChangelogCollapseAll(selected: Signal<Selection>, set: CollapseSet) -> El
 }
 
 /// The newest-first release cards the selection shows, each with its date
-/// and notes. A port of zwipe's `components::ChangelogReleases`, so the two
-/// read the same. A click anywhere on a card's header opens or shuts it;
+/// and notes, each orangui's `ReleaseCard`, the card zwipe's changelog draws
+/// too. A click anywhere on a card's header opens or shuts it;
 /// `collapse` is the set [`ChangelogCollapseAll`] shares.
 #[component]
 pub fn ChangelogCards(selected: Signal<Selection>, collapse: CollapseSet) -> Element {
@@ -347,40 +363,15 @@ pub fn ChangelogCards(selected: Signal<Selection>, collapse: CollapseSet) -> Ele
     rsx! {
         div { class: "changelog-list",
             for release in log.shown(selection) {
-                div {
+                ReleaseCard {
                     key: "{selection_key}-{release.version}",
+                    set: collapse,
+                    version: release.version.to_owned(),
+                    date: release.date.map(|date| date.to_string()),
+                    tag: release_tag(log, release.version),
+                    entries: release.entries.iter().map(|&entry| entry.to_owned()).collect::<Vec<String>>(),
                     id: anchor(release.version),
-                    class: "changelog-card",
-                    CollapseHeader {
-                        set: collapse,
-                        section: release.version.to_owned(),
-                        label: release.version.to_owned(),
-                        class: "changelog-version-row",
-                        h2 { class: "changelog-version",
-                            a {
-                                href: "#{anchor(release.version)}",
-                                // Following the link leaves the card as it is.
-                                onclick: |event: MouseEvent| event.stop_propagation(),
-                                title: "Link to {release.version}",
-                                "{release.version}"
-                            }
-                        }
-                        if let Some(date) = release.date {
-                            span { class: "changelog-date", "{date}" }
-                        }
-                        if log.is_upcoming(release.version) {
-                            span { class: "status-tag status-doing", "Upcoming" }
-                        } else if log.is_latest(release.version) {
-                            span { class: "status-tag status-done", "Latest" }
-                        }
-                    }
-                    CollapseBody { set: collapse, section: release.version.to_owned(),
-                        ul { class: "changelog-bullets",
-                            for entry in release.entries {
-                                li { "{entry}" }
-                            }
-                        }
-                    }
+                    href: format!("#{}", anchor(release.version)),
                 }
             }
         }
