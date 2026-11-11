@@ -163,8 +163,19 @@ a:visited {
     transition: color 0.2s;
 }
 
-/* Hover states that actually answer the cursor: links brighten toward the
-   text color, panels lift a few pixels with a deeper shadow. Both sit inside
+/* An inline text link, which has no class: underlined in its ink at rest,
+   as on zwipe.net and app.zwipe.net. The kit's hover then gives it the
+   accent and a firmer underline. */
+:where(a):not([class]),
+:where(a):not([class]):visited {
+    color: var(--ink-palette-1, var(--palette-1));
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Hover states that actually answer the cursor: links with a class (the
+   brand, pills) brighten toward the text color, panels lift a few pixels
+   with a deeper shadow. An inline text link takes the kit's hover instead. Both sit inside
    (hover: hover) so touch devices never get a stuck state.
 
    The panel rules carry the .theme-wrapper prefix on purpose: the crate's
@@ -192,7 +203,7 @@ a:visited {
 }
 
 @media (hover: hover) {
-    a:not(.tag):hover {
+    a[class]:not(.tag, .footer-built-repo):hover {
         /* 30% keeps a trace of the accent hue but reads as a clear
            brighten; the earlier 55% mix was too close to the resting
            color to register as a hover at all. */
@@ -1606,8 +1617,23 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
 
 .footer-built-repo,
 .footer-built-repo:visited {
-    color: var(--palette-1);
+    color: var(--ink-palette-1, var(--palette-1));
     text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* The footer's repo link is a text link with a class, so it takes the kit's
+   text-link hover here: the accent and a firmer underline. */
+@media (hover: hover) {
+    .footer-built-repo:hover {
+        color: var(--ink-accent-primary, var(--accent-primary));
+        text-decoration-thickness: 2px;
+    }
+}
+
+.footer-built-repo:focus-visible {
+    color: var(--ink-accent-primary, var(--accent-primary));
+    text-decoration-thickness: 2px;
 }
 
 /* === Responsive === */
