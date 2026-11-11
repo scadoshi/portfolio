@@ -171,14 +171,13 @@ a:visited {
     transition: color 0.2s;
 }
 
-/* An inline text link, which has no class: underlined in its ink at rest,
-   as on zwipe.net and app.zwipe.net. The kit's hover then gives it the
-   accent and a firmer underline. */
+/* An inline text link, which has no class: the accent marks it, with no
+   underline, as on zwipe.net and app.zwipe.net. The kit's hover then
+   brightens it a little and its focus adds a ring. */
 :where(a):not([class]),
 :where(a):not([class]):visited {
-    color: var(--ink-palette-1, var(--palette-1));
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    color: var(--ink-accent-primary, var(--accent-primary));
+    text-decoration: none;
 }
 
 /* Hover states that actually answer the cursor: links with a class (the
@@ -1625,23 +1624,23 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
 
 .footer-built-repo,
 .footer-built-repo:visited {
-    color: var(--ink-palette-1, var(--palette-1));
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    color: var(--ink-accent-primary, var(--accent-primary));
+    text-decoration: none;
 }
 
 /* The footer's repo link is a text link with a class, so it takes the kit's
-   text-link hover here: the accent and a firmer underline. */
+   text-link hover and focus here: a slight brighten, and a ring on focus. */
 @media (hover: hover) {
     .footer-built-repo:hover {
-        color: var(--ink-accent-primary, var(--accent-primary));
-        text-decoration-thickness: 2px;
+        color: color-mix(in srgb, var(--ink-accent-primary, var(--accent-primary)) 70%, var(--text-primary));
     }
 }
 
 .footer-built-repo:focus-visible {
-    color: var(--ink-accent-primary, var(--accent-primary));
-    text-decoration-thickness: 2px;
+    color: color-mix(in srgb, var(--ink-accent-primary, var(--accent-primary)) 70%, var(--text-primary));
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+    border-radius: 0.2em;
 }
 
 /* === Responsive === */
