@@ -38,7 +38,12 @@ use dioxus::prelude::*;
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum MediaKind {
     Image,
-    Video,
+    /// A video and its frame size in pixels, which reserves its box before
+    /// the first frame arrives.
+    Video {
+        width: u32,
+        height: u32,
+    },
 }
 
 #[derive(Clone, PartialEq, Debug)]
@@ -104,19 +109,28 @@ const CAIRN: Project = Project {
             src: asset!("/assets/projects/cairn/1_home.mp4"),
             alt: "Tapping +5 and +10 on the pull-ups counter until its goal tag reads goal met",
             caption: Some("Tap to count, in fives or tens"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/cairn/2_create.mp4"),
             alt: "Creating a burpees counter and setting its goal to 50 a day",
             caption: Some("Make a counter with a daily goal"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/cairn/3_details.mp4"),
             alt: "One counter's page: a year heatmap, totals and projection, goal pace, a 60-day trend and bests",
             caption: Some("A year of one counter, from the heatmap down to its bests"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
     ],
     approach: &[
@@ -378,31 +392,46 @@ const ZWIPE: Project = Project {
             src: asset!("/assets/projects/zwipe/1_swipe.mp4"),
             alt: "Swiping cards right to add them to a deck and left to skip them",
             caption: Some("Swipe right to add a card, left to skip it"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/zwipe/2_stats.mp4"),
             alt: "Scrolling a deck's stats: price, mana curve and colors",
             caption: Some("Price and mana curve for the deck you're building"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/zwipe/3_playstyle.mp4"),
             alt: "The Playstyle screen: most-played colors, Oracle tags and suggested commanders",
             caption: Some("The colors and Oracle tags you play most, and commanders that fit them"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/zwipe/4_activity.mp4"),
             alt: "The Activity screen: swipe and search history, card roles and most skipped cards",
             caption: Some("Your swipes and searches over the year, and the cards you skip most"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/zwipe/5_deck.mp4"),
             alt: "A deck's Cards page: the commander and MVPs in a strip up top, then the cards grouped by type",
             caption: Some("Your deck: commander and MVPs up top, every card a tap away"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 540,
+                height: 1110,
+            },
         },
     ],
     approach: &[
@@ -549,19 +578,28 @@ const HALO_ACTION_IMPORTER: Project = Project {
             caption: Some(
                 "Full run: batching across multiple sizes and only-parse mode validating inbound data",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1844,
+                height: 1134,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/halo-action-importer/showing_imported_actions.mp4"),
             alt: "Imported actions resulting from the run",
             caption: Some("Resulting actions imported into Halo"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/halo-action-importer/logging_and_cache.mp4"),
             alt: "Per-run log directory and cache files",
             caption: Some("Per-run log directory and the two-tier cache"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
     ],
     approach: &[
@@ -665,13 +703,19 @@ const HALO_CUSTOM_FIELD_BUILDER: Project = Project {
             src: asset!("/assets/projects/halo-custom-field-builder/full_process.mp4"),
             alt: "Full process: debug mode, regular mode, CSV used, and logs rendered",
             caption: Some("Full process: debug mode, regular mode, CSV used, and logs rendered"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/halo-custom-field-builder/build_field_by_hand.mp4"),
             alt: "Manually creating a custom field",
             caption: Some("Manually creating a custom field"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
     ],
     approach: &[
@@ -763,31 +807,46 @@ const MARVIN: Project = Project {
             src: asset!("/assets/projects/marvin/help_cmd_std_chat.mp4"),
             alt: "Help command and a standard chat exchange",
             caption: Some("/help and a standard chat exchange"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1580,
+                height: 1018,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/marvin/commands.mp4"),
             alt: "Slash command tour",
             caption: Some("Slash command tour"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/marvin/import_chat_math_tool_call.mp4"),
             alt: "Importing a chat and a math tool call",
             caption: Some("Importing a chat and a math tool call"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/marvin/tavily_web_tool_calls.mp4"),
             alt: "Tavily web search tool calls",
             caption: Some("Tavily web search tool calls"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/marvin/model_switch_mid_chat.mp4"),
             alt: "Switching Anthropic models mid-chat",
             caption: Some("Switching Anthropic models mid-chat"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 1062,
+            },
         },
     ],
     approach: &[
@@ -909,7 +968,10 @@ const CHICKADEE: Project = Project {
             src: asset!("/assets/projects/chickadee/01-cli-basics.mp4"),
             alt: "CLI REPL: set, get, and a delete that writes a tombstone",
             caption: Some("Set, get, and a delete that writes a tombstone rather than erasing"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/chickadee/02-wal-on-disk.mp4"),
@@ -917,25 +979,37 @@ const CHICKADEE: Project = Project {
             caption: Some(
                 "The WAL in hex: a 10-byte header per entry, and CD marking every boundary",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/chickadee/03-durability.mp4"),
             alt: "Process killed and restarted, with keys rebuilt by replaying the log",
             caption: Some("Kill the process and the memtable dies with it. The log rebuilds it"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/chickadee/04-corruption-recovery.mp4"),
             alt: "One byte flipped in the log; the bad entry is dropped and later entries survive",
             caption: Some("One flipped byte: the bad entry is dropped, everything after it lives"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/chickadee/05-concurrent-clients.mp4"),
             alt: "Two TCP clients reading and writing the same store on separate threads",
             caption: Some("Two connections, two threads, one store"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
     ],
     approach: &[
@@ -1168,13 +1242,19 @@ const STELLER: Project = Project {
             src: asset!("/assets/projects/steller/01-basics.mp4"),
             alt: "redis-cli connecting to Steller: PING, SET, GET, EXISTS, DEL",
             caption: Some("A real redis-cli connects and never notices it isn't Redis"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/steller/02-ttl-and-set-options.mp4"),
             alt: "SET with EX and PX options, and a key expiring on its own",
             caption: Some("SET options on millisecond deadlines, and a PX key expiring live"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/steller/03-pubsub.mp4"),
@@ -1182,19 +1262,28 @@ const STELLER: Project = Project {
             caption: Some(
                 "Pub/sub without async: the push lands while the subscriber's reader is blocked",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/steller/04-persistence-across-restart.mp4"),
             alt: "Server shut down and restarted, with the value and its TTL both surviving",
             caption: Some("Restart: the value survives and the TTL comes back lower, not reset"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/steller/05-error-handling.mp4"),
             alt: "Three malformed commands answered with errors, session still serving",
             caption: Some("Bad input gets an error and the session keeps going"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
     ],
     approach: &[
@@ -1315,7 +1404,10 @@ const UPSEE: Project = Project {
         src: asset!("/assets/projects/upsee/upsee-demo.mp4"),
         alt: "Upsee counting pullups in real time from webcam input",
         caption: Some("Real-time pose estimation and rep counting via on-device MoveNet inference"),
-        kind: MediaKind::Video,
+        kind: MediaKind::Video {
+            width: 800,
+            height: 450,
+        },
     }],
     approach: &[
         "tract is the Rust-native inference path. Three calls take an ONNX file to runnable: model_for_path, into_optimized, into_runnable. No Python, no cloud",
@@ -1413,7 +1505,10 @@ const GOTCHA: Project = Project {
         src: asset!("/assets/projects/gotcha/demo.mp4"),
         alt: "Keyboard and mouse input triggering intruder captures",
         caption: Some("Keyboard and mouse input triggering intruder captures"),
-        kind: MediaKind::Video,
+        kind: MediaKind::Video {
+            width: 1132,
+            height: 736,
+        },
     }],
     approach: &[
         "cfg(target_os) switches between platform modules, with the platform-only dependencies scoped in Cargo.toml so neither target pulls the other's crates",
@@ -1511,7 +1606,10 @@ const RUSTMAS: Project = Project {
             src: asset!("/assets/projects/rustmas/01-run-a-day.mp4"),
             alt: "Running one day's solution, showing both answers and their timings",
             caption: Some("One day, both parts, and what each one cost. Offline, from cache"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/rustmas/02-independent-solver.mp4"),
@@ -1519,7 +1617,10 @@ const RUSTMAS: Project = Project {
             caption: Some(
                 "Someone else's implementation, used as a regression check. No account needed",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/rustmas/03-every-year-at-once.mp4"),
@@ -1527,7 +1628,10 @@ const RUSTMAS: Project = Project {
             caption: Some(
                 "Drop the filters and it runs everything, skipping unwritten days before they download",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/rustmas/04-the-cache.mp4"),
@@ -1535,7 +1639,10 @@ const RUSTMAS: Project = Project {
             caption: Some(
                 "The cache keeps the whole puzzle, plus a hash of the cookie that fetched the input",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
     ],
     approach: &[
@@ -1622,13 +1729,19 @@ const SHARPMAS: Project = Project {
             caption: Some(
                 "Same subcommands, same filters, same output. Different language under it",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/sharpmas/02-independent-solver.mp4"),
             alt: "Answers validated against the independent solver, both parts marked correct",
             caption: Some("The same check against the same independent solver"),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/sharpmas/03-sum-types-in-csharp.mp4"),
@@ -1636,7 +1749,10 @@ const SHARPMAS: Project = Project {
             caption: Some(
                 "What C# has instead of an enum: a private constructor closing the set of cases",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
         MediaItem {
             src: asset!("/assets/projects/sharpmas/04-same-tool-two-languages.mp4"),
@@ -1644,7 +1760,10 @@ const SHARPMAS: Project = Project {
             caption: Some(
                 "Side by side on the same puzzle. Same answers, same verdicts, honest timings",
             ),
-            kind: MediaKind::Video,
+            kind: MediaKind::Video {
+                width: 1624,
+                height: 978,
+            },
         },
     ],
     approach: &[
@@ -1723,6 +1842,47 @@ public static async Task<Solved> Solve<T>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The display size in an mp4's video track header: the first `tkhd` box
+    /// with a nonzero width, its width and height as 16.16 fixed point.
+    fn mp4_size(bytes: &[u8]) -> Option<(u32, u32)> {
+        let read = |i: usize| -> Option<u32> {
+            let word: [u8; 4] = bytes.get(i..i.checked_add(4)?)?.try_into().ok()?;
+            Some(u32::from_be_bytes(word) >> 16)
+        };
+        let mut from = 0;
+        while let Some(at) = bytes.get(from..)?.windows(4).position(|w| w == b"tkhd") {
+            let body = from.checked_add(at)?.checked_add(4)?;
+            // Version 1 widens the three times and the duration to 8 bytes.
+            let skip = if *bytes.get(body)? == 1 { 88 } else { 76 };
+            let size_at = body.checked_add(skip)?;
+            let (width, height) = (read(size_at)?, read(size_at.checked_add(4)?)?);
+            if width > 0 {
+                return Some((width, height));
+            }
+            from = body;
+        }
+        None
+    }
+
+    /// A video's reserved box is its file's own frame size, so swapping one
+    /// file for another without updating its size fails here.
+    #[test]
+    fn every_video_reserves_its_files_size() {
+        let mut checked = 0;
+        for project in Section::ALL.iter().flat_map(|s| s.projects()) {
+            for item in project.media {
+                let MediaKind::Video { width, height } = item.kind else {
+                    continue;
+                };
+                let path = item.src.bundled().absolute_source_path().to_owned();
+                let bytes = std::fs::read(&path).unwrap();
+                assert_eq!(mp4_size(&bytes), Some((width, height)), "{path}");
+                checked += 1_u32;
+            }
+        }
+        assert_eq!(checked, 38, "every video on the site");
+    }
 
     /// public/sitemap.xml is hand-maintained, so it drifts. It already has:
     /// cairn landed in 3c17f1c and never made it into the file. Compare it
