@@ -212,6 +212,12 @@ pub(crate) fn weekly_commits(live: Option<&Snapshot>) -> Option<(&[WeekCommits],
     Some((&snapshot.totals.weekly_commits, source))
 }
 
+/// The month the current snapshot was assembled in, `YYYY-MM`.
+pub(crate) fn taken_month(live: Option<&Snapshot>) -> Option<&str> {
+    let (snapshot, _) = current(live)?;
+    snapshot.generated_at.get(..7)
+}
+
 /// The contribution calendar and where it came from, when the current snapshot
 /// has one.
 pub(crate) fn calendar(live: Option<&Snapshot>) -> Option<(&Calendar, Source)> {

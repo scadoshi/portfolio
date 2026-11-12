@@ -76,7 +76,7 @@ A project added to `data.rs` has to be added to `GITHUB_REPOS` on heron's box as
 Every chart is an inline SVG the site draws itself from the `GET /stats` answer, so it takes the theme's colors and needs no chart library.
 
 - The home page has the year of contributions (heron's `calendar`, from GitHub's GraphQL) as a heatmap, with a contributions-by-month line drawn on the same columns. `heatmap.rs` lays both out, and the year's outlier days get a lit edge (`PEAK_RATIO` times the median busy day, `MAX_PEAKS` at most).
-- The heron page has the flow diagram (shared `Diagram*` pieces from orangui), the fleet bar chart of lines, tests and lints, and commits by month summed from `weekly_commits`. That last one only covers the repositories heron measures, and its caption says so.
+- The heron page has the flow diagram (shared `Diagram*` pieces from orangui), the fleet bar chart of lines, tests and lints, and commits by month summed from `weekly_commits`, running to the month the snapshot was taken (a month with no weeks yet shows no commits). That last one only covers the repositories heron measures, and its caption says so.
 - The steller page has the benchmark against Redis, the one hand-typed number set, with its link pinned to the commit of `BENCHMARKS.md` the rows came from.
 - Hover chips are shared in `chart.rs`. The monotone curve, the chips' edge anchoring and the peak pick come from orangui.
 - On a phone, a chart keeps a readable width inside a `.chart-scroll` box, and the time charts open on the newest months (`scroll.rs`).
