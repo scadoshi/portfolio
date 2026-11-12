@@ -372,7 +372,7 @@ a.panel-action:visited {
    padding, so the hero's edges align with the band below. The card enters a
    beat after the wordmark so the hero lands in two steps. */
 .hero-panel {
-    max-width: 71rem;
+    max-width: var(--pf-page-max);
     margin: 0 auto var(--panel-gap);
     animation: content-enter 0.5s ease-out 0.15s backwards;
 }
@@ -455,8 +455,8 @@ a.panel-action:visited {
 }
 
 .home-band {
-    /* zite's .page column width. */
-    max-width: 74rem;
+    /* zite's page width. */
+    max-width: var(--pf-page-max);
     margin: 0 auto;
     /* The same 1rem off the footer as the nav's margin leaves at the top. */
     padding: 0 1.5rem 1rem;
@@ -671,7 +671,7 @@ a.panel-action:visited {
 }
 
 .project-detail {
-    max-width: 74rem;
+    max-width: var(--pf-page-max);
     margin: 0 auto;
     padding: 0 1.5rem 1rem;
     display: flex;
@@ -1575,7 +1575,7 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
 /* === Index pages (projects, contribute) === */
 
 .index-page {
-    max-width: 74rem;
+    max-width: var(--pf-page-max);
     margin: 0 auto;
     padding: 0 1.5rem 1rem;
     display: flex;
@@ -2174,5 +2174,57 @@ html.js:not(.splash-skip).splash-over .splash {
         width: max(100%, 44px);
         height: max(100%, 44px);
         transform: translate(-50%, -50%);
+    }
+}
+
+/* === The page's width ===
+   Every page runs the window's width inside its 1.5rem gutter, as zwipe.net
+   does, up to seven 26rem columns; the hero, the bands and the index and
+   detail pages share that one width, so their edges line up. Running text
+   keeps a readable measure inside its panel, and the flow diagram keeps its
+   own size. */
+:root {
+    --pf-page-max: calc(7 * 26rem + 6 * var(--panel-gap));
+}
+
+.hero-tagline,
+.theme-wrapper :is(.home-band, .index-page, .project-detail) .panel-card p {
+    max-width: 70ch;
+}
+
+.hero-tagline {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.theme-wrapper .diagram {
+    max-width: 57rem;
+}
+
+/* The hero's year of contributions keeps its size, centered in the wide
+   hero, so its cells and labels read as they do at 1280. */
+.hero-panel .heatmap {
+    max-width: 71rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* From 1920px the home band's panels flow down as many 26rem columns as fit,
+   About and the left's featured cards first, then the right's, each panel
+   whole in one column. */
+@media (min-width: 120rem) {
+    .home-band {
+        display: block;
+        columns: 26rem 7;
+        column-gap: var(--panel-gap);
+    }
+
+    .home-band .band-col {
+        display: contents;
+    }
+
+    .home-band .panel-card {
+        break-inside: avoid;
+        margin-bottom: var(--panel-gap);
     }
 }
