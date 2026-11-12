@@ -53,10 +53,10 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
     }
 }
 
-/// The class of a video's box: a pulsing skeleton until its first frame can
-/// paint, then the video fades in over it.
-fn video_box_class(painted: bool) -> &'static str {
-    if painted {
+/// The class of a video's box: a pulsing skeleton until the video settles,
+/// then the video fades in over it.
+fn video_box_class(settled: bool) -> &'static str {
+    if settled {
         "gallery-video"
     } else {
         "gallery-video gallery-video-pending"
@@ -65,13 +65,14 @@ fn video_box_class(painted: bool) -> &'static str {
 
 /// A video in a box its own `width` by `height` shape, so nothing moves when
 /// it arrives. The box pulses as a skeleton and the video stays hidden until
-/// its first frame can paint.
+/// it settles: its first frame can paint, or it fails to load, so a broken
+/// file shows the player's own error state instead of pulsing forever.
 #[component]
 fn GalleryVideo(item: MediaItem, width: u32, height: u32) -> Element {
-    let mut painted = use_signal(|| false);
+    let mut settled = use_signal(|| false);
     rsx! {
         div {
-            class: video_box_class(painted()),
+            class: video_box_class(settled()),
             style: "--media-w: {width}; --media-h: {height};",
             video {
                 class: "gallery-image",
@@ -85,7 +86,8 @@ fn GalleryVideo(item: MediaItem, width: u32, height: u32) -> Element {
                 playsinline: true,
                 controls: true,
                 preload: "metadata",
-                onloadeddata: move |_| painted.set(true),
+                onloadeddata: move |_| settled.set(true),
+                onerror: move |_| settled.set(true),
             }
         }
     }
@@ -96,7 +98,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn a_video_box_is_a_skeleton_until_its_first_frame() {
+    fn a_video_box_is_a_skeleton_until_the_video_settles() {
         assert_eq!(
             video_box_class(false),
             "gallery-video gallery-video-pending"

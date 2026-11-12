@@ -769,9 +769,9 @@ a.panel-action:visited {
     max-height: none;
 }
 
-/* Until the video's first frame can paint, its box is a skeleton in zwipe's
-   ghost fill and pulse, and the video, spinner and all, stays hidden. Its
-   fade starts when the box stops pending. */
+/* Until the video's first frame can paint, or it fails to load, its box is
+   a skeleton in zwipe's ghost fill and pulse, and the video, spinner and
+   all, stays hidden. Its fade starts when the box stops pending. */
 .gallery-video-pending {
     background-color: var(--border-muted);
     animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
