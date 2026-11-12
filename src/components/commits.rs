@@ -60,9 +60,12 @@ struct Month {
     commits: u32,
 }
 
-/// Weeks grouped by the month their Sunday falls in, oldest first. The first
-/// and last months are partial, which the hover says for the last one.
-fn by_month(weeks: &[WeekCommits]) -> Vec<Month> {
+/// Weeks grouped by the month their Sunday falls in, oldest first, then every
+/// month after the last week's up to `through` (`YYYY-MM`, the month the
+/// numbers were taken) with no commits, so the chart ends on the current
+/// month. A `through` that cannot be read adds nothing. The first and last
+/// months are partial, which the hover says for the last one.
+fn by_month(weeks: &[WeekCommits], through: &str) -> Vec<Month> {
     let mut months: Vec<Month> = Vec::new();
     for week in weeks {
         let Some(key) = week.week.get(..7) else {
@@ -83,7 +86,47 @@ fn by_month(weeks: &[WeekCommits]) -> Vec<Month> {
             }),
         }
     }
+    let Some(through) = year_month(through) else {
+        return months;
+    };
+    while let Some(next) = months
+        .last()
+        .and_then(|month| year_month(&month.key))
+        .filter(|&last| last < through)
+        .map(next_month)
+    {
+        let (year, month) = next;
+        let key = format!("{year:04}-{month:02}");
+        let label = format!(
+            "{} {year}",
+            chart::month_name(&format!("{month:02}")).unwrap_or("")
+        );
+        months.push(Month {
+            key,
+            label,
+            commits: 0,
+        });
+    }
     months
+}
+
+/// A `YYYY-MM` key as its year and month.
+fn year_month(key: &str) -> Option<(u32, u32)> {
+    let (year, month) = key.get(..7)?.split_once('-')?;
+    let month: u32 = month.parse().ok()?;
+    if !(1..=12).contains(&month) {
+        return None;
+    }
+    Some((year.parse().ok()?, month))
+}
+
+/// The month after `(year, month)`.
+fn next_month((year, month): (u32, u32)) -> (u32, u32) {
+    if month >= 12 {
+        (year.saturating_add(1), 1)
+    } else {
+        (year, month.saturating_add(1))
+    }
 }
 
 /// The drawing area a series is placed in.
@@ -137,7 +180,7 @@ pub fn Commits() -> Element {
     let Some((weeks, source)) = stats::weekly_commits(live.as_ref()) else {
         return rsx! {};
     };
-    let months = by_month(weeks);
+    let months = by_month(weeks, stats::taken_month(live.as_ref()).unwrap_or(""));
     let max = months.iter().map(|month| month.commits).max().unwrap_or(0);
     let top = ceiling(max);
     let total_points = points(&months, top, TOTAL_FRAME);
@@ -278,12 +321,15 @@ mod tests {
             week: date.to_string(),
             commits,
         };
-        let months = by_month(&[
-            week("2025-09-28", 1),
-            week("2025-10-05", 2),
-            week("2025-10-12", 3),
-            week("2025-11-02", 4),
-        ]);
+        let months = by_month(
+            &[
+                week("2025-09-28", 1),
+                week("2025-10-05", 2),
+                week("2025-10-12", 3),
+                week("2025-11-02", 4),
+            ],
+            "2025-11",
+        );
         let summed: Vec<(&str, &str, u32)> = months
             .iter()
             .map(|month| (month.key.as_str(), month.label.as_str(), month.commits))
@@ -296,6 +342,34 @@ mod tests {
                 ("2025-11", "Nov 2025", 4)
             ]
         );
+    }
+
+    #[test]
+    fn the_months_run_to_the_snapshot_s_month() {
+        let week = |date: &str, commits| WeekCommits {
+            week: date.to_string(),
+            commits,
+        };
+        let months = by_month(&[week("2026-09-20", 3), week("2026-09-27", 2)], "2027-01");
+        let keys: Vec<(&str, &str, u32)> = months
+            .iter()
+            .map(|month| (month.key.as_str(), month.label.as_str(), month.commits))
+            .collect();
+        assert_eq!(
+            keys,
+            [
+                ("2026-09", "Sep 2026", 5),
+                ("2026-10", "Oct 2026", 0),
+                ("2026-11", "Nov 2026", 0),
+                ("2026-12", "Dec 2026", 0),
+                ("2027-01", "Jan 2027", 0),
+            ],
+            "the chart ends on the month the numbers were taken, across a year's end"
+        );
+        let current = by_month(&[week("2026-11-08", 4)], "2026-11");
+        assert_eq!(current.len(), 1, "a series that reaches it adds nothing");
+        let garbled = by_month(&[week("2026-11-08", 4)], "soon");
+        assert_eq!(garbled.len(), 1, "a month it cannot read adds nothing");
     }
 
     #[test]
