@@ -1,5 +1,5 @@
 //! The site's pages share one column, 1400px at most (Scotty's pick between the old 74rem column
-//! and the window's width), running text at a readable 70ch inside it, and the nav logo takes
+//! and the window's width), running text filling its panel across it, and the nav logo takes
 //! orangui's shared size.
 
 /// The site's stylesheet.
@@ -31,13 +31,16 @@ fn every_page_shares_one_1400px_column() {
 }
 
 #[test]
-fn running_text_keeps_a_readable_measure() {
-    let at = CSS.find("max-width: 70ch").expect("a 70ch rule");
-    let before = CSS.get(..at).expect("the sheet before it");
-    let selectors = before
-        .get(before.rfind('}').expect("a rule before it")..)
-        .expect("its selectors");
-    assert!(selectors.contains(".panel-body > p"), "{selectors}");
+fn running_text_fills_its_panel() {
+    assert!(
+        !CSS.contains("70ch"),
+        "no text is capped to a reading measure"
+    );
+    let copy = rule(".kit-phone-copy").unwrap_or_default();
+    assert!(
+        !copy.contains("max-width"),
+        "the kit page's copy beside the phone: {copy}"
+    );
 }
 
 #[test]

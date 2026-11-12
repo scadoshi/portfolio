@@ -66,17 +66,6 @@
     --page-max: 87.5rem;
 }
 
-/* Running text keeps a readable measure inside the wide column; the hero's
-   centered tagline stays centered. */
-.panel-body > p,
-.panel-body li {
-    max-width: 70ch;
-}
-
-.hero-tagline {
-    margin-inline: auto;
-}
-
 /* === Animations === */
 
 /* The hero's entrance waits for the app. The shell's script marks the
@@ -1020,10 +1009,6 @@ p.kit-label {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: 2rem;
-}
-
-.kit-phone-copy {
-    max-width: 30rem;
 }
 
 /* The list's top edge meets the phone's. */
