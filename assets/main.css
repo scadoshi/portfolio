@@ -491,6 +491,10 @@ a.panel-action:visited {
         max-height: 55vh;
     }
 
+    .project-gallery .gallery-video {
+        --media-max-h: 55vh;
+    }
+
     /* Single-stack order is about -> every featured card -> how I use AI,
        which no DOM order can give both columns at once.
        display:contents dissolves the two column wrappers (and the left
@@ -745,6 +749,52 @@ a.panel-action:visited {
     }
     to {
         opacity: 1;
+    }
+}
+
+/* A video's box takes its file's shape (`--media-w` and `--media-h`, set
+   inline) inside the media's bounds: the panel's width, and 70vh tall (55vh
+   on a phone). The box holds that size from the first paint, so nothing
+   moves as the video arrives. */
+.gallery-video {
+    --media-max-h: 70vh;
+    width: min(100%, calc(var(--media-max-h) * var(--media-w) / var(--media-h)));
+    aspect-ratio: var(--media-w) / var(--media-h);
+    border-radius: 0.4rem;
+}
+
+.gallery-video > .gallery-image {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+}
+
+/* Until the video's first frame can paint, its box is a skeleton in zwipe's
+   ghost fill and pulse, and the video, spinner and all, stays hidden. Its
+   fade starts when the box stops pending. */
+.gallery-video-pending {
+    background-color: var(--border-muted);
+    animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.gallery-video-pending > .gallery-image {
+    opacity: 0;
+    animation: none;
+}
+
+@keyframes skeleton-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    61.8% {
+        opacity: 0.4;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gallery-video-pending {
+        animation: none;
     }
 }
 

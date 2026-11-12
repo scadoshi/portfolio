@@ -38,23 +38,69 @@ pub fn ProjectGallery(items: &'static [MediaItem]) -> Element {
                                 loading: "lazy",
                             }
                         },
-                        MediaKind::Video => rsx! {
-                            video {
+                        MediaKind::Video { width, height } => rsx! {
+                            GalleryVideo {
                                 key: "{index()}",
-                                class: "gallery-image",
-                                src: "{current.src}",
-                                "aria-label": "{current.alt}",
-                                autoplay: true,
-                                muted: true,
-                                "loop": true,
-                                playsinline: true,
-                                controls: true,
-                                preload: "metadata",
+                                item: current.clone(),
+                                width,
+                                height,
                             }
                         },
                     }
                 }
             }
         }
+    }
+}
+
+/// The class of a video's box: a pulsing skeleton until its first frame can
+/// paint, then the video fades in over it.
+fn video_box_class(painted: bool) -> &'static str {
+    if painted {
+        "gallery-video"
+    } else {
+        "gallery-video gallery-video-pending"
+    }
+}
+
+/// A video in a box its own `width` by `height` shape, so nothing moves when
+/// it arrives. The box pulses as a skeleton and the video stays hidden until
+/// its first frame can paint.
+#[component]
+fn GalleryVideo(item: MediaItem, width: u32, height: u32) -> Element {
+    let mut painted = use_signal(|| false);
+    rsx! {
+        div {
+            class: video_box_class(painted()),
+            style: "--media-w: {width}; --media-h: {height};",
+            video {
+                class: "gallery-image",
+                src: "{item.src}",
+                "aria-label": "{item.alt}",
+                width: "{width}",
+                height: "{height}",
+                autoplay: true,
+                muted: true,
+                "loop": true,
+                playsinline: true,
+                controls: true,
+                preload: "metadata",
+                onloadeddata: move |_| painted.set(true),
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_video_box_is_a_skeleton_until_its_first_frame() {
+        assert_eq!(
+            video_box_class(false),
+            "gallery-video gallery-video-pending"
+        );
+        assert_eq!(video_box_class(true), "gallery-video");
     }
 }
