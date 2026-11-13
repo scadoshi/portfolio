@@ -101,20 +101,21 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[Release {
-    version: "1.4.2",
-    date: None,
-    entries: &[
-        "A new quote: Marcus Aurelius on the present weighing heavier than the future or the past (Meditations 8.36, Farquharson translation)",
-        "Every sheet shows a handle where to drag it, with a grab cursor on a computer",
-        "In Themes, the arrow keys and h, j, k and l move through the themes, gg and Shift+G go to the first or last, and Enter picks one",
-        "Tab stays inside an open dialog instead of leaving for the page behind it",
-        "An open sheet takes focus as it opens, keeps Tab inside, closes on Esc and gives focus back to what opened it",
-    ],
-}];
+pub(crate) const UPCOMING: &[Release] = &[];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
+    Release {
+        version: "1.4.2",
+        date: Some(Date::new(2026, 11, 13)),
+        entries: &[
+            "A new quote: Marcus Aurelius on the present weighing heavier than the future or the past (Meditations 8.36, Farquharson translation)",
+            "Every sheet shows a handle where to drag it, with a grab cursor on a computer",
+            "In Themes, the arrow keys and h, j, k and l move through the themes, gg and Shift+G go to the first or last, and Enter picks one",
+            "Tab stays inside an open dialog instead of leaving for the page behind it",
+            "An open sheet takes focus as it opens, keeps Tab inside, closes on Esc and gives focus back to what opened it",
+        ],
+    },
     Release {
         version: "1.4.1",
         date: Some(Date::new(2026, 11, 8)),
