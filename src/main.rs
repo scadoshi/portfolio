@@ -218,7 +218,7 @@ fn NavbarLayout() -> Element {
                 Outlet::<Route> {}
             }
             components::footer::Footer {}
-            orangui::ShortcutsSheet { open: shortcuts, rows: orangui::page_rows(true).len(),
+            orangui::ShortcutsSheet { open: shortcuts,
                 orangui::PageShortcuts { steps: true }
             }
             if splash() {
