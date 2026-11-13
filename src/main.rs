@@ -178,6 +178,19 @@ fn NavbarLayout() -> Element {
     // index.html decides before first paint and marks the document
     // `splash-skip` otherwise, which hides the prerendered overlay; the app
     // reads the same mark here and opens the gate for the entrances at once.
+    // The keys every page answers on a computer: gg and Shift+G to the ends, j and k a step,
+    // t the theme sheet and Shift+H the list of them.
+    let shortcuts = use_signal(|| false);
+    let steps = use_signal(|| true);
+    orangui::use_page_keys(
+        orangui::PageKeys {
+            themes: true,
+            shortcuts: Some(shortcuts),
+            blocked_by: &[],
+            scroller: None,
+        },
+        steps.into(),
+    );
     let route = use_route::<Route>();
     let mut splash = use_signal(|| route == Route::Home {});
     let mut gate = use_context::<orangui::SplashGate>().0;
@@ -205,6 +218,9 @@ fn NavbarLayout() -> Element {
                 Outlet::<Route> {}
             }
             components::footer::Footer {}
+            orangui::ShortcutsSheet { open: shortcuts,
+                orangui::PageShortcuts { steps: true }
+            }
             if splash() {
                 orangui::Splash { pace: 67, prerendered: true,
                     pre { class: "logo", orangui::Decode { text: pages::home::LOGO_ASCII } }
