@@ -1757,7 +1757,7 @@ rect.fleet-bar {
 }
 
 /* The fleet's entrance: each bar grows from the left on its own delay and
-   its value fades in behind it. `backwards` holds the start state through
+   its value fades in behind it, on orangui's chart-grow and chart-fade. `backwards` holds the start state through
    the delay, then the resting style returns so the metric swap's width
    transition still applies. */
 rect.fleet-bar {
@@ -1768,15 +1768,6 @@ rect.fleet-bar {
 
 .fleet-value {
     animation: chart-fade 0.3s ease-out backwards;
-}
-
-@keyframes chart-grow {
-    from {
-        transform: scaleX(0);
-    }
-    to {
-        transform: none;
-    }
 }
 
 /* === Steller: the benchmark against Redis === */
@@ -2002,15 +1993,6 @@ rect.fleet-bar {
     transform-box: fill-box;
     transform-origin: center;
     animation: chart-pop 0.3s cubic-bezier(0.33, 1, 0.68, 1) backwards;
-}
-
-@keyframes chart-fade {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 @keyframes chart-pop {
