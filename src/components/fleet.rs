@@ -50,6 +50,17 @@ const BAR_HEIGHT: f64 = 14.0;
 const ROW_STAGGER_MS: usize = 45;
 const VALUE_AFTER_MS: usize = 350;
 
+/// One repository's row as drawn: its rank under the chosen metric sets `y`
+/// and the entrance delay.
+#[derive(Debug, Clone, Copy, PartialEq)]
+struct Placed<'src> {
+    name: &'src str,
+    value: u64,
+    y: f64,
+    width: f64,
+    delay_ms: usize,
+}
+
 /// Every repository heron measures, as bars of one metric, drawn from the same
 /// snapshot the cards use. Renders nothing when nothing has been measured.
 #[component]
@@ -98,6 +109,21 @@ pub fn Fleet() -> Element {
         stats::Source::AsOf(day) => format!("as Heron answered on {day}"),
     };
 
+    // Each row's place and size, in name order: the DOM order never changes
+    // with the metric, only the transforms and widths do.
+    let mut placed: Vec<Placed<'_>> = rows
+        .iter()
+        .enumerate()
+        .map(|(rank, (name, value))| Placed {
+            name,
+            value: *value,
+            y: px(u64::try_from(rank).unwrap_or(u64::MAX)) * ROW_HEIGHT + 2.0,
+            width: (px(*value) / max * span).max(1.0),
+            delay_ms: rank.saturating_mul(ROW_STAGGER_MS),
+        })
+        .collect();
+    placed.sort_by(|a, b| a.name.cmp(b.name));
+
     rsx! {
         div { class: "fleet",
             // The shared Chip, so the toggles look like every other toggle
@@ -125,42 +151,37 @@ pub fn Fleet() -> Element {
                 // Each row is a group placed by a transform and each bar's width
                 // is a style, so a change of metric glides: rows swap places and
                 // bars grow or shrink where they are, with the CSS transitions on
-                // .fleet-row and .fleet-bar. Keyed by name so the group survives
-                // the re-sort.
-                for (i, (name, value)) in rows.iter().enumerate() {
-                    {
-                        let y = px(u64::try_from(i).unwrap_or(u64::MAX)) * ROW_HEIGHT + 2.0;
-                        let width = (px(*value) / max * span).max(1.0);
-                        rsx! {
-                            g {
-                                key: "{name}",
-                                class: "fleet-row",
-                                style: "transform: translate(0px, {y}px)",
-                                text {
-                                    class: "fleet-name",
-                                    x: "{LABEL_WIDTH - 10.0}",
-                                    y: "{BAR_HEIGHT - 3.0}",
-                                    text_anchor: "end",
-                                    "{name}"
-                                }
-                                // The entrance grows each bar from the left, a
-                                // row at a time, and the value fades in after it.
-                                rect {
-                                    class: "fleet-bar",
-                                    x: "{LABEL_WIDTH}",
-                                    y: "0",
-                                    height: "{BAR_HEIGHT}",
-                                    rx: "3",
-                                    style: "width: {width}px; animation-delay: {i * ROW_STAGGER_MS}ms",
-                                }
-                                text {
-                                    class: "fleet-value",
-                                    x: "0",
-                                    y: "{BAR_HEIGHT - 3.0}",
-                                    style: "transform: translateX({LABEL_WIDTH + width + 6.0}px); animation-delay: {i * ROW_STAGGER_MS + VALUE_AFTER_MS}ms",
-                                    "{orangui::with_separators(*value)}"
-                                }
-                            }
+                // .fleet-row and .fleet-bar. Keyed by name and drawn in name
+                // order, so a re-sort keeps every node where it is in the DOM and
+                // the entrance below plays once per SVG.
+                for row in placed.iter() {
+                    g {
+                        key: "{row.name}",
+                        class: "fleet-row",
+                        style: "transform: translate(0px, {row.y}px)",
+                        text {
+                            class: "fleet-name",
+                            x: "{LABEL_WIDTH - 10.0}",
+                            y: "{BAR_HEIGHT - 3.0}",
+                            text_anchor: "end",
+                            "{row.name}"
+                        }
+                        // The entrance grows each bar from the left, a row at a
+                        // time, and the value fades in after it.
+                        rect {
+                            class: "fleet-bar",
+                            x: "{LABEL_WIDTH}",
+                            y: "0",
+                            height: "{BAR_HEIGHT}",
+                            rx: "3",
+                            style: "width: {row.width}px; animation-delay: {row.delay_ms}ms",
+                        }
+                        text {
+                            class: "fleet-value",
+                            x: "0",
+                            y: "{BAR_HEIGHT - 3.0}",
+                            style: "transform: translateX({LABEL_WIDTH + row.width + 6.0}px); animation-delay: {row.delay_ms + VALUE_AFTER_MS}ms",
+                            "{orangui::with_separators(row.value)}"
                         }
                     }
                 }
