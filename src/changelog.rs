@@ -107,6 +107,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     entries: &[
         "In the menu, the row of icons under the counters is centered",
         "In a counter's Every day grid, the weekday names stay at the left while the weeks scroll under them, and it opens on the newest weeks with no month name cut in half at the edge",
+        "On a touch screen, a tapped button no longer stays highlighted",
     ],
 }];
 
