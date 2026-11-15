@@ -104,7 +104,10 @@ pub(crate) struct Release {
 pub(crate) const UPCOMING: &[Release] = &[Release {
     version: "1.4.3",
     date: None,
-    entries: &["In the menu, the row of icons under the counters is centered"],
+    entries: &[
+        "In the menu, the row of icons under the counters is centered",
+        "In a counter's Every day grid, the weekday names stay at the left while the weeks scroll under them, and it opens on the newest weeks with no month name cut in half at the edge",
+    ],
 }];
 
 /// Shipped releases, newest first by date.
