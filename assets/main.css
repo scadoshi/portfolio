@@ -1078,14 +1078,17 @@ p.kit-label {
 }
 
 /* The bezel and the notch: the page's background darkened, so the body
-   follows the site's theme while the screen keeps the phone's own. */
+   follows the site's theme while the screen keeps the phone's own. The
+   bezel's corner and its width are tokens the glass's corner is made from. */
 .phone {
     --bezel: color-mix(in srgb, var(--bg-primary), #000 45%);
+    --phone-radius: 2.6rem;
+    --phone-inset: 0.55rem;
     position: relative;
     width: 20rem;
     max-width: 100%;
-    padding: 0.55rem;
-    border-radius: 2.6rem;
+    padding: var(--phone-inset);
+    border-radius: var(--phone-radius);
     background: var(--bezel);
     border: 1px solid var(--border-secondary);
     box-shadow: var(--shadow-md);
@@ -1107,12 +1110,13 @@ p.kit-label {
 /* The screen is the containing block for the app pieces' position: fixed
    (the transform does that) and clips them at its edges. */
 /* The frame's glass: an iPhone 11 Pro Max's proportions, clipping the
-   screen inside it. */
+   screen inside it. Its corner is the bezel's less the bezel's border and
+   width, so the bezel stays one width around the curve. */
 .phone-viewport {
     position: relative;
     aspect-ratio: 414 / 896;
     overflow: hidden;
-    border-radius: 2.1rem;
+    border-radius: max(0.15rem, calc(var(--phone-radius) - 1px - var(--phone-inset)));
     view-transition-name: phone-screen;
 }
 
