@@ -243,9 +243,11 @@ a:visited {
 
 /* Respect reduced-motion for the lift and the entrance animations alike. */
 @media (prefers-reduced-motion: reduce) {
-    .theme-wrapper .panel-card:hover,
-    a:hover .ext {
-        transform: none;
+    @media (hover: hover) {
+        .theme-wrapper .panel-card:hover,
+        a:hover .ext {
+            transform: none;
+        }
     }
 
     .hero-panel,
@@ -806,9 +808,11 @@ a.panel-action:visited {
         background 0.15s;
 }
 
-.gallery-nav:hover {
-    opacity: 1;
-    background: var(--bg-sink);
+@media (hover: hover) {
+    .gallery-nav:hover {
+        opacity: 1;
+        background: var(--bg-sink);
+    }
 }
 
 /* Rides in Panel's `actions` slot, which is itself a flex row, so the footer
@@ -1733,10 +1737,16 @@ rect.fleet-bar {
 @media (prefers-reduced-motion: reduce) {
     rect.fleet-bar,
     .fleet-row,
-    .fleet-value,
-    .theme-wrapper .fleet-metrics .chip:hover {
+    .fleet-value {
         transition: none;
         transform: none;
+    }
+
+    @media (hover: hover) {
+        .theme-wrapper .fleet-metrics .chip:hover {
+            transition: none;
+            transform: none;
+        }
     }
 }
 
