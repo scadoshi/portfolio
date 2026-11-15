@@ -19,7 +19,10 @@ fn the_phone_glass_follows_the_bezel() {
     let phone = rule(".phone");
     assert!(phone.contains("--phone-radius: 2.6rem;"), "{phone:?}");
     assert!(phone.contains("--phone-inset: 0.55rem;"), "{phone:?}");
-    assert!(phone.contains("border-radius: var(--phone-radius);"), "{phone:?}");
+    assert!(
+        phone.contains("border-radius: var(--phone-radius);"),
+        "{phone:?}"
+    );
     assert!(phone.contains("padding: var(--phone-inset);"), "{phone:?}");
     let glass = rule(".phone-viewport");
     assert!(
