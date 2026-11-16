@@ -130,6 +130,9 @@ fn App() -> Element {
         document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
         document::Link { rel: "apple-touch-icon", sizes: "180x180", href: APPLE_TOUCH_ICON }
+        // The manifest and its 192 and 512 icons sit in public/ at fixed paths,
+        // since the manifest names them; scripts/icons.py writes all of them.
+        document::Link { rel: "manifest", href: "/site.webmanifest" }
         // Shared CSS inlined from orangui (a git dep can't be reached
         // by an asset pipeline). Themes, then components, then the shared site
         // sheet. The prerendered head puts these inline blocks after the linked
