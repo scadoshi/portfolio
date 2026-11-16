@@ -13,8 +13,8 @@ use dioxus::prelude::*;
 use dioxus_primitives::toast::{ToastOptions, use_toast};
 use orangui::{
     ActionBar, AlertDialog, BottomSheet, Button, ButtonVariant, Chip, DarkModeButton, DialogAction,
-    DialogHostView, GridCells, HintKey, InfoButton, ModeIcon, PageHeader, Panel, TOAST_NORMAL,
-    ThemeConfig, ThemeSheet, ToastStack, display_theme_name, use_dialog_host,
+    DialogHostView, GridCells, HintKey, IconButton, InfoButton, ModeIcon, PageHeader, Panel,
+    TOAST_NORMAL, ThemeConfig, ThemeSheet, ToastStack, display_theme_name, icons, use_dialog_host,
 };
 
 use super::navbar::ThemeWipe;
@@ -44,20 +44,20 @@ impl PhoneHint {
 }
 
 /// The Theme row's hint. Its controls are drawn as the keys they are, the
-/// mode button as its icon and word, never the icon described in words.
+/// pencil and the mode button as their icons, never described in words.
 fn theme_hint() -> Hint {
     let body = rsx! {
         "Picks the colors. "
-        HintKey { "Change" }
+        HintKey {
+            icons::DockIcon { path: icons::PENCIL }
+        }
         " opens every theme; "
         HintKey {
             ModeIcon { dark: false }
-            " Light"
         }
         " and "
         HintKey {
             ModeIcon { dark: true }
-            " Dark"
         }
         " flip the mode."
     };
@@ -264,14 +264,14 @@ fn PhoneApp(site: Signal<ThemeConfig>, picked: Signal<ThemeConfig>) -> Element {
                             div { class: "settings-row-value",
                                 span { "{name}" }
                                 DarkModeButton { is_dark: current.is_dark, onclick: toggle_dark }
-                                Button {
-                                    variant: ButtonVariant::Action,
+                                IconButton {
+                                    label: "Change theme",
+                                    path: icons::PENCIL,
                                     onclick: move |_| {
                                         // The sheet's own "?" opens the Theme hint.
                                         hint.prime(theme_hint());
                                         themes_open.set(true);
                                     },
-                                    "Change"
                                 }
                             }
                         }
