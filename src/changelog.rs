@@ -101,24 +101,25 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[Release {
-    version: "1.4.3",
-    date: None,
-    entries: &[
-        "In the menu, the row of icons under the counters is centered",
-        "In a counter's Every day grid, the weekday names stay at the left while the weeks scroll under them, and it opens on the newest weeks with no month name cut in half at the edge",
-        "On a touch screen, a tapped button no longer stays highlighted",
-        "A counter's stat tiles and lifetime box have corners that follow their card's, so the gap around them stays even",
-        "The last row of a sheet always scrolls clear of the save button",
-        "In Settings, each Change button is a pencil and the light and dark toggle is a sun or moon, so a long theme name no longer gets cut off",
-        "In Settings, a value that fits beside its row's name shows in full instead of ending in an ellipsis",
-        "Cards, the dock and sheets cast shadows in three clear levels, so what sits above what reads at a glance",
-        "Spacing follows one scale, so buttons, chips and headers line up",
-    ],
-}];
+pub(crate) const UPCOMING: &[Release] = &[];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
+    Release {
+        version: "1.4.3",
+        date: Some(Date::new(2026, 11, 15)),
+        entries: &[
+            "In the menu, the row of icons under the counters is centered",
+            "In a counter's Every day grid, the weekday names stay at the left while the weeks scroll under them, and it opens on the newest weeks with no month name cut in half at the edge",
+            "On a touch screen, a tapped button no longer stays highlighted",
+            "A counter's stat tiles and lifetime box have corners that follow their card's, so the gap around them stays even",
+            "The last row of a sheet always scrolls clear of the save button",
+            "In Settings, each Change button is a pencil and the light and dark toggle is a sun or moon, so a long theme name no longer gets cut off",
+            "In Settings, a value that fits beside its row's name shows in full instead of ending in an ellipsis",
+            "Cards, the dock and sheets cast shadows in three clear levels, so what sits above what reads at a glance",
+            "Spacing follows one scale, so buttons, chips and headers line up",
+        ],
+    },
     Release {
         version: "1.4.2",
         date: Some(Date::new(2026, 11, 13)),
