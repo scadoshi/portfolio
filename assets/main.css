@@ -398,22 +398,22 @@ a.panel-action:visited {
 /* Keyword highlights cycle the palette, zite-tagline-style. */
 .hl-p3 {
     color: var(--palette-3);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .hl-p2 {
     color: var(--palette-2);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .hl-p5 {
     color: var(--palette-5);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .hl-tertiary {
     color: var(--accent-tertiary);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* === Project Tags === */
