@@ -375,13 +375,13 @@ pub(crate) fn find_project(slug: &str) -> Option<&'static Project> {
 const ZWIPE: Project = Project {
     name: "Zwipe",
     slug: "zwipe",
-    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 118k+ printings.",
+    headline: "Full-stack MTG deck builder. Axum backend, Dioxus frontend, PostgreSQL, 120k+ printings.",
     category: "Full-Stack Application",
     repo_url: "https://github.com/scadoshi/zwipe",
     summary: "Mobile-first Magic: The Gathering deck builder with swipe-based navigation.",
     card_bullets: &[
         "iOS and Android apps from one Rust codebase",
-        "Its own server and database, with fast search across 118,000+ card printings",
+        "Its own server and database, with fast search across 120,000+ card printings",
         "The build rejects any code that could crash on bad data",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
@@ -515,7 +515,7 @@ QueryBuilder::new("INSERT INTO scryfall_data (")
     obstacles: &[
         "ScryfallData has 87 fields, and hexagonal architecture wants a separate database type. Maintaining 87 fields twice felt untenable solo, so the domain type carried a feature-gated sqlx derive for a while. That bend has since been unbent: a real database type lives in the outbound layer and converts inward",
         "Postgres caps a statement at 65,535 parameters, and 87 fields per card means batching. Zwipe uses half the limit, which works out to 376 cards a batch. Five upsert strategies compose to handle it, with card-by-card fallback so one bad record never blocks 100k others",
-        "Search over 118k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
+        "Search over 120k printings returned the same card once per printing, and substring search crawled. A materialized view pre-deduplicates to one row per name with trigram indexes, refreshed nightly",
     ],
     progress: "Live on the [App Store](https://apps.apple.com/us/app/zwipe-tcg/id6761341603), [Google Play](https://play.google.com/store/apps/details?id=com.scadoshi.zwipe), and [zwipe.net](https://zwipe.net), with regular releases since launch. Full deck management, swipe-based building, the commander system (partners, backgrounds, oathbreaker), synergy-ranked card suggestions, deck sharing via public links, draw-odds and price/land targets, card roles, maybeboard/sideboard, import/export, and 50 themes. Dependencies scanned weekly against the RustSec advisory database; nightly backups.",
     impact: "Built and run alone, end to end: the server, the database, both app stores and the website, shipped on a regular release cadence from one Rust codebase.",

@@ -2,7 +2,7 @@
 
 ## Headline
 
-Full-stack MTG deck builder in Rust: Axum backend, Dioxus frontend, PostgreSQL, 118k+ printings.
+Full-stack MTG deck builder in Rust: Axum backend, Dioxus frontend, PostgreSQL, 120k+ printings.
 
 ## Category
 
@@ -20,7 +20,7 @@ A mobile-first Magic: The Gathering deck builder with swipe-based navigation. Ei
 - Argon2id password hashing with common password blocklist (170+ patterns, NIST guidelines)
 - PostgreSQL with SQLx: 53 migrations, JSONB operators, window functions, composite constraints
 - Advanced card search: CMC ranges, dual color identity modes, type/rarity/set filtering
-- Background job binary (zervice) for Scryfall delta sync handling 35k+ cards in batches
+- Background job binary (zervice) for Scryfall delta sync handling 120k+ printings (39k+ unique cards) in batches
 - Option<Option<T>> for partial updates, distinguishing "not provided" from "set to null"
 - Full-stack documentation pass with #![warn(missing_docs)] enabled (243 warnings resolved)
 - Clippy configured with 22 enforced lints
