@@ -368,7 +368,7 @@ pub fn ChangelogCards(selected: Signal<Selection>, collapse: CollapseSet) -> Ele
                     set: collapse,
                     version: release.version.to_owned(),
                     date: release.date.map(|date| date.to_string()),
-                    tag: release_tag(log, release.version),
+                    tags: release_tag(log, release.version).into_iter().collect::<Vec<ReleaseTag>>(),
                     entries: release.entries.iter().map(|&entry| entry.to_owned()).collect::<Vec<String>>(),
                     id: anchor(release.version),
                     href: format!("#{}", anchor(release.version)),
