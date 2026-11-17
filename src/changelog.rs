@@ -105,7 +105,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     version: "1.5.0",
     date: None,
     entries: &[
-        "A tap on a counter's step buttons shows a toast with the counter's name, the change and the day's new count, and a quick run of taps on one counter shows one toast with the whole change",
+        "A tap on a counter's step buttons shows a toast with the counter's name and the change, and a quick run of taps on one counter shows one toast with the whole change",
         "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
     ],
 }];
