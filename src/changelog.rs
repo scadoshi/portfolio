@@ -105,6 +105,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     version: "1.5.0",
     date: None,
     entries: &[
+        "Stat tiles and the lifetime box sit closer to their card's edge, with rounder corners, bigger numbers and labels that wrap less",
         "Toasts rise from the bottom edge and drift up as they fade out",
         "Stacked toasts line up behind the newest",
         "Toasts stamp as they land",
