@@ -105,7 +105,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     version: "1.5.0",
     date: None,
     entries: &[
-        "Toasts rise from the bottom edge and drop back down",
+        "Toasts rise from the bottom edge and drift up as they fade out",
         "Stacked toasts line up behind the newest",
         "A tap on a counter's step buttons shows a toast with the counter's name and the change, and a quick run of taps on one counter shows one toast with the whole change",
         "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
