@@ -1952,7 +1952,6 @@ mod tests {
         }
     }
 
-    /// A project named like a section would be unreachable behind it.
     /// zwipe.net serves every page at its address with a trailing slash, so a link without one
     /// costs a redirect.
     #[test]
@@ -1972,6 +1971,7 @@ mod tests {
         assert!(checked > 0, "no zwipe.net page links found");
     }
 
+    /// A project named like a section would be unreachable behind it.
     #[test]
     fn no_project_slug_is_a_section_name() {
         for project in all_projects() {
