@@ -112,6 +112,8 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Theme search, which finds a theme by name or color",
         "On a keyboard, t opens Themes ready to search",
         "Jump keys, g g for the top of a screen or Shift+G for the bottom",
+        "The open menu has a rule under its header",
+        "The open menu's bottom row no longer sits on its edge",
     ],
 }];
 
