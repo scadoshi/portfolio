@@ -385,7 +385,7 @@ const ZWIPE: Project = Project {
         "The build rejects any code that could crash on bad data",
     ],
     impact_metric: "Live on the App Store, Google Play, and zwipe.net.",
-    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Eight workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwiper-web (the web app at app.zwipe.net), zwipe-client (the typed API client every client calls), zwipe-ui (the screen logic, Dioxus-free so web, desktop and terminal clients draw the same screens), components (the Magic UI, over [Orangui](https://github.com/scadoshi/orangui), the UI kit in its own repo), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
+    objective: "Build a full-stack MTG deck builder with swipe-based navigation as a single-language Rust project. Eight workspace crates: zwipe-core (shared domain), zerver (Axum API, plus a zervice background-sync binary), zwiper (Dioxus mobile app), zwiper-web (the web app at app.zwipe.net), zwipe-client (the typed API client every client calls), zwipe-ui (the screen logic, Dioxus-free so web, desktop and terminal clients draw the same screens), components (the Magic UI, over [Orangui](https://github.com/scadoshi/orangui), the UI kit in its own repo), zite (the public site: guides, changelog, shared deck pages). Full commander support: partners, backgrounds, oathbreaker. See the [architecture](https://zwipe.net/about/) and [demo](https://zwipe.net). Live on the App Store and Google Play.",
     tags: &["ios", "android", "hexagonal"],
     media: &[
         MediaItem {
@@ -1950,6 +1950,25 @@ mod tests {
                 project.slug
             );
         }
+    }
+
+    /// zwipe.net serves every page at its address with a trailing slash, so a link without one
+    /// costs a redirect.
+    #[test]
+    fn zwipe_site_page_links_end_in_a_slash() {
+        let source = include_str!("data.rs");
+        let site = ["https://zwipe.net", "/"].concat();
+        let mut checked = 0;
+        for (at, _) in source.match_indices(&site) {
+            let rest = source.get(at..).unwrap_or_default();
+            let end = rest.find([')', '"', ' ', '`']).unwrap_or(rest.len());
+            let link = rest.get(..end).unwrap_or_default();
+            if link.len() > site.len() {
+                assert!(link.ends_with('/'), "{link}");
+                checked += 1;
+            }
+        }
+        assert!(checked > 0, "no zwipe.net page links found");
     }
 
     /// A project named like a section would be unreachable behind it.
