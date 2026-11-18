@@ -3,8 +3,8 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 use orangui::{
-    ChartTip, HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, HeatReadout, Replay, area, curve, heat_span,
-    peak_indices, use_heat_pick, with_separators,
+    ChartTip, HEAT_CELL, HEAT_ROWS, HeatGrid, HeatHit, HeatReadout, HeatWeekdays, Replay, area,
+    curve, heat_span, peak_indices, use_heat_pick, with_separators,
 };
 
 use crate::components::chart::{self, Tip};
@@ -342,14 +342,9 @@ pub fn Heatmap() -> Element {
                         }
                     }
                 }
-                for (row, name) in [(1usize, "Mon"), (3, "Wed"), (5, "Fri")] {
-                    text {
-                        key: "d{row}",
-                        class: "heat-label",
-                        x: "0",
-                        y: "{TOP + heat_span(row) + HEAT_CELL - 2.0}",
-                        "{name}"
-                    }
+                HeatWeekdays {
+                    labels: vec![(1, "Mon".to_owned()), (3, "Wed".to_owned()), (5, "Fri".to_owned())],
+                    top: TOP,
                 }
             }
             // The chip is placed by percentages of the plot, so it lives in a
