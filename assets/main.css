@@ -1346,10 +1346,10 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     max-height: 85%;
 }
 
-/* Toasts sit where the kit puts them, bottom left at one inset, and never
+/* Toasts sit where the kit puts them, bottom left on the corner gap, and never
    run wider than the phone. */
 .theme-wrapper .phone-screen .toast-container {
-    max-width: calc(100% - 2 * var(--toast-inset, var(--space-4)));
+    max-width: calc(100% - 2 * var(--corner-gap));
 }
 
 /* The phone's backdrop: GridCells sits absolute inside the screen (whose
