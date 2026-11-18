@@ -107,6 +107,9 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
     entries: &[
         "A tap on a counter's step buttons shows a toast with the counter's name and the change, and a quick run of taps on one counter shows one toast with the whole change",
         "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
+        "Theme search, which finds a theme by name or color",
+        "On a keyboard, t opens Themes ready to search",
+        "Jump keys, g g for the top of a screen or Shift+G for the bottom",
     ],
 }];
 
