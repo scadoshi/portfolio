@@ -110,7 +110,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Stacked toasts line up behind the newest",
         "Toasts stamp down as they land, coming in big and settling with a small bounce",
         "A single toast no longer blocks taps on what sits under it",
-        "Closing a toast in a stack with its × leaves the stack as it was",
+        "Closing one stacked toast with its × leaves the others where they were",
         "Tags that only show a value have a smaller corner than buttons",
         "A tap on a counter's step buttons shows its name and change in one toast that counts up as you keep tapping",
         "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
