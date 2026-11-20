@@ -108,7 +108,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "Stat tiles and the lifetime box sit closer to their card's edge, with rounder corners, bigger numbers and labels that wrap less",
         "Toasts rise from the bottom edge and drift up as they fade out",
         "Stacked toasts line up behind the newest",
-        "Toasts come in large and land at their size, with no pop after they land",
+        "Toasts stamp down as they land, coming in big and settling with a small bounce",
         "Tags that only show a value have a smaller corner than buttons",
         "A tap on a counter's step buttons shows its name and change in one toast that counts up as you keep tapping",
         "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
