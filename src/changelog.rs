@@ -112,6 +112,7 @@ pub(crate) const UPCOMING: &[Release] = &[Release {
         "A single toast no longer blocks taps on what sits under it",
         "Closing one stacked toast with its × leaves the others where they were",
         "Tags that only show a value have a smaller corner than buttons",
+        "On a computer, hovering a day in the Every day grid names it",
         "A tap on a counter's step buttons shows its name and change in one toast that counts up as you keep tapping",
         "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
         "On a keyboard, t opens Themes",
