@@ -1413,7 +1413,7 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
 .orangutan-frame {
     font-size: clamp(0.28rem, 0.74vw, 0.68rem);
     height: 68em;
-    margin: 0 -1.5rem;
+    margin: 0 calc(-1 * var(--panel-pad));
     overflow: hidden;
     display: flex;
     justify-content: center;
