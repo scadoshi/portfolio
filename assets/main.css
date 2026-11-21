@@ -319,7 +319,7 @@ a.panel-action:visited {
     z-index: 1000;
     padding: 0.5rem 0.9rem;
     border: 2px solid var(--accent-primary);
-    border-radius: 0.5rem;
+    border-radius: var(--chip-radius);
     background: var(--bg-primary);
     color: var(--text-primary);
     font-weight: 700;
@@ -600,10 +600,10 @@ a.panel-action:visited {
     font-size: 0.85rem;
     color: var(--palette-5);
     margin-bottom: 1rem;
-    padding: 0.5rem 0.75rem;
+    padding: var(--panel-pad);
     background: var(--bg-sink);
     border-left: 2px solid var(--palette-5);
-    border-radius: 0.4rem;
+    border-radius: var(--panel-radius);
 }
 
 /* Measured numbers under a card's impact line, and under a detail page's
@@ -972,7 +972,7 @@ p.kit-label {
     justify-content: center;
     height: 2.75rem;
     padding-bottom: 0.2rem;
-    border-radius: 0.5rem;
+    border-radius: var(--chip-radius);
     font-size: 0.7rem;
     color: var(--bg-primary);
 }
@@ -1006,7 +1006,7 @@ p.kit-label {
     gap: 0.35rem;
     width: 100%;
     min-height: 7.5rem;
-    border-radius: 0.8rem;
+    border-radius: var(--panel-radius);
     font-size: 0.8rem;
     animation: gallery-fade-in 0.25s ease-out;
 }
@@ -1436,7 +1436,7 @@ html[data-wipe="left"]::view-transition-new(theme-sheet) {
     margin: 1.5rem 0;
     background: var(--bg-primary);
     border: 1px solid var(--border-secondary);
-    border-radius: 0.6rem;
+    border-radius: var(--panel-radius);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
