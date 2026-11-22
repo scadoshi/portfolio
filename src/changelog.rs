@@ -101,30 +101,31 @@ pub(crate) struct Release {
 
 /// Entries for the next version, not yet cut, newest first. Rendered at the
 /// top with an "Upcoming" badge instead of "Latest".
-pub(crate) const UPCOMING: &[Release] = &[Release {
-    version: "1.5.0",
-    date: None,
-    entries: &[
-        "Stat tiles and the lifetime box have bigger numbers",
-        "Toasts rise from the bottom edge and drift up as they fade out",
-        "Stacked toasts line up behind the newest",
-        "Toasts stamp down as they land, coming in big and settling with a small bounce",
-        "A single toast no longer blocks taps on what sits under it",
-        "Closing one stacked toast with its × leaves the others where they were",
-        "Cards have squarer corners, and every tag and button shares one smaller corner that sits inside a card's",
-        "On a computer, hovering a day in the Every day grid names it",
-        "A tap on a counter's step buttons shows its name and change in one toast that counts up as you keep tapping",
-        "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
-        "On a keyboard, t opens Themes",
-        "Jump keys, g g for the top of a screen or Shift+G for the bottom",
-        "On a phone, Themes opened from the menu fills the window instead of the menu's box",
-        "The open menu has a rule under its header",
-        "The open menu's bottom row no longer sits on its edge",
-    ],
-}];
+pub(crate) const UPCOMING: &[Release] = &[];
 
 /// Shipped releases, newest first by date.
 pub(crate) const RELEASES: &[Release] = &[
+    Release {
+        version: "1.5.0",
+        date: Some(Date::new(2026, 11, 21)),
+        entries: &[
+            "Stat tiles and the lifetime box have bigger numbers",
+            "Toasts rise from the bottom edge and drift up as they fade out",
+            "Stacked toasts line up behind the newest",
+            "Toasts stamp down as they land, coming in big and settling with a small bounce",
+            "A single toast no longer blocks taps on what sits under it",
+            "Closing one stacked toast with its × leaves the others where they were",
+            "Cards have squarer corners, and every tag and button shares one smaller corner that sits inside a card's",
+            "On a computer, hovering a day in the Every day grid names it",
+            "A tap on a counter's step buttons shows its name and change in one toast that counts up as you keep tapping",
+            "Toasts sit in the bottom-left corner the same distance from the left and bottom edges, over the dock when there is one",
+            "On a keyboard, t opens Themes",
+            "Jump keys, g g for the top of a screen or Shift+G for the bottom",
+            "On a phone, Themes opened from the menu fills the window instead of the menu's box",
+            "The open menu has a rule under its header",
+            "The open menu's bottom row no longer sits on its edge",
+        ],
+    },
     Release {
         version: "1.4.3",
         date: Some(Date::new(2026, 11, 15)),
