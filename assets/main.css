@@ -943,6 +943,14 @@ p.kit-label {
     z-index: 1;
 }
 
+/* The row's last menu hangs from its trigger's right edge, back over the
+   row, so it never runs past a phone's screen. Closed menus stay laid out,
+   so one jutting right would widen the page even shut. */
+.kit-dropdown .nav-dropdown:last-child .nav-dropdown-content {
+    left: auto;
+    right: 0;
+}
+
 /* An open menu's panel holds still: the hover lift's transform would trap
    the click-away layer inside the panel. */
 .theme-wrapper .panel-card:has(.nav-dropdown-open) {
