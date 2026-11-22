@@ -741,7 +741,7 @@ a.panel-action:visited {
     max-height: 70vh;
     height: auto;
     object-fit: contain;
-    border-radius: 0.4rem;
+    border-radius: var(--chip-radius);
     animation: gallery-fade-in 0.25s ease-out;
 }
 
@@ -762,7 +762,7 @@ a.panel-action:visited {
     --media-max-h: 70vh;
     width: min(100%, calc(var(--media-max-h) * var(--media-w) / var(--media-h)));
     aspect-ratio: var(--media-w) / var(--media-h);
-    border-radius: 0.4rem;
+    border-radius: var(--chip-radius);
 }
 
 .gallery-video > .gallery-image {

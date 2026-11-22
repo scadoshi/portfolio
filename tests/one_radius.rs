@@ -1,7 +1,7 @@
 //! One radius, the kit's rule on the portfolio: every container rounds at the panel radius, a box
 //! inside a container takes the panel radius and padding too, and every chip and button rounds at
 //! the chip radius. No rule sets a radius of its own, except the shapes that are no container, chip
-//! or button: the gallery's media, the phone mockup and a link's focus ring.
+//! or button: the phone mockup and a link's focus ring.
 
 #![expect(
     clippy::string_slice,
@@ -16,10 +16,7 @@ const CSS: &str = include_str!("../assets/main.css");
 const ALLOWED: [&str; 2] = ["var(--panel-radius)", "var(--chip-radius)"];
 
 /// Rules whose shape is no container, chip or button, each keeping its own radius.
-const OUT_OF_SCOPE: [&str; 7] = [
-    // The gallery's screenshots and videos.
-    ".gallery-image",
-    ".gallery-video",
+const OUT_OF_SCOPE: [&str; 5] = [
     // The phone mockup: its frame, its notch, its screen, and the kit's settings list scaled
     // down inside it.
     ".phone",
